@@ -1,12 +1,14 @@
 package com.business.unknow.services.services;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -102,7 +104,7 @@ public class FacturaService {
 	@Autowired
 	private FacturacionModernaExecutor facturacionModernaExecutor;
 
-	@Autowired
+	@Autowired 
 	private NtinkExecutorService ntinkExecutorService;
 
 	@Autowired
@@ -297,9 +299,12 @@ public class FacturaService {
 		Factura factura = repository.findByIdCfdi(idCfdi)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
 						String.format("La factura con el pre-folio %d no existe", idCfdi)));
+		CfdiDto cfdi = cfdiService.getCfdiById(idCfdi);
 		BigDecimal total = newTotal.isPresent() ? newTotal.get() : factura.getTotal();
 		BigDecimal montoPagado = pagoService.findPagosByFolio(factura.getFolio()).stream()
-				.filter(p -> !"CREDITO".equals(p.getFormaPago())).map(p -> p.getMonto())
+				.filter(p -> !"CREDITO".equals(p.getFormaPago()))
+				.map(p -> cfdi.getMoneda().equals(p.getMoneda()) ? p.getMonto()
+						: p.getMonto().divide(p.getTipoDeCambio(), 2, RoundingMode.HALF_UP)) 
 				.reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2));
 
 		if (pago.isPresent()) {
@@ -447,14 +452,24 @@ public class FacturaService {
 				&& facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
 			devolucionService.generarDevoluciones(facturaContext.getFacturaDto());
 		}
-		if (facturaContext.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
-			try {
-				timbradoExecutorService.sentEmail(facturaContext, TipoEmail.SEMEL_JACK);
-			} catch (InvoiceManagerException e) {
-				timbradoExecutorService.sentEmail(facturaContext, TipoEmail.GMAIL);
-			}
-		}
+		final FacturaContext fc= facturaContext;
+		CompletableFuture.supplyAsync(()->enviarCorreo(fc));
 		return facturaContext;
+	}
+	
+	private Boolean enviarCorreo(FacturaContext fc)  {
+		try{
+			if (fc.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
+				try {
+					timbradoExecutorService.sentEmail(fc, TipoEmail.SEMEL_JACK);
+				} catch (InvoiceManagerException e) {
+					timbradoExecutorService.sentEmail(fc, TipoEmail.GMAIL);
+				}
+			}
+			return true;
+		}catch (InvoiceManagerException e) {
+			return false;
+		}
 	}
 
 	public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
