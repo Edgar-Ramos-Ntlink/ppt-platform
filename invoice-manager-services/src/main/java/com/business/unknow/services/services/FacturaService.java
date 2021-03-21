@@ -28,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.business.unknow.services.services.translators.RelacionadosTranslator;
 import com.business.unknow.commons.validator.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
@@ -119,88 +120,95 @@ public class FacturaService {
 	@Autowired
 	private PagoService pagoService;
 
+	@Autowired
+	private RelacionadosTranslator sustitucionTranslator;
+
 	private FacturaValidator validator = new FacturaValidator();
-	
-	
+
 	private static final Logger log = LoggerFactory.getLogger(FacturaService.class);
 
-	
-	
-	private Specification<Factura> buildSearchFilters(Map<String, String> parameters){
-		String linea = (parameters.get("lineaEmisor")==null)?"A":parameters.get("lineaEmisor");
-		
+	private Specification<Factura> buildSearchFilters(Map<String, String> parameters) {
+		String linea = (parameters.get("lineaEmisor") == null) ? "A" : parameters.get("lineaEmisor");
+
 		log.info("Finding facturas by {}", parameters);
-		
+
 		return new Specification<Factura>() {
-			
+
 			private static final long serialVersionUID = -7435096122716669730L;
 
 			@Override
 			public Predicate toPredicate(Root<Factura> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-				 List<Predicate> predicates = new ArrayList<>();
-				 
-				 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("lineaEmisor"),linea)));
-				 // TODO move this logic into a enum class that handles all this logic
-				 if(parameters.get("solicitante")!=null) {
-					 predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("solicitante"),"%"+parameters.get("solicitante")+"%")));
-				 }
-				 if(parameters.get("emisor")!=null) {
-					 predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("razonSocialEmisor"),"%"+parameters.get("emisor")+"%")));
-				 }
-				 if(parameters.get("remitente")!=null) {
-					 predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("razonSocialRemitente"),"%"+parameters.get("remitente")+"%")));
-				 }
-				 
-				 if(parameters.get("status")!=null) {
-					 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("statusFactura"),parameters.get("status"))));
-				 }
-				 
-				 if(parameters.get("tipoDocumento")!=null) {
-					 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("tipoDocumento"),parameters.get("tipoDocumento"))));
-				 }
-				 
-				 if(parameters.get("metodoPago")!=null) {
-					 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("metodoPago"),parameters.get("metodoPago"))));
-				 }
-				 
-				 if(parameters.get("saldoPendiente")!=null) {
-					 BigDecimal saldo = new BigDecimal(parameters.get("saldoPendiente"));
-					 predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("saldoPendiente"), saldo)));
-				 }
-				 
-				 if(parameters.get("since")!=null && parameters.get("to")!=null) {
-					 java.sql.Date start = java.sql.Date.valueOf(LocalDate.parse(parameters.get("since")));
-					 java.sql.Date end = java.sql.Date.valueOf(LocalDate.parse(parameters.get("to")).plusDays(1));
-					 predicates.add(criteriaBuilder.and(criteriaBuilder.between(root.get("fechaCreacion"),start,end)));
-				 }
-				
-				  
-				 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+				List<Predicate> predicates = new ArrayList<>();
+
+				predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("lineaEmisor"), linea)));
+				// TODO move this logic into a enum class that handles all this logic
+				if (parameters.get("solicitante") != null) {
+					predicates.add(criteriaBuilder.and(
+							criteriaBuilder.like(root.get("solicitante"), "%" + parameters.get("solicitante") + "%")));
+				}
+				if (parameters.get("emisor") != null) {
+					predicates.add(criteriaBuilder.and(
+							criteriaBuilder.like(root.get("razonSocialEmisor"), "%" + parameters.get("emisor") + "%")));
+				}
+				if (parameters.get("remitente") != null) {
+					predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("razonSocialRemitente"),
+							"%" + parameters.get("remitente") + "%")));
+				}
+
+				if (parameters.get("status") != null) {
+					predicates.add(criteriaBuilder
+							.and(criteriaBuilder.equal(root.get("statusFactura"), parameters.get("status"))));
+				}
+
+				if (parameters.get("tipoDocumento") != null) {
+					predicates.add(criteriaBuilder
+							.and(criteriaBuilder.equal(root.get("tipoDocumento"), parameters.get("tipoDocumento"))));
+				}
+
+				if (parameters.get("metodoPago") != null) {
+					predicates.add(criteriaBuilder
+							.and(criteriaBuilder.equal(root.get("metodoPago"), parameters.get("metodoPago"))));
+				}
+
+				if (parameters.get("saldoPendiente") != null) {
+					BigDecimal saldo = new BigDecimal(parameters.get("saldoPendiente"));
+					predicates.add(criteriaBuilder
+							.and(criteriaBuilder.greaterThanOrEqualTo(root.get("saldoPendiente"), saldo)));
+				}
+
+				if (parameters.get("since") != null && parameters.get("to") != null) {
+					java.sql.Date start = java.sql.Date.valueOf(LocalDate.parse(parameters.get("since")));
+					java.sql.Date end = java.sql.Date.valueOf(LocalDate.parse(parameters.get("to")).plusDays(1));
+					predicates.add(criteriaBuilder.and(criteriaBuilder.between(root.get("fechaCreacion"), start, end)));
+				}
+
+				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
 	}
-	
-	
+
 	// FACTURAS
 	public Page<FacturaDto> getFacturasByParametros(Map<String, String> parameters) {
-		
+
 		Page<Factura> result;
-		int page = (parameters.get("page")==null)?0:Integer.valueOf(parameters.get("page"));
-		int size = (parameters.get("size")==null)?10:Integer.valueOf(parameters.get("size"));
-		if(parameters.get("prefolio")!=null) {
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+		if (parameters.get("prefolio") != null) {
 			result = repository.findByPreFolio(parameters.get("prefolio"), PageRequest.of(0, 10));
-		}else {
-			result = repository.findAll(buildSearchFilters(parameters), PageRequest.of(page, size,Sort.by("fechaActualizacion").descending()));
+		} else {
+			result = repository.findAll(buildSearchFilters(parameters),
+					PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		}
 		return new PageImpl<>(mapper.getFacturaDtosFromEntities(result.getContent()), result.getPageable(),
 				result.getTotalElements());
 	}
 
 	public Page<FacturaReportDto> getFacturaReportsByParams(Map<String, String> parameters) {
-		int page = (parameters.get("page")==null)?0:Integer.valueOf(parameters.get("page"));
-		int size = (parameters.get("size")==null)?10:Integer.valueOf(parameters.get("size"));
-		Page<Factura> result = repository.findAll(buildSearchFilters(parameters), PageRequest.of(page, size,Sort.by("fechaActualizacion").descending()));
-		
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+		Page<Factura> result = repository.findAll(buildSearchFilters(parameters),
+				PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+
 		List<String> folios = result.getContent().stream().map(f -> f.getFolio()).collect(Collectors.toList());
 		if (folios.isEmpty()) {
 			return new PageImpl<>(new ArrayList<>(), result.getPageable(), result.getTotalElements());
@@ -211,9 +219,10 @@ public class FacturaService {
 	}
 
 	public Page<PagoReportDto> getComplementoReportsByParams(Map<String, String> parameters) {
-		int page = (parameters.get("page")==null)?0:Integer.valueOf(parameters.get("page"));
-		int size = (parameters.get("size")==null)?10:Integer.valueOf(parameters.get("size"));
-		Page<Factura> result = repository.findAll(buildSearchFilters(parameters), PageRequest.of(page, size,Sort.by("fechaActualizacion").descending()));
+		int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
+		int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+		Page<Factura> result = repository.findAll(buildSearchFilters(parameters),
+				PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 		List<String> folios = result.getContent().stream().map(f -> f.getFolio()).collect(Collectors.toList());
 		if (folios.isEmpty()) {
 			return new PageImpl<>(new ArrayList<>(), result.getPageable(), result.getTotalElements());
@@ -275,7 +284,10 @@ public class FacturaService {
 		entity.setTotal(cfdi.getTotal());
 		entity.setSaldoPendiente(cfdi.getTotal());
 		FacturaDto saveFactura = mapper.getFacturaDtoFromEntity(repository.save(entity));
-		pdfService.generateInvoicePDF(facturaBuilded, facturaContext.getCfdi());
+		if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
+				|| facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.NOTA_CREDITO.getDescripcion())) {
+			pdfService.generateInvoicePDF(facturaBuilded, facturaContext.getCfdi());
+		}
 		saveFactura.setCfdi(cfdi);
 		return saveFactura;
 	}
@@ -386,6 +398,18 @@ public class FacturaService {
 		FacturaContext facturaContext = timbradoBuilderService.buildFacturaContextTimbrado(facturaDto, folio);
 		timbradoServiceEvaluator.facturaTimbradoValidation(facturaContext);
 		switch (TipoDocumentoEnum.findByDesc(facturaContext.getTipoDocumento())) {
+		case NOTA_CREDITO:
+			if (facturaDto.getIdCfdiRelacionadoPadre() != null) {
+				FacturaDto facturaPadre = getFacturaBaseByPrefolio(facturaDto.getIdCfdiRelacionadoPadre());
+				if (facturaDto.getTotal().compareTo(facturaPadre.getTotal()) > 0
+						|| facturaDto.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
+					throw new InvoiceManagerException("El monto total de la nota credito es invalido",
+							"Nota de credito invalida", HttpStatus.CONFLICT.value());
+				}
+			} else {
+				throw new InvoiceManagerException("Nota de credito invalida", "No esta correctamente referenciada",
+						HttpStatus.CONFLICT.value());
+			}
 		case FACTURA:
 			facturaContext = facturaTranslator.translateFactura(facturaContext);
 			break;
@@ -514,11 +538,38 @@ public class FacturaService {
 		pdfService.generateInvoicePDF(factura, null);
 	}
 
-	// RENVIAR CORREOS
 	public FacturaContext renviarCorreo(String folio, FacturaDto facturaDto) throws InvoiceManagerException {
 		FacturaContext facturaContext = facturaBuilderService.buildEmailContext(folio, getFacturaByFolio(folio));
 		timbradoExecutorService.sentEmail(facturaContext, TipoEmail.GMAIL);
 		return facturaContext;
+	}
+
+	public FacturaDto postRelacion(FacturaDto dto, TipoDocumentoEnum tipoDocumento) throws InvoiceManagerException {
+		FacturaDto facturaDto = getFacturaByFolio(dto.getFolio());
+		if (TipoDocumentoEnum.FACTURA.getDescripcion().equals(facturaDto.getTipoDocumento())) {
+			switch (tipoDocumento) {
+			case FACTURA:
+				sustitucionTranslator.sustitucionFactura(facturaDto);
+				break;
+			case NOTA_CREDITO:
+				sustitucionTranslator.notaCreditoFactura(facturaDto);
+				break;
+			default:
+				throw new InvoiceManagerException("The type of document not supported",
+						String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
+						HttpStatus.BAD_REQUEST.value());
+			}
+			facturaDto.setIdCfdiRelacionadoPadre(dto.getIdCfdi());
+			facturaDto = insertNewFacturaWithDetail(facturaDto);
+			FacturaDto facturaAnterior = getFacturaByFolio(dto.getFolio());
+			facturaAnterior.setIdCfdiRelacionado(facturaDto.getIdCfdi());
+			repository.save(mapper.getEntityFromFacturaDto(facturaAnterior));
+			return dto;
+		} else {
+			throw new InvoiceManagerException("El tipo de documento en la relacion no es de tipo factura",
+					HttpStatus.BAD_REQUEST.value());
+		}
+
 	}
 
 }
