@@ -244,6 +244,7 @@
             <label for="inputStatus" class="label">Estatus factura</label>
             <select id="inputStatus" style="display:block;" class="form-control" [(ngModel)]="filterParams.status"
               [disabled]="filterParams.prefolio.length > 0">
+              <option value="*">Todos</option>
               <option value="8">Por timbrar</option>
               <option value="3">Timbrada</option>
               <option value="7">Cancelada</option>
@@ -387,12 +388,12 @@
                     [disabled]="(fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Validacion operaciones' && fila.statusFactura !== 'Validacion tesoreria' )"
                     (click)="redirectToPreferences(fila.folio)"><i class="fa fa-wallet"></i>
                   </button>
-                  <button type="button" class="btn btn-sm btn-outline-primary"
+                  <!--button type="button" class="btn btn-sm btn-outline-primary"
                     *ngIf="module !== 'promotor' && module !== 'contabilidad'"
                     [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD'), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') }"
                     [disabled]=" (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD')"
                     (click)="redirectToDevolutionDetails(fila.folio)"><i class="fa fa-university"></i>
-                  </button>
+                  </button-->
                   <button type="button" class="btn btn-sm btn-outline-primary"
                     (click)="downloadPdf(fila.rfcEmisor,fila.rfcRemitente,fila.folio)">
                     <i class="fa fa-file-pdf"></i>
