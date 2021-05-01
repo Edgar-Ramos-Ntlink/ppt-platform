@@ -15,6 +15,8 @@ import { LineaCComponent } from './linea-c/linea-c.component';
 import { MulticomplementosComponent } from '../commons/multicomplementos/multicomplementos.component';
 import { PagosFacturaComponent } from '../commons/pagos-factura/pagos-factura.component';
 import { PagosComponent } from '../commons/pagos/pagos.component';
+import { CuentasBancariasComponent } from '../commons/cuentas-bancarias/cuentas-bancarias.component';
+import { CuentaBancariaComponent } from '../commons/cuenta-bancaria/cuenta-bancaria.component';
 
 const routes: Routes = [{
   path: '',
@@ -65,6 +67,14 @@ const routes: Routes = [{
       path: 'pagos',
       component: PagosComponent,
     },
+    {
+      path: 'cuentas-bancarias',
+      component: CuentasBancariasComponent,
+    },
+    {
+      path: 'cuenta-bancaria/:empresa/:cuenta',
+      component: CuentaBancariaComponent,
+    }
   ]}];
 
 @NgModule({

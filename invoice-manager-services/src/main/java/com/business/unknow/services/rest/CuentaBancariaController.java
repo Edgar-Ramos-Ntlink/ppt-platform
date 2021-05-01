@@ -1,13 +1,12 @@
 package com.business.unknow.services.rest;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,15 +32,8 @@ public class CuentaBancariaController {
 
 	@GetMapping("/cuentas")
 	public ResponseEntity<Page<CuentaBancariaDto>> getCuentasBancariasByfilters(
-			@RequestParam(name = "empresa", defaultValue = "") String empresa,
-			@RequestParam(name = "banco", defaultValue = "") String banco,
-			@RequestParam(name = "cuenta", defaultValue = "") String cuenta,
-			@RequestParam(name = "clabe", defaultValue = "") String clabe,
-			@RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date since,
-			@RequestParam(name = "to", required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getCuentasBancariasByfilters(banco, empresa, clabe, cuenta, since, to, page, size), HttpStatus.OK);
+			@RequestParam Map<String, String> parameters) {
+		return new ResponseEntity<>(service.getCuentasBancariasByfilters(parameters), HttpStatus.OK);
 	}
 	
 	@GetMapping("/empresas/{empresa}/cuentas")

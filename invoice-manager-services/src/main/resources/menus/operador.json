@@ -38,6 +38,10 @@
      	{
 			"title": "Pagos",
 			"link": "/pages/operaciones/pagos"
+		},
+		{
+			"title": "Cuentas Bancarias",
+			"link": "/pages/tesoreria/cuentas-bancarias"
 		}
 	]
 }
