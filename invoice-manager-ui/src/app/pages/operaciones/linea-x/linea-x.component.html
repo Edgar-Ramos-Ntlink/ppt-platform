@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12" [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
-      <nb-card-header class="puff_center">Registro CFDI Linea B<span class="badge badge-primary"
+      <nb-card-header class="puff_center">Registro CFDI Linea {{LINEAEMISOR}}<span class="badge badge-primary"
           style="margin-left: 10px;" *ngIf="preFolio != '*' && factura">{{factura.statusFactura}}</span>
 
         <button type="button" *ngIf="preFolio !== '*'" class="btn btn-sm btn-outline-primary float-right"
@@ -94,7 +94,7 @@
               SOLICITAR CFDI
             </button>
           </div>
-
+          
           <div class="d-flex float-right" *ngIf="factura.idCfdi !== undefined">
             <button nbButton status="success" size="small" (click)="timbrarFactura(factura,dialog)"
               [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Por Timbrar'"

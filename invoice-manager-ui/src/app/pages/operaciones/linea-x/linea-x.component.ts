@@ -422,7 +422,6 @@ export class LineaXComponent implements OnInit {
 
   private loadConceptos() {
     this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a);
-    console.log("logggg  ");
           this.invoiceService.getComplementosInvoice(this.factura.folio)
           .pipe(
             map((facturas: Factura[]) => {
