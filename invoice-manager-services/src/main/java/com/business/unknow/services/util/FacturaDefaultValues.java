@@ -18,7 +18,7 @@ public class FacturaDefaultValues {
 
 	public void assignaDefaultsFactura(FacturaDto facturaDto, int amount) throws InvoiceManagerException {
 		facturaDto.setSaldoPendiente(facturaDto.getTotal());
-		facturaDto.setPackFacturacion(PackFacturarionEnum.SW_SAPIENS.name());
+		facturaDto.setPackFacturacion(PackFacturarionEnum.NTLINK.name());
 		facturaDto.getCfdi().setTipoCambio(
 				facturaDto.getCfdi().getTipoCambio() == null ? BigDecimal.ONE : facturaDto.getCfdi().getTipoCambio());
 		if (facturaDto.getStatusFactura() == null) {

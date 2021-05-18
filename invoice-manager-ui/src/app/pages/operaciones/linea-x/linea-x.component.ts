@@ -2,11 +2,10 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Factura } from '../../../models/factura/factura';
 import { Catalogo } from '../../../models/catalogos/catalogo';
-import { Empresa } from '../../../models/empresa';
-import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { Concepto } from '../../../models/factura/concepto';
 import { UsersData } from '../../../@core/data/users-data';
-import { Cfdi } from '../../../models/factura/cfdi';
+import { Empresa } from '../../../models/empresa';
+import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
 import { InvoicesData } from '../../../@core/data/invoices-data';
@@ -17,24 +16,24 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Client } from '../../../models/client';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { Contribuyente } from '../../../models/contribuyente';
-import { GenericPage } from '../../../models/generic-page';
 import { map } from 'rxjs/operators';
+import { GenericPage } from '../../../models/generic-page';
+import { Cfdi } from '../../../models/factura/cfdi';
 import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
 import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
-import { Pago } from '../../../models/factura/pago';
 import { PagoBase } from '../../../models/pago-base';
 import { NbDialogService } from '@nebular/theme';
 import { PaymentsData } from '../../../@core/data/payments-data';
+import { Pago } from '../../../models/factura/pago';
 import { User } from '../../../models/user';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 
-
 @Component({
-  selector: 'ngx-linea-c',
-  templateUrl: './linea-c.component.html',
-  styleUrls: ['./linea-c.component.scss']
+  selector: 'ngx-linea-x',
+  templateUrl: './linea-x.component.html',
+  styleUrls: ['./linea-x.component.scss']
 })
-export class LineaCComponent implements OnInit {
+export class LineaXComponent implements OnInit {
   public girosCat: Catalogo[] = [];
   public emisoresCat: Empresa[] = [];
   public receptoresCat: Empresa[] = [];
@@ -49,20 +48,21 @@ export class LineaCComponent implements OnInit {
 
   public complementPayTypeCat: Catalogo[] = [];
   public newConcep: Concepto;
- /*  public payment: Pago; */
+  public payment: Pago;
   public factura: Factura;
   public preFolio: string;
   public user: User;
 
+  public complementos: Factura[] = [];
 
   public pagosCfdi: Pago[] = [];
 
   public successMessage: string;
   public errorMessages: string[] = [];
   public conceptoMessages: string[] = [];
-/*   public payErrorMessages: string[] = []; */
+  public payErrorMessages: string[] = [];
 
-  public LINEAEMISOR : string = 'C';
+  public LINEAEMISOR : string = 'B';
 
   public formInfo = { emisorRfc: '*', receptorRfc: '*', giroReceptor: '*', giroEmisor: '*', lineaReceptor: 'CLIENTE', usoCfdi: '*', payType: '*',clientRfc: '*',clientName: '', companyRfc: '', giro: '*', empresa: '*'  };
 
@@ -73,10 +73,10 @@ export class LineaCComponent implements OnInit {
 
   /** PAYMENT SECCTION**/
 
-/*   public paymentForm = { coin: '*', payType: '*', bank: '*', filename: '', successPayment: false };
+  public paymentForm = { coin: '*', payType: '*', bank: '*', filename: '', successPayment: false };
   public newPayment: PagoBase;
   public invoicePayments = [];
-  public paymentSum: number = 0; */
+  public paymentSum: number = 0;
 
   //
 
@@ -91,6 +91,7 @@ export class LineaCComponent implements OnInit {
     private filesService: FilesData,
     private userService: UsersData,
     private cfdiValidator: CfdiValidatorService,
+    private paymentsService: PaymentsData,
     private downloadService: DonwloadFileService,
     private route: ActivatedRoute,
     private router: Router) { }
@@ -99,13 +100,17 @@ export class LineaCComponent implements OnInit {
     this.loading = true;
     this.userService.getUserInfo().then(user => this.user = user as User);
     this.initVariables();
- 
+    this.paymentsService.getFormasPago().subscribe(payTypes => this.complementPayTypeCat = payTypes);
     /* preloaded cats*/
     this.catalogsService.getStatusValidacion().then(cat => this.validationCat = cat);
     this.catalogsService.getAllGiros().then(cat => this.girosCat = cat)
     .then(() => {
         this.route.paramMap.subscribe(route => {
           this.preFolio = route.get('folio');
+          let linea = route.get('linea');
+
+          this.LINEAEMISOR = linea;
+
           if (this.preFolio !== '*') {
             this.getInvoiceInfoByPreFolio(this.preFolio);
           } else {
@@ -120,7 +125,7 @@ export class LineaCComponent implements OnInit {
     this.newConcep = new Concepto();
     this.factura = new Factura();
     this.conceptoMessages = [];
-    /* this.payErrorMessages = []; */
+    this.payErrorMessages = [];
     this.errorMessages = [];
    
   }
@@ -133,19 +138,19 @@ export class LineaCComponent implements OnInit {
     this.loading = false;
     this.factura.cfdi.moneda = 'MXN';
     this.factura.cfdi.metodoPago = '*';
- /*    this.payment = new Pago();
-    this.payment.formaPago = '*'; */
+    this.payment = new Pago();
+    this.payment.formaPago = '*';
     this.factura.cfdi.formaPago = '*';
     this.factura.cfdi.receptor.usoCfdi = '*';
     this.conceptoMessages = [];
-    /* this.payErrorMessages = []; */
+    this.payErrorMessages = [];
     this.loading = false;
   }
 
   public getInvoiceInfoByPreFolio(preFolio: string) {
     const idCfdi: number = +preFolio;
-    this.pagosCfdi = [];
     this.preFolio = preFolio;
+    this.pagosCfdi = [];
     this.cfdiService.getFacturaInfo(idCfdi).pipe(
       map((fac: Factura) => {
         fac.statusFactura = this.validationCat.find(v => v.id === fac.statusFactura).nombre;
@@ -349,10 +354,10 @@ export class LineaCComponent implements OnInit {
                 this.loading = false;
                 this.errorMessages.push((error.error != null && error.error != undefined) ?
                 error.error.message : `${error.statusText} : ${error.message}`);});
-    } else {
-      this.loading = false;
-      this.errorMessages.push('El cliente que solicita la factura se encuentra inactivo');
-    }});
+        }else {
+          this.loading = false;
+        }
+      });
   }
 
   public cancelarFactura(factura: Factura) {
@@ -371,7 +376,7 @@ export class LineaCComponent implements OnInit {
           this.loading = false;
           console.error(this.errorMessages); });
   }
-/* 
+
   generateComplement() {
     this.loading = true;
     this.errorMessages = [];
@@ -396,18 +401,19 @@ export class LineaCComponent implements OnInit {
     if (this.errorMessages.length === 0) {
         this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
         .subscribe(complement => {
-          this.loadConceptos();
+          this.getInvoiceInfoByPreFolio(this.preFolio);
+        //  this.loadConceptos();
         }, ( error: HttpErrorResponse) => {
           this.errorMessages.push((error.error != null && error.error !== undefined)
             ? error.error.message : `${error.statusText} : ${error.message}`);
-          this.loadConceptos();
+      //    this.loadConceptos();
           this.loading = false;
         });
       }else {
         this.loading = false;
       }
-  } */
-/* 
+  }
+
   private loadConceptos() {
     this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a);
           this.invoiceService.getComplementosInvoice(this.factura.folio)
@@ -420,6 +426,7 @@ export class LineaCComponent implements OnInit {
             })).subscribe(complementos => {
             this.factura.complementos = complementos;
             this.calculatePaymentSum(complementos);
+            this.getInvoiceInfoByPreFolio(this.preFolio);
             this.loading = false;
           });
   }
@@ -430,6 +437,6 @@ export class LineaCComponent implements OnInit {
     } else {
       this.paymentSum = complementos.map((c: Factura) => c.total).reduce((total, c) => total + c);
     }
-  } */
+  }
 
 }

@@ -41,6 +41,7 @@ export class Factura {
 		this.statusDetail = '';
 		this.lineaEmisor = 'A';
 		this.lineaRemitente = 'CLIENTE';
+		this.packFacturacion = 'NTLINK';
 		this.cfdi = new Cfdi();
 		this.complementos = [];
 	}

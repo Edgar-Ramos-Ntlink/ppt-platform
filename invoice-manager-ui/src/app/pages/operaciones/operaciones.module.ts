@@ -7,8 +7,7 @@ import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { ValidacionDevolucionComponent } from './devoluciones/validacion-devolucion/validacion-devolucion.component';
 import { DownloadCsvService } from '../../@core/util-services/download-csv.service';
 import { DonwloadFileService } from '../../@core/util-services/download-file-service';
-import { LineaBComponent } from './linea-b/linea-b.component';
-import { LineaCComponent } from './linea-c/linea-c.component';
+import { LineaXComponent } from './linea-x/linea-x.component';
 import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion-pagos.component';
 import { ValidacionPagoComponent } from '../commons/pagos/validacion-pago/validacion-pago.component';
 
@@ -19,8 +18,7 @@ import { ValidacionPagoComponent } from '../commons/pagos/validacion-pago/valida
     RevisionComponent,
     DevolucionesComponent,
     ValidacionDevolucionComponent,
-    LineaBComponent,
-    LineaCComponent],
+    LineaXComponent],
   imports: [
     OperacionesRoutingModule,
     CommonsModule,

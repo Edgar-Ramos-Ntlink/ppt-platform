@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LineaBComponent } from './linea-b.component';
+import { LineaXComponent } from './linea-x.component';
 
-describe('LineaBComponent', () => {
-  let component: LineaBComponent;
-  let fixture: ComponentFixture<LineaBComponent>;
+describe('LineaXComponent', () => {
+  let component: LineaXComponent;
+  let fixture: ComponentFixture<LineaXComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LineaBComponent ]
+      declarations: [ LineaXComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LineaBComponent);
+    fixture = TestBed.createComponent(LineaXComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

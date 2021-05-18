@@ -102,14 +102,23 @@ export class InvoiceReportsComponent implements OnInit {
         this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
         break;
       case 'operaciones':
-        if (this.filterParams.lineaEmisor === 'A') {
-          this.router.navigate([`./pages/operaciones/revision/${folio}`]);
-        } else if (this.filterParams.lineaEmisor === 'B') {
-          this.router.navigate([`./pages/operaciones/linea-b/${folio}`]);
-        } else if (this.filterParams.lineaEmisor === 'C') {
-          this.router.navigate([`./pages/operaciones/linea-c/${folio}`]);
-        } else {
-          this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
+
+        switch (this.filterParams.lineaEmisor) {
+          case 'A':
+            this.router.navigate([`./pages/operaciones/revision/${folio}`]);
+            break;
+          case 'B':
+            this.router.navigate([`./pages/operaciones/cfdi/B/${folio}`]);
+            break;
+          case 'C':
+            this.router.navigate([`./pages/operaciones/cfdi/C/${folio}`]);
+            break;
+          case 'NT':
+            this.router.navigate([`./pages/operaciones/cfdi/NT/${folio}`]);
+            break;
+          default:
+            this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
+            break;
         }
         break;
       case 'contabilidad':
