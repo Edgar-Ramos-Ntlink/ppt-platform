@@ -98,12 +98,6 @@ export class LineaXComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-
-
-    let line = this.router.url.split('/')[3];
-    console.log('Line demo'+line)
-
-
     this.userService.getUserInfo().then(user => this.user = user as User);
     this.initVariables();
     this.paymentsService.getFormasPago().subscribe(payTypes => this.complementPayTypeCat = payTypes);
