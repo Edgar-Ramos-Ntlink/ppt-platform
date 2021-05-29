@@ -7,8 +7,8 @@ import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.business.unknow.commons.builder.EmailConfigBuilder;
-import com.business.unknow.commons.util.MailHelper;
+import com.business.unknow.builder.EmailConfigBuilder;
+import com.business.unknow.services.util.helpers.MailHelper;
 import com.business.unknow.enums.LineaEmpresaEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;

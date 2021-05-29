@@ -6,7 +6,7 @@ import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.business.unknow.commons.builder.FacturaContextBuilder;
+import com.business.unknow.builder.FacturaContextBuilder;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;

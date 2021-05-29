@@ -10,7 +10,7 @@ import java.util.Optional;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-import com.business.unknow.commons.builder.PagoReportDtoBuilder;
+import com.business.unknow.builder.PagoReportDtoBuilder;
 import com.business.unknow.model.dto.PagoReportDto;
 
 /**

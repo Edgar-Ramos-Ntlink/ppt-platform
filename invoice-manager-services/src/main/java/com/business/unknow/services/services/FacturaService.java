@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.services.services.translators.RelacionadosTranslator;
-import com.business.unknow.commons.validator.FacturaValidator;
+import com.business.unknow.services.util.validators.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;

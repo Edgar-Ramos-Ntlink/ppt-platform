@@ -76,7 +76,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.business.unknow</groupId>
-			<artifactId>invoice-manager-commons</artifactId>
+			<artifactId>invoice-manager-models</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

@@ -12,8 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.unknow.commons.util.ContactoHelper;
-import com.business.unknow.commons.validator.ClienteValidator;
+import com.business.unknow.services.util.helpers.ContactoHelper;
+import com.business.unknow.services.util.validators.ClienteValidator;
 import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Client;

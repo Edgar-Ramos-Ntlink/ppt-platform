@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-import com.business.unknow.commons.builder.FacturaReportDtoBuilder;
+import com.business.unknow.builder.FacturaReportDtoBuilder;
 import com.business.unknow.model.dto.FacturaReportDto;
 
 /**
