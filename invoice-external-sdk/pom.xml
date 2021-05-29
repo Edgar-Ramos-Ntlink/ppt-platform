@@ -10,6 +10,7 @@
 	<artifactId>invoice-external-sdk</artifactId>
 
 	<properties>
+		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -21,11 +22,6 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
@@ -59,10 +55,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.10.0</version>
@@ -73,24 +65,9 @@
 			<version>19.0</version>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 			<version>2.10.0</version>
-		</dependency>
-		<dependency>
-			<groupId>mx.com.sw.services</groupId>
-			<artifactId>SW-JAVA</artifactId>
-			<version>0.0.3.4</version>
-		</dependency>
-		<dependency>
-			<groupId>mx.com.sw.services</groupId>
-			<artifactId>SW-JAVA</artifactId>
-			<version>0.0.3.4</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
@@ -126,8 +103,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 		</plugins>

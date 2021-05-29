@@ -1,6 +1,7 @@
 package com.business.unknow.rules.payments;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import org.jeasy.rules.annotation.Action;
@@ -26,7 +27,7 @@ public class PaymentAmountValidationRule {
 			@Fact("facturas") List<FacturaDto> facturas) {
 		if(facturas!=null && currentPayment!=null) {
 			BigDecimal total = currentPayment.getFacturas().stream().map(PagoFacturaDto:: getMonto).reduce(BigDecimal.ZERO,(p1,p2)->p1.add(p2));
-			return total.subtract(currentPayment.getMonto()).setScale(1, BigDecimal.ROUND_DOWN).compareTo(BigDecimal.ZERO)!=0;
+			return total.subtract(currentPayment.getMonto()).setScale(1, RoundingMode.DOWN).compareTo(BigDecimal.ZERO)!=0;
 		}else {
 			log.error("One or more missing facts on {} rule",PaymentAmountValidationRule.class.getName());
 			return true;
