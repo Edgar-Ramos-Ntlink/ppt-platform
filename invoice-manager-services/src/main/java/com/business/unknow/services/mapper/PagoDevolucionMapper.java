@@ -10,11 +10,9 @@ import com.business.unknow.services.entities.PagoDevolucion;
 @Mapper
 public interface PagoDevolucionMapper {
 
-	public PagoDevolucionDto getPagoDevolucionDtoFromEntity(PagoDevolucion pagoDevolucion);
+	PagoDevolucionDto getPagoDevolucionDtoFromEntity(PagoDevolucion pagoDevolucion);
 
-	public List<PagoDevolucionDto> getPagoDevolucionesDtoFromEntities(List<PagoDevolucion> pagoDevoluciones);
+	List<PagoDevolucionDto> getPagoDevolucionesDtoFromEntities(List<PagoDevolucion> pagoDevoluciones);
 
-	public PagoDevolucion getEntityFromPagoDevolucionDto(PagoDevolucionDto pagoDevolucion);
-
-	public List<PagoDevolucion> getEntitiesFromDtos(List<PagoDevolucionDto> pagoDevoluciones);
+	PagoDevolucion getEntityFromPagoDevolucionDto(PagoDevolucionDto pagoDevolucion);
 }

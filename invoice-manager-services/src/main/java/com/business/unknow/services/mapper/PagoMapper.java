@@ -21,12 +21,11 @@ import com.business.unknow.services.entities.PagoFactura;
 public interface PagoMapper {
 	
 	
-	public PagoDto getPagoDtoFromEntity(Pago pago);
-	public List<PagoDto> getPagosDtoFromEntities(List<Pago> pagos);
+	PagoDto getPagoDtoFromEntity(Pago pago);
+	List<PagoDto> getPagosDtoFromEntities(List<Pago> pagos);
 	
 	@Mapping(target = "facturas", ignore = true)
-	public Pago getEntityFromPagoDto(PagoDto pago);
-	public List<Pago> getEntitiesFromDtos(List<PagoDto> pagos);
+	Pago getEntityFromPagoDto(PagoDto pago);
 	
 	
 	public PagoFacturaDto getPagoFacturaDtoFromEntity(PagoFactura pago);

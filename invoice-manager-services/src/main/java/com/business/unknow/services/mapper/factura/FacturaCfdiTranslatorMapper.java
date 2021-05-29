@@ -43,7 +43,7 @@ public interface FacturaCfdiTranslatorMapper {
 			@Mapping(source = "empresaDto.noCertificado", target = "noCertificado"),
 			@Mapping(source = "facturaDto.cfdi.sello", target = "sello"),
 			@Mapping(source = "empresaDto.informacionFiscal.cp", target = "lugarExpedicion")})
-	public Cfdi cdfiRootInfo(FacturaDto facturaDto, EmpresaDto empresaDto);
+	Cfdi cdfiRootInfo(FacturaDto facturaDto, EmpresaDto empresaDto);
 
 	@Mappings({ @Mapping(source = "cfdiDto.folio", target = "folio"),
 			@Mapping(source = "cfdiDto.emisor.rfc", target = "emisor.rfc"),
@@ -66,14 +66,14 @@ public interface FacturaCfdiTranslatorMapper {
 			@Mapping(target = "metodoPago", ignore = true),
 			@Mapping(target = "descuento", ignore = true),
 			@Mapping(source = "cfdiDto.version", target = "version"), @Mapping(target = "conceptos", ignore = true) })
-	public Cfdi complementoRootInfo(CfdiDto cfdiDto, EmpresaDto empresaDto);
+	Cfdi complementoRootInfo(CfdiDto cfdiDto, EmpresaDto empresaDto);
 
 	@Mappings({ @Mapping(target = "impuestos", ignore = true), @Mapping(source = "cantidad", target = "cantidad"),
 			@Mapping(source = "claveProdServ", target = "claveProdServ"),
 			@Mapping(source = "descripcion", target = "descripcion"),
 			@Mapping(source = "claveUnidad", target = "claveUnidad"), @Mapping(source = "importe", target = "importe"),
 			@Mapping(source = "valorUnitario", target = "valorUnitario") })
-	public Concepto complementoConcepto(ConceptoDto dto);
+	Concepto complementoConcepto(ConceptoDto dto);
 
 	@Mappings({
 			@Mapping(target = "folio", source = "cfdiPago.folio"),
@@ -85,15 +85,15 @@ public interface FacturaCfdiTranslatorMapper {
 			@Mapping(target = "monedaDR", source = "cfdiPago.monedaDr"),
 			@Mapping(target = "numParcialidad", source = "cfdiPago.numeroParcialidad"),
 			@Mapping(target = "serie", source = "cfdiPago.serie") })
-	public ComplementoDocRelacionado complementoComponente(CfdiPagoDto cfdiPago);
+	ComplementoDocRelacionado complementoComponente(CfdiPagoDto cfdiPago);
 
 	@Mappings({ @Mapping(target = "impuestos", ignore = true) })
-	public Concepto cfdiConcepto(ConceptoDto dto);
+	Concepto cfdiConcepto(ConceptoDto dto);
 
-	public Translado cfdiImpuesto(ImpuestoDto dto);
+	Translado cfdiImpuesto(ImpuestoDto dto);
 	
-	public Retencion cfdiRetencion(RetencionDto dto);
+	Retencion cfdiRetencion(RetencionDto dto);
 
-	public Translado cfdiImpuestoGlobal(ImpuestoDto dto);
+	Translado cfdiImpuestoGlobal(ImpuestoDto dto);
 
 }

@@ -17,12 +17,4 @@ public interface FacturaMapper {
 	List<FacturaDto> getFacturaDtosFromEntities(List<Factura> entities);
 
 	Factura getEntityFromFacturaDto(FacturaDto dto);
-	List<Factura> getEntitiesFromFacturaDtos(List<FacturaDto> dto);
-	
-	Pago getEntityFromPagoDto(PagoDto dto);
-	
-	PagoDto getPagoDtoFromEntity(Pago dto);
-	List<PagoDto> getPagosDtoFromEntity(List<Pago> dto);
-
-
 }
