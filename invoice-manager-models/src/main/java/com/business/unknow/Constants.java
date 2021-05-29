@@ -32,7 +32,7 @@ public class Constants {
 		public static final String UNIX_CONSTANT = "k";
 		public static final String SYSTEM_CODIFICATION = "UTF-8";
 
-		public static final String CADENA_ORIGINAL = "src/main/resources/factura-xslt/cadenaoriginal_3_3.xslt";
+		public static final String CADENA_ORIGINAL = "invoice-manager-services/src/main/resources/factura-xslt/cadenaoriginal_3_3.xslt";
 		public static final String FACTURA_DUMMY = "src/main/resources/factura-xslt/factura_dummy.txt";
 	}
 
