@@ -2,7 +2,6 @@ package com.business.unknow.services.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,7 +16,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -27,247 +25,280 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "EMPRESAS")
 public class Empresa implements Serializable {
 
-	private static final long serialVersionUID = 8251482734350985993L;
+  private static final long serialVersionUID = 8251482734350985993L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_EMPRESA")
-	private int id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID_EMPRESA")
+  private int id;
 
-	@Column(name = "REGIMEN_FISCAL")
-	private String regimenFiscal;
+  @Column(name = "REGIMEN_FISCAL")
+  private String regimenFiscal;
 
-	@Column(name = "REFERENCIA")
-	private String referencia;
+  @Column(name = "REFERENCIA")
+  private String referencia;
 
-	@Column(name = "CONTACTO_ADMIN")
-	private String contactoAdmin;
+  @Column(name = "CONTACTO_ADMIN")
+  private String contactoAdmin;
 
-	@Basic(optional = false)
-	@Column(name = "SUCURSAL")
-	private String sucursal;
+  @Basic(optional = false)
+  @Column(name = "SUCURSAL")
+  private String sucursal;
 
-	@Basic(optional = false)
-	@Column(name = "LUGAR_EXPEDICION")
-	private String lugarExpedicion;
+  @Basic(optional = false)
+  @Column(name = "LUGAR_EXPEDICION")
+  private String lugarExpedicion;
 
-	@Column(name = "NO_CERTIFICADO")
-	private String noCertificado;
+  @Column(name = "NO_CERTIFICADO")
+  private String noCertificado;
 
-	@Column(name = "PW_SAT")
-	private String pwSat;
+  @Column(name = "PW_SAT")
+  private String pwSat;
 
-	@Column(name = "PW_CORREO")
-	private String pwCorreo;
+  @Column(name = "PW_CORREO")
+  private String pwCorreo;
 
-	@Column(name = "WEB")
-	private String web;
+  @Column(name = "WEB")
+  private String web;
 
-	@Email
-	@Column(name = "CORREO")
-	private String correo;
+  @Email
+  @Column(name = "CORREO")
+  private String correo;
 
-	@Column(name = "ENCABEZADO")
-	private String encabezado;
+  @Column(name = "ENCABEZADO")
+  private String encabezado;
 
-	@Column(name = "PIE_DE_PAGINA")
-	private String piePagina;
+  @Column(name = "PIE_DE_PAGINA")
+  private String piePagina;
 
-	@Column(name = "ACTIVO")
-	private Boolean activo;
+  @Column(name = "ACTIVO")
+  private Boolean activo;
 
-	@Column(name = "LINEA")
-	private String tipo;
+  @Column(name = "LINEA")
+  private String tipo;
 
-	@Column(name = "DOMINIO_CORREO")
-	private String dominioCorreo;
+  @Column(name = "DOMINIO_CORREO")
+  private String dominioCorreo;
 
-	@Column(name = "GIRO_ID")
-	private Integer giro;
+  @Column(name = "GIRO_ID")
+  private Integer giro;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
-	@Column(name = "FECHA_CREACION")
-	private Date fechaCreacion;
+  @Temporal(TemporalType.TIMESTAMP)
+  @CreatedDate
+  @Column(name = "FECHA_CREACION")
+  private Date fechaCreacion;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
-	@Column(name = "FECHA_ACTUALIZACION")
-	private Date fechaActualizacion;
+  @Temporal(TemporalType.TIMESTAMP)
+  @LastModifiedDate
+  @Column(name = "FECHA_ACTUALIZACION")
+  private Date fechaActualizacion;
 
-	@OneToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "RFC", referencedColumnName = "RFC")
-	private Contribuyente informacionFiscal;
+  @OneToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "RFC", referencedColumnName = "RFC")
+  private Contribuyente informacionFiscal;
 
-	public int getId() {
-		return id;
-	}
+  public int getId() {
+    return id;
+  }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  public void setId(int id) {
+    this.id = id;
+  }
 
-	public String getRegimenFiscal() {
-		return regimenFiscal;
-	}
+  public String getRegimenFiscal() {
+    return regimenFiscal;
+  }
 
-	public void setRegimenFiscal(String regimenFiscal) {
-		this.regimenFiscal = regimenFiscal;
-	}
+  public void setRegimenFiscal(String regimenFiscal) {
+    this.regimenFiscal = regimenFiscal;
+  }
 
-	public String getReferencia() {
-		return referencia;
-	}
+  public String getReferencia() {
+    return referencia;
+  }
 
-	public void setReferencia(String referencia) {
-		this.referencia = referencia;
-	}
+  public void setReferencia(String referencia) {
+    this.referencia = referencia;
+  }
 
-	public String getContactoAdmin() {
-		return contactoAdmin;
-	}
+  public String getContactoAdmin() {
+    return contactoAdmin;
+  }
 
-	public void setContactoAdmin(String contactoAdmin) {
-		this.contactoAdmin = contactoAdmin;
-	}
+  public void setContactoAdmin(String contactoAdmin) {
+    this.contactoAdmin = contactoAdmin;
+  }
 
-	public String getSucursal() {
-		return sucursal;
-	}
+  public String getSucursal() {
+    return sucursal;
+  }
 
-	public void setSucursal(String sucursal) {
-		this.sucursal = sucursal;
-	}
+  public void setSucursal(String sucursal) {
+    this.sucursal = sucursal;
+  }
 
-	public String getLugarExpedicion() {
-		return lugarExpedicion;
-	}
+  public String getLugarExpedicion() {
+    return lugarExpedicion;
+  }
 
-	public void setLugarExpedicion(String lugarExpedicion) {
-		this.lugarExpedicion = lugarExpedicion;
-	}
+  public void setLugarExpedicion(String lugarExpedicion) {
+    this.lugarExpedicion = lugarExpedicion;
+  }
 
-	public String getNoCertificado() {
-		return noCertificado;
-	}
+  public String getNoCertificado() {
+    return noCertificado;
+  }
 
-	public void setNoCertificado(String noCertificado) {
-		this.noCertificado = noCertificado;
-	}
+  public void setNoCertificado(String noCertificado) {
+    this.noCertificado = noCertificado;
+  }
 
-	public String getPwSat() {
-		return pwSat;
-	}
+  public String getPwSat() {
+    return pwSat;
+  }
 
-	public void setPwSat(String pwSat) {
-		this.pwSat = pwSat;
-	}
+  public void setPwSat(String pwSat) {
+    this.pwSat = pwSat;
+  }
 
-	public String getPwCorreo() {
-		return pwCorreo;
-	}
+  public String getPwCorreo() {
+    return pwCorreo;
+  }
 
-	public void setPwCorreo(String pwCorreo) {
-		this.pwCorreo = pwCorreo;
-	}
+  public void setPwCorreo(String pwCorreo) {
+    this.pwCorreo = pwCorreo;
+  }
 
-	public String getWeb() {
-		return web;
-	}
+  public String getWeb() {
+    return web;
+  }
 
-	public void setWeb(String web) {
-		this.web = web;
-	}
+  public void setWeb(String web) {
+    this.web = web;
+  }
 
-	public String getCorreo() {
-		return correo;
-	}
+  public String getCorreo() {
+    return correo;
+  }
 
-	public void setCorreo(String correo) {
-		this.correo = correo;
-	}
+  public void setCorreo(String correo) {
+    this.correo = correo;
+  }
 
-	public String getEncabezado() {
-		return encabezado;
-	}
+  public String getEncabezado() {
+    return encabezado;
+  }
 
-	public void setEncabezado(String encabezado) {
-		this.encabezado = encabezado;
-	}
+  public void setEncabezado(String encabezado) {
+    this.encabezado = encabezado;
+  }
 
-	public String getPiePagina() {
-		return piePagina;
-	}
+  public String getPiePagina() {
+    return piePagina;
+  }
 
-	public void setPiePagina(String piePagina) {
-		this.piePagina = piePagina;
-	}
+  public void setPiePagina(String piePagina) {
+    this.piePagina = piePagina;
+  }
 
-	public Boolean getActivo() {
-		return activo;
-	}
+  public Boolean getActivo() {
+    return activo;
+  }
 
-	public void setActivo(Boolean activo) {
-		this.activo = activo;
-	}
+  public void setActivo(Boolean activo) {
+    this.activo = activo;
+  }
 
-	public String getTipo() {
-		return tipo;
-	}
+  public String getTipo() {
+    return tipo;
+  }
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
+  public void setTipo(String tipo) {
+    this.tipo = tipo;
+  }
 
-	public Integer getGiro() {
-		return giro;
-	}
+  public Integer getGiro() {
+    return giro;
+  }
 
-	public void setGiro(Integer giro) {
-		this.giro = giro;
-	}
+  public void setGiro(Integer giro) {
+    this.giro = giro;
+  }
 
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
+  public Date getFechaCreacion() {
+    return fechaCreacion;
+  }
 
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
+  public void setFechaCreacion(Date fechaCreacion) {
+    this.fechaCreacion = fechaCreacion;
+  }
 
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
+  public Date getFechaActualizacion() {
+    return fechaActualizacion;
+  }
 
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
+  public void setFechaActualizacion(Date fechaActualizacion) {
+    this.fechaActualizacion = fechaActualizacion;
+  }
 
-	public Contribuyente getInformacionFiscal() {
-		return informacionFiscal;
-	}
+  public Contribuyente getInformacionFiscal() {
+    return informacionFiscal;
+  }
 
-	public void setInformacionFiscal(Contribuyente informacionFiscal) {
-		this.informacionFiscal = informacionFiscal;
-	}
+  public void setInformacionFiscal(Contribuyente informacionFiscal) {
+    this.informacionFiscal = informacionFiscal;
+  }
 
-	public String getDominioCorreo() {
-		return dominioCorreo;
-	}
+  public String getDominioCorreo() {
+    return dominioCorreo;
+  }
 
-	public void setDominioCorreo(String dominioCorreo) {
-		this.dominioCorreo = dominioCorreo;
-	}
+  public void setDominioCorreo(String dominioCorreo) {
+    this.dominioCorreo = dominioCorreo;
+  }
 
-	@Override
-	public String toString() {
-		return "Empresa [id=" + id + ", regimenFiscal=" + regimenFiscal + ", referencia=" + referencia
-				+ ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal + ", lugarExpedicion=" + lugarExpedicion
-				+ ", noCertificado=" + noCertificado + ", pwSat=" + pwSat + ", pwCorreo=" + pwCorreo + ", web=" + web
-				+ ", correo=" + correo + ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo="
-				+ activo + ", tipo=" + tipo + ", dominioCorreo=" + dominioCorreo + ", giro=" + giro + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal="
-				+ informacionFiscal + "]";
-	}
-
+  @Override
+  public String toString() {
+    return "Empresa [id="
+        + id
+        + ", regimenFiscal="
+        + regimenFiscal
+        + ", referencia="
+        + referencia
+        + ", contactoAdmin="
+        + contactoAdmin
+        + ", sucursal="
+        + sucursal
+        + ", lugarExpedicion="
+        + lugarExpedicion
+        + ", noCertificado="
+        + noCertificado
+        + ", pwSat="
+        + pwSat
+        + ", pwCorreo="
+        + pwCorreo
+        + ", web="
+        + web
+        + ", correo="
+        + correo
+        + ", encabezado="
+        + encabezado
+        + ", piePagina="
+        + piePagina
+        + ", activo="
+        + activo
+        + ", tipo="
+        + tipo
+        + ", dominioCorreo="
+        + dominioCorreo
+        + ", giro="
+        + giro
+        + ", fechaCreacion="
+        + fechaCreacion
+        + ", fechaActualizacion="
+        + fechaActualizacion
+        + ", informacionFiscal="
+        + informacionFiscal
+        + "]";
+  }
 }

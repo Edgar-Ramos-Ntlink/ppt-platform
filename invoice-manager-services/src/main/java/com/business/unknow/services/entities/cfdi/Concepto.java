@@ -18,171 +18,193 @@ import javax.persistence.Table;
 @Table(name = "CFDI_CONCEPTOS")
 public class Concepto implements Serializable {
 
-	private static final long serialVersionUID = -1917092984790590992L;
+  private static final long serialVersionUID = -1917092984790590992L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CONCEPTO")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID_CONCEPTO")
+  private Integer id;
 
-	@Column(name = "CLAVE_PROD_SERV")
-	private String claveProdServ;
-	
-	@Column(name = "DESCRIPCION_CLAVE_UNIDAD")
-	private String descripcionCUPS;
+  @Column(name = "CLAVE_PROD_SERV")
+  private String claveProdServ;
 
-	@Column(name = "NO_IDENTIFICACION")
-	private String noIdentificacion;
+  @Column(name = "DESCRIPCION_CLAVE_UNIDAD")
+  private String descripcionCUPS;
 
-	@Column(name = "CANTIDAD")
-	private BigDecimal cantidad;
+  @Column(name = "NO_IDENTIFICACION")
+  private String noIdentificacion;
 
-	@Column(name = "CLAVE_UNIDAD")
-	private String claveUnidad;
+  @Column(name = "CANTIDAD")
+  private BigDecimal cantidad;
 
-	@Column(name = "UNIDAD")
-	private String unidad;
+  @Column(name = "CLAVE_UNIDAD")
+  private String claveUnidad;
 
-	@Column(name = "DESCRIPCION")
-	private String descripcion;
+  @Column(name = "UNIDAD")
+  private String unidad;
 
-	@Column(name = "VALOR_UNITARIO")
-	private BigDecimal valorUnitario;
+  @Column(name = "DESCRIPCION")
+  private String descripcion;
 
-	@Column(name = "IMPORTE")
-	private BigDecimal importe;
+  @Column(name = "VALOR_UNITARIO")
+  private BigDecimal valorUnitario;
 
-	@Column(name = "DESCUENTO")
-	private BigDecimal descuento;
+  @Column(name = "IMPORTE")
+  private BigDecimal importe;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "ID_CFDI", nullable = false)
-	private Cfdi cfdi;
+  @Column(name = "DESCUENTO")
+  private BigDecimal descuento;
 
-	@OneToMany(mappedBy = "concepto")
-	private List<Impuesto> impuestos;
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "ID_CFDI", nullable = false)
+  private Cfdi cfdi;
 
-	@OneToMany(mappedBy = "concepto")
-	private List<Retencion> retenciones;
+  @OneToMany(mappedBy = "concepto")
+  private List<Impuesto> impuestos;
 
-	public Integer getId() {
-		return id;
-	}
+  @OneToMany(mappedBy = "concepto")
+  private List<Retencion> retenciones;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public String getNoIdentificacion() {
-		return noIdentificacion;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public void setNoIdentificacion(String noIdentificacion) {
-		this.noIdentificacion = noIdentificacion;
-	}
+  public String getNoIdentificacion() {
+    return noIdentificacion;
+  }
 
-	public BigDecimal getCantidad() {
-		return cantidad;
-	}
+  public void setNoIdentificacion(String noIdentificacion) {
+    this.noIdentificacion = noIdentificacion;
+  }
 
-	public void setCantidad(BigDecimal cantidad) {
-		this.cantidad = cantidad;
-	}
+  public BigDecimal getCantidad() {
+    return cantidad;
+  }
 
-	public String getDescripcionCUPS() {
-		return descripcionCUPS;
-	}
+  public void setCantidad(BigDecimal cantidad) {
+    this.cantidad = cantidad;
+  }
 
-	public void setDescripcionCUPS(String descripcionCUPS) {
-		this.descripcionCUPS = descripcionCUPS;
-	}
+  public String getDescripcionCUPS() {
+    return descripcionCUPS;
+  }
 
-	public String getClaveUnidad() {
-		return claveUnidad;
-	}
+  public void setDescripcionCUPS(String descripcionCUPS) {
+    this.descripcionCUPS = descripcionCUPS;
+  }
 
-	public void setClaveUnidad(String claveUnidad) {
-		this.claveUnidad = claveUnidad;
-	}
+  public String getClaveUnidad() {
+    return claveUnidad;
+  }
 
-	public String getUnidad() {
-		return unidad;
-	}
+  public void setClaveUnidad(String claveUnidad) {
+    this.claveUnidad = claveUnidad;
+  }
 
-	public void setUnidad(String unidad) {
-		this.unidad = unidad;
-	}
+  public String getUnidad() {
+    return unidad;
+  }
 
-	public String getDescripcion() {
-		return descripcion;
-	}
+  public void setUnidad(String unidad) {
+    this.unidad = unidad;
+  }
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-	
-	public BigDecimal getValorUnitario() {
-		return valorUnitario;
-	}
+  public String getDescripcion() {
+    return descripcion;
+  }
 
-	public void setValorUnitario(BigDecimal valorUnitario) {
-		this.valorUnitario = valorUnitario;
-	}
+  public void setDescripcion(String descripcion) {
+    this.descripcion = descripcion;
+  }
 
-	public BigDecimal getImporte() {
-		return importe;
-	}
+  public BigDecimal getValorUnitario() {
+    return valorUnitario;
+  }
 
-	public void setImporte(BigDecimal importe) {
-		this.importe = importe;
-	}
+  public void setValorUnitario(BigDecimal valorUnitario) {
+    this.valorUnitario = valorUnitario;
+  }
 
-	public BigDecimal getDescuento() {
-		return descuento;
-	}
+  public BigDecimal getImporte() {
+    return importe;
+  }
 
-	public void setDescuento(BigDecimal descuento) {
-		this.descuento = descuento;
-	}
+  public void setImporte(BigDecimal importe) {
+    this.importe = importe;
+  }
 
-	public String getClaveProdServ() {
-		return claveProdServ;
-	}
+  public BigDecimal getDescuento() {
+    return descuento;
+  }
 
-	public void setClaveProdServ(String claveProdServ) {
-		this.claveProdServ = claveProdServ;
-	}
-	
-	public Cfdi getCfdi() {
-		return cfdi;
-	}
+  public void setDescuento(BigDecimal descuento) {
+    this.descuento = descuento;
+  }
 
-	public void setCfdi(Cfdi cfdi) {
-		this.cfdi = cfdi;
-	}
+  public String getClaveProdServ() {
+    return claveProdServ;
+  }
 
-	public List<Impuesto> getImpuestos() {
-		return impuestos;
-	}
+  public void setClaveProdServ(String claveProdServ) {
+    this.claveProdServ = claveProdServ;
+  }
 
-	public void setImpuestos(List<Impuesto> impuestos) {
-		this.impuestos = impuestos;
-	}
+  public Cfdi getCfdi() {
+    return cfdi;
+  }
 
-	public List<Retencion> getRetenciones() {
-		return retenciones;
-	}
+  public void setCfdi(Cfdi cfdi) {
+    this.cfdi = cfdi;
+  }
 
-	public void setRetenciones(List<Retencion> retenciones) {
-		this.retenciones = retenciones;
-	}
+  public List<Impuesto> getImpuestos() {
+    return impuestos;
+  }
 
-	@Override
-	public String toString() {
-		return "Concepto [id=" + id + ", claveProdServ=" + claveProdServ + ", noIdentificacion=" + noIdentificacion
-				+ ", cantidad=" + cantidad + ", claveUnidad=" + claveUnidad + ", unidad=" + unidad + ", descripcion="
-				+ descripcion + ", valorUnitario=" + valorUnitario + ", importe=" + importe + ", descuento=" + descuento
-				+ ", cfdi=" + cfdi + ", impuestos=" + impuestos + ", retenciones=" + retenciones + "]";
-	}
+  public void setImpuestos(List<Impuesto> impuestos) {
+    this.impuestos = impuestos;
+  }
 
+  public List<Retencion> getRetenciones() {
+    return retenciones;
+  }
+
+  public void setRetenciones(List<Retencion> retenciones) {
+    this.retenciones = retenciones;
+  }
+
+  @Override
+  public String toString() {
+    return "Concepto [id="
+        + id
+        + ", claveProdServ="
+        + claveProdServ
+        + ", noIdentificacion="
+        + noIdentificacion
+        + ", cantidad="
+        + cantidad
+        + ", claveUnidad="
+        + claveUnidad
+        + ", unidad="
+        + unidad
+        + ", descripcion="
+        + descripcion
+        + ", valorUnitario="
+        + valorUnitario
+        + ", importe="
+        + importe
+        + ", descuento="
+        + descuento
+        + ", cfdi="
+        + cfdi
+        + ", impuestos="
+        + impuestos
+        + ", retenciones="
+        + retenciones
+        + "]";
+  }
 }

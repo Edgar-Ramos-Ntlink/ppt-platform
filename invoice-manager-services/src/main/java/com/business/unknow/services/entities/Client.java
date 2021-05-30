@@ -3,7 +3,6 @@ package com.business.unknow.services.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +20,6 @@ import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -31,153 +29,170 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "CLIENTES")
 public class Client implements Serializable {
 
-	private static final long serialVersionUID = -491025321146807933L;
+  private static final long serialVersionUID = -491025321146807933L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CLIENTE")
-	private int id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID_CLIENTE")
+  private int id;
 
-	@NotNull
-	@Column(name = "ACTIVO")
-	private Boolean activo;
+  @NotNull
+  @Column(name = "ACTIVO")
+  private Boolean activo;
 
-	@NotEmpty
-	@Column(name = "CORREO_PROMOTOR")
-	private String correoPromotor;
+  @NotEmpty
+  @Column(name = "CORREO_PROMOTOR")
+  private String correoPromotor;
 
-	@Column(name = "CORREO_CONTACTO")
-	private String correoContacto;
+  @Column(name = "CORREO_CONTACTO")
+  private String correoContacto;
 
-	@DecimalMin("0.00")
-	@DecimalMax("16.00")
-	@Column(name = "PORCENTAJE_PROMOTOR")
-	private BigDecimal porcentajePromotor;
+  @DecimalMin("0.00")
+  @DecimalMax("16.00")
+  @Column(name = "PORCENTAJE_PROMOTOR")
+  private BigDecimal porcentajePromotor;
 
-	@DecimalMin("0.00")
-	@DecimalMax("16.00")
-	@Column(name = "PORCENTAJE_CLIENTE")
-	private BigDecimal porcentajeCliente;
+  @DecimalMin("0.00")
+  @DecimalMax("16.00")
+  @Column(name = "PORCENTAJE_CLIENTE")
+  private BigDecimal porcentajeCliente;
 
-	@DecimalMin("0.00")
-	@DecimalMax("16.00")
-	@Column(name = "PORCENTAJE_DESPACHO")
-	private BigDecimal porcentajeDespacho;
+  @DecimalMin("0.00")
+  @DecimalMax("16.00")
+  @Column(name = "PORCENTAJE_DESPACHO")
+  private BigDecimal porcentajeDespacho;
 
-	@DecimalMin("0.00")
-	@DecimalMax("16.00")
-	@Column(name = "PORCENTAJE_CONTACTO")
-	private BigDecimal porcentajeContacto;
+  @DecimalMin("0.00")
+  @DecimalMax("16.00")
+  @Column(name = "PORCENTAJE_CONTACTO")
+  private BigDecimal porcentajeContacto;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
-	@Column(name = "FECHA_CREACION")
-	private Date fechaCreacion;
+  @Temporal(TemporalType.TIMESTAMP)
+  @CreatedDate
+  @Column(name = "FECHA_CREACION")
+  private Date fechaCreacion;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
-	@Column(name = "FECHA_ACTUALIZACION")
-	private Date fechaActualizacion;
+  @Temporal(TemporalType.TIMESTAMP)
+  @LastModifiedDate
+  @Column(name = "FECHA_ACTUALIZACION")
+  private Date fechaActualizacion;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "RFC", referencedColumnName = "RFC")
-	private Contribuyente informacionFiscal;
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinColumn(name = "RFC", referencedColumnName = "RFC")
+  private Contribuyente informacionFiscal;
 
-	public int getId() {
-		return id;
-	}
+  public int getId() {
+    return id;
+  }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  public void setId(int id) {
+    this.id = id;
+  }
 
-	public Boolean getActivo() {
-		return activo;
-	}
+  public Boolean getActivo() {
+    return activo;
+  }
 
-	public void setActivo(Boolean activo) {
-		this.activo = activo;
-	}
+  public void setActivo(Boolean activo) {
+    this.activo = activo;
+  }
 
-	public String getCorreoPromotor() {
-		return correoPromotor;
-	}
+  public String getCorreoPromotor() {
+    return correoPromotor;
+  }
 
-	public void setCorreoPromotor(String correoPromotor) {
-		this.correoPromotor = correoPromotor;
-	}
+  public void setCorreoPromotor(String correoPromotor) {
+    this.correoPromotor = correoPromotor;
+  }
 
-	public String getCorreoContacto() {
-		return correoContacto;
-	}
+  public String getCorreoContacto() {
+    return correoContacto;
+  }
 
-	public void setCorreoContacto(String correoContacto) {
-		this.correoContacto = correoContacto;
-	}
+  public void setCorreoContacto(String correoContacto) {
+    this.correoContacto = correoContacto;
+  }
 
-	public BigDecimal getPorcentajePromotor() {
-		return porcentajePromotor;
-	}
+  public BigDecimal getPorcentajePromotor() {
+    return porcentajePromotor;
+  }
 
-	public void setPorcentajePromotor(BigDecimal porcentajePromotor) {
-		this.porcentajePromotor = porcentajePromotor;
-	}
+  public void setPorcentajePromotor(BigDecimal porcentajePromotor) {
+    this.porcentajePromotor = porcentajePromotor;
+  }
 
-	public BigDecimal getPorcentajeCliente() {
-		return porcentajeCliente;
-	}
+  public BigDecimal getPorcentajeCliente() {
+    return porcentajeCliente;
+  }
 
-	public void setPorcentajeCliente(BigDecimal porcentajeCliente) {
-		this.porcentajeCliente = porcentajeCliente;
-	}
+  public void setPorcentajeCliente(BigDecimal porcentajeCliente) {
+    this.porcentajeCliente = porcentajeCliente;
+  }
 
-	public BigDecimal getPorcentajeDespacho() {
-		return porcentajeDespacho;
-	}
+  public BigDecimal getPorcentajeDespacho() {
+    return porcentajeDespacho;
+  }
 
-	public void setPorcentajeDespacho(BigDecimal porcentajeDespacho) {
-		this.porcentajeDespacho = porcentajeDespacho;
-	}
+  public void setPorcentajeDespacho(BigDecimal porcentajeDespacho) {
+    this.porcentajeDespacho = porcentajeDespacho;
+  }
 
-	public BigDecimal getPorcentajeContacto() {
-		return porcentajeContacto;
-	}
+  public BigDecimal getPorcentajeContacto() {
+    return porcentajeContacto;
+  }
 
-	public void setPorcentajeContacto(BigDecimal porcentajeContacto) {
-		this.porcentajeContacto = porcentajeContacto;
-	}
+  public void setPorcentajeContacto(BigDecimal porcentajeContacto) {
+    this.porcentajeContacto = porcentajeContacto;
+  }
 
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
+  public Date getFechaCreacion() {
+    return fechaCreacion;
+  }
 
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
+  public void setFechaCreacion(Date fechaCreacion) {
+    this.fechaCreacion = fechaCreacion;
+  }
 
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
+  public Date getFechaActualizacion() {
+    return fechaActualizacion;
+  }
 
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
+  public void setFechaActualizacion(Date fechaActualizacion) {
+    this.fechaActualizacion = fechaActualizacion;
+  }
 
-	public Contribuyente getInformacionFiscal() {
-		return informacionFiscal;
-	}
+  public Contribuyente getInformacionFiscal() {
+    return informacionFiscal;
+  }
 
-	public void setInformacionFiscal(Contribuyente informacionFiscal) {
-		this.informacionFiscal = informacionFiscal;
-	}
+  public void setInformacionFiscal(Contribuyente informacionFiscal) {
+    this.informacionFiscal = informacionFiscal;
+  }
 
-	@Override
-	public String toString() {
-		return "Client [id=" + id + ", activo=" + activo + ", correoPromotor=" + correoPromotor + ", correoContacto="
-				+ correoContacto + ", porcentajePromotor=" + porcentajePromotor + ", porcentajeCliente="
-				+ porcentajeCliente + ", porcentajeDespacho=" + porcentajeDespacho + ", porcentajeContacto="
-				+ porcentajeContacto + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ ", informacionFiscal=" + informacionFiscal + "]";
-	}
-
+  @Override
+  public String toString() {
+    return "Client [id="
+        + id
+        + ", activo="
+        + activo
+        + ", correoPromotor="
+        + correoPromotor
+        + ", correoContacto="
+        + correoContacto
+        + ", porcentajePromotor="
+        + porcentajePromotor
+        + ", porcentajeCliente="
+        + porcentajeCliente
+        + ", porcentajeDespacho="
+        + porcentajeDespacho
+        + ", porcentajeContacto="
+        + porcentajeContacto
+        + ", fechaCreacion="
+        + fechaCreacion
+        + ", fechaActualizacion="
+        + fechaActualizacion
+        + ", informacionFiscal="
+        + informacionFiscal
+        + "]";
+  }
 }

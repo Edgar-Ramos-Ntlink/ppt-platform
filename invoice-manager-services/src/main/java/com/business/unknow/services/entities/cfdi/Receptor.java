@@ -1,7 +1,6 @@
 package com.business.unknow.services.entities.cfdi;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,80 +14,79 @@ import javax.persistence.Table;
 @Table(name = "CFDI_RECEPTORES")
 public class Receptor implements Serializable {
 
-	private static final long serialVersionUID = 4815637463468040210L;
+  private static final long serialVersionUID = 4815637463468040210L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CFDI_RECEPTOR")
-	private int id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID_CFDI_RECEPTOR")
+  private int id;
 
-	@Column(name = "RFC")
-	private String rfc;
+  @Column(name = "RFC")
+  private String rfc;
 
-	@Column(name = "NOMBRE")
-	private String nombre;
+  @Column(name = "NOMBRE")
+  private String nombre;
 
-	@Column(name = "USO_CFDI")
-	private String usoCfdi;
-	
-	@Column(name = "DIRECCION")
-	private String direccion;
+  @Column(name = "USO_CFDI")
+  private String usoCfdi;
 
-	@OneToOne
-	@JoinColumn(name = "ID_CFDI", referencedColumnName = "ID_CFDI")
-	private Cfdi cfdi;
+  @Column(name = "DIRECCION")
+  private String direccion;
 
-	public String getRfc() {
-		return rfc;
-	}
+  @OneToOne
+  @JoinColumn(name = "ID_CFDI", referencedColumnName = "ID_CFDI")
+  private Cfdi cfdi;
 
-	public void setRfc(String rfc) {
-		this.rfc = rfc;
-	}
+  public String getRfc() {
+    return rfc;
+  }
 
-	public String getNombre() {
-		return nombre;
-	}
+  public void setRfc(String rfc) {
+    this.rfc = rfc;
+  }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+  public String getNombre() {
+    return nombre;
+  }
 
-	public String getUsoCfdi() {
-		return usoCfdi;
-	}
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
 
-	public void setUsoCfdi(String usoCfdi) {
-		this.usoCfdi = usoCfdi;
-	}
-	
-	public String getDireccion() {
-		return direccion;
-	}
+  public String getUsoCfdi() {
+    return usoCfdi;
+  }
 
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
-	}
+  public void setUsoCfdi(String usoCfdi) {
+    this.usoCfdi = usoCfdi;
+  }
 
-	public Cfdi getCfdi() {
-		return cfdi;
-	}
+  public String getDireccion() {
+    return direccion;
+  }
 
-	public void setCfdi(Cfdi cfdi) {
-		this.cfdi = cfdi;
-	}
+  public void setDireccion(String direccion) {
+    this.direccion = direccion;
+  }
 
-	public int getId() {
-		return id;
-	}
+  public Cfdi getCfdi() {
+    return cfdi;
+  }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  public void setCfdi(Cfdi cfdi) {
+    this.cfdi = cfdi;
+  }
 
-	@Override
-	public String toString() {
-		return "Receptor [rfc=" + rfc + ", nombre=" + nombre + ", usoCfdi=" + usoCfdi + "]";
-	}
+  public int getId() {
+    return id;
+  }
 
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  @Override
+  public String toString() {
+    return "Receptor [rfc=" + rfc + ", nombre=" + nombre + ", usoCfdi=" + usoCfdi + "]";
+  }
 }

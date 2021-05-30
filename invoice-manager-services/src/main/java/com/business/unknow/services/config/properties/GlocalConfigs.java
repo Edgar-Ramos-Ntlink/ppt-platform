@@ -8,20 +8,19 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "invoce")
 public class GlocalConfigs {
 
-	@Value("${invoce.environment}")
-	private String environment;
+  @Value("${invoce.environment}")
+  private String environment;
 
-	public String getEnvironment() {
-		return environment;
-	}
+  public String getEnvironment() {
+    return environment;
+  }
 
-	public void setEnvironment(String environment) {
-		this.environment = environment;
-	}
+  public void setEnvironment(String environment) {
+    this.environment = environment;
+  }
 
-	@Override
-	public String toString() {
-		return "GlocalConfigs [environment=" + environment + "]";
-	}
-
+  @Override
+  public String toString() {
+    return "GlocalConfigs [environment=" + environment + "]";
+  }
 }

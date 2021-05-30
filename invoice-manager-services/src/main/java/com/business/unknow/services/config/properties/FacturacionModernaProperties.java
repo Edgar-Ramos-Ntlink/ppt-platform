@@ -8,51 +8,60 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "fm")
 public class FacturacionModernaProperties {
 
-	@Value("${fm.username}")
-	private String user;
-	@Value("${fm.password}")
-	private String password;
-	@Value("${fm.host}")
-	private String host;
-	@Value("${fm.context}")
-	private String context;
+  @Value("${fm.username}")
+  private String user;
 
-	public String getUser() {
-		return user;
-	}
+  @Value("${fm.password}")
+  private String password;
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+  @Value("${fm.host}")
+  private String host;
 
-	public String getPassword() {
-		return password;
-	}
+  @Value("${fm.context}")
+  private String context;
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+  public String getUser() {
+    return user;
+  }
 
-	public String getHost() {
-		return host;
-	}
+  public void setUser(String user) {
+    this.user = user;
+  }
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+  public String getPassword() {
+    return password;
+  }
 
-	public String getContext() {
-		return context;
-	}
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-	public void setContext(String context) {
-		this.context = context;
-	}
+  public String getHost() {
+    return host;
+  }
 
-	@Override
-	public String toString() {
-		return "FacturacionModernaProperties [user=" + user + ", password=" + password + ", host=" + host + ", context="
-				+ context + "]";
-	}
+  public void setHost(String host) {
+    this.host = host;
+  }
 
+  public String getContext() {
+    return context;
+  }
+
+  public void setContext(String context) {
+    this.context = context;
+  }
+
+  @Override
+  public String toString() {
+    return "FacturacionModernaProperties [user="
+        + user
+        + ", password="
+        + password
+        + ", host="
+        + host
+        + ", context="
+        + context
+        + "]";
+  }
 }

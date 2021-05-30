@@ -15,44 +15,43 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RulesConfig {
 
-    @Bean
-    public DeletePagoSuite getDeletePagoSuite() {
-        return new DeletePagoSuite();
-    }
+  @Bean
+  public DeletePagoSuite getDeletePagoSuite() {
+    return new DeletePagoSuite();
+  }
 
-    @Bean
-    public FacturaSuite getFacturaSuite() {
-        return new FacturaSuite();
-    }
+  @Bean
+  public FacturaSuite getFacturaSuite() {
+    return new FacturaSuite();
+  }
 
-    @Bean
-    public TimbradoSuite getFacturarSuite() {
-        return new TimbradoSuite();
-    }
+  @Bean
+  public TimbradoSuite getFacturarSuite() {
+    return new TimbradoSuite();
+  }
 
-    @Bean
-    public PaymentUpdateSuite getPagoPueSuite() {
-        return new PaymentUpdateSuite();
-    }
+  @Bean
+  public PaymentUpdateSuite getPagoPueSuite() {
+    return new PaymentUpdateSuite();
+  }
 
-    @Bean
-    public PaymentCreationSuite getPagoPpdSuite() {
-        return new PaymentCreationSuite();
-    }
+  @Bean
+  public PaymentCreationSuite getPagoPpdSuite() {
+    return new PaymentCreationSuite();
+  }
 
-    @Bean
-    public FacturaValidationSuite getFacturaValidationSuite() {
-        return new FacturaValidationSuite();
-    }
+  @Bean
+  public FacturaValidationSuite getFacturaValidationSuite() {
+    return new FacturaValidationSuite();
+  }
 
-    @Bean
-    public CancelacionSuite getCancelacionSuite() {
-        return new CancelacionSuite();
-    }
+  @Bean
+  public CancelacionSuite getCancelacionSuite() {
+    return new CancelacionSuite();
+  }
 
-    @Bean
-    public RulesEngine getRulesEngine() {
-        return new DefaultRulesEngine();
-    }
-
+  @Bean
+  public RulesEngine getRulesEngine() {
+    return new DefaultRulesEngine();
+  }
 }

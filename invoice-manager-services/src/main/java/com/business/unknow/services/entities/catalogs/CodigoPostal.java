@@ -1,7 +1,6 @@
 package com.business.unknow.services.entities.catalogs;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,74 +12,88 @@ import javax.persistence.Table;
 @Table(name = "CAT_CODIGO_POSTAL")
 public class CodigoPostal implements Serializable {
 
-	private static final long serialVersionUID = 3999575917505652397L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
-	private int id;
-	@Column(name = "CODIGO_POSTAL")
-	private String codigoPostal;
-	@Column(name = "ESTADO")
-	private String estado;
-	@Column(name = "MUNICIPIO")
-	private String municipio;
-	@Column(name = "CIUDAD")
-	private String ciudad;
-	@Column(name = "COLONIA")
-	private String colonia;
+  private static final long serialVersionUID = 3999575917505652397L;
 
-	public String getCodigoPostal() {
-		return codigoPostal;
-	}
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID")
+  private int id;
 
-	public void setCodigoPostal(String codigoPostal) {
-		this.codigoPostal = codigoPostal;
-	}
+  @Column(name = "CODIGO_POSTAL")
+  private String codigoPostal;
 
-	public String getEstado() {
-		return estado;
-	}
+  @Column(name = "ESTADO")
+  private String estado;
 
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
+  @Column(name = "MUNICIPIO")
+  private String municipio;
 
-	public String getMunicipio() {
-		return municipio;
-	}
+  @Column(name = "CIUDAD")
+  private String ciudad;
 
-	public void setMunicipio(String municipio) {
-		this.municipio = municipio;
-	}
+  @Column(name = "COLONIA")
+  private String colonia;
 
-	public String getCiudad() {
-		return ciudad;
-	}
+  public String getCodigoPostal() {
+    return codigoPostal;
+  }
 
-	public void setCiudad(String ciudad) {
-		this.ciudad = ciudad;
-	}
+  public void setCodigoPostal(String codigoPostal) {
+    this.codigoPostal = codigoPostal;
+  }
 
-	public String getColonia() {
-		return colonia;
-	}
+  public String getEstado() {
+    return estado;
+  }
 
-	public void setColonia(String colonia) {
-		this.colonia = colonia;
-	}
+  public void setEstado(String estado) {
+    this.estado = estado;
+  }
 
-	public int getId() {
-		return id;
-	}
+  public String getMunicipio() {
+    return municipio;
+  }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  public void setMunicipio(String municipio) {
+    this.municipio = municipio;
+  }
 
-	@Override
-	public String toString() {
-		return "CodigoPostal [codigoPostal=" + codigoPostal + ", estado=" + estado + ", municipio=" + municipio
-				+ ", ciudad=" + ciudad + ", colonia=" + colonia + "]";
-	}
+  public String getCiudad() {
+    return ciudad;
+  }
 
+  public void setCiudad(String ciudad) {
+    this.ciudad = ciudad;
+  }
+
+  public String getColonia() {
+    return colonia;
+  }
+
+  public void setColonia(String colonia) {
+    this.colonia = colonia;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  @Override
+  public String toString() {
+    return "CodigoPostal [codigoPostal="
+        + codigoPostal
+        + ", estado="
+        + estado
+        + ", municipio="
+        + municipio
+        + ", ciudad="
+        + ciudad
+        + ", colonia="
+        + colonia
+        + "]";
+  }
 }

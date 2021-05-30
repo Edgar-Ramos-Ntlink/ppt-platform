@@ -3,7 +3,6 @@ package com.business.unknow.services.entities.cfdi;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,220 +16,270 @@ import javax.persistence.Table;
 @Table(name = "CFDI_PAGOS")
 public class CfdiPago implements Serializable {
 
-	private static final long serialVersionUID = -9003721389303480808L;
+  private static final long serialVersionUID = -9003721389303480808L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CFDI_PAGO")
-	private int id;
-	@Column(name = "VERSION")
-	private String version;
-	@Column(name = "FECHA_PAGO")
-	private Date fechaPago;
-	@Column(name = "FORMA_PAGO")
-	private String formaPago;
-	@Column(name = "MONEDA")
-	private String moneda;
-	@Column(name = "MONTO")
-	private BigDecimal monto;
-	@Column(name = "FOLIO")
-	private String folio;
-	@Column(name = "ID_DOCUMENTO")
-	private String idDocumento;
-	@Column(name = "IMPORTE_PAGADO")
-	private BigDecimal importePagado;
-	@Column(name = "IMPORTE_SALDO_ANTERIOR")
-	private BigDecimal importeSaldoAnterior;
-	@Column(name = "IMPORTE_SALDO_INSOLUTO")
-	private BigDecimal importeSaldoInsoluto;
-	@Column(name = "METODO_PAGO")
-	private String metodoPago;
-	@Column(name = "MONEDA_DR")
-	private String monedaDr;
-	@Column(name = "NUM_PARCIALIDAD", columnDefinition = "TINYINT")
-	private int numeroParcialidad;
-	@Column(name = "SERIE")
-	private String serie;
-	@Column(name = "TIPO_CAMBIO_DR")
-	private BigDecimal tipoCambioDr;
-	@Column(name = "TIPO_CAMBIO")
-	private BigDecimal tipoCambio;
-	@Column(name = "VALIDO", columnDefinition = "TINYINT")
-	private Boolean valido;
-	@ManyToOne
-	@JoinColumn(name = "ID_CFDI", nullable = false)
-	private Cfdi cfdi;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID_CFDI_PAGO")
+  private int id;
 
-	public CfdiPago(BigDecimal importeSaldoInsoluto, int numeroParcialidad) {
-		super();
-		this.importeSaldoInsoluto = importeSaldoInsoluto;
-		this.numeroParcialidad = numeroParcialidad;
-	}
+  @Column(name = "VERSION")
+  private String version;
 
-	public CfdiPago() {
-		super();
-	}
+  @Column(name = "FECHA_PAGO")
+  private Date fechaPago;
 
-	public int getId() {
-		return id;
-	}
+  @Column(name = "FORMA_PAGO")
+  private String formaPago;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  @Column(name = "MONEDA")
+  private String moneda;
 
-	public String getVersion() {
-		return version;
-	}
+  @Column(name = "MONTO")
+  private BigDecimal monto;
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+  @Column(name = "FOLIO")
+  private String folio;
 
-	public Date getFechaPago() {
-		return fechaPago;
-	}
+  @Column(name = "ID_DOCUMENTO")
+  private String idDocumento;
 
-	public void setFechaPago(Date fechaPago) {
-		this.fechaPago = fechaPago;
-	}
+  @Column(name = "IMPORTE_PAGADO")
+  private BigDecimal importePagado;
 
-	public String getFormaPago() {
-		return formaPago;
-	}
+  @Column(name = "IMPORTE_SALDO_ANTERIOR")
+  private BigDecimal importeSaldoAnterior;
 
-	public void setFormaPago(String formaPago) {
-		this.formaPago = formaPago;
-	}
+  @Column(name = "IMPORTE_SALDO_INSOLUTO")
+  private BigDecimal importeSaldoInsoluto;
 
-	public String getMoneda() {
-		return moneda;
-	}
+  @Column(name = "METODO_PAGO")
+  private String metodoPago;
 
-	public void setMoneda(String moneda) {
-		this.moneda = moneda;
-	}
+  @Column(name = "MONEDA_DR")
+  private String monedaDr;
 
-	public BigDecimal getMonto() {
-		return monto;
-	}
+  @Column(name = "NUM_PARCIALIDAD", columnDefinition = "TINYINT")
+  private int numeroParcialidad;
 
-	public void setMonto(BigDecimal monto) {
-		this.monto = monto;
-	}
+  @Column(name = "SERIE")
+  private String serie;
 
-	public String getFolio() {
-		return folio;
-	}
+  @Column(name = "TIPO_CAMBIO_DR")
+  private BigDecimal tipoCambioDr;
 
-	public void setFolio(String folio) {
-		this.folio = folio;
-	}
+  @Column(name = "TIPO_CAMBIO")
+  private BigDecimal tipoCambio;
 
-	public String getIdDocumento() {
-		return idDocumento;
-	}
+  @Column(name = "VALIDO", columnDefinition = "TINYINT")
+  private Boolean valido;
 
-	public void setIdDocumento(String idDocumento) {
-		this.idDocumento = idDocumento;
-	}
+  @ManyToOne
+  @JoinColumn(name = "ID_CFDI", nullable = false)
+  private Cfdi cfdi;
 
-	public BigDecimal getImportePagado() {
-		return importePagado;
-	}
+  public CfdiPago(BigDecimal importeSaldoInsoluto, int numeroParcialidad) {
+    super();
+    this.importeSaldoInsoluto = importeSaldoInsoluto;
+    this.numeroParcialidad = numeroParcialidad;
+  }
 
-	public void setImportePagado(BigDecimal importePagado) {
-		this.importePagado = importePagado;
-	}
+  public CfdiPago() {
+    super();
+  }
 
-	public BigDecimal getImporteSaldoAnterior() {
-		return importeSaldoAnterior;
-	}
+  public int getId() {
+    return id;
+  }
 
-	public void setImporteSaldoAnterior(BigDecimal importeSaldoAnterior) {
-		this.importeSaldoAnterior = importeSaldoAnterior;
-	}
+  public void setId(int id) {
+    this.id = id;
+  }
 
-	public BigDecimal getImporteSaldoInsoluto() {
-		return importeSaldoInsoluto;
-	}
+  public String getVersion() {
+    return version;
+  }
 
-	public void setImporteSaldoInsoluto(BigDecimal importeSaldoInsoluto) {
-		this.importeSaldoInsoluto = importeSaldoInsoluto;
-	}
+  public void setVersion(String version) {
+    this.version = version;
+  }
 
-	public String getMetodoPago() {
-		return metodoPago;
-	}
+  public Date getFechaPago() {
+    return fechaPago;
+  }
 
-	public void setMetodoPago(String metodoPago) {
-		this.metodoPago = metodoPago;
-	}
+  public void setFechaPago(Date fechaPago) {
+    this.fechaPago = fechaPago;
+  }
 
-	public String getMonedaDr() {
-		return monedaDr;
-	}
+  public String getFormaPago() {
+    return formaPago;
+  }
 
-	public void setMonedaDr(String monedaDr) {
-		this.monedaDr = monedaDr;
-	}
+  public void setFormaPago(String formaPago) {
+    this.formaPago = formaPago;
+  }
 
-	public int getNumeroParcialidad() {
-		return numeroParcialidad;
-	}
+  public String getMoneda() {
+    return moneda;
+  }
 
-	public void setNumeroParcialidad(int numeroParcialidad) {
-		this.numeroParcialidad = numeroParcialidad;
-	}
+  public void setMoneda(String moneda) {
+    this.moneda = moneda;
+  }
 
-	public String getSerie() {
-		return serie;
-	}
+  public BigDecimal getMonto() {
+    return monto;
+  }
 
-	public void setSerie(String serie) {
-		this.serie = serie;
-	}
+  public void setMonto(BigDecimal monto) {
+    this.monto = monto;
+  }
 
-	public Cfdi getCfdi() {
-		return cfdi;
-	}
+  public String getFolio() {
+    return folio;
+  }
 
-	public void setCfdi(Cfdi cfdi) {
-		this.cfdi = cfdi;
-	}
+  public void setFolio(String folio) {
+    this.folio = folio;
+  }
 
-	public BigDecimal getTipoCambioDr() {
-		return tipoCambioDr;
-	}
+  public String getIdDocumento() {
+    return idDocumento;
+  }
 
-	public void setTipoCambioDr(BigDecimal tipoCambioDr) {
-		this.tipoCambioDr = tipoCambioDr;
-	}
+  public void setIdDocumento(String idDocumento) {
+    this.idDocumento = idDocumento;
+  }
 
-	public BigDecimal getTipoCambio() {
-		return tipoCambio;
-	}
+  public BigDecimal getImportePagado() {
+    return importePagado;
+  }
 
-	public void setTipoCambio(BigDecimal tipoCambio) {
-		this.tipoCambio = tipoCambio;
-	}
+  public void setImportePagado(BigDecimal importePagado) {
+    this.importePagado = importePagado;
+  }
 
-	public Boolean getValido() {
-		return valido;
-	}
+  public BigDecimal getImporteSaldoAnterior() {
+    return importeSaldoAnterior;
+  }
 
-	public void setValido(Boolean valido) {
-		this.valido = valido;
-	}
+  public void setImporteSaldoAnterior(BigDecimal importeSaldoAnterior) {
+    this.importeSaldoAnterior = importeSaldoAnterior;
+  }
 
-	@Override
-	public String toString() {
-		return "CfdiPago [id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", formaPago=" + formaPago
-				+ ", moneda=" + moneda + ", monto=" + monto + ", folio=" + folio + ", idDocumento=" + idDocumento
-				+ ", importePagado=" + importePagado + ", importeSaldoAnterior=" + importeSaldoAnterior
-				+ ", importeSaldoInsoluto=" + importeSaldoInsoluto + ", metodoPago=" + metodoPago + ", monedaDr="
-				+ monedaDr + ", numeroParcialidad=" + numeroParcialidad + ", serie=" + serie + ", tipoCambioDr="
-				+ tipoCambioDr + ", tipoCambio=" + tipoCambio + ", valido=" + valido + ", cfdi=" + cfdi + "]";
-	}
+  public BigDecimal getImporteSaldoInsoluto() {
+    return importeSaldoInsoluto;
+  }
 
+  public void setImporteSaldoInsoluto(BigDecimal importeSaldoInsoluto) {
+    this.importeSaldoInsoluto = importeSaldoInsoluto;
+  }
+
+  public String getMetodoPago() {
+    return metodoPago;
+  }
+
+  public void setMetodoPago(String metodoPago) {
+    this.metodoPago = metodoPago;
+  }
+
+  public String getMonedaDr() {
+    return monedaDr;
+  }
+
+  public void setMonedaDr(String monedaDr) {
+    this.monedaDr = monedaDr;
+  }
+
+  public int getNumeroParcialidad() {
+    return numeroParcialidad;
+  }
+
+  public void setNumeroParcialidad(int numeroParcialidad) {
+    this.numeroParcialidad = numeroParcialidad;
+  }
+
+  public String getSerie() {
+    return serie;
+  }
+
+  public void setSerie(String serie) {
+    this.serie = serie;
+  }
+
+  public Cfdi getCfdi() {
+    return cfdi;
+  }
+
+  public void setCfdi(Cfdi cfdi) {
+    this.cfdi = cfdi;
+  }
+
+  public BigDecimal getTipoCambioDr() {
+    return tipoCambioDr;
+  }
+
+  public void setTipoCambioDr(BigDecimal tipoCambioDr) {
+    this.tipoCambioDr = tipoCambioDr;
+  }
+
+  public BigDecimal getTipoCambio() {
+    return tipoCambio;
+  }
+
+  public void setTipoCambio(BigDecimal tipoCambio) {
+    this.tipoCambio = tipoCambio;
+  }
+
+  public Boolean getValido() {
+    return valido;
+  }
+
+  public void setValido(Boolean valido) {
+    this.valido = valido;
+  }
+
+  @Override
+  public String toString() {
+    return "CfdiPago [id="
+        + id
+        + ", version="
+        + version
+        + ", fechaPago="
+        + fechaPago
+        + ", formaPago="
+        + formaPago
+        + ", moneda="
+        + moneda
+        + ", monto="
+        + monto
+        + ", folio="
+        + folio
+        + ", idDocumento="
+        + idDocumento
+        + ", importePagado="
+        + importePagado
+        + ", importeSaldoAnterior="
+        + importeSaldoAnterior
+        + ", importeSaldoInsoluto="
+        + importeSaldoInsoluto
+        + ", metodoPago="
+        + metodoPago
+        + ", monedaDr="
+        + monedaDr
+        + ", numeroParcialidad="
+        + numeroParcialidad
+        + ", serie="
+        + serie
+        + ", tipoCambioDr="
+        + tipoCambioDr
+        + ", tipoCambio="
+        + tipoCambio
+        + ", valido="
+        + valido
+        + ", cfdi="
+        + cfdi
+        + "]";
+  }
 }
