@@ -340,8 +340,7 @@ public class PagoService {
       if (TipoDocumentoEnum.COMPLEMENTO.equals(
           TipoDocumentoEnum.findByDesc(fact.getTipoDocumento()))) {
         facturaService.deleteFactura(fact.getFolio());
-        // TODO: COMPLETE THIS FUNCTION
-        // filesService.deleteFacturaFileByFolioAndType(fact.getFolio(), "PDF");
+        filesService.deleteS3File(fact.getFolio(), "PDF");
       }
     }
     for (PagoFactura pagoFactura : facturaPagosRepository.findByPagoId(payment.getId())) {

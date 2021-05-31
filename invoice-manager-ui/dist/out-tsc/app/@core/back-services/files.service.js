@@ -17,9 +17,6 @@ let FilesService = class FilesService {
     insertResourceFile(file) {
         return this.httpClient.post(`../api/recursos/${file.tipoRecurso}/files`, file);
     }
-    deleteFacturaFile(id) {
-        return this.httpClient.delete(`../api/facturas/files/${id}`);
-    }
     deleteResourceFile(id) {
         return this.httpClient.delete(`../api/recursos/files/${id}`);
     }

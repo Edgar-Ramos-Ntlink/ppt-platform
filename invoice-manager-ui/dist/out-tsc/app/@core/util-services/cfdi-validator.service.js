@@ -7,7 +7,7 @@ let CfdiValidatorService = class CfdiValidatorService {
         concepto.importe = concepto.cantidad * concepto.valorUnitario;
         const base = concepto.importe - concepto.descuento;
         if (concepto.iva) {
-            const impuesto = base * 0.16; // TODO calcular impuestos dinamicamente no solo IVA
+            const impuesto = base * 0.16;
             concepto.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];
         }
         return concepto;

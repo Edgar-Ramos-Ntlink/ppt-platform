@@ -43,6 +43,11 @@ public class FilesService {
     s3FileService.upsertS3File(bucket, fileFormat, name, file);
   }
 
+  public void deleteS3File(String folio, String type) throws InvoiceManagerException {
+    s3FileService.deleteS3File(
+        S3BucketsEnum.FACTURAS, TipoArchivoEnum.valueOf(type).getFormat(), folio);
+  }
+
   public ResourceFileDto getResourceFileByResourceReferenceAndType(
       String resource, String referencia, String type) throws InvoiceManagerException {
     return filesDao

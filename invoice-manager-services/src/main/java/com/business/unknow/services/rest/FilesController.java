@@ -71,13 +71,6 @@ public class FilesController {
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
-  @DeleteMapping("/facturas/files/{id}")
-  public ResponseEntity<Void> deleteFacturaFile(@PathVariable Integer id) {
-    // TODO:COMPLETE THIS MESSAGE
-    //    service.deleteFacturaFile(id);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
-
   @DeleteMapping("/recursos/files/{id}")
   public ResponseEntity<Void> deleteRecursoFile(@PathVariable Integer id) {
     service.deleteResourceFile(id);
