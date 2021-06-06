@@ -12,9 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.unknow.Constants;
-import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
-import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
 import com.business.unknow.commons.util.ContactoHelper;
 import com.business.unknow.commons.validator.ClienteValidator;
 import com.business.unknow.model.dto.services.ClientDto;
@@ -24,7 +21,6 @@ import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.repositories.ClientRepository;
 import com.business.unknow.services.repositories.ContribuyenteRepository;
-import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 
 @Service
 public class ClientService {
@@ -37,9 +33,6 @@ public class ClientService {
 
 	@Autowired
 	private ClientMapper mapper;
-
-	@Autowired
-	private SwSapinsExecutorService swSapinsExecutorService;
 
 	private ClienteValidator clientValidator = new ClienteValidator();
 
@@ -82,7 +75,6 @@ public class ClientService {
 	}
 
 	public ClientDto insertNewClient(ClientDto cliente) throws InvoiceManagerException {
-		try {
 			clientValidator.validatePostCliente(cliente);
 			Optional<Contribuyente> entity = contribuyenteRepository.findByRfc(cliente.getInformacionFiscal().getRfc());
 			Optional<Client> client = repository.findByCorreoPromotorAndClient(cliente.getCorreoPromotor(),
@@ -90,12 +82,6 @@ public class ClientService {
 			cliente.setCorreoContacto(contactoHelper.translateContacto(cliente.getInformacionFiscal().getRfc(),
 					cliente.getCorreoPromotor(), cliente.getPorcentajeContacto()));
 			Client clientEntity=mapper.getEntityFromClientDto(cliente);
-			SwSapiensConfig config = swSapinsExecutorService
-					.validateRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
-			if (!config.getStatus().equals(Constants.SUCCESS)) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-						String.format("El RFC %s no es valido para facturar", cliente.getInformacionFiscal().getRfc()));
-			}
 			if (!entity.isPresent() && !client.isPresent()) {
 				cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
 			} else if (entity.isPresent() && client.isPresent()) {
@@ -108,10 +94,6 @@ public class ClientService {
 			}
 			clientEntity.setActivo(false);
 			return mapper.getClientDtoFromEntity(repository.save(clientEntity));
-		} catch (SwSapiensClientException e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					String.format("El RFC %s no esta dado de alta en el SAT", cliente.getInformacionFiscal().getRfc()));
-		}
 	}
 
 	public ClientDto updateClientInfo(ClientDto client, String rfc) throws InvoiceManagerException {

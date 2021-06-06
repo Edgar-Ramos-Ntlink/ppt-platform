@@ -101,3 +101,6 @@ buildNumber.properties
 *.iml
 invoice-manager-services/.classpath
 invoice-manager-services/.factorypath
+invoice-manager-services/src/main/resources/application-prod.properties
+invoice-manager-services/.factorypath
+invoice-manager-services/.factorypath
