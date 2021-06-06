@@ -8,7 +8,6 @@ import { Concepto } from '../../../models/factura/concepto';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NbDialogService } from '@nebular/theme';
-import { Factura } from '../../../models/factura/factura';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { FilesData } from '../../../@core/data/files-data';
 import { Router } from '@angular/router';

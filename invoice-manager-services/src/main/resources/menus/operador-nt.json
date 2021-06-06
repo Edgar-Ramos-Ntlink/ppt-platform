@@ -1,15 +1,15 @@
 {
-	"title": "Operaciones linea B",
+	"title": "NT Link Facturacion",
 	"icon": "layout-outline",
 	"children": [
 		{
 			"title": "Reportes",
 			"link": "/pages/operaciones/reportes",
-			"queryParams":{"lineaEmisor":"B","status":"*"}
+			"queryParams":{"lineaEmisor":"NT","status":"*"}
 		},
 		{
 			"title": "CFDI",
-			"link": "/pages/operaciones/cfdi/B/*"
+			"link": "/pages/operaciones/cfdi/NT/*"
 		},
 		{
 			"title": "Multicomplementos",

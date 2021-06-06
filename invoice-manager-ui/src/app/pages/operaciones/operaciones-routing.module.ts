@@ -10,11 +10,12 @@ import { EmpresaComponent } from '../commons/empresa/empresa.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
 import { DevolutionsDetailsComponent } from '../commons/devolutions-details/devolutions-details.component';
-import { LineaBComponent } from './linea-b/linea-b.component';
-import { LineaCComponent } from './linea-c/linea-c.component';
+import { LineaXComponent } from './linea-x/linea-x.component';
 import { MulticomplementosComponent } from '../commons/multicomplementos/multicomplementos.component';
 import { PagosFacturaComponent } from '../commons/pagos-factura/pagos-factura.component';
 import { PagosComponent } from '../commons/pagos/pagos.component';
+import { CuentasBancariasComponent } from '../commons/cuentas-bancarias/cuentas-bancarias.component';
+import { CuentaBancariaComponent } from '../commons/cuenta-bancaria/cuenta-bancaria.component';
 
 const routes: Routes = [{
   path: '',
@@ -45,11 +46,8 @@ const routes: Routes = [{
       path: 'revision/:folio',
       component : RevisionComponent,
     }, {
-      path: 'linea-b/:folio',
-      component : LineaBComponent,
-    }, {
-      path: 'linea-c/:folio',
-      component : LineaCComponent,
+      path: 'cfdi/:linea/:folio',
+      component : LineaXComponent,
     }, {
       path: 'multicomplementos',
       component : MulticomplementosComponent,
@@ -65,6 +63,14 @@ const routes: Routes = [{
       path: 'pagos',
       component: PagosComponent,
     },
+    {
+      path: 'cuentas-bancarias',
+      component: CuentasBancariasComponent,
+    },
+    {
+      path: 'cuenta-bancaria/:empresa/:cuenta',
+      component: CuentaBancariaComponent,
+    }
   ]}];
 
 @NgModule({
