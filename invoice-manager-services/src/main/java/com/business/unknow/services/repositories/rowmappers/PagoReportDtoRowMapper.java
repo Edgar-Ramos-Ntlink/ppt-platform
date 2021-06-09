@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.business.unknow.commons.builder.PagoReportDtoBuilder;
+import com.business.unknow.builder.PagoReportDtoBuilder;
 import com.business.unknow.model.dto.PagoReportDto;
 
 /**

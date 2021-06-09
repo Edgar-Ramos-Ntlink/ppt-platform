@@ -4,10 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -31,7 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.business.unknow.services.services.translators.RelacionadosTranslator;
-import com.business.unknow.commons.validator.FacturaValidator;
+import com.business.unknow.services.util.validators.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
@@ -125,7 +123,9 @@ public class FacturaService {
 	@Autowired
 	private RelacionadosTranslator sustitucionTranslator;
 
-	private FacturaValidator validator = new FacturaValidator();
+	private final FacturaValidator validator = new FacturaValidator();
+
+	private final DateTimeFormatter customFormatter = DateTimeFormatter.ofPattern("yyyy-M-d");
 
 	private static final Logger log = LoggerFactory.getLogger(FacturaService.class);
 
@@ -179,8 +179,8 @@ public class FacturaService {
 				}
 
 				if (parameters.get("since") != null && parameters.get("to") != null) {
-					java.sql.Date start = java.sql.Date.valueOf(LocalDate.parse(parameters.get("since")));
-					java.sql.Date end = java.sql.Date.valueOf(LocalDate.parse(parameters.get("to")).plusDays(1));
+					java.sql.Date start = java.sql.Date.valueOf(LocalDate.parse(parameters.get("since"),customFormatter));
+					java.sql.Date end = java.sql.Date.valueOf(LocalDate.parse(parameters.get("to"),customFormatter).plusDays(1));
 					predicates.add(criteriaBuilder.and(criteriaBuilder.between(root.get("fechaCreacion"), start, end)));
 				}
 

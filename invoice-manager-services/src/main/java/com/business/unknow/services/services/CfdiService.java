@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.business.unknow.commons.validator.AbstractValidator;
+import com.business.unknow.services.util.validators.AbstractValidator;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.model.dto.cfdi.CfdiDto;

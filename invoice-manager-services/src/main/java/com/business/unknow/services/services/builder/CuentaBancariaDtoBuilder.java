@@ -2,7 +2,7 @@ package com.business.unknow.services.services.builder;
 
 import java.util.Date;
 
-import com.business.unknow.commons.builder.AbstractBuilder;
+import com.business.unknow.builder.AbstractBuilder;
 import com.business.unknow.model.dto.services.CuentaBancariaDto;
 
 public class CuentaBancariaDtoBuilder extends AbstractBuilder<CuentaBancariaDto> {

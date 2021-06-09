@@ -16,6 +16,4 @@ public interface CuentaBancariaMapper {
 
 	List<CuentaBancariaDto> getCuentaBancariaDtosFromEntities(List<CuentaBancaria> entities);
 
-	List<CuentaBancaria> getEntitiesFromCuentaBancariaDtos(List<CuentaBancariaDto> dto);
-
 }

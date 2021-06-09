@@ -34,8 +34,6 @@ public interface CfdiMapper {
 			@Mapping(target = "receptor", ignore = true), @Mapping(target = "relacionado", ignore = true) })
 	Cfdi getEntityFromCfdiDto(CfdiDto dto);
 
-	List<CfdiPago> getEntityFromCdfiPagosDtos(List<CfdiPagoDto> dtos);
-
 	CfdiPago getEntityFromCdfiPagosDto(CfdiPagoDto dtos);
 
 	List<CfdiPagoDto> getCfdiPagosDtoFromEntities(List<CfdiPago> entities);
@@ -51,10 +49,6 @@ public interface CfdiMapper {
 	ConceptoDto getConceptoDtoFromEntity(Concepto entity);
 
 	Concepto getEntityFromConceptoDto(ConceptoDto dto);
-
-	List<ClientDto> getconceptoDtosFromEntities(List<Concepto> entities);
-
-	List<Concepto> getEntitiesFromConceptoDtos(List<ConceptoDto> dto);
 
 	List<ConceptoDto> getDtosFromConceptoEntities(List<Concepto> dto);
 

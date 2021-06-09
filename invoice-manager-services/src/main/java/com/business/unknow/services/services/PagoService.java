@@ -42,7 +42,7 @@ import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.PagoFacturaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
-import com.business.unknow.services.util.PagoBuilder;
+import com.business.unknow.builder.PagoBuilder;
 
 /**
  * @author ralfdemoledor

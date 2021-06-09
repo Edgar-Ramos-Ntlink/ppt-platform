@@ -17,10 +17,9 @@ import com.business.unknow.services.entities.Devolucion;
 @Mapper
 public interface DevolucionMapper {
 	
-	public DevolucionDto getDevolucionDtoFromEntity(Devolucion devolucion);
-	public List<DevolucionDto> getDevolucionesDtoFromEntities(List<Devolucion> devoluciones);
+	 DevolucionDto getDevolucionDtoFromEntity(Devolucion devolucion);
+	 List<DevolucionDto> getDevolucionesDtoFromEntities(List<Devolucion> devoluciones);
 	
-	public Devolucion getEntityFromDevolucionDto(DevolucionDto devolucion);
-	public List<Devolucion> getEntitiesFromDtos(List<DevolucionDto> devoluciones);
+	 Devolucion getEntityFromDevolucionDto(DevolucionDto devolucion);
 
 }
