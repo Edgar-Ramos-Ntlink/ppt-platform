@@ -1,10 +1,8 @@
-
 package com.business.unknow.services.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -15,7 +13,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -25,274 +22,308 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "PAGO_DEVOLUCION")
 public class PagoDevolucion implements Serializable {
 
-	private static final long serialVersionUID = -1572795797336952518L;
+  private static final long serialVersionUID = -1572795797336952518L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_PAGO_DEVOLUCION")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID_PAGO_DEVOLUCION")
+  private Integer id;
 
-	@NotNull
-	@Column(name = "MONEDA")
-	private String moneda;
+  @NotNull
+  @Column(name = "MONEDA")
+  private String moneda;
 
-	@NotNull
-	@Column(name = "TIPO_CAMBIO")
-	private BigDecimal tipoCambio;
+  @NotNull
+  @Column(name = "TIPO_CAMBIO")
+  private BigDecimal tipoCambio;
 
-	@NotNull
-	@Column(name = "MONTO")
-	private BigDecimal monto;
+  @NotNull
+  @Column(name = "MONTO")
+  private BigDecimal monto;
 
-	@NotNull
-	@Column(name = "BENEFICIARIO")
-	private String beneficiario;
+  @NotNull
+  @Column(name = "BENEFICIARIO")
+  private String beneficiario;
 
-	@NotNull
-	@Column(name = "FORMA_PAGO")
-	private String formaPago;
+  @NotNull
+  @Column(name = "FORMA_PAGO")
+  private String formaPago;
 
-	@Column(name = "BANCO")
-	private String banco;
+  @Column(name = "BANCO")
+  private String banco;
 
-	@Column(name = "TIPO_REFERENCIA")
-	private String tipoReferencia;
-	
-	@Column(name = "REFERENCIA")
-	private String referencia;
+  @Column(name = "TIPO_REFERENCIA")
+  private String tipoReferencia;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "FECHA_PAGO")
-	private Date fechaPago;
+  @Column(name = "REFERENCIA")
+  private String referencia;
 
-	@NotNull
-	@Column(name = "STATUS")
-	private String status;
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "FECHA_PAGO")
+  private Date fechaPago;
 
-	@NotNull
-	@Column(name = "TIPO_RECEPTOR")
-	private String tipoReceptor;
-	
-	@NotNull
-	@Column(name = "RECEPTOR")
-	private String receptor;
+  @NotNull
+  @Column(name = "STATUS")
+  private String status;
 
-	@NotNull
-	@Column(name = "SOLICITANTE")
-	private String solicitante;
+  @NotNull
+  @Column(name = "TIPO_RECEPTOR")
+  private String tipoReceptor;
 
-	@Column(name = "CUENTA_PAGO")
-	private String cuentaPago;
+  @NotNull
+  @Column(name = "RECEPTOR")
+  private String receptor;
 
-	@Column(name = "RFC_EMPRESA")
-	private String rfcEmpresa;
+  @NotNull
+  @Column(name = "SOLICITANTE")
+  private String solicitante;
 
-	@Column(name = "AUTORIZADOR")
-	private String autorizador;
-	
-	@Column(name = "COMENTARIOS")
-	private String comentarios;
-	
-	@Column(name = "ID_DEVOLUCION")
-	private Integer idDevolucion;
-	
-	@Column(name = "FOLIO_FACT")
-	private String folioFactura;
+  @Column(name = "CUENTA_PAGO")
+  private String cuentaPago;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
-	@Column(name = "FECHA_CREACION")
-	private Date fechaCreacion;
+  @Column(name = "RFC_EMPRESA")
+  private String rfcEmpresa;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
-	@Column(name = "FECHA_ACTUALIZACION")
-	private Date fechaActualizacion;
+  @Column(name = "AUTORIZADOR")
+  private String autorizador;
 
-	public Integer getId() {
-		return id;
-	}
+  @Column(name = "COMENTARIOS")
+  private String comentarios;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  @Column(name = "ID_DEVOLUCION")
+  private Integer idDevolucion;
 
-	public String getMoneda() {
-		return moneda;
-	}
+  @Column(name = "FOLIO_FACT")
+  private String folioFactura;
 
-	public void setMoneda(String moneda) {
-		this.moneda = moneda;
-	}
+  @Temporal(TemporalType.TIMESTAMP)
+  @CreatedDate
+  @Column(name = "FECHA_CREACION")
+  private Date fechaCreacion;
 
-	public BigDecimal getTipoCambio() {
-		return tipoCambio;
-	}
+  @Temporal(TemporalType.TIMESTAMP)
+  @LastModifiedDate
+  @Column(name = "FECHA_ACTUALIZACION")
+  private Date fechaActualizacion;
 
-	public void setTipoCambio(BigDecimal tipoCambio) {
-		this.tipoCambio = tipoCambio;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public BigDecimal getMonto() {
-		return monto;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public void setMonto(BigDecimal monto) {
-		this.monto = monto;
-	}
+  public String getMoneda() {
+    return moneda;
+  }
 
-	public String getBeneficiario() {
-		return beneficiario;
-	}
+  public void setMoneda(String moneda) {
+    this.moneda = moneda;
+  }
 
-	public void setBeneficiario(String beneficiario) {
-		this.beneficiario = beneficiario;
-	}
+  public BigDecimal getTipoCambio() {
+    return tipoCambio;
+  }
 
-	public String getFormaPago() {
-		return formaPago;
-	}
+  public void setTipoCambio(BigDecimal tipoCambio) {
+    this.tipoCambio = tipoCambio;
+  }
 
-	public void setFormaPago(String formaPago) {
-		this.formaPago = formaPago;
-	}
+  public BigDecimal getMonto() {
+    return monto;
+  }
 
-	public String getBanco() {
-		return banco;
-	}
+  public void setMonto(BigDecimal monto) {
+    this.monto = monto;
+  }
 
-	public void setBanco(String banco) {
-		this.banco = banco;
-	}
+  public String getBeneficiario() {
+    return beneficiario;
+  }
 
-	public String getTipoReferencia() {
-		return tipoReferencia;
-	}
+  public void setBeneficiario(String beneficiario) {
+    this.beneficiario = beneficiario;
+  }
 
-	public void setTipoReferencia(String tipoReferencia) {
-		this.tipoReferencia = tipoReferencia;
-	}
+  public String getFormaPago() {
+    return formaPago;
+  }
 
-	public String getReferencia() {
-		return referencia;
-	}
+  public void setFormaPago(String formaPago) {
+    this.formaPago = formaPago;
+  }
 
-	public void setReferencia(String referencia) {
-		this.referencia = referencia;
-	}
+  public String getBanco() {
+    return banco;
+  }
 
-	public Date getFechaPago() {
-		return fechaPago;
-	}
+  public void setBanco(String banco) {
+    this.banco = banco;
+  }
 
-	public void setFechaPago(Date fechaPago) {
-		this.fechaPago = fechaPago;
-	}
+  public String getTipoReferencia() {
+    return tipoReferencia;
+  }
 
-	public String getStatus() {
-		return status;
-	}
+  public void setTipoReferencia(String tipoReferencia) {
+    this.tipoReferencia = tipoReferencia;
+  }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+  public String getReferencia() {
+    return referencia;
+  }
 
-	public String getTipoReceptor() {
-		return tipoReceptor;
-	}
+  public void setReferencia(String referencia) {
+    this.referencia = referencia;
+  }
 
-	public void setTipoReceptor(String tipoReceptor) {
-		this.tipoReceptor = tipoReceptor;
-	}
+  public Date getFechaPago() {
+    return fechaPago;
+  }
 
-	public String getReceptor() {
-		return receptor;
-	}
+  public void setFechaPago(Date fechaPago) {
+    this.fechaPago = fechaPago;
+  }
 
-	public void setReceptor(String receptor) {
-		this.receptor = receptor;
-	}
+  public String getStatus() {
+    return status;
+  }
 
-	public String getSolicitante() {
-		return solicitante;
-	}
+  public void setStatus(String status) {
+    this.status = status;
+  }
 
-	public void setSolicitante(String solicitante) {
-		this.solicitante = solicitante;
-	}
+  public String getTipoReceptor() {
+    return tipoReceptor;
+  }
 
-	public String getCuentaPago() {
-		return cuentaPago;
-	}
+  public void setTipoReceptor(String tipoReceptor) {
+    this.tipoReceptor = tipoReceptor;
+  }
 
-	public void setCuentaPago(String cuentaPago) {
-		this.cuentaPago = cuentaPago;
-	}
+  public String getReceptor() {
+    return receptor;
+  }
 
-	public String getRfcEmpresa() {
-		return rfcEmpresa;
-	}
+  public void setReceptor(String receptor) {
+    this.receptor = receptor;
+  }
 
-	public void setRfcEmpresa(String rfcEmpresa) {
-		this.rfcEmpresa = rfcEmpresa;
-	}
+  public String getSolicitante() {
+    return solicitante;
+  }
 
-	public String getAutorizador() {
-		return autorizador;
-	}
+  public void setSolicitante(String solicitante) {
+    this.solicitante = solicitante;
+  }
 
-	public void setAutorizador(String autorizador) {
-		this.autorizador = autorizador;
-	}
-	
-	public String getComentarios() {
-		return comentarios;
-	}
+  public String getCuentaPago() {
+    return cuentaPago;
+  }
 
-	public void setComentarios(String comentarios) {
-		this.comentarios = comentarios;
-	}
+  public void setCuentaPago(String cuentaPago) {
+    this.cuentaPago = cuentaPago;
+  }
 
-	public Integer getIdDevolucion() {
-		return idDevolucion;
-	}
+  public String getRfcEmpresa() {
+    return rfcEmpresa;
+  }
 
-	public void setIdDevolucion(Integer idDevolucion) {
-		this.idDevolucion = idDevolucion;
-	}
-	
-	public String getFolioFactura() {
-		return folioFactura;
-	}
+  public void setRfcEmpresa(String rfcEmpresa) {
+    this.rfcEmpresa = rfcEmpresa;
+  }
 
-	public void setFolioFactura(String folioFactura) {
-		this.folioFactura = folioFactura;
-	}
+  public String getAutorizador() {
+    return autorizador;
+  }
 
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
+  public void setAutorizador(String autorizador) {
+    this.autorizador = autorizador;
+  }
 
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
+  public String getComentarios() {
+    return comentarios;
+  }
 
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
+  public void setComentarios(String comentarios) {
+    this.comentarios = comentarios;
+  }
 
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
+  public Integer getIdDevolucion() {
+    return idDevolucion;
+  }
 
-	@Override
-	public String toString() {
-		return "PagoDevolucion [id=" + id + ", moneda=" + moneda + ", tipoCambio=" + tipoCambio + ", monto=" + monto
-				+ ", beneficiario=" + beneficiario + ", formaPago=" + formaPago + ", banco=" + banco
-				+ ", tipoReferencia=" + tipoReferencia + ", referencia=" + referencia + ", fechaPago=" + fechaPago
-				+ ", status=" + status + ", tipoReceptor=" + tipoReceptor + ", receptor=" + receptor + ", solicitante="
-				+ solicitante + ", cuentaPagop=" + cuentaPago + ", rfcEmpresa=" + rfcEmpresa + ", autorizador="
-				+ autorizador + ", idDevolucion=" + idDevolucion + ", fechaCreacion=" + fechaCreacion
-				+ ", fechaActualizacion=" + fechaActualizacion + "]";
-	}
+  public void setIdDevolucion(Integer idDevolucion) {
+    this.idDevolucion = idDevolucion;
+  }
+
+  public String getFolioFactura() {
+    return folioFactura;
+  }
+
+  public void setFolioFactura(String folioFactura) {
+    this.folioFactura = folioFactura;
+  }
+
+  public Date getFechaCreacion() {
+    return fechaCreacion;
+  }
+
+  public void setFechaCreacion(Date fechaCreacion) {
+    this.fechaCreacion = fechaCreacion;
+  }
+
+  public Date getFechaActualizacion() {
+    return fechaActualizacion;
+  }
+
+  public void setFechaActualizacion(Date fechaActualizacion) {
+    this.fechaActualizacion = fechaActualizacion;
+  }
+
+  @Override
+  public String toString() {
+    return "PagoDevolucion [id="
+        + id
+        + ", moneda="
+        + moneda
+        + ", tipoCambio="
+        + tipoCambio
+        + ", monto="
+        + monto
+        + ", beneficiario="
+        + beneficiario
+        + ", formaPago="
+        + formaPago
+        + ", banco="
+        + banco
+        + ", tipoReferencia="
+        + tipoReferencia
+        + ", referencia="
+        + referencia
+        + ", fechaPago="
+        + fechaPago
+        + ", status="
+        + status
+        + ", tipoReceptor="
+        + tipoReceptor
+        + ", receptor="
+        + receptor
+        + ", solicitante="
+        + solicitante
+        + ", cuentaPagop="
+        + cuentaPago
+        + ", rfcEmpresa="
+        + rfcEmpresa
+        + ", autorizador="
+        + autorizador
+        + ", idDevolucion="
+        + idDevolucion
+        + ", fechaCreacion="
+        + fechaCreacion
+        + ", fechaActualizacion="
+        + fechaActualizacion
+        + "]";
+  }
 }

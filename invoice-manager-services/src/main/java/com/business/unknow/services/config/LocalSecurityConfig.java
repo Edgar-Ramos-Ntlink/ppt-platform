@@ -9,9 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Profile("local")
 public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().antMatchers("/api/**").permitAll();
-	}
-
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.csrf().disable().authorizeRequests().antMatchers("/api/**").permitAll();
+  }
 }

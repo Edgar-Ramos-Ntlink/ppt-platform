@@ -24,10 +24,6 @@ export class FilesService {
   public insertResourceFile(file:ResourceFile):Observable<any>{
     return this.httpClient.post(`../api/recursos/${file.tipoRecurso}/files`,file);
   }
-
-  public deleteFacturaFile(id:number):Observable<any>{
-    return this.httpClient.delete(`../api/facturas/files/${id}`);
-  }
   public deleteResourceFile(id:number):Observable<any>{
     return this.httpClient.delete(`../api/recursos/files/${id}`);
   }

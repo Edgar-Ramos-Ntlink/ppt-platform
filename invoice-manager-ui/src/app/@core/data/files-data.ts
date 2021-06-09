@@ -10,7 +10,5 @@ export abstract class FilesData{
 
     abstract insertFacturaFile(file: ResourceFile):Observable<ResourceFile>;
     abstract insertResourceFile(file: ResourceFile):Observable<ResourceFile>;
-
-    abstract deleteFacturaFile(id:number):Observable<any>;
     abstract deleteResourceFile(id:number):Observable<any>;
 }
