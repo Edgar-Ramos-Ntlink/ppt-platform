@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/invoice-external-sdk/invoice-external-sdk.iml" filepath="$PROJECT_DIR$/invoice-external-sdk/invoice-external-sdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/invoice-manager-models/invoice-manager-models.iml" filepath="$PROJECT_DIR$/invoice-manager-models/invoice-manager-models.iml" />
+      <module fileurl="file://$PROJECT_DIR$/invoice-manager-platform.iml" filepath="$PROJECT_DIR$/invoice-manager-platform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/invoice-manager-rules/invoice-manager-rule.iml" filepath="$PROJECT_DIR$/invoice-manager-rules/invoice-manager-rule.iml" />
+      <module fileurl="file://$PROJECT_DIR$/invoice-manager-services/invoice-manager-services.iml" filepath="$PROJECT_DIR$/invoice-manager-services/invoice-manager-services.iml" />
+    </modules>
+  </component>
+</project>
