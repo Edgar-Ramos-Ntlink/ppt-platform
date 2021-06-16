@@ -13,6 +13,7 @@ import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -34,6 +35,8 @@ import com.business.unknow.services.services.translators.FacturaTranslator;
 import com.business.unknow.services.services.translators.RelacionadosTranslator;
 import com.business.unknow.services.util.FacturaDefaultValues;
 import com.business.unknow.services.util.validators.FacturaValidator;
+
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
@@ -73,6 +76,8 @@ public class FacturaService {
   @Autowired private CfdiPagoRepository cfdiPagoRepository;
 
   @Autowired private CfdiService cfdiService;
+
+  @Autowired private DownloaderService downloaderService;
 
   @Autowired private FacturaMapper mapper;
 
@@ -202,24 +207,20 @@ public class FacturaService {
         result.getTotalElements());
   }
 
-  public Page<FacturaReportDto> getFacturaReportsByParams(Map<String, String> parameters) {
+  public ResourceFileDto getFacturaReportsByParams(Map<String, String> parameters) throws IOException {
     int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
     int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-    Page<Factura> result =
-        repository.findAll(
-            buildSearchFilters(parameters),
-            PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
 
-    List<String> folios =
-        result.getContent().stream().map(f -> f.getFolio()).collect(Collectors.toList());
-    if (folios.isEmpty()) {
-      return new PageImpl<>(new ArrayList<>(), result.getPageable(), result.getTotalElements());
-    } else {
-      return new PageImpl<FacturaReportDto>(
-          facturaDao.getInvoiceDetailsByFolios(folios),
-          result.getPageable(),
-          result.getTotalElements());
-    }
+    var invoices =repository.findAll(buildSearchFilters(parameters)).stream()
+            .map(inv -> {
+              Map<String,String> row = new HashMap<>();
+              row.put("FOLIO",inv.getFolio());
+
+              return  row;
+            }).collect(Collectors.toList());
+
+    return downloaderService.generateBase64Report("REPORTE DE FACTURAS", invoices);
+
   }
 
   public Page<PagoReportDto> getComplementoReportsByParams(Map<String, String> parameters) {

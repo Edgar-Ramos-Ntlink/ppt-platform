@@ -295,5 +295,7 @@
     <orderEntry type="library" name="Maven: jakarta.xml.soap:jakarta.xml.soap-api:1.4.1" level="project" />
     <orderEntry type="library" name="Maven: org.jvnet.mimepull:mimepull:1.9.11" level="project" />
     <orderEntry type="library" name="Maven: org.jvnet.staxex:stax-ex:1.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.dhatim:fastexcel:0.12.8" level="project" />
+    <orderEntry type="library" name="Maven: com.github.rzymek:opczip:1.0.2" level="project" />
   </component>
 </module>
