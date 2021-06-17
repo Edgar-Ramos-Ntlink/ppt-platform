@@ -74,7 +74,7 @@ public class FacturaController {
   }
 
   @GetMapping("/{folio}/pagos")
-  public ResponseEntity<List<PagoDto>> getPagosbyFolio(@PathVariable String folio) {
+  public ResponseEntity<List<PagoDto>> getPagosBy(@PathVariable String folio) {
     return new ResponseEntity<>(pagoService.findPagosByFolio(folio), HttpStatus.OK);
   }
 

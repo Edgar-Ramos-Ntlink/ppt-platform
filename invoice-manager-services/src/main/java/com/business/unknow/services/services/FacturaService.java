@@ -214,8 +214,20 @@ public class FacturaService {
     var invoices =repository.findAll(buildSearchFilters(parameters)).stream()
             .map(inv -> {
               Map<String,String> row = new HashMap<>();
+              row.put("PREFOLIO",inv.getPreFolio());
               row.put("FOLIO",inv.getFolio());
-
+              row.put("RAZON SOCIAL EMISOR",inv.getRazonSocialEmisor());
+              row.put("RFC EMISOR",inv.getRfcEmisor());
+              row.put("RAZON SOCIAL RECEPTOR",inv.getRazonSocialRemitente());
+              row.put("RFC RECEPTOR",inv.getRfcRemitente());
+              row.put("TIPO DOCUMENTO",inv.getTipoDocumento());
+              row.put("METODO PAGO",inv.getMetodoPago());
+              row.put("ESTATUS",inv.getStatusFactura().toString());
+              row.put("TOTAL",inv.getTotal().toString());
+              row.put("SALDO PENDIENTE",inv.getSaldoPendiente().toString());
+              row.put("PROMOTOR",inv.getSolicitante());
+              row.put("FECHA CREACION",inv.getFechaCreacion().toString());
+              row.put("FECHA ACTUALIZACION",inv.getFechaActualizacion().toString());
               return  row;
             }).collect(Collectors.toList());
 
