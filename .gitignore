@@ -169,3 +169,6 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 invoice-manager-services/src/main/resources/application-prod.properties
 invoice-manager-ui/.vscode/settings.json
+
+
+*.iml
