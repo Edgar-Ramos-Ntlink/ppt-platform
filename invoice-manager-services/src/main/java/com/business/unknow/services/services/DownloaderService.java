@@ -7,7 +7,6 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import org.dhatim.fastexcel.Workbook;
 import org.dhatim.fastexcel.Worksheet;
 import org.slf4j.Logger;
@@ -21,8 +20,8 @@ public class DownloaderService {
 
   private static final Logger log = LoggerFactory.getLogger(DownloaderService.class);
 
-  public ResourceFileDto generateBase64Report(String reportName, List<Map<String, String>> data)
-      throws IOException {
+  public ResourceFileDto generateBase64Report(
+      String reportName, List<Map<String, Object>> data, List<String> headers) throws IOException {
     if (!data.isEmpty()) {
 
       log.info("Generating Excel report for {} data", data.size());
@@ -30,24 +29,23 @@ public class DownloaderService {
       try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
 
         Workbook wb = new Workbook(os, "InvManagerReport", "1.0");
-        Worksheet ws = wb.newWorksheet("reportName");
+        Worksheet ws = wb.newWorksheet(reportName);
 
         int column = 0;
         int row = 0;
         // Building headers
-        for (String key : data.get(0).keySet()) {
-          ws.value(0,column, key);
-          column ++;
-          row ++;
+        for (String header : headers) {
+          ws.value(0, column, header);
+          column++;
         }
-
+        row++;
         // Building table values
 
-        for (Map<String, String> map : data) {
+        for (Map<String, Object> map : data) {
           column = 0;
-          for (String key : map.keySet()) {
-            String value = (map.get(key) != null ? map.get(key).toString() : " ");
-            ws.value(row,column,value);
+          for (String header : headers) {
+            String value = (map.get(header) != null ? map.get(header).toString() : " ");
+            ws.value(row, column, value);
             column++;
           }
           row++;

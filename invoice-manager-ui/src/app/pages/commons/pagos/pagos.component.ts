@@ -10,6 +10,7 @@ import { PagoBase } from '../../../models/pago-base';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { User } from '../../../models/user';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 
 @Component({
   selector: 'ngx-pagos',
@@ -29,7 +30,7 @@ export class PagosComponent implements OnInit {
   constructor(
     private userService: UsersData,
     private paymentService: PaymentsData,
-    private donwloadService: DownloadCsvService,
+    private downloadService: DonwloadFileService,
     private router: Router,
     private dialogService: NbDialogService,
   ) { }
@@ -61,8 +62,8 @@ export class PagosComponent implements OnInit {
   }
 
   public downloadHandler() {
-    this.paymentService.getAllPayments(0, 10000, this.filterParams).subscribe(result => {
-      this.donwloadService.exportCsv(result.content, 'Pagos');
+    this.paymentService.getPaymentsReport(0, 10000, this.filterParams).subscribe(result => {
+      this.downloadService.downloadFile(result.data,'Pagos.xlsx','data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,');
     });
   }
 
