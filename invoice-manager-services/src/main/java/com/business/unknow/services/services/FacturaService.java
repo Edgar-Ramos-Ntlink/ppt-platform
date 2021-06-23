@@ -1,35 +1,5 @@
 package com.business.unknow.services.services;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.business.unknow.services.services.translators.RelacionadosTranslator;
-import com.business.unknow.services.util.validators.FacturaValidator;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
@@ -37,12 +7,11 @@ import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.enums.TipoEmail;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.FacturaReportDto;
-import com.business.unknow.model.dto.PagoReportDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -64,10 +33,12 @@ import com.business.unknow.services.services.translators.FacturaTranslator;
 import com.business.unknow.services.services.translators.RelacionadosTranslator;
 import com.business.unknow.services.util.FacturaDefaultValues;
 import com.business.unknow.services.util.validators.FacturaValidator;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +73,8 @@ public class FacturaService {
   @Autowired private CfdiPagoRepository cfdiPagoRepository;
 
   @Autowired private CfdiService cfdiService;
+
+  @Autowired private DownloaderService downloaderService;
 
   @Autowired private FacturaMapper mapper;
 
@@ -231,43 +204,165 @@ public class FacturaService {
         result.getTotalElements());
   }
 
-  public Page<FacturaReportDto> getFacturaReportsByParams(Map<String, String> parameters) {
+  public ResourceFileDto getFacturaReportsByParams(Map<String, String> parameters)
+      throws IOException {
     int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
     int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-    Page<Factura> result =
-        repository.findAll(
-            buildSearchFilters(parameters),
-            PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+
+    parameters.put("tipoDocumento", "Factura");
 
     List<String> folios =
-        result.getContent().stream().map(f -> f.getFolio()).collect(Collectors.toList());
-    if (folios.isEmpty()) {
-      return new PageImpl<>(new ArrayList<>(), result.getPageable(), result.getTotalElements());
-    } else {
-      return new PageImpl<FacturaReportDto>(
-          facturaDao.getInvoiceDetailsByFolios(folios),
-          result.getPageable(),
-          result.getTotalElements());
-    }
+        repository.findAll(buildSearchFilters(parameters)).stream()
+            .map(Factura::getFolio)
+            .collect(Collectors.toList());
+
+    List<String> headersOrder =
+        Arrays.asList(
+            "FOLIO",
+            "FOLIO FISCAL",
+            "FECHA EMISION",
+            "RFC EMISOR",
+            "EMISOR",
+            "RFC RECEPTOR",
+            "RECEPTOR",
+            "TIPO DOCUMENTO",
+            "PACK",
+            "TIPO",
+            "IMPUESTOS TRASLADADOS",
+            "IMPUESTOS RETENIDOS",
+            "SUBTOTAL",
+            "TOTAL",
+            "METDOD PAGO",
+            "FORMA PAGO",
+            "MONEDA",
+            "ESTATUS",
+            "CANCELACION",
+            "LINEA",
+            "PROMOTOR",
+            "CANTIDAD",
+            "CLAVE UNIDAD",
+            "UNIDAD",
+            "CLAVE PROD SERV",
+            "DESCRIPCION",
+            "VALOR UNITARIO",
+            "IMPORTE",
+            "SALDO PENDIENTE");
+
+    var invoices =
+        facturaDao.getInvoiceDetailsByFolios(folios).stream()
+            .map(
+                inv -> {
+                  Map<String, Object> row = new HashMap<>();
+                  row.put("FOLIO", inv.getFolio());
+                  row.put("FOLIO FISCAL", inv.getFolioFiscal());
+                  row.put("FECHA EMISION", inv.getFechaEmision());
+                  row.put("RFC EMISOR", inv.getRfcEmisor());
+                  row.put("EMISOR", inv.getEmisor());
+                  row.put("RFC RECEPTOR", inv.getRfcReceptor());
+                  row.put("RECEPTOR", inv.getReceptor());
+                  row.put("TIPO DOCUMENTO", inv.getTipoDocumento());
+                  row.put("PACK", inv.getPackFacturacion());
+                  row.put("TIPO", inv.getTipoComprobante());
+                  row.put("IMPUESTOS TRASLADADOS", inv.getImpuestosTrasladados());
+                  row.put("IMPUESTOS RETENIDOS", inv.getImpuestosRetenidos());
+                  row.put("SUBTOTAL", inv.getSubtotal());
+                  row.put("TOTAL", inv.getTotal());
+                  row.put("METODO PAGO", inv.getMetodoPago());
+                  row.put("FORMA PAGO", inv.getFormaPago());
+                  row.put("MONEDA", inv.getMoneda());
+                  row.put("ESTATUS", inv.getStatusFactura());
+                  row.put("CANCELACION", inv.getFechaCancelacion());
+                  row.put("LINEA", inv.getLineaEmisor());
+                  row.put("PROMOTOR", inv.getCorreoPromotor());
+                  row.put("CANTIDAD", inv.getCantidad());
+                  row.put("CLAVE UNIDAD", inv.getClaveUnidad());
+                  row.put("UNIDAD", inv.getUnidad());
+                  row.put("CLAVE PROD SERV", inv.getClaveProdServ());
+                  row.put("DESCRIPCION", inv.getDescripcion());
+                  row.put("VALOR UNITARIO", inv.getValorUnitario());
+                  row.put("IMPORTE", inv.getImporte());
+                  row.put("SALDO PENDIENTE", inv.getSaldoPendiente());
+                  return row;
+                })
+            .collect(Collectors.toList());
+
+    return downloaderService.generateBase64Report("REPORTE DE FACTURAS", invoices, headersOrder);
   }
 
-  public Page<PagoReportDto> getComplementoReportsByParams(Map<String, String> parameters) {
+  public ResourceFileDto getComplementoReportsByParams(Map<String, String> parameters)
+      throws IOException {
     int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
     int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-    Page<Factura> result =
-        repository.findAll(
-            buildSearchFilters(parameters),
-            PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+    parameters.put("tipoDocumento", "Complemento");
+
     List<String> folios =
-        result.getContent().stream().map(f -> f.getFolio()).collect(Collectors.toList());
-    if (folios.isEmpty()) {
-      return new PageImpl<>(new ArrayList<>(), result.getPageable(), result.getTotalElements());
-    } else {
-      return new PageImpl<PagoReportDto>(
-          facturaDao.getComplementsDetailsByFolios(folios),
-          result.getPageable(),
-          result.getTotalElements());
-    }
+        repository.findAll(buildSearchFilters(parameters)).stream()
+            .map(Factura::getFolio)
+            .collect(Collectors.toList());
+
+    List<String> headersOrder =
+        Arrays.asList(
+            "FOLIO",
+            "FOLIO FISCAL",
+            "FECHA EMISION",
+            "RFC EMISOR",
+            "EMISOR",
+            "RFC RECEPTOR",
+            "RECEPTOR",
+            "TIPO DOCUMENTO",
+            "PACK",
+            "TIPO",
+            "IMPUESTOS TRASLADADOS",
+            "IMPUESTOS RETENIDOS",
+            "SUBTOTAL",
+            "TOTAL",
+            "METDOD PAGO",
+            "FORMA PAGO",
+            "MONEDA",
+            "ESTATUS",
+            "CANCELACION",
+            "FOLIO FISCAL PAGO",
+            "IMPORTE",
+            "SALDO ANTERIOR",
+            "SALDO INSOLUTO",
+            "PARCIALIDAD",
+            "FECHA PAGO");
+
+    var complements =
+        facturaDao.getComplementsDetailsByFolios(folios).stream()
+            .map(
+                inv -> {
+                  Map<String, Object> row = new HashMap<>();
+                  row.put("FOLIO", inv.getFolioPago());
+                  row.put("FOLIO FISCAL", inv.getFolioFiscal());
+                  row.put("FECHA EMISION", inv.getFechaEmision());
+                  row.put("RFC EMISOR", inv.getRfcEmisor());
+                  row.put("EMISOR", inv.getEmisor());
+                  row.put("RFC RECEPTOR", inv.getRfcReceptor());
+                  row.put("RECEPTOR", inv.getReceptor());
+                  row.put("TIPO DOCUMENTO", inv.getTipoDocumento());
+                  row.put("PACK", inv.getPackFacturacion());
+                  row.put("TIPO", inv.getTipoComprobante());
+                  row.put("IMPUESTOS TRASLADADOS", inv.getImpuestosTrasladados());
+                  row.put("IMPUESTOS RETENIDOS", inv.getImpuestosRetenidos());
+                  row.put("SUBTOTAL", inv.getSubtotal());
+                  row.put("TOTAL", inv.getTotal());
+                  row.put("METODO PAGO", inv.getMetodoPago());
+                  row.put("FORMA PAGO", inv.getFormaPago());
+                  row.put("MONEDA", inv.getMoneda());
+                  row.put("ESTATUS", inv.getStatusFactura());
+                  row.put("CANCELACION", inv.getFechaCancelacion());
+                  row.put("FOLIO FISCAL PAGO", inv.getFolioFiscalPago());
+                  row.put("IMPORTE", inv.getImportePagado());
+                  row.put("SALDO ANTERIOR", inv.getSaldoAnterior());
+                  row.put("SALDO INSOLUTO", inv.getSaldoInsoluto());
+                  row.put("PARCIALIDAD", inv.getNumeroParcialidad());
+                  row.put("FECHA PAGO", inv.getFechaPago());
+                  return row;
+                })
+            .collect(Collectors.toList());
+
+    return downloaderService.generateBase64Report("COMPLEMENTOS", complements, headersOrder);
   }
 
   public FacturaDto getComplementoByIdCfdiAnParcialidad(String folio, Integer parcialidad) {

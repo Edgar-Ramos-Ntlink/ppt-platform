@@ -1,9 +1,11 @@
 /** */
 package com.business.unknow.services.rest;
 
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.PagoService;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -48,6 +50,26 @@ public class PagosController {
             solicitante, acredor, deudor, formaPago, status, banco, since, to, page, size);
 
     return new ResponseEntity<>(pagos, HttpStatus.OK);
+  }
+
+  @GetMapping("/report")
+  public ResponseEntity<ResourceFileDto> getPaymentReports(
+      @RequestParam(name = "solicitante", required = false) Optional<String> solicitante,
+      @RequestParam(name = "acredor", required = false) Optional<String> acredor,
+      @RequestParam(name = "deudor", required = false) Optional<String> deudor,
+      @RequestParam(name = "status", defaultValue = "") String status,
+      @RequestParam(name = "formaPago", defaultValue = "") String formaPago,
+      @RequestParam(name = "banco", defaultValue = "") String banco,
+      @RequestParam(name = "since", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd")
+          Date since,
+      @RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
+      @RequestParam(name = "page", defaultValue = "0") int page,
+      @RequestParam(name = "size", defaultValue = "10") int size)
+      throws IOException {
+    return new ResponseEntity<>(
+        pagoService.getPaymentsReport(
+            solicitante, acredor, deudor, formaPago, status, banco, since, to, page, size),
+        HttpStatus.OK);
   }
 
   @GetMapping("/{idPago}")

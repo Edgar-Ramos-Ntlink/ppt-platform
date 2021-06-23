@@ -8,6 +8,7 @@ import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -17,12 +18,10 @@ import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.PagoFacturaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
+import java.io.IOException;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.joda.time.DateTime;
@@ -56,9 +55,11 @@ public class PagoService {
 
   @Autowired private CfdiService cfdiService;
 
+  @Autowired private DownloaderService downloaderService;
+
   private static final Logger log = LoggerFactory.getLogger(PagoService.class);
 
-  public Page<PagoDto> getPaginatedPayments(
+  private Page<Pago> paymentsSearch(
       Optional<String> solicitante,
       Optional<String> acredor,
       Optional<String> deudor,
@@ -108,11 +109,95 @@ public class PagoService {
               end,
               PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
     }
+    return result;
+  }
+
+  public Page<PagoDto> getPaginatedPayments(
+      Optional<String> solicitante,
+      Optional<String> acredor,
+      Optional<String> deudor,
+      String formaPago,
+      String status,
+      String banco,
+      Date since,
+      Date to,
+      int page,
+      int size) {
+
+    Page<Pago> result =
+        paymentsSearch(
+            solicitante, acredor, deudor, formaPago, status, banco, since, to, page, size);
 
     return new PageImpl<>(
         mapper.getPagosDtoFromEntities(result.getContent()),
         result.getPageable(),
         result.getTotalElements());
+  }
+
+  public ResourceFileDto getPaymentsReport(
+      Optional<String> solicitante,
+      Optional<String> acredor,
+      Optional<String> deudor,
+      String formaPago,
+      String status,
+      String banco,
+      Date since,
+      Date to,
+      int page,
+      int size)
+      throws IOException {
+
+    Page<Pago> result =
+        paymentsSearch(
+            solicitante, acredor, deudor, formaPago, status, banco, since, to, page, size);
+
+    List<String> headers =
+        Arrays.asList(
+            "ID",
+            "ACREDOR",
+            "DEUDOR",
+            "MONEDA",
+            "BANCO",
+            "CUENTA",
+            "TIPO CAMBIO",
+            "FORMA PAGO",
+            "MONTO",
+            "FECHA PAGO",
+            "ESTATUS",
+            "COMENTARIO",
+            "SOLICITANTE",
+            "REVISOR 1",
+            "REVISOR 2",
+            "CREACION",
+            "ACTUALIZACION");
+
+    List<Map<String, Object>> data =
+        result.getContent().stream()
+            .map(
+                pago -> {
+                  Map<String, Object> row = new HashMap<>();
+                  row.put("ID", pago.getId());
+                  row.put("ACREDOR", pago.getAcredor());
+                  row.put("DEUDOR", pago.getDeudor());
+                  row.put("MONEDA", pago.getMoneda());
+                  row.put("BANCO", pago.getBanco());
+                  row.put("CUENTA", pago.getCuenta());
+                  row.put("TIPO CAMBIO", pago.getTipoDeCambio());
+                  row.put("FORMA PAGO", pago.getFormaPago());
+                  row.put("MONTO", pago.getMonto());
+                  row.put("FECHA PAGO", pago.getFechaPago());
+                  row.put("ESTATUS", pago.getStatusPago());
+                  row.put("COMENTARIO", pago.getComentarioPago());
+                  row.put("SOLICITANTE", pago.getSolicitante());
+                  row.put("REVISOR 1", pago.getRevisor1());
+                  row.put("REVISOR 2", pago.getRevisor2());
+                  row.put("CREACION", pago.getFechaCreacion());
+                  row.put("ACTUALIZACION", pago.getFechaActualizacion());
+                  return row;
+                })
+            .collect(Collectors.toList());
+
+    return downloaderService.generateBase64Report("Pagos", data, headers);
   }
 
   public List<PagoDto> findPagosByFolio(String folio) {
