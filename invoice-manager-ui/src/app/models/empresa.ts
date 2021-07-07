@@ -1,4 +1,7 @@
 import { Contribuyente } from './contribuyente';
+import { Cuenta } from './cuenta';
+import { Observacion } from './observacion';
+import { ResourceFile } from './resource-file';
 
 export class Empresa {
     public id: number;
@@ -23,6 +26,18 @@ export class Empresa {
     public sucursal: string;
     public lugarExpedicion: string;
     public noCertificado: string;
+
+    public nombreCorto: string;
+
+    public estatusJuridico: string;
+    public estatusJuridico2: string;
+    public representanteLegal: string;
+
+    public documentos: ResourceFile[];
+
+    public observaciones : Observacion[];
+
+    public cuentas : Cuenta[];
 
     constructor() {
         this.informacionFiscal = new Contribuyente();
