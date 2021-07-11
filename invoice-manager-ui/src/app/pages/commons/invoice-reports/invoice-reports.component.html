@@ -344,9 +344,8 @@
               <option *ngIf="page.number<(page.totalElements/50)" value="50">50</option>
             </select>
 
-            <button style="margin-right: 15px;" type="button" *ngIf="module === 'promotor'" (click)="downloadHandler()"
-              class="btn btn-success float-right"><i class="fa fa-download"></i></button>
-            <button style="margin-right: 15px;" type="button" *ngIf="module !== 'promotor'"
+
+            <button style="margin-right: 15px;" type="button"
               (click)="downloadInvoicesReports()" class="btn btn-success float-right"><i
                 class="fa fa-download"></i>Facturas</button>
             <button type="button" *ngIf="module !== 'promotor'" (click)="downloadComplementReports()"

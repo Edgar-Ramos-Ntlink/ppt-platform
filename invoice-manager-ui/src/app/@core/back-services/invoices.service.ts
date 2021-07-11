@@ -55,31 +55,11 @@ export class InvoicesService {
 
   public getInvoicesReports(filterParams: any): Observable<any> {
     return this.httpClient.get('../api/facturas/factura-reports',
-    {params: this.getHttpParams(filterParams)})
-    .pipe(
-      map((invPage: GenericPage<any>) => {
-        const records: any[] = invPage.content.map(record => {
-          record.statusFactura = this.validationCat.find(v => v.id.toString()
-                                      === record.statusFactura.toString()).nombre;
-          return record;
-        });
-        invPage.content = records;
-        return invPage;
-      }));
+    {params: this.getHttpParams(filterParams)});
   }
   public getComplementReports(filterParams: any): Observable<any>{
     return this.httpClient.get('../api/facturas/complemento-reports',
-    {params: this.getHttpParams(filterParams)})
-    .pipe(
-      map((invPage: GenericPage<any>) => {
-        const records: any[] = invPage.content.map(record => {
-          record.statusFactura = this.validationCat.find(v => v.id.toString()
-                                      === record.statusFactura.toString()).nombre;
-          return record;
-        });
-        invPage.content = records;
-        return invPage;
-      }));
+    {params: this.getHttpParams(filterParams)});
   }
 
   public getInvoiceByFolio(folio: string): Observable<any> {

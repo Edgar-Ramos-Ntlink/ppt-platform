@@ -3,14 +3,14 @@ package com.business.unknow.services.rest;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.FacturaReportDto;
-import com.business.unknow.model.dto.PagoReportDto;
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.DevolucionService;
 import com.business.unknow.services.services.FacturaService;
 import com.business.unknow.services.services.PagoService;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
@@ -46,14 +46,14 @@ public class FacturaController {
   }
 
   @GetMapping("/factura-reports")
-  public ResponseEntity<Page<FacturaReportDto>> getAllFacturasReportsByParametros(
-      @RequestParam Map<String, String> parameters) {
+  public ResponseEntity<ResourceFileDto> getAllFacturasReportsByParametros(
+      @RequestParam Map<String, String> parameters) throws IOException {
     return new ResponseEntity<>(service.getFacturaReportsByParams(parameters), HttpStatus.OK);
   }
 
   @GetMapping("/complemento-reports")
-  public ResponseEntity<Page<PagoReportDto>> getAllComplementoReportsByParametros(
-      @RequestParam Map<String, String> parameters) {
+  public ResponseEntity<ResourceFileDto> getAllComplementoReportsByParametros(
+      @RequestParam Map<String, String> parameters) throws IOException {
     return new ResponseEntity<>(service.getComplementoReportsByParams(parameters), HttpStatus.OK);
   }
 
@@ -71,7 +71,7 @@ public class FacturaController {
   }
 
   @GetMapping("/{folio}/pagos")
-  public ResponseEntity<List<PagoDto>> getPagosbyFolio(@PathVariable String folio) {
+  public ResponseEntity<List<PagoDto>> getPagosBy(@PathVariable String folio) {
     return new ResponseEntity<>(pagoService.findPagosByFolio(folio), HttpStatus.OK);
   }
 
