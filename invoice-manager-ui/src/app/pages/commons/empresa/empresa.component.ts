@@ -122,6 +122,8 @@ export class EmpresaComponent implements OnInit {
     this.companyInfo.tipo = linea;
   }
 
+
+  /*
   logoUploadListener(event: any): void {
     const reader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
@@ -172,7 +174,7 @@ export class EmpresaComponent implements OnInit {
       };
       reader.onerror = (error) => { this.showToast('danger','Error', 'Error cargando el certificado', true); };
     }
-  }
+  }*/
 
   public async insertNewCompany() {
     try {

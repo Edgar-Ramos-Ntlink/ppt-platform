@@ -178,3 +178,4 @@ invoice-manager-ui/.vscode/settings.json
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
+.idea/sonarlint/issuestore/index.pb
