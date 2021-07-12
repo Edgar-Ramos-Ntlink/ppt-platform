@@ -4,12 +4,10 @@ import com.business.unknow.Constants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
+import java.io.Serializable;
 import java.util.Date;
 
 
@@ -18,9 +16,12 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ObservacionDto {
+public class ObservacionDto implements Serializable {
+
+    private static final long serialVersionUID = -5306687061683976517L;
 
     private Integer id;
     private String rfc;
