@@ -7,6 +7,7 @@ import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.ResourceFile;
+import com.business.unknow.services.mapper.ResourceFileMapper;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Service;
 public class FilesService {
 
   @Autowired private ResourceFileRepository resourceFileRepository;
+
+  @Autowired private ResourceFileMapper resourceFileMapper;
 
   @Autowired private S3FileService s3FileService;
 
@@ -42,12 +45,19 @@ public class FilesService {
       S3BucketsEnum resource, String reference, String type, String format)
       throws InvoiceManagerException {
     try {
-      String data = s3FileService.getS3File(resource, format, reference);
+      Optional<ResourceFile> entity =
+          resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(
+              resource.name(), reference, type);
       ResourceFileDto resourceFileDto = new ResourceFileDto();
       resourceFileDto.setReferencia(reference);
       resourceFileDto.setTipoRecurso(resource.name());
+      if (entity.isPresent()) {
+        resourceFileDto.setFormat(entity.get().getFormato());
+      } else {
+        resourceFileDto.setFormat(format);
+      }
+      String data = s3FileService.getS3File(resource, resourceFileDto.getFormato(), reference);
       resourceFileDto.setData(data);
-      resourceFileDto.setFormat(format);
       resourceFileDto.setTipoArchivo(type);
       return resourceFileDto;
     } catch (Exception e) {
@@ -71,9 +81,10 @@ public class FilesService {
     baos.write(decodedBytes, 0, decodedBytes.length);
     s3FileService.upsertS3File(
         S3BucketsEnum.findByValor(resourceFile.getTipoRecurso()),
-        resourceFile.getFormat(),
+        resourceFile.getFormato(),
         resourceFile.getReferencia(),
         baos);
+    resourceFileRepository.save(resourceFileMapper.getEntityFromDto(resourceFile));
   }
 
   public void deleteFacturaFile(String folio, String type) throws InvoiceManagerException {
@@ -81,10 +92,10 @@ public class FilesService {
         S3BucketsEnum.CFDIS, TipoArchivoEnum.valueOf(type).getFormat(), folio);
   }
 
-  public void deleteResourceFileByResourceReferenceAndType(String resource, String referencia)
-      throws InvoiceManagerException {
+  public void deleteResourceFileByResourceReferenceAndType(
+      String resource, String referencia, String tipoArchivo) throws InvoiceManagerException {
     Optional<ResourceFile> resourceFile =
-        resourceFileRepository.findByTipoRecursoAndReferencia(resource, referencia);
+        resourceFileRepository.findByTipoRecursoAndTipoArchivo(resource, tipoArchivo);
     if (resourceFile.isPresent()) {
       ResourceFile file = resourceFile.get();
       s3FileService.deleteS3File(

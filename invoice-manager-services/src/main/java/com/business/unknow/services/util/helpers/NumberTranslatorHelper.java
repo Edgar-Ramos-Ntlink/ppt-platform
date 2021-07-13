@@ -172,7 +172,6 @@ public class NumberTranslatorHelper {
 
   public String getStringNumber(BigDecimal number, String moneda) throws InvoiceCommonException {
     String cambio;
-    System.out.println(moneda);
     if (moneda.equals("MXN")) {
       cambio = "Pesos ";
     } else if (moneda.equals("USD")) {

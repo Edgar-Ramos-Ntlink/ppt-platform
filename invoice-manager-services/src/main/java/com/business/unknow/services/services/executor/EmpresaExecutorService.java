@@ -38,19 +38,22 @@ public class EmpresaExecutorService {
             TipoArchivoEnum.CERT.name(),
             empresaDto.getInformacionFiscal().getRfc(),
             S3BucketsEnum.EMPRESAS.name(),
-            empresaDto.getCertificado()));
+            empresaDto.getCertificado(),
+            TipoArchivoEnum.CERT.getFormat()));
     filesService.upsertResourceFile(
         new ResourceFileDto(
             TipoArchivoEnum.KEY.name(),
             empresaDto.getInformacionFiscal().getRfc(),
             S3BucketsEnum.EMPRESAS.name(),
-            empresaDto.getLlavePrivada()));
+            empresaDto.getLlavePrivada(),
+            TipoArchivoEnum.KEY.getFormat()));
     filesService.upsertResourceFile(
         new ResourceFileDto(
             TipoArchivoEnum.LOGO.name(),
             empresaDto.getInformacionFiscal().getRfc(),
             S3BucketsEnum.EMPRESAS.name(),
-            logo.substring(logo.indexOf("base64") + 7)));
+            logo.substring(logo.indexOf("base64") + 7),
+            TipoArchivoEnum.LOGO.getFormat()));
     Contribuyente contribuyente =
         contribuyenteRepository.save(
             contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));
@@ -66,7 +69,8 @@ public class EmpresaExecutorService {
               TipoArchivoEnum.LOGO.name(),
               rfc,
               S3BucketsEnum.EMPRESAS.name(),
-              data.substring(data.indexOf("base64") + 7)));
+              data.substring(data.indexOf("base64") + 7),
+              TipoArchivoEnum.LOGO.getFormat()));
     }
   }
 
@@ -74,7 +78,11 @@ public class EmpresaExecutorService {
     if (data != null) {
       filesService.upsertResourceFile(
           new ResourceFileDto(
-              TipoArchivoEnum.CERT.name(), rfc, S3BucketsEnum.EMPRESAS.name(), data));
+              TipoArchivoEnum.CERT.name(),
+              rfc,
+              S3BucketsEnum.EMPRESAS.name(),
+              data,
+              TipoArchivoEnum.CERT.getFormat()));
     }
   }
 
@@ -82,7 +90,11 @@ public class EmpresaExecutorService {
     if (data != null) {
       filesService.upsertResourceFile(
           new ResourceFileDto(
-              TipoArchivoEnum.KEY.name(), rfc, S3BucketsEnum.EMPRESAS.name(), data));
+              TipoArchivoEnum.KEY.name(),
+              rfc,
+              S3BucketsEnum.EMPRESAS.name(),
+              data,
+              TipoArchivoEnum.KEY.getFormat()));
     }
   }
 }

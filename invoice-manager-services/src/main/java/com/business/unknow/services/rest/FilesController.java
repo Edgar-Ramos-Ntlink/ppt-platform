@@ -5,8 +5,10 @@ import com.business.unknow.enums.S3BucketsEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
+import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.FilesService;
+import com.business.unknow.services.util.helpers.StringHelper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
@@ -22,12 +24,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** @author ralfdemoledor */
 @RestController
 @RequestMapping("/api")
 public class FilesController {
 
   @Autowired private FilesService service;
+
+  @Autowired private StringHelper stringHelper;
 
   @GetMapping("/facturas/{folio}/files/{fileType}")
   public ResponseEntity<FacturaFileDto> getFacturaFiles(
@@ -71,7 +74,8 @@ public class FilesController {
 
   @PostMapping("/recursos/{recurso}/files")
   public ResponseEntity<Void> insertResourceFile(@RequestBody @Valid ResourceFileDto resourceFile)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, InvoiceCommonException {
+    resourceFile.setFormat(stringHelper.getFileFormatFromBase64(resourceFile.getData()));
     service.upsertResourceFile(resourceFile);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }

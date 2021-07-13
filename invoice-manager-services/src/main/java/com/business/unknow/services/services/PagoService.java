@@ -1,11 +1,7 @@
 package com.business.unknow.services.services;
 
 import com.business.unknow.builder.PagoBuilder;
-import com.business.unknow.enums.FacturaStatusEnum;
-import com.business.unknow.enums.FormaPagoEnum;
-import com.business.unknow.enums.MetodosPagoEnum;
-import com.business.unknow.enums.RevisionPagosEnum;
-import com.business.unknow.enums.TipoDocumentoEnum;
+import com.business.unknow.enums.*;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
@@ -431,7 +427,8 @@ public class PagoService {
     for (PagoFactura pagoFactura : facturaPagosRepository.findByPagoId(payment.getId())) {
       facturaPagosRepository.delete(pagoFactura);
     }
-    filesService.deleteResourceFileByResourceReferenceAndType("PAGO", idPago.toString());
+    filesService.deleteResourceFileByResourceReferenceAndType(
+        "PAGO", idPago.toString(), TipoArchivoEnum.IMAGEN.name());
     repository.delete(mapper.getEntityFromPagoDto(payment));
   }
 }

@@ -24,7 +24,7 @@ public class ResourceFileDto implements Serializable {
 	private String tipoArchivo;
 	private String referencia;
 	private String tipoRecurso;
-	private String format;
+	private String formato;
 	private String data;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaCreacion;
@@ -32,10 +32,11 @@ public class ResourceFileDto implements Serializable {
 	public ResourceFileDto() {
 	}
 
-	public ResourceFileDto(String tipoArchivo, String referencia, String tipoRecurso, String data) {
+	public ResourceFileDto(String tipoArchivo, String referencia, String tipoRecurso, String data,String formato) {
 		this.tipoArchivo = tipoArchivo;
 		this.referencia = referencia;
 		this.tipoRecurso = tipoRecurso;
+		this.formato=formato;
 		this.data = data;
 	}
 
@@ -87,18 +88,24 @@ public class ResourceFileDto implements Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public String getFormat() {
-		return format;
+	public String getFormato() {
+		return formato;
 	}
 
-	public void setFormat(String format) {
-		this.format = format;
+	public void setFormat(String formato) {
+		this.formato = formato;
 	}
 
 	@Override
 	public String toString() {
-		return "ResourceFileDto [id=" + id + ", tipoArchivo=" + tipoArchivo + ", referencia=" + referencia
-				+ ", tipoRecurso=" + tipoRecurso + ", fechaCreacion=" + fechaCreacion + "]";
+		return "ResourceFileDto{" +
+				"id=" + id +
+				", tipoArchivo='" + tipoArchivo + '\'' +
+				", referencia='" + referencia + '\'' +
+				", tipoRecurso='" + tipoRecurso + '\'' +
+				", formato='" + formato + '\'' +
+				", data='" + data + '\'' +
+				", fechaCreacion=" + fechaCreacion +
+				'}';
 	}
-
 }
