@@ -425,13 +425,13 @@ public class PagoService {
       if (TipoDocumentoEnum.COMPLEMENTO.equals(
           TipoDocumentoEnum.findByDesc(fact.getTipoDocumento()))) {
         facturaService.deleteFactura(fact.getFolio());
-        filesService.deleteS3File(fact.getFolio(), "PDF");
+        filesService.deleteFacturaFile(fact.getFolio(), "PDF");
       }
     }
     for (PagoFactura pagoFactura : facturaPagosRepository.findByPagoId(payment.getId())) {
       facturaPagosRepository.delete(pagoFactura);
     }
-    filesService.deleteResourceFileByResourceReferenceAndType("PAGO", idPago.toString(), "IMAGEN");
+    filesService.deleteResourceFileByResourceReferenceAndType("PAGO", idPago.toString());
     repository.delete(mapper.getEntityFromPagoDto(payment));
   }
 }

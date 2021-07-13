@@ -44,7 +44,11 @@ public class FilesController {
       @PathVariable(name = "referencia") String referencia)
       throws InvoiceManagerException {
     return new ResponseEntity<>(
-        service.getResourceFileByResourceReferenceAndType(recurso, referencia, fileType),
+        service.getResourceFileByResourceReferenceAndType(
+            S3BucketsEnum.findByValor(recurso),
+            referencia,
+            fileType,
+            TipoArchivoEnum.valueOf(recurso).getFormat()),
         HttpStatus.OK);
   }
 
@@ -54,8 +58,8 @@ public class FilesController {
     try {
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
       bos.write(Base64.getDecoder().decode(facturaFile.getData()));
-      service.upsertS3File(
-          S3BucketsEnum.FACTURAS,
+      service.upsertFacturaFile(
+          S3BucketsEnum.CFDIS,
           TipoArchivoEnum.valueOf(facturaFile.getTipoArchivo()).getFormat(),
           facturaFile.getFolio(),
           bos);
@@ -66,13 +70,15 @@ public class FilesController {
   }
 
   @PostMapping("/recursos/{recurso}/files")
-  public ResponseEntity<Void> insertResourceFile(@RequestBody @Valid ResourceFileDto resourceFile) {
+  public ResponseEntity<Void> insertResourceFile(@RequestBody @Valid ResourceFileDto resourceFile)
+      throws InvoiceManagerException {
     service.upsertResourceFile(resourceFile);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @DeleteMapping("/recursos/files/{id}")
-  public ResponseEntity<Void> deleteRecursoFile(@PathVariable Integer id) {
+  public ResponseEntity<Void> deleteRecursoFile(@PathVariable Integer id)
+      throws InvoiceManagerException {
     service.deleteResourceFile(id);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }

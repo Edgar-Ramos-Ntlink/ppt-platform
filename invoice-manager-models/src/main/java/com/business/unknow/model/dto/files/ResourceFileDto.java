@@ -24,6 +24,7 @@ public class ResourceFileDto implements Serializable {
 	private String tipoArchivo;
 	private String referencia;
 	private String tipoRecurso;
+	private String format;
 	private String data;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
 	private Date fechaCreacion;
@@ -84,6 +85,14 @@ public class ResourceFileDto implements Serializable {
 
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
+	}
+
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
 	}
 
 	@Override

@@ -6,18 +6,19 @@ import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.repositories.files.FilesDao;
+import com.business.unknow.services.entities.ResourceFile;
+import com.business.unknow.services.repositories.files.ResourceFileRepository;
 import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-/** @author ralfdemoledor */
 @Service
 public class FilesService {
 
-  @Autowired private FilesDao filesDao;
+  @Autowired private ResourceFileRepository resourceFileRepository;
 
   @Autowired private S3FileService s3FileService;
 
@@ -26,7 +27,7 @@ public class FilesService {
     try {
       String data =
           s3FileService.getS3File(
-              S3BucketsEnum.FACTURAS, TipoArchivoEnum.valueOf(type).getFormat(), folio);
+              S3BucketsEnum.CFDIS, TipoArchivoEnum.valueOf(type).getFormat(), folio);
       FacturaFileDto fileDto = new FacturaFileDto();
       fileDto.setFolio(folio);
       fileDto.setData(data);
@@ -37,52 +38,72 @@ public class FilesService {
     }
   }
 
-  public void upsertS3File(
+  public ResourceFileDto getResourceFileByResourceReferenceAndType(
+      S3BucketsEnum resource, String reference, String type, String format)
+      throws InvoiceManagerException {
+    try {
+      String data = s3FileService.getS3File(resource, format, reference);
+      ResourceFileDto resourceFileDto = new ResourceFileDto();
+      resourceFileDto.setReferencia(reference);
+      resourceFileDto.setTipoRecurso(resource.name());
+      resourceFileDto.setData(data);
+      resourceFileDto.setFormat(format);
+      resourceFileDto.setTipoArchivo(type);
+      return resourceFileDto;
+    } catch (Exception e) {
+      throw new InvoiceManagerException(
+          String.format(
+              "Error obteniendo el recurso %s de la referencia %s del tipo %s con el error:%s",
+              resource, reference, type, e.getMessage()),
+          HttpStatus.CONFLICT.value());
+    }
+  }
+
+  public void upsertFacturaFile(
       S3BucketsEnum bucket, String fileFormat, String name, ByteArrayOutputStream file)
       throws InvoiceManagerException {
     s3FileService.upsertS3File(bucket, fileFormat, name, file);
   }
 
-  public void deleteS3File(String folio, String type) throws InvoiceManagerException {
+  public void upsertResourceFile(ResourceFileDto resourceFile) throws InvoiceManagerException {
+    byte[] decodedBytes = Base64.getDecoder().decode(resourceFile.getData());
+    ByteArrayOutputStream baos = new ByteArrayOutputStream(decodedBytes.length);
+    baos.write(decodedBytes, 0, decodedBytes.length);
+    s3FileService.upsertS3File(
+        S3BucketsEnum.findByValor(resourceFile.getTipoRecurso()),
+        resourceFile.getFormat(),
+        resourceFile.getReferencia(),
+        baos);
+  }
+
+  public void deleteFacturaFile(String folio, String type) throws InvoiceManagerException {
     s3FileService.deleteS3File(
-        S3BucketsEnum.FACTURAS, TipoArchivoEnum.valueOf(type).getFormat(), folio);
+        S3BucketsEnum.CFDIS, TipoArchivoEnum.valueOf(type).getFormat(), folio);
   }
 
-  public ResourceFileDto getResourceFileByResourceReferenceAndType(
-      String resource, String referencia, String type) throws InvoiceManagerException {
-    return filesDao
-        .findResourceFileByResourceTypeAndReference(resource, referencia, type)
-        .orElseThrow(
-            () ->
-                new InvoiceManagerException(
-                    "El recurso solicitado no existe.", HttpStatus.NOT_FOUND.value()));
-  }
-
-  public Optional<ResourceFileDto> findResourceFileByResourceReferenceAndType(
-      String resource, String referencia, String type) {
-    return filesDao.findResourceFileByResourceTypeAndReference(resource, type, referencia);
-  }
-
-  public void upsertResourceFile(ResourceFileDto resourceFile) {
-    Optional<ResourceFileDto> resource =
-        filesDao.findResourceFileByResourceTypeAndReference(
-            resourceFile.getTipoRecurso(),
-            resourceFile.getReferencia(),
-            resourceFile.getTipoArchivo());
-    if (resource.isPresent()) {
-      resourceFile.setId(resource.get().getId());
-      filesDao.updateResourceFile(resource.get().getId(), resourceFile);
-    } else {
-      filesDao.insertResourceFile(resourceFile);
+  public void deleteResourceFileByResourceReferenceAndType(String resource, String referencia)
+      throws InvoiceManagerException {
+    Optional<ResourceFile> resourceFile =
+        resourceFileRepository.findByTipoRecursoAndReferencia(resource, referencia);
+    if (resourceFile.isPresent()) {
+      ResourceFile file = resourceFile.get();
+      s3FileService.deleteS3File(
+          S3BucketsEnum.findByValor(file.getTipoRecurso()),
+          TipoArchivoEnum.valueOf(file.getTipoArchivo()).getFormat(),
+          file.getReferencia());
+      resourceFileRepository.delete(file);
     }
   }
 
-  public void deleteResourceFile(Integer id) {
-    filesDao.deletResourceFileById(id);
-  }
-
-  public void deleteResourceFileByResourceReferenceAndType(
-      String resource, String referencia, String type) {
-    filesDao.deleteResourceFileByResourceTypeAndReference(resource, type, referencia);
+  public void deleteResourceFile(Integer id) throws InvoiceManagerException {
+    Optional<ResourceFile> resourceFile = resourceFileRepository.findById(id);
+    if (resourceFile.isPresent()) {
+      ResourceFile file = resourceFile.get();
+      s3FileService.deleteS3File(
+          S3BucketsEnum.findByValor(file.getTipoRecurso()),
+          TipoArchivoEnum.valueOf(file.getTipoArchivo()).getFormat(),
+          file.getReferencia());
+      resourceFileRepository.delete(file);
+    }
   }
 }

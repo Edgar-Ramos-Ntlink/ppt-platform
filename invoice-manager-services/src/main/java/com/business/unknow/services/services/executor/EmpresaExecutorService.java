@@ -1,9 +1,10 @@
 package com.business.unknow.services.services.executor;
 
-import com.business.unknow.enums.ResourceFileEnum;
-import com.business.unknow.enums.TipoRecursoEnum;
+import com.business.unknow.enums.S3BucketsEnum;
+import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
+import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.mapper.ContribuyenteMapper;
@@ -28,27 +29,27 @@ public class EmpresaExecutorService {
 
   @Autowired private FilesService filesService;
 
-  public EmpresaDto createEmpresa(EmpresaDto empresaDto) {
+  public EmpresaDto createEmpresa(EmpresaDto empresaDto) throws InvoiceManagerException {
     empresaDto.getInformacionFiscal().setFechaActualizacion(new Date());
     empresaDto.getInformacionFiscal().setFechaCreacion(new Date());
     String logo = empresaDto.getLogotipo();
     filesService.upsertResourceFile(
         new ResourceFileDto(
-            ResourceFileEnum.CERT.name(),
+            TipoArchivoEnum.CERT.name(),
             empresaDto.getInformacionFiscal().getRfc(),
-            TipoRecursoEnum.EMPRESA.name(),
+            S3BucketsEnum.EMPRESAS.name(),
             empresaDto.getCertificado()));
     filesService.upsertResourceFile(
         new ResourceFileDto(
-            ResourceFileEnum.KEY.name(),
+            TipoArchivoEnum.KEY.name(),
             empresaDto.getInformacionFiscal().getRfc(),
-            TipoRecursoEnum.EMPRESA.name(),
+            S3BucketsEnum.EMPRESAS.name(),
             empresaDto.getLlavePrivada()));
     filesService.upsertResourceFile(
         new ResourceFileDto(
-            ResourceFileEnum.LOGO.name(),
+            TipoArchivoEnum.LOGO.name(),
             empresaDto.getInformacionFiscal().getRfc(),
-            TipoRecursoEnum.EMPRESA.name(),
+            S3BucketsEnum.EMPRESAS.name(),
             logo.substring(logo.indexOf("base64") + 7)));
     Contribuyente contribuyente =
         contribuyenteRepository.save(
@@ -58,30 +59,30 @@ public class EmpresaExecutorService {
     return empresaMapper.getEmpresaDtoFromEntity(empresaRepository.save(empresa));
   }
 
-  public void updateLogo(String rfc, String data) {
+  public void updateLogo(String rfc, String data) throws InvoiceManagerException {
     if (data != null) {
       filesService.upsertResourceFile(
           new ResourceFileDto(
-              ResourceFileEnum.LOGO.name(),
+              TipoArchivoEnum.LOGO.name(),
               rfc,
-              TipoRecursoEnum.EMPRESA.name(),
+              S3BucketsEnum.EMPRESAS.name(),
               data.substring(data.indexOf("base64") + 7)));
     }
   }
 
-  public void updateCertificado(String rfc, String data) {
+  public void updateCertificado(String rfc, String data) throws InvoiceManagerException {
     if (data != null) {
       filesService.upsertResourceFile(
           new ResourceFileDto(
-              ResourceFileEnum.CERT.name(), rfc, TipoRecursoEnum.EMPRESA.name(), data));
+              TipoArchivoEnum.CERT.name(), rfc, S3BucketsEnum.EMPRESAS.name(), data));
     }
   }
 
-  public void updateKey(String rfc, String data) {
+  public void updateKey(String rfc, String data) throws InvoiceManagerException {
     if (data != null) {
       filesService.upsertResourceFile(
           new ResourceFileDto(
-              ResourceFileEnum.KEY.name(), rfc, TipoRecursoEnum.EMPRESA.name(), data));
+              TipoArchivoEnum.KEY.name(), rfc, S3BucketsEnum.EMPRESAS.name(), data));
     }
   }
 }

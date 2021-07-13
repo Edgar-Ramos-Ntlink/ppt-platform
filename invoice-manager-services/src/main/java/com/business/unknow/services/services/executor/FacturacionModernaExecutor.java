@@ -111,14 +111,14 @@ public class FacturacionModernaExecutor extends AbstractPackExecutor {
       e.printStackTrace();
       throw new InvoiceManagerException(
           String.format(
-              "Error Stamping in facturacion moderna: %s Detail:%s",
+              "Error timbrando con facturacion moderna: %s Detail:%s",
               e.getMessage(), e.getErrorMessage().getMessageDetail()),
           e.getMessage(),
           HttpStatus.SC_CONFLICT);
     } catch (InvoiceCommonException e) {
       throw new InvoiceManagerException(
           String.format(
-              "Error Stamping in facturacion moderna: %s Detail:%s",
+              "Error timbrando con facturacion moderna: %s Detail:%s",
               e.getMessage(), e.getErrorMessage().getDeveloperMessage()),
           e.getMessage(),
           HttpStatus.SC_CONFLICT);

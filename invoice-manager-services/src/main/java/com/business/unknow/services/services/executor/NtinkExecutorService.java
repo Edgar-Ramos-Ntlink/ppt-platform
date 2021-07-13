@@ -150,14 +150,14 @@ public class NtinkExecutorService extends AbstractPackExecutor {
       e.printStackTrace();
       throw new InvoiceManagerException(
           String.format(
-              "Error Stamping in facturacion moderna:  Error:%s detail:%s",
+              "Error Timbrando con NTLINK:  Error:%s detail:%s",
               e.getMessage(), e.getErrorMessage().getMessageDetail()),
           e.getMessage(),
           HttpStatus.SC_CONFLICT);
     } catch (InvoiceCommonException e) {
       throw new InvoiceManagerException(
           String.format(
-              "Error Stamping in facturacion moderna: Error:%s detail:%s",
+              "Error Timbrando con NTLINK: Error:%s detail:%s",
               e.getMessage(), e.getErrorMessage().getDeveloperMessage()),
           e.getMessage(),
           HttpStatus.SC_CONFLICT);

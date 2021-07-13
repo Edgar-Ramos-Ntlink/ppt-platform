@@ -57,7 +57,7 @@ public class MailHelper {
         multipart.addBodyPart(text);
         for (FileConfig file : emailConfig.getArchivos()) {
           BodyPart fileBodyPart = new PreencodedMimeBodyPart("base64");
-          fileBodyPart.setText(file.getTipòArchivo().getDescripcion());
+          fileBodyPart.setText(file.getTipòArchivo().name());
           ByteArrayDataSource rawData =
               new ByteArrayDataSource(
                   file.getBase64Content().getBytes(), file.getTipòArchivo().getByteArrayData());

@@ -9,6 +9,7 @@ import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaPdfModelDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.catalogs.FormaPago;
@@ -71,17 +72,31 @@ public class PDFService {
     } catch (InvoiceManagerException e) {
       log.info(String.format("%s file for Qr not found", facturaDto.getFolio()));
     }
+    ResourceFileDto logo = null;
+    try {
+      logo =
+          filesService.getResourceFileByResourceReferenceAndType(
+              S3BucketsEnum.EMPRESAS,
+              TipoArchivoEnum.LOGO.name(),
+              facturaDto.getRfcEmisor(),
+              TipoArchivoEnum.LOGO.getFormat());
+    } catch (InvoiceManagerException e) {
+      log.info(String.format("%s file for logo not found", facturaDto.getFolio()));
+    }
+    try {
+      logo =
+          filesService.getResourceFileByResourceReferenceAndType(
+              S3BucketsEnum.EMPRESAS,
+              TipoArchivoEnum.LOGO.name(),
+              facturaDto.getRfcEmisor(),
+              TipoArchivoEnum.LOGO.getFormat());
+    } catch (InvoiceManagerException e) {
+      log.info(String.format("%s file for Qr not found", facturaDto.getFolio()));
+    }
     fBuilder
         .setMetodoPagoDesc(
             MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
-        .setLogotipo(
-            filesService
-                .findResourceFileByResourceReferenceAndType(
-                    TipoRecursoEnum.EMPRESA.name(),
-                    ResourceFileEnum.LOGO.name(),
-                    facturaDto.getRfcEmisor())
-                .map(q -> q.getData())
-                .orElse(null))
+        .setLogotipo(logo == null ? null : logo.getData())
         .setTipoDeComprobanteDesc(
             TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante())
                 .getDescripcion())
@@ -142,17 +157,21 @@ public class PDFService {
     } catch (InvoiceManagerException e) {
       log.info(String.format("%s file for Qr not found", facturaDto.getFolio()));
     }
+    ResourceFileDto logo = null;
+    try {
+      logo =
+          filesService.getResourceFileByResourceReferenceAndType(
+              S3BucketsEnum.EMPRESAS,
+              TipoArchivoEnum.LOGO.name(),
+              facturaDto.getRfcEmisor(),
+              TipoArchivoEnum.LOGO.getFormat());
+    } catch (InvoiceManagerException e) {
+      log.info(String.format("%s file for Qr not found", facturaDto.getFolio()));
+    }
     fBuilder
         .setMetodoPagoDesc(
             MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
-        .setLogotipo(
-            filesService
-                .findResourceFileByResourceReferenceAndType(
-                    TipoRecursoEnum.EMPRESA.name(),
-                    ResourceFileEnum.LOGO.name(),
-                    facturaDto.getRfcEmisor())
-                .map(q -> q.getData())
-                .orElse(null))
+        .setLogotipo(logo == null ? null : logo.getData())
         .setTipoDeComprobanteDesc(
             TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante())
                 .getDescripcion())
@@ -262,11 +281,8 @@ public class PDFService {
       Reader inputReader = new StringReader(xmlContent);
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       pdfGenerator.render(inputReader, outputStream, templateReader);
-      filesService.upsertS3File(
-          S3BucketsEnum.FACTURAS,
-          TipoArchivoEnum.PDF.getFormat(),
-          factura.getFolio(),
-          outputStream);
+      filesService.upsertFacturaFile(
+          S3BucketsEnum.CFDIS, TipoArchivoEnum.PDF.getFormat(), factura.getFolio(), outputStream);
       String data = Base64.getEncoder().encodeToString(outputStream.toByteArray());
       FacturaFileDto factFile = new FacturaFileDto();
       factFile.setData(data);
@@ -338,8 +354,8 @@ public class PDFService {
       Reader inputReader = new StringReader(xmlContent);
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       pdfGenerator.render(inputReader, outputStream, templateReader);
-      filesService.upsertS3File(
-          S3BucketsEnum.FACTURAS,
+      filesService.upsertFacturaFile(
+          S3BucketsEnum.CFDIS,
           TipoArchivoEnum.PDF.getFormat(),
           context.getFacturaDto().getFolio(),
           outputStream);
