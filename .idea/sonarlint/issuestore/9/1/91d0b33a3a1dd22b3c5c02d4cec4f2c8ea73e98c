@@ -1,0 +1,15 @@
+
+b
+java:S1192;"GDefine a constant instead of duplicating this literal "cuenta" 3 times.(âºéÿÿÿÿÿ
+\
+java:S11926"FDefine a constant instead of duplicating this literal "banco" 3 times.(Àëİ
+c
+java:S11920"HDefine a constant instead of duplicating this literal "empresa" 3 times.(‹íìÿÿÿÿÿ
+\
+java:S1192A"FDefine a constant instead of duplicating this literal "clabe" 3 times.(Ó¢Ÿî
+R
+java:S3655c"7Call "Optional#isPresent()" before accessing the value.(µ¡áçøÿÿÿÿ
+E
+java:S6212o"/Declare this local variable with "var" instead.(ø ÑÁ
+J
+java:S1172v"/Remove this unused method parameter "cuentaId".(ªğìÜøÿÿÿÿ

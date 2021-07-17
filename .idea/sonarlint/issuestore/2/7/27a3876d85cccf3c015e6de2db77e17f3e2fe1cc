@@ -1,0 +1,35 @@
+
+U
+java:S3655„"9Call "primerPago.isPresent()" before accessing the value.(Âùô°ıÿÿÿÿ
+E
+java:S6212;"/Declare this local variable with "var" instead.(µìÊ¼
+E
+java:S6212<"/Declare this local variable with "var" instead.(“°™
+J
+java:S6212@"/Declare this local variable with "var" instead.(Ùß…şÿÿÿÿÿ
+F
+java:S1874X"0Remove this use of "setScale"; it is deprecated.(Ó®­
+K
+java:S1874X"5Remove this use of "ROUND_HALF_UP"; it is deprecated.(Ó®­
+F
+java:S1874_"0Remove this use of "setScale"; it is deprecated.(ıÀ²ª
+K
+java:S1874_"5Remove this use of "ROUND_HALF_UP"; it is deprecated.(ıÀ²ª
+J
+java:S6212x"/Declare this local variable with "var" instead.(Ùß…şÿÿÿÿÿ
+J
+java:S6212"/Declare this local variable with "var" instead.(µûÉüÿÿÿÿ
+K
+java:S6212€"/Declare this local variable with "var" instead.(õ’üÿÿÿÿ
+F
+java:S6212"/Declare this local variable with "var" instead.(ß¤´¦
+F
+java:S6212‹"/Declare this local variable with "var" instead.(ˆ‰ß©
+L
+java:S1874"0Remove this use of "setScale"; it is deprecated.(íŸÀùÿÿÿÿ
+N
+java:S1874"2Remove this use of "ROUND_DOWN"; it is deprecated.(íŸÀùÿÿÿÿ
+F
+java:S6212ò"/Declare this local variable with "var" instead.(“°™
+F
+java:S6212ÿ"/Declare this local variable with "var" instead.(µìÊ¼

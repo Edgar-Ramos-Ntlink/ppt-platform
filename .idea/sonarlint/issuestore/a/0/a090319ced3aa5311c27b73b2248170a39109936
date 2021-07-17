@@ -1,0 +1,15 @@
+
+y
+java:S1104@"^Make representanteLegal a static final constant or non-public and provide accessors if needed.(Ôô©Éùÿÿÿÿ
+f
+java:S1104A"PMake ciec a static final constant or non-public and provide accessors if needed.(‡¡ê±
+P
+java:S1133Y"5Do not forget to remove this deprecated code someday.(…¬×Éüÿÿÿÿ
+C
+java:S1123Y"(Add the missing @deprecated Javadoc tag.(…¬×Éüÿÿÿÿ
+M
+java:S1135W"2Complete the task associated to this TODO comment.(ôèÏıÿÿÿÿ
+K
+java:S1133["5Do not forget to remove this deprecated code someday.(ñ ¸
+>
+java:S1123["(Add the missing @deprecated Javadoc tag.(ñ ¸
