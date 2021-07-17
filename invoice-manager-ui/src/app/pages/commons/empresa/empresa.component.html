@@ -15,7 +15,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="inputRFC" class="label">RFC</label>
-                  <input type="text" [(ngModel)]="companyInfo.informacionFiscal.rfc" class="form-control" fullWidth
+                  <input type="text" [(ngModel)]="companyInfo.rfc" class="form-control" fullWidth
                     id="inputRFC" placeholder="RFC Empresa"
                     [disabled]="companyInfo.id!==undefined || companyInfo.activo">
                 </div>
@@ -23,7 +23,7 @@
               <div class="col-md-5">
                 <div class="form-group">
                   <label for="inputSocialReason" class="label">Razón Social</label>
-                  <input type="text" [(ngModel)]="companyInfo.informacionFiscal.razonSocial" class="form-control"
+                  <input type="text" [(ngModel)]="companyInfo.razonSocial" class="form-control"
                     fullWidth [disabled]="companyInfo.activo" id="inputSocialReason" placeholder="Razón Social">
                 </div>
               </div>
@@ -48,7 +48,7 @@
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="inputZipCode" class="label">Código Postal</label>
-                  <input type="text" [(ngModel)]="companyInfo.informacionFiscal.cp"
+                  <input type="text" [(ngModel)]="companyInfo.cp"
                     (ngModelChange)="zipCodeInfo($event)" [disabled]="companyInfo.activo" class="form-control" fullWidth
                     id="inputZipCode" placeholder="00300">
                 </div>
@@ -60,7 +60,7 @@
                   <option value="*">Seleccionar</option>
                   <option *ngFor="let colonia of colonias; let i = index" [value]="i">{{colonia}}</option>
                 </select>
-                <input type="text" [(ngModel)]="companyInfo.informacionFiscal.localidad" class="form-control" fullWidth
+                <input type="text" [(ngModel)]="companyInfo.localidad" class="form-control" fullWidth
                   [disabled]="companyInfo.activo" *ngIf="companyInfo.activo" id="inputLocalidad" placeholder="Colonia">
               </div>
 
@@ -68,13 +68,13 @@
             <div class="row slide_3">
               <div class="col-sm-4">
                 <label for="inputState" class="label">Estado</label>
-                <input type="text" [(ngModel)]="companyInfo.informacionFiscal.estado" class="form-control" fullWidth
+                <input type="text" [(ngModel)]="companyInfo.estado" class="form-control" fullWidth
                   id="inputState" [disabled]="companyInfo.activo" placeholder="Estado">
               </div>
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="inputCity" class="label">Municipio/Delegación</label>
-                  <input type="text" [(ngModel)]="companyInfo.informacionFiscal.municipio" class="form-control"
+                  <input type="text" [(ngModel)]="companyInfo.municipio" class="form-control"
                     fullWidth id="inputCity" [disabled]="companyInfo.activo" placeholder="Municipio/Delegación">
                 </div>
               </div>
@@ -83,21 +83,21 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="inputCalle" class="label">Calle</label>
-                  <input type="text" [(ngModel)]="companyInfo.informacionFiscal.calle" class="form-control" fullWidth
+                  <input type="text" [(ngModel)]="companyInfo.calle" class="form-control" fullWidth
                     id="inputCalle" [disabled]="companyInfo.activo" placeholder="Calle">
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="inputExterior" class="label">No exterior</label>
-                  <input type="text" [(ngModel)]="companyInfo.informacionFiscal.noExterior" class="form-control"
+                  <input type="text" [(ngModel)]="companyInfo.noExterior" class="form-control"
                     fullWidth [disabled]="companyInfo.activo" id="inputExterior" placeholder="No exterior">
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="inputInterior" class="label">No interior</label>
-                  <input type="text" [(ngModel)]="companyInfo.informacionFiscal.noInterior" class="form-control"
+                  <input type="text" [(ngModel)]="companyInfo.noInterior" class="form-control"
                     fullWidth [disabled]="companyInfo.activo" id="inputInterior" placeholder="No interior">
                 </div>
               </div>
