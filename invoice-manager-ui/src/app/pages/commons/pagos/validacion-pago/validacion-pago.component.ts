@@ -39,7 +39,7 @@ export class ValidacionPagoComponent implements OnInit {
   public mostrarComprobante(pago: PagoBase) {
     this.comprobanteUrl = undefined;
     if (pago.formaPago !== 'CREDITO' && pago.formaPago !== 'EFECTIVO') {
-      this.filesService.getResourceFile(`${pago.id}`, 'PAGO', 'IMAGEN').subscribe(
+      this.filesService.getResourceFile(`${pago.id}`, 'PAGOS', 'IMAGEN').subscribe(
         (file) => {
           this.comprobanteUrl = this.sanitizer.bypassSecurityTrustUrl(file.data)
           this.cosa = file.data;

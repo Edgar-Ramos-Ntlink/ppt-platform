@@ -428,7 +428,7 @@ public class PagoService {
       facturaPagosRepository.delete(pagoFactura);
     }
     filesService.deleteResourceFileByResourceReferenceAndType(
-        "PAGO", idPago.toString(), TipoArchivoEnum.IMAGEN.name());
+        "PAGOS", idPago.toString(), TipoArchivoEnum.IMAGEN.name());
     repository.delete(mapper.getEntityFromPagoDto(payment));
   }
 }

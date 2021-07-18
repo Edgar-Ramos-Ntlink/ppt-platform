@@ -1,6 +1,7 @@
 /** */
 package com.business.unknow.services.services;
 
+import com.amazonaws.util.Base64;
 import com.business.unknow.enums.S3BucketsEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.dto.files.FacturaFileDto;
@@ -10,7 +11,7 @@ import com.business.unknow.services.entities.ResourceFile;
 import com.business.unknow.services.mapper.ResourceFileMapper;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
 import java.io.ByteArrayOutputStream;
-import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -76,7 +77,7 @@ public class FilesService {
   }
 
   public void upsertResourceFile(ResourceFileDto resourceFile) throws InvoiceManagerException {
-    byte[] decodedBytes = Base64.getDecoder().decode(resourceFile.getData());
+    byte[] decodedBytes = Base64.decode(resourceFile.getData());
     ByteArrayOutputStream baos = new ByteArrayOutputStream(decodedBytes.length);
     baos.write(decodedBytes, 0, decodedBytes.length);
     s3FileService.upsertS3File(
@@ -95,12 +96,12 @@ public class FilesService {
   public void deleteResourceFileByResourceReferenceAndType(
       String resource, String referencia, String tipoArchivo) throws InvoiceManagerException {
     Optional<ResourceFile> resourceFile =
-        resourceFileRepository.findByTipoRecursoAndTipoArchivo(resource, tipoArchivo);
+        resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(resource,referencia, tipoArchivo);
     if (resourceFile.isPresent()) {
       ResourceFile file = resourceFile.get();
       s3FileService.deleteS3File(
           S3BucketsEnum.findByValor(file.getTipoRecurso()),
-          TipoArchivoEnum.valueOf(file.getTipoArchivo()).getFormat(),
+              file.getFormato(),
           file.getReferencia());
       resourceFileRepository.delete(file);
     }

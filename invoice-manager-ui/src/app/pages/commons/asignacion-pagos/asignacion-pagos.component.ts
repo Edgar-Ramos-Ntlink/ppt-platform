@@ -190,7 +190,7 @@ this.userService.getUserInfo().then(user => {this.user = user;});
         result => {
           const resourceFile = new ResourceFile();
           resourceFile.tipoArchivo = 'IMAGEN';
-          resourceFile.tipoRecurso = 'PAGO';
+          resourceFile.tipoRecurso = 'PAGOS';
           resourceFile.referencia  = `${result.id}`;
           resourceFile.data = payment.documento;
           this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));
