@@ -2,22 +2,16 @@ package com.business.unknow.enums;
 
 public enum TipoDocumentoEnum {
 
-	FACTURA(1,"Factura"),
-	COMPLEMENTO(2,"Complemento"),
-	PREGUNTAR(3,"PREGUNTAR"),
-	NOTA_CREDITO(4,"NotaDeCredito"),
-	NOT_VALID(0,"NOT_VALID");
+	FACTURA("Factura"),
+	COMPLEMENTO("Complemento"),
+	PREGUNTAR("PREGUNTAR"),
+	NOTA_CREDITO("NotaDeCredito"),
+	NOT_VALID("NOT_VALID");
 
-	private Integer valor;
 	private String descripcion;
 
-	private TipoDocumentoEnum(Integer valor, String descripcion) {
-		this.valor = valor;
+	private TipoDocumentoEnum( String descripcion) {
 		this.descripcion = descripcion;
-	}
-
-	public Integer getValor() {
-		return valor;
 	}
 
 	public String getDescripcion() {
