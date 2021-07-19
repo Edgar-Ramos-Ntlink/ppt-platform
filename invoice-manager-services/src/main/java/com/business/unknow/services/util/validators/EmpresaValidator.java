@@ -40,9 +40,5 @@ public class EmpresaValidator extends AbstractValidator {
     checkNotNull(dto.getGiro(), "Giro");
     checkNotNull(dto.getTipo(), "Tipo");
     checkNotEquals(dto.getTipo(), "*");
-    checkNotNull(dto.getCorreo(), "Correo");
-    checkValidEmail(dto.getCorreo());
-    checkNotNull(dto.getCertificado(), "Certificado");
-    checkNotNull(dto.getLlavePrivada(), "Llave privada");
   }
 }

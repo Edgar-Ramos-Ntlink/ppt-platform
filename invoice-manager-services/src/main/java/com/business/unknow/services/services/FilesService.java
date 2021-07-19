@@ -48,13 +48,13 @@ public class FilesService {
       Optional<ResourceFile> entity =
           resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(
               resource.name(), reference, type);
-      ResourceFileDto resourceFileDto = new ResourceFileDto();
-      resourceFileDto.setReferencia(reference);
-      resourceFileDto.setTipoRecurso(resource.name());
+      ResourceFileDto resourceFileDto =
+          ResourceFileDto.builder().referencia(reference).tipoArchivo(resource.name()).build();
+
       if (entity.isPresent()) {
-        resourceFileDto.setFormat(entity.get().getFormato());
+        resourceFileDto.setFormato(entity.get().getFormato());
       } else {
-        resourceFileDto.setFormat(format);
+        resourceFileDto.setFormato(format);
       }
       String data = s3FileService.getS3File(resource, resourceFileDto.getFormato(), reference);
       resourceFileDto.setData(data);
