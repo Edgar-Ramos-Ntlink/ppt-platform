@@ -140,31 +140,54 @@
             </div>
             
           </nb-tab>
-          <nb-tab tabTitle="Datos digitales">
+          <nb-tab tabTitle="Datos digitales" *ngIf="formInfo.rfc != ''">
             <p class="font-weight-bold puff_center">Claves y accessos</p>
             <div class="row slide_4">
-              <div class="col-sm-6">
+              <div class="col-sm-3">
                 <div class="form-group">
                   <label for="inputEmail" class="label">Correo Empresa</label>
                   <input type="email" [(ngModel)]="companyInfo.correo" class="form-control" fullWidth id="inputEmail"
-                    [disabled]="companyInfo.activo" placeholder="Email">
+                     placeholder="Email">
                 </div>
               </div>
-              <div class="col-sm-6">
+              <div class="col-sm-3">
                 <div class="form-group">
                   <label for="inputPassword" class="label">Contraseña correo</label>
-                  <input type="text" [(ngModel)]="companyInfo.pwCorreo" class="form-control" fullWidth
-                    id="inputPassword" [disabled]="companyInfo.activo" placeholder="Password">
+                  <input type="password" [(ngModel)]="companyInfo.pwCorreo" class="form-control" fullWidth
+                    id="inputPassword"  placeholder="Password">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="inputPasswordSAT" class="label">Contraseña SAT</label>
+                  <input type="password" [(ngModel)]="companyInfo.pwSat" class="form-control" fullWidth
+                    id="inputPasswordSAT" placeholder="Contraseña SAT">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="noCert" class="label">No de certificado</label>
+                  <input type="text" [(ngModel)]="companyInfo.noCertificado" class="form-control" fullWidth
+                     id="noCert" placeholder="0000000000">
                 </div>
               </div>
             </div>
+           
+
+            <p class="font-weight-bold puff_center">Datos facturacion</p>
+
             <div class="row slide_4">
+              <div class="col-md-6">
+                <label for="inputWeb" class="label">Sitio web</label>
+                <input type="text" [(ngModel)]="companyInfo.web" class="form-control" fullWidth
+                   id="inputWeb" placeholder="www.mi-empresa.com">
+              </div>
               <div class="form-group col-md-3">
                 <label for="certFile" class="label">Certificado SAT</label>
                 <div class="input-group">
                   <div class="custom-file" id="certFile">
                     <input type="file" class="custom-file-input" id="inputCertificateFile" accept=".cer"
-                      [disabled]="companyInfo.activo" (change)="certificateUploadListener($event)"
+                       (change)="certificateUploadListener($event)"
                       style="display:block;" aria-describedby="inputGroupFileAddon01">
                     <label class="custom-file-label" for="inputCertificateFile">{{formInfo.certificateFileName}}</label>
                   </div>
@@ -176,38 +199,11 @@
                 <div class="input-group">
                   <div class="custom-file" id="keyFile">
                     <input type="file" class="custom-file-input" id="inputKeyFile" accept=".key"
-                      [disabled]="companyInfo.activo" (change)="keyUploadListener($event)" style="display:block;"
+                       (change)="keyUploadListener($event)" style="display:block;"
                       aria-describedby="inputGroupFileAddon01">
                     <label class="custom-file-label" for="inputKeyFile">{{formInfo.keyFileName}}</label>
                   </div>
                 </div>
-              </div>
-
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="inputPasswordSAT" class="label">Contraseña SAT</label>
-                  <input type="password" [(ngModel)]="companyInfo.pwSat" class="form-control" fullWidth
-                    [disabled]="companyInfo.activo" id="inputPasswordSAT" placeholder="Contraseña SAT">
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="noCert" class="label">No de certificado</label>
-                  <input type="text" [(ngModel)]="companyInfo.noCertificado" class="form-control" fullWidth
-                    [disabled]="companyInfo.activo" id="noCert" placeholder="0000000000">
-                </div>
-              </div>
-            </div>
-
-            <p class="font-weight-bold puff_center">Datos facturacion</p>
-
-            <div class="row slide_4">
-              <div class="col-md-6">
-
-                <label for="inputWeb" class="label">Sitio web</label>
-                <input type="text" [(ngModel)]="companyInfo.web" class="form-control" fullWidth
-                  [disabled]="companyInfo.activo" id="inputWeb" placeholder="www.mi-empresa.com">
-
               </div>
             </div>
             <label for="logoFile" class="label">Logotipo Empresa</label>
@@ -217,7 +213,7 @@
                 <div class="input-group">
                   <div class="custom-file" id="logoFile">
                     <input type="file" class="custom-file-input" id="inputLogoFile" accept="image/*"
-                      [disabled]="companyInfo.activo" (change)="logoUploadListener($event)" style="display:block;"
+                     (change)="logoUploadListener($event)" style="display:block;"
                       aria-describedby="inputGroupFileAddon01">
                     <label class="custom-file-label" for="inputLogoFile">{{formInfo.logoFileName}}</label>
                   </div>
@@ -231,10 +227,10 @@
               </div>
             </div>
           </nb-tab>
-          <nb-tab tabTitle="Legales">
+          <nb-tab tabTitle="Legales" *ngIf="formInfo.rfc != ''">
             <p class="font-weight-bold puff_center">Datos legales</p>
             <div class="row slide_1">
-              <div class="col-md-5">
+              <div class="col-md-6">
                 <div class="form-group">
                   <label for="inputRepresentante" class="label">Representante Legal</label>
                   <input type="text" [(ngModel)]="companyInfo.representanteLegal" class="form-control" fullWidth
@@ -245,7 +241,7 @@
               <div class="col-sm-3">
                 <label for="inputAlta" class="label">Año Alta</label>
                 <select selected="*" id="inputAlta" style="display:block" fullWidth class="form-control"
-                  [disabled]="companyInfo.activo" [(ngModel)]="companyInfo.anioAlta">
+                   [(ngModel)]="companyInfo.anioAlta">
                   <option value="*">Seleccionar</option>
                   <option value="2018">2018</option>
                   <option value="2019">2019</option>
@@ -258,13 +254,43 @@
                 <div class="form-group">
                   <label for="inputShortName" class="label">Nombre Corto</label>
                   <input type="text" [(ngModel)]="companyInfo.nombre" class="form-control"
-                    fullWidth [disabled]="companyInfo.activo" id="inputShortName" placeholder="Nombre corto">
+                    fullWidth  id="inputShortName" placeholder="Nombre corto">
                 </div>
               </div>
 
             </div>
+            <div class="row slide_1">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="registroPatronal" class="label">Registro Patronal</label>
+                  <input type="text" [(ngModel)]="companyInfo.registroPatronal" class="form-control"
+                    fullWidth  id="inputShortName" placeholder="Registro Patronal">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="estatusJuridico" class="label">Estatus Juridico</label>
+                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico" class="form-control"
+                    fullWidth  id="estatusJuridico" placeholder="EstatusJuridico">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="estatusJuridico2" class="label">Estatus Juridico 2</label>
+                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico2" class="form-control"
+                    fullWidth  id="estatusJuridico2" placeholder="Estatus Juridico 2">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="ciec" class="label">Contraseña del SAT</label>
+                  <input type="password" [(ngModel)]="companyInfo.ciec" class="form-control" fullWidth
+                    id="ciec" placeholder="Contraseña del SAT">
+                </div>
+              </div>
+            </div>  
           </nb-tab>
-          <nb-tab tabTitle="Cuentas bancarias">
+          <nb-tab tabTitle="Cuentas bancarias" *ngIf="formInfo.rfc != ''">
             <div class="row">
               <div class="col-md-12">
 
@@ -282,8 +308,7 @@
                     <thead class="thead-dark">
                       <tr>
 
-                        <th scope="col">BANCO</th>
-                        <th scope="col">EMPRESA</th>
+                        <th scope="col">BANCO</th>  
                         <th scope="col">NO_CUENTA</th>
                         <th scope="col">CLABE</th>
                         <th scope="col">fechaCreacion</th>
@@ -295,7 +320,6 @@
                       <tr *ngFor="let fila of cuentas">
 
                         <td scope="row">{{fila.banco}}</td>
-                        <td scope="row">{{fila.empresa}}</td>
                         <td scope="row">{{fila.cuenta}}</td>
                         <td scope="row">{{fila.clabe}}</td>
                         <td scope="row">{{fila.fechaCreacion}}</td>
@@ -307,12 +331,110 @@
               </div>
             </div>
           </nb-tab>
-          <nb-tab tabTitle="Contabilidad">
-            <span>Content #3</span>
+          <nb-tab tabTitle="Contabilidad" *ngIf="formInfo.rfc != ''">
+            <div class="row">
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="creador" class="label">Creador</label>
+                  <input type="text" [(ngModel)]="companyInfo.creador" class="form-control"
+                    fullWidth id="creador" placeholder="Creador">
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label for="fechaCreacion" class="label">Fecha de Creacion</label>
+                <input nbInput placeholder="Fecha de Creacion" [nbDatepicker]="fechaCreacion" fullWidth style="display:block;"
+                  class="form-control" [(ngModel)]="companyInfo.fechaCreacion">
+                <nb-datepicker #fechaCreacion></nb-datepicker>
+              </div>
+              <div class="col-md-4">
+                <label for="fechaActualizacion" class="label">Fecha de Actualizacion</label>
+                <input nbInput placeholder="Fecha de Actualizacion" [nbDatepicker]="fechaActualizacion" fullWidth style="display:block;"
+                  class="form-control" [(ngModel)]="companyInfo.fechaActualizacion">
+                <nb-datepicker #fechaActualizacion></nb-datepicker>
+              </div>
+
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-12">
+
+                <div class="puff_center">
+                  <p class="font-weight-bold puff_center">Lista de Ingresos Relacionadas a la Empresa</p>
+                </div>
+
+
+                <div class="puff_center" *ngIf="companyInfo.ingresos === undefined" class="alert alert-primary" role="alert">
+                  No se encontraron resultados de Ingresos
+                </div>
+
+                <div class="table-responsive slide_1" *ngIf="companyInfo.ingresos !== undefined">
+                  <table class="table table-sm">
+                    <thead class="thead-dark">
+                      <tr>
+
+                       
+                        <th scope="col">Ingresos</th>
+                       
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let fila of companyInfo.ingresos">
+
+                        <td scope="row">{{fila}}</td>
+                      
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
           </nb-tab>
 
-          <nb-tab tabTitle="Observaciones">
-            <span>Content #3</span>
+          <nb-tab tabTitle="Observaciones" *ngIf="formInfo.rfc != ''">
+            <div class="row">
+              <div class="col-md-12">
+
+                <div class="puff_center">
+                  <p class="font-weight-bold puff_center">Observaciones de la Empresa</p>
+                </div>
+
+
+                <div class="puff_center" *ngIf="companyInfo.observaciones === undefined" class="alert alert-primary" role="alert">
+                  No se encontraron resultados
+                </div>
+
+                <div class="table-responsive slide_1" *ngIf="companyInfo.observaciones !== undefined">
+                  <table class="table table-sm">
+                    <thead class="thead-dark">
+                      <tr>
+
+                        <th scope="col">AREA</th>  
+                        <th scope="col">OBSERVACIONES</th>
+                        <th scope="col">DETALLES</th>
+                        <th scope="col">NOTIFICANTE</th>
+                      
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let fila of companyInfo.observaciones">
+
+                        <td scope="row">{{fila.area}}</td>
+                        <td scope="row">{{fila.observacion}}</td>
+                        <td scope="row">{{fila.detalles}}</td>
+                        <td scope="row">{{fila.notificante}}</td>
+                    
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </nb-tab>
         </nb-tabset>
 
