@@ -8,7 +8,7 @@ public class Constants {
 		public static final String FACTURA_SUITE = "FacturaSuite";
 		public static final String EMISOR_VALIDATION = "EmisorValidation";
 		public static final String EMISOR_VALIDATION_RULE = "EmisorValidationRule";
-		public static final String EMISOR_VALIDATION_RULE_DESC = "La empresa Emisora no se encunetra activa en el sistema";
+		public static final String EMISOR_VALIDATION_RULE_DESC = "La empresa Emisora no esta activa en el sistema";
 		
 	}
 	public static class DeletePagoSuite {

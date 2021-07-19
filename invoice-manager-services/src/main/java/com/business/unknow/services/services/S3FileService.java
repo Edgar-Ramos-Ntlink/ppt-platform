@@ -10,8 +10,6 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.config.properties.S3Properties;
 import java.io.*;
 import java.util.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,8 +18,6 @@ import org.springframework.stereotype.Service;
 public class S3FileService {
 
   @Autowired private S3Properties s3Properties;
-
-  private static final Logger log = LoggerFactory.getLogger(S3FileService.class);
 
   public void upsertS3File(
       S3BucketsEnum bucket, String fileFormat, String name, ByteArrayOutputStream file)

@@ -1,7 +1,7 @@
 package com.business.unknow.services.services.builder;
 
-import com.business.unknow.enums.ResourceFileEnum;
-import com.business.unknow.enums.TipoRecursoEnum;
+import com.business.unknow.enums.S3BucketsEnum;
+import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
@@ -17,12 +17,16 @@ public class AbstractBuilderService {
       throws InvoiceManagerException {
     ResourceFileDto certFile =
         service.getResourceFileByResourceReferenceAndType(
-            TipoRecursoEnum.EMPRESA.name(),
+            S3BucketsEnum.EMPRESAS,
             facturaDto.getRfcEmisor(),
-            ResourceFileEnum.CERT.name());
+            TipoArchivoEnum.CERT.name(),
+            TipoArchivoEnum.CERT.getFormat());
     ResourceFileDto keyFile =
         service.getResourceFileByResourceReferenceAndType(
-            TipoRecursoEnum.EMPRESA.name(), facturaDto.getRfcEmisor(), ResourceFileEnum.KEY.name());
+            S3BucketsEnum.EMPRESAS,
+            facturaDto.getRfcEmisor(),
+            TipoArchivoEnum.KEY.name(),
+            TipoArchivoEnum.KEY.getFormat());
     empresaDto.setCertificado(certFile.getData());
     empresaDto.setLlavePrivada(keyFile.getData());
   }

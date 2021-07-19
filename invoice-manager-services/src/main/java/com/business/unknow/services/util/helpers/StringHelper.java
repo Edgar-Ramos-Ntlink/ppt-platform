@@ -26,4 +26,18 @@ public class StringHelper {
       throw new InvoiceCommonException(String.format("Error reading the file %s", e.getMessage()));
     }
   }
+
+  public String getFileFormatFromBase64(String base64String) throws InvoiceCommonException {
+    String[] a = base64String.split(",");
+    if (a.length > 1) {
+      String[] b = a[0].split("/");
+      if (b.length > 1) {
+        String[] c = b[1].split(";");
+        if (c.length > 1) {
+          return ".".concat(c[0]);
+        }
+      }
+    }
+    throw new InvoiceCommonException("El archivo no tiene un formato Asociado");
+  }
 }

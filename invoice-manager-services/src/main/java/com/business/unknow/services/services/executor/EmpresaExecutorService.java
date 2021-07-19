@@ -23,33 +23,32 @@ public class EmpresaExecutorService {
 
   @Autowired private FilesService filesService;
 
-  // TODO refactor this method to enable push company data to S3 directly
   public EmpresaDto createEmpresa(EmpresaDto empresaDto) {
-    /*empresaDto.setFechaActualizacion(new Date());
-    empresaDto.setFechaCreacion(new Date());
-    String logo = empresaDto.getLogotipo();
+    /* String logo = empresaDto.getLogotipo();
     filesService.upsertResourceFile(
         new ResourceFileDto(
-            ResourceFileEnum.CERT.name(),
+            TipoArchivoEnum.CERT.name(),
             empresaDto.getInformacionFiscal().getRfc(),
-            TipoRecursoEnum.EMPRESA.name(),
-            empresaDto.getCertificado()));
+            S3BucketsEnum.EMPRESAS.name(),
+            empresaDto.getCertificado(),
+            TipoArchivoEnum.CERT.getFormat()));
     filesService.upsertResourceFile(
         new ResourceFileDto(
-            ResourceFileEnum.KEY.name(),
+            TipoArchivoEnum.KEY.name(),
             empresaDto.getInformacionFiscal().getRfc(),
-            TipoRecursoEnum.EMPRESA.name(),
-            empresaDto.getLlavePrivada()));
+            S3BucketsEnum.EMPRESAS.name(),
+            empresaDto.getLlavePrivada(),
+            TipoArchivoEnum.KEY.getFormat()));
     filesService.upsertResourceFile(
         new ResourceFileDto(
-            ResourceFileEnum.LOGO.name(),
+            TipoArchivoEnum.LOGO.name(),
             empresaDto.getInformacionFiscal().getRfc(),
-            TipoRecursoEnum.EMPRESA.name(),
-            logo.substring(logo.indexOf("base64") + 7)));
+            S3BucketsEnum.EMPRESAS.name(),
+            logo.substring(logo.indexOf("base64") + 7),
+            TipoArchivoEnum.LOGO.getFormat()));
     Contribuyente contribuyente =
         contribuyenteRepository.save(
-            contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));
-    */
+            contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));*/
     Empresa empresa = empresaMapper.getEntityFromEmpresaDto(empresaDto);
     return empresaMapper.getEmpresaDtoFromEntity(empresaRepository.save(empresa));
   }
