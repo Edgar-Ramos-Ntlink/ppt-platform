@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.services.services;
 
 import com.amazonaws.util.Base64;
@@ -11,7 +10,6 @@ import com.business.unknow.services.entities.ResourceFile;
 import com.business.unknow.services.mapper.ResourceFileMapper;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
 import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,13 +51,20 @@ public class FilesService {
       resourceFileDto.setReferencia(reference);
       resourceFileDto.setTipoRecurso(resource.name());
       if (entity.isPresent()) {
-        resourceFileDto.setFormat(entity.get().getFormato());
+        resourceFileDto.setFormato(entity.get().getFormato());
       } else {
-        resourceFileDto.setFormat(format);
+        resourceFileDto.setFormato(format);
       }
       String data = s3FileService.getS3File(resource, resourceFileDto.getFormato(), reference);
       resourceFileDto.setData(data);
       resourceFileDto.setTipoArchivo(type);
+      if (type.equals(TipoArchivoEnum.IMAGEN.name())) {
+        String dataRecalculated =
+            String.format(
+                "data:image/%s;base64,%s",
+                resourceFileDto.getFormato().replace(".", ""), resourceFileDto.getData());
+        resourceFileDto.setData(dataRecalculated);
+      }
       return resourceFileDto;
     } catch (Exception e) {
       throw new InvoiceManagerException(
@@ -96,12 +101,13 @@ public class FilesService {
   public void deleteResourceFileByResourceReferenceAndType(
       String resource, String referencia, String tipoArchivo) throws InvoiceManagerException {
     Optional<ResourceFile> resourceFile =
-        resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(resource,referencia, tipoArchivo);
+        resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(
+            resource, referencia, tipoArchivo);
     if (resourceFile.isPresent()) {
       ResourceFile file = resourceFile.get();
       s3FileService.deleteS3File(
           S3BucketsEnum.findByValor(file.getTipoRecurso()),
-              file.getFormato(),
+          file.getFormato(),
           file.getReferencia());
       resourceFileRepository.delete(file);
     }

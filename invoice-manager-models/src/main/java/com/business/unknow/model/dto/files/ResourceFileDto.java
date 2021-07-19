@@ -92,7 +92,7 @@ public class ResourceFileDto implements Serializable {
 		return formato;
 	}
 
-	public void setFormat(String formato) {
+	public void setFormato(String formato) {
 		this.formato = formato;
 	}
 

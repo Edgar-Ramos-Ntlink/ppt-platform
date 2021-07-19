@@ -51,7 +51,7 @@ public class FilesController {
             S3BucketsEnum.findByValor(recurso),
             referencia,
             fileType,
-            TipoArchivoEnum.valueOf(recurso).getFormat()),
+            TipoArchivoEnum.valueOf(fileType).getFormat()),
         HttpStatus.OK);
   }
 
@@ -75,7 +75,8 @@ public class FilesController {
   @PostMapping("/recursos/{recurso}/files")
   public ResponseEntity<Void> insertResourceFile(@RequestBody @Valid ResourceFileDto resourceFile)
       throws InvoiceManagerException, InvoiceCommonException {
-    resourceFile.setFormat(stringHelper.getFileFormatFromBase64(resourceFile.getData()));
+    resourceFile.setFormato(stringHelper.getFileFormatFromBase64(resourceFile.getData()));
+    resourceFile.setFormato(stringHelper.getFileFormatFromBase64(resourceFile.getData()));
     resourceFile.setData(stringHelper.getFileDataFromBase64(resourceFile.getData()));
     service.upsertResourceFile(resourceFile);
     return new ResponseEntity<>(HttpStatus.CREATED);
