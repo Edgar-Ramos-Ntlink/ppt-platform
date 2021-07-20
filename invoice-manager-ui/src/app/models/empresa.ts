@@ -53,9 +53,10 @@ export class Empresa {
     // OPCIONAL, puede ser realizado despues de paso 1
     // contabilidad
 
-    public actividadSAT;
+    public actividadSAT: string;
+    public fielEmpresa: string;
     
-    public ingresos : []; // lista de objetos con ingreosos anuales empresa
+    public ingresos : Ingresos[]; // lista de objetos con ingreosos anuales empresa
 
 
     public creador: string;
@@ -85,5 +86,14 @@ export class Empresa {
         this.documentos = [];
         this.observaciones = [];
         this.cuentas = [];
+    }
+}
+//TODO extraer clase o a ver 
+export class Ingresos{
+    ano: string;
+    cantidad: number;
+    constructor(ano: string, cantidad: number){
+        this.ano = ano;
+        this.cantidad = cantidad;
     }
 }

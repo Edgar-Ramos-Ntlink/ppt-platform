@@ -132,6 +132,6 @@ export class EmpresasComponent implements OnInit {
   }
 
   public redirectToEmpresa(rfc: string) {
-    this.router.navigate([`./pages/operaciones/empresa/${rfc}`])
+    this.router.navigate([`./pages/${this.module}/empresa/${rfc}`])
   }
 }

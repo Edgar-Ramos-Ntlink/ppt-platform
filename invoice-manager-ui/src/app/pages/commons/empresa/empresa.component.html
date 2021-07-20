@@ -146,16 +146,21 @@
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="inputEmail" class="label">Correo Empresa</label>
-                  <input type="email" [(ngModel)]="companyInfo.correo" class="form-control" fullWidth id="inputEmail"
+                  <input type="email" [(ngModel)]="companyInfo.correo" class="form-control"  fullWidth id="inputEmail"
                      placeholder="Email">
                 </div>
               </div>
-              <div class="col-sm-3">
+              <div class="col-sm-2">
                 <div class="form-group">
                   <label for="inputPassword" class="label">Contraseña correo</label>
                   <input type="password" [(ngModel)]="companyInfo.pwCorreo" class="form-control" fullWidth
                     id="inputPassword"  placeholder="Password">
                 </div>
+              </div>
+              <div class="col-sm-1">
+                <label for="dominioCorreo" class="label">Dom.Corre.</label>
+                <input type="text" [(ngModel)]="companyInfo.dominioCorreo" class="form-control" fullWidth
+                   id="dominioCorreo" placeholder="@tiendalocal">
               </div>
               <div class="col-md-3">
                 <div class="form-group">
@@ -208,7 +213,7 @@
             </div>
             <label for="logoFile" class="label">Logotipo Empresa</label>
             <div class="row slide_4">
-              <div class="form-group col-md-4" *ngIf="companyInfo.logotipo==undefined && !companyInfo.activo">
+              <div class="form-group col-md-4" *ngIf="companyInfo.logotipo==undefined">
 
                 <div class="input-group">
                   <div class="custom-file" id="logoFile">
@@ -356,10 +361,30 @@
               </div>
 
             </div>
+            <div class="row">
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="Fiel" class="label">Fiel de la empresa</label>
+                  <input type="text" [(ngModel)]="companyInfo.fielEmpresa" class="form-control"
+                    fullWidth id="Fiel" placeholder="Fiel de la empresa">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="Actividad" class="label">Actividad SAT</label>
+                  <input type="text" [(ngModel)]="companyInfo.actividadSAT" class="form-control"
+                    fullWidth id="Actividad" placeholder="Actividad Sat">
+                </div>
+              </div>
+             
+
+            </div>
 
 
             <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-10">
 
                 <div class="puff_center">
                   <p class="font-weight-bold puff_center">Lista de Ingresos Relacionadas a la Empresa</p>
@@ -373,23 +398,45 @@
                 <div class="table-responsive slide_1" *ngIf="companyInfo.ingresos !== undefined">
                   <table class="table table-sm">
                     <thead class="thead-dark">
-                      <tr>
+                      <tr >
 
                        
-                        <th scope="col">Ingresos</th>
-                       
+                        <th scope="col" *ngFor="let fila of companyInfo.ingresos" ><div *ngIf="companyInfo.anioAlta <= fila.ano">{{fila.ano}}</div></th>
+                        <th scope="col" >Total:</th>
+                        
 
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let fila of companyInfo.ingresos">
+                      <tr >
 
-                        <td scope="row">{{fila}}</td>
-                      
+                        <td scope="row" *ngFor="let fila of companyInfo.ingresos" ><div *ngIf="companyInfo.anioAlta <= fila.ano">${{fila.cantidad}}</div></td>
+                        <th scope="col" >{{totalSaldos}}</th>
                       </tr>
                     </tbody>
                   </table>
                 </div>
+              </div>
+              <div class="col-md-2">
+                <label for="inputAlta" class="label">Desdel año</label>
+                <select selected="*" id="inputAlta" style="display:block" fullWidth class="form-control"
+                   [(ngModel)]="companyInfo.anioAlta">
+                  <option value="*">Seleccionar</option>
+                  
+                  <option value="2009">2009</option>
+                  <option value="2010">2010</option>
+                  <option value="2011">2011</option>
+                  <option value="2012">2012</option>
+                  <option value="2013">2013</option>
+                  <option value="2014">2014</option>
+                  <option value="2015">2015</option>
+                  <option value="2016">2016</option>
+                  <option value="2017">2017</option>
+                  <option value="2018">2018</option>
+                  <option value="2019">2019</option>
+                  <option value="2020">2020</option>
+                  <option value="2021">2021</option>
+                </select>
               </div>
             </div>
 
@@ -413,7 +460,7 @@
                     <thead class="thead-dark">
                       <tr>
 
-                        <th scope="col">AREA</th>  
+                       
                         <th scope="col">OBSERVACIONES</th>
                         <th scope="col">DETALLES</th>
                         <th scope="col">NOTIFICANTE</th>
@@ -424,10 +471,10 @@
                     <tbody>
                       <tr *ngFor="let fila of companyInfo.observaciones">
 
-                        <td scope="row">{{fila.area}}</td>
-                        <td scope="row">{{fila.observacion}}</td>
-                        <td scope="row">{{fila.detalles}}</td>
-                        <td scope="row">{{fila.notificante}}</td>
+                       
+                        <td scope="row" *ngIf="module === fila.area">{{fila.observacion}}</td>
+                        <td scope="row" *ngIf="module === fila.area">{{fila.detalles}}</td>
+                        <td scope="row" *ngIf="module === fila.area">{{fila.notificante}}</td>
                     
                       </tr>
                     </tbody>
