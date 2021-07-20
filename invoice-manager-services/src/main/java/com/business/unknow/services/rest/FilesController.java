@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.services.rest;
 
 import com.business.unknow.enums.S3BucketsEnum;
@@ -11,9 +10,7 @@ import com.business.unknow.services.services.FilesService;
 import com.business.unknow.services.util.helpers.StringHelper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,14 +50,13 @@ public class FilesController {
             S3BucketsEnum.findByValor(recurso),
             referencia,
             fileType,
-            TipoArchivoEnum.valueOf(recurso).getFormat()),
+            TipoArchivoEnum.valueOf(fileType).getFormat()),
         HttpStatus.OK);
   }
 
   @PostMapping("/facturas/{folio}/files")
   public ResponseEntity<Void> insertFacturaFile(@RequestBody @Valid FacturaFileDto facturaFile)
       throws InvoiceManagerException {
-    // TODO move this code inside the service
     try {
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
       bos.write(Base64.getDecoder().decode(facturaFile.getData()));
@@ -71,16 +67,16 @@ public class FilesController {
           bos);
       return new ResponseEntity<>(HttpStatus.CREATED);
     } catch (IOException e) {
-      // TODO for generic Exception is better use ResponseStatusException
       throw new InvoiceManagerException(e.getMessage(), HttpStatus.CONFLICT.value());
     }
   }
 
-  // TODO refactor this controller to use S3 instead Mysql
   @PostMapping("/recursos/{recurso}/files")
   public ResponseEntity<Void> insertResourceFile(@RequestBody @Valid ResourceFileDto resourceFile)
       throws InvoiceManagerException, InvoiceCommonException {
     resourceFile.setFormato(stringHelper.getFileFormatFromBase64(resourceFile.getData()));
+    resourceFile.setFormato(stringHelper.getFileFormatFromBase64(resourceFile.getData()));
+    resourceFile.setData(stringHelper.getFileDataFromBase64(resourceFile.getData()));
     service.upsertResourceFile(resourceFile);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
@@ -90,13 +86,5 @@ public class FilesController {
       throws InvoiceManagerException {
     service.deleteResourceFile(id);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
-
-  // TODO code this implemntation, for now this is only a mock response
-  @GetMapping("/empresas/{rfc}/documentos")
-  public ResponseEntity<List<ResourceFileDto>> findAttachedDocumentsBy(@PathVariable String rfc) {
-    List<ResourceFileDto> files = new ArrayList<>();
-
-    return new ResponseEntity<>(files, HttpStatus.OK);
   }
 }

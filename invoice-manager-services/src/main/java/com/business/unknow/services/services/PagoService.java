@@ -424,11 +424,16 @@ public class PagoService {
         filesService.deleteFacturaFile(fact.getFolio(), "PDF");
       }
     }
-    for (PagoFactura pagoFactura : facturaPagosRepository.findByPagoId(payment.getId())) {
-      facturaPagosRepository.delete(pagoFactura);
-    }
+
     filesService.deleteResourceFileByResourceReferenceAndType(
-        "PAGO", idPago.toString(), TipoArchivoEnum.IMAGEN.name());
+        "PAGOS", idPago.toString(), TipoArchivoEnum.IMAGEN.name());
     repository.delete(mapper.getEntityFromPagoDto(payment));
   }
+
+  public void delePagoFacturas(int id){
+    for (PagoFactura pagoFactura : facturaPagosRepository.findByPagoId(id)) {
+      facturaPagosRepository.deleteById(pagoFactura.getId());
+    }
+  }
+
 }

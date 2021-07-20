@@ -17,7 +17,7 @@ let ValidacionPagoComponent = class ValidacionPagoComponent {
     mostrarComprobante(pago) {
         this.comprobanteUrl = undefined;
         if (pago.formaPago != 'CREDITO') {
-            this.filesService.getResourceFile(`${pago.id}_${pago.folio}`, 'PAGO', 'IMAGEN').subscribe((file) => this.comprobanteUrl = this.sanitizer.bypassSecurityTrustUrl(file.data));
+            this.filesService.getResourceFile(`${pago.id}_${pago.folio}`, 'PAGOS', 'IMAGEN').subscribe((file) => this.comprobanteUrl = this.sanitizer.bypassSecurityTrustUrl(file.data));
         }
     }
     cancel() {

@@ -40,4 +40,12 @@ public class StringHelper {
     }
     throw new InvoiceCommonException("El archivo no tiene un formato Asociado");
   }
+
+  public String getFileDataFromBase64(String base64String) throws InvoiceCommonException {
+    String[] a = base64String.split(",");
+    if (a.length > 1) {
+      return a[1];
+    }
+    throw new InvoiceCommonException("El archivo no tiene informacion asociada");
+  }
 }
