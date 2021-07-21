@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.business.unknow.model.dto.files;
 
 import java.io.Serializable;
@@ -10,11 +7,6 @@ import com.business.unknow.Constants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.extern.jackson.Jacksonized;
 
 /**
  * @author ralfdemoledor
@@ -108,6 +100,7 @@ public class ResourceFileDto implements Serializable {
 	public void setFormato(String formato) {
 		this.formato = formato;
 	}
+
 
 	@Override
 	public String toString() {

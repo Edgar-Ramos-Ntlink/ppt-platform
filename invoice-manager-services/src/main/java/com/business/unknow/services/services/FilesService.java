@@ -47,9 +47,9 @@ public class FilesService {
       Optional<ResourceFile> entity =
           resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(
               resource.name(), reference, type);
-      ResourceFileDto resourceFileDto =
-          ResourceFileDto.builder().referencia(reference).tipoArchivo(resource.name()).build();
-
+      ResourceFileDto resourceFileDto = new ResourceFileDto();
+      resourceFileDto.setReferencia(reference);
+      resourceFileDto.setTipoArchivo(resource.name());
       if (entity.isPresent()) {
         resourceFileDto.setFormato(entity.get().getFormato());
       } else {

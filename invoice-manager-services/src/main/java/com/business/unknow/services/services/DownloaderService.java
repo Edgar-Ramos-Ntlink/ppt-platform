@@ -55,13 +55,13 @@ public class DownloaderService {
 
         String reportData = Base64.getEncoder().encodeToString(os.toByteArray());
 
-        return ResourceFileDto.builder()
-            .data(reportData)
-            .fechaCreacion(new Date())
-            .referencia(reportName)
-            .tipoArchivo("XLS")
-            .tipoRecurso("AUTOGENERADO")
-            .build();
+        ResourceFileDto resourceFileDto = new ResourceFileDto();
+        resourceFileDto.setData(reportData);
+        resourceFileDto.setFechaCreacion(new Date());
+        resourceFileDto.setReferencia(reportName);
+        resourceFileDto.setTipoArchivo("XLS");
+        resourceFileDto.setTipoRecurso("AUTOGENERADO");
+        return resourceFileDto;
       }
     } else {
       throw new ResponseStatusException(

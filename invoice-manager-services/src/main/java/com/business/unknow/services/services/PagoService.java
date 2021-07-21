@@ -430,10 +430,9 @@ public class PagoService {
     repository.delete(mapper.getEntityFromPagoDto(payment));
   }
 
-  public void delePagoFacturas(int id){
+  public void delePagoFacturas(int id) {
     for (PagoFactura pagoFactura : facturaPagosRepository.findByPagoId(id)) {
       facturaPagosRepository.deleteById(pagoFactura.getId());
     }
   }
-
 }
