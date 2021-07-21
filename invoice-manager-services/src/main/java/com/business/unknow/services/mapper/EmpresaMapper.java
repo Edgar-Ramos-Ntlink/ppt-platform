@@ -6,7 +6,6 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-/** @author eej000f */
 @Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface EmpresaMapper {
 

@@ -33,8 +33,6 @@ public class EmpresaDto implements Serializable {
 
 	private static final long serialVersionUID = -5354660274346579595L;
 
-
-
 	private int id;
 
 	private Boolean activo;
