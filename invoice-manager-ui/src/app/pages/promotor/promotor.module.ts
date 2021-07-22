@@ -11,6 +11,7 @@ import { DonwloadFileService } from '../../@core/util-services/download-file-ser
 import { CommonsModule } from '../commons/commons.module';
 import { DevolutionPreferencesComponent } from './devolution-preferences/devolution-preferences.component';
 import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion-pagos.component';
+import { ObservacionPendientesComponent } from '../commons/observacion-pendientes/observacion-pendientes.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion
   ],
   entryComponents: [
     AsignacionPagosComponent,
+    ObservacionPendientesComponent
   ],
   providers: [ DownloadCsvService , DonwloadFileService ],
 })

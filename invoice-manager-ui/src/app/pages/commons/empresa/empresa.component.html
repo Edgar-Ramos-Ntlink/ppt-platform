@@ -442,17 +442,27 @@
 
           </nb-tab>
 
-          <nb-tab tabTitle="Observaciones" *ngIf="formInfo.rfc != ''">
+          <nb-tab tabTitle="Observaciones y Pendientes" *ngIf="formInfo.rfc != ''">
             <div class="row">
               <div class="col-md-12">
+                <div class="puff_center">
+                 
+                  <button type="button" (click)="openObservaciones()" style=" margin-left:25px;"  class="btn btn-primary float-right">Nueva Observacion</button>
+                  <button type="button" (click)="openObservaciones()" style=" margin-left:25px;" class="btn btn-primary float-right">Nuevo Pendiente</button>
+                </div>
+              </div>
+              
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+
+             
 
                 <div class="puff_center">
                   <p class="font-weight-bold puff_center">Observaciones de la Empresa</p>
                 </div>
-
-
                 <div class="puff_center" *ngIf="companyInfo.observaciones === undefined" class="alert alert-primary" role="alert">
-                  No se encontraron resultados
+                  No se encontraron resultados de Observaciones
                 </div>
 
                 <div class="table-responsive slide_1" *ngIf="companyInfo.observaciones !== undefined">
@@ -460,8 +470,8 @@
                     <thead class="thead-dark">
                       <tr>
 
-                       
-                        <th scope="col">OBSERVACIONES</th>
+                        <th class="text-center">Acciones</th>
+                        <th scope="col">RESUMEN</th>
                         <th scope="col">DETALLES</th>
                         <th scope="col">NOTIFICANTE</th>
                       
@@ -471,7 +481,7 @@
                     <tbody>
                       <tr *ngFor="let fila of companyInfo.observaciones">
 
-                       
+                        <td scope="row" *ngIf="module === fila.area" class="text-center"> <button class="btn d-inline p-2 btn-outline-danger" (click)= "redirectToEmpresa(fila.rfc)"><i class="fa fa-trash"></i></button></td>
                         <td scope="row" *ngIf="module === fila.area">{{fila.observacion}}</td>
                         <td scope="row" *ngIf="module === fila.area">{{fila.detalles}}</td>
                         <td scope="row" *ngIf="module === fila.area">{{fila.notificante}}</td>
@@ -480,20 +490,65 @@
                     </tbody>
                   </table>
                 </div>
+                <div class="clearfix">
+                  <ul class="pagination float-right" >
+                    <li class="page-item" ><button class="btn page-link"
+                        (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
+                    <li class="page-item" ><button class="btn page-link"
+                        (click)="updateDataTable(page.number-1,page.size)">{{1}}</button></li>
+                    <li class="page-item" ><button class="btn page-link"
+                        (click)="updateDataTable(page.number+1,page.size)">{{2}}</button></li>
+                    <li class="page-item"><button class="btn page-link"
+                        (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
+                  </ul>
+                </div>
+
+                <div class="puff_center">
+                  <p class="font-weight-bold puff_center">Pendientes de la Empresa</p>
+                </div>
+                <div class="puff_center" *ngIf="companyInfo.observaciones === undefined" class="alert alert-primary" role="alert">
+                  No se encontraron resultados de Observaciones
+                </div>
+
+                <div class="table-responsive slide_1" *ngIf="companyInfo.observaciones !== undefined">
+                  <table class="table table-sm">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th class="text-center">Acciones</th>
+                        <th scope="col">RESUMEN</th>
+                        <th scope="col">DETALLES</th>
+                        <th scope="col">NOTIFICANTE</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let fila of companyInfo.observaciones">
+
+                        <td scope="row" *ngIf="module === fila.area" class="text-center"> <button class="btn d-inline p-2 btn-outline-danger" (click)= "redirectToEmpresa(fila.rfc)"><i class="fa fa-trash"></i></button></td>
+                        <td scope="row" *ngIf="module === fila.area">{{fila.observacion}}</td>
+                        <td scope="row" *ngIf="module === fila.area">{{fila.detalles}}</td>
+                        <td scope="row" *ngIf="module === fila.area">{{fila.notificante}}</td>
+                    
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="clearfix">
+                  <ul class="pagination float-right" >
+                    <li class="page-item" ><button class="btn page-link"
+                        (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
+                    <li class="page-item" ><button class="btn page-link"
+                        (click)="updateDataTable(page.number-1,page.size)">{{1}}</button></li>
+                    <li class="page-item" ><button class="btn page-link"
+                        (click)="updateDataTable(page.number+1,page.size)">{{2}}</button></li>
+                    <li class="page-item"><button class="btn page-link"
+                        (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
+                  </ul>
+                </div>
               </div>
             </div>
           </nb-tab>
         </nb-tabset>
-
-
-
-
-
-
-
-
-
-
       </nb-card-body>
 
       <nb-card-footer>
@@ -513,4 +568,3 @@
       </nb-card-footer>
     </nb-card>
   </div>
-</div>

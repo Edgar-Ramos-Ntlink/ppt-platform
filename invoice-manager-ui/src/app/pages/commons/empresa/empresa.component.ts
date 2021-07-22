@@ -12,8 +12,9 @@ import { FilesData } from '../../../@core/data/files-data';
 import { CuentasData } from '../../../@core/data/cuentas-data';
 import { Cuenta } from '../../../models/cuenta';
 import { GenericPage } from '../../../models/generic-page';
-import { NbComponentStatus, NbGlobalPhysicalPosition, NbToastrService } from '@nebular/theme';
+import { NbComponentStatus, NbDialogService, NbGlobalPhysicalPosition, NbToastrService } from '@nebular/theme';
 import { Observacion } from '../../../models/observacion';
+import { ObservacionPendientesComponent } from '../observacion-pendientes/observacion-pendientes.component';
 
 @Component({
   selector: 'ngx-empresa',
@@ -35,6 +36,7 @@ export class EmpresaComponent implements OnInit {
   public totalSaldos: number = 0;
  
   constructor(private router: Router,
+    private dialogService: NbDialogService,
     private toastrService: NbToastrService,
     private catalogsService: CatalogsData,
     private empresaService: CompaniesData,
@@ -106,6 +108,10 @@ export class EmpresaComponent implements OnInit {
 
 
 
+  }
+
+  openObservaciones() {
+    this.dialogService.open(ObservacionPendientesComponent);
   }
 
   sanitize(url: string) {

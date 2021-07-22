@@ -31,12 +31,13 @@ import { InvoiceReportsComponent } from './invoice-reports/invoice-reports.compo
 import { DevolutionsDetailsComponent } from './devolutions-details/devolutions-details.component';
 import { CfdiComponent } from './cfdi/cfdi.component';
 import { AsignacionPagosComponent } from './asignacion-pagos/asignacion-pagos.component';
-import {AutocompleteLibModule} from 'angular-ng-autocomplete';
+import { AutocompleteLibModule} from 'angular-ng-autocomplete';
 import { PagoFacturaComponent } from './pago-factura/pago-factura.component';
 import { GenerarComplementoComponent } from './generar-complemento/generar-complemento.component';
 import { MulticomplementosComponent } from './multicomplementos/multicomplementos.component';
 import { CuentasBancariasComponent } from './cuentas-bancarias/cuentas-bancarias.component';
 import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.component';
+import { ObservacionPendientesComponent } from './observacion-pendientes/observacion-pendientes.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.compo
     MulticomplementosComponent,
     CuentasBancariasComponent,
     CuentasBancariasComponent,
-    CuentaBancariaComponent
+    CuentaBancariaComponent,
+    ObservacionPendientesComponent
   ],
   imports: [
     CommonModule,
@@ -95,6 +97,7 @@ import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.compo
     ConceptosComponent,
     CfdiComponent,
     AsignacionPagosComponent,
+    ObservacionPendientesComponent,
     CuentasBancariasComponent,
     FormsModule,
     CommonModule,
