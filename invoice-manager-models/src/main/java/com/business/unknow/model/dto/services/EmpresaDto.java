@@ -78,8 +78,6 @@ public class EmpresaDto implements Serializable {
 
 	@Builder.Default private List<DatoAnualEmpresaDto> ingresos = new ArrayList<>();
 	@Builder.Default private List<ResourceFileDto> documentos = new ArrayList<>();
-	@Builder.Default private List<ObservacionDto> observaciones = new ArrayList<>();
-
 
 
 	// TODO remove certificate and key dependencies
