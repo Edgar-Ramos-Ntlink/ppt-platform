@@ -5,7 +5,6 @@ import com.business.unknow.services.entities.EmpresaDetalles;
 import com.business.unknow.services.mapper.EmpresaDetallesMapper;
 import com.business.unknow.services.repositories.EmpresaDetallesRepository;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

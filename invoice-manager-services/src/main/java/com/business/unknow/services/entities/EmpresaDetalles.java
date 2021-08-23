@@ -3,11 +3,18 @@ package com.business.unknow.services.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@ToString
 @Entity
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "EMPRESA_DETALLES")
 public class EmpresaDetalles implements Serializable {
@@ -22,8 +29,8 @@ public class EmpresaDetalles implements Serializable {
   private String rfc;
 
   @Basic(optional = false)
-  @Column(name = "USER")
-  private String user;
+  @Column(name = "NOTIFICANTE")
+  private String notificante;
 
   @Basic(optional = false)
   @Column(name = "AREA")
@@ -49,103 +56,4 @@ public class EmpresaDetalles implements Serializable {
   @LastModifiedDate
   @Column(name = "FECHA_ACTUALIZACION")
   private Date fechaActualizacion;
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  public String getRfc() {
-    return rfc;
-  }
-
-  public void setRfc(String rfc) {
-    this.rfc = rfc;
-  }
-
-  public String getUser() {
-    return user;
-  }
-
-  public void setUser(String user) {
-    this.user = user;
-  }
-
-  public String getArea() {
-    return area;
-  }
-
-  public void setArea(String area) {
-    this.area = area;
-  }
-
-  public String getTipo() {
-    return tipo;
-  }
-
-  public void setTipo(String tipo) {
-    this.tipo = tipo;
-  }
-
-  public String getResumen() {
-    return resumen;
-  }
-
-  public void setResumen(String resumen) {
-    this.resumen = resumen;
-  }
-
-  public String getDetalle() {
-    return detalle;
-  }
-
-  public void setDetalle(String detalle) {
-    this.detalle = detalle;
-  }
-
-  public Date getFechaCreacion() {
-    return fechaCreacion;
-  }
-
-  public void setFechaCreacion(Date fechaCreacion) {
-    this.fechaCreacion = fechaCreacion;
-  }
-
-  public Date getFechaActualizacion() {
-    return fechaActualizacion;
-  }
-
-  public void setFechaActualizacion(Date fechaActualizacion) {
-    this.fechaActualizacion = fechaActualizacion;
-  }
-
-  @Override
-  public String toString() {
-    return "EmpresaDetalles{"
-        + "id="
-        + id
-        + ", user='"
-        + user
-        + '\''
-        + ", area='"
-        + area
-        + '\''
-        + ", tipo='"
-        + tipo
-        + '\''
-        + ", resumen='"
-        + resumen
-        + '\''
-        + ", detalle='"
-        + detalle
-        + '\''
-        + ", fechaCreacion="
-        + fechaCreacion
-        + ", fechaActualizacion="
-        + fechaActualizacion
-        + '}';
-  }
 }

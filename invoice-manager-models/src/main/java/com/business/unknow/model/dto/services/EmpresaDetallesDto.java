@@ -24,7 +24,7 @@ public class EmpresaDetallesDto implements Serializable {
     private int id;
     private String rfc;
     private String tipo;
-    private String user;
+    private String notificante;
     private String area;
     private Integer resumen;
     private String detalle;
