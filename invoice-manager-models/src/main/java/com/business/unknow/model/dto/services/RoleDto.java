@@ -1,9 +1,8 @@
 package com.business.unknow.model.dto.services;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,10 +18,9 @@ import lombok.extern.jackson.Jacksonized;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RoleDto implements Serializable {
 
-	private static final long serialVersionUID = 6929229782062286217L;
-	
-	private Integer id;
-	private String role;
-	private String description;
+  private static final long serialVersionUID = 6929229782062286217L;
 
+  private Integer id;
+  private String role;
+  private String description;
 }

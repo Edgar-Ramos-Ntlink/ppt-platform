@@ -9,20 +9,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CfdiRelacionado {
 
-	@XmlAttribute(name = "UUID")
-	private String uuid;
+  @XmlAttribute(name = "UUID")
+  private String uuid;
 
-	public String getUuid() {
-		return uuid;
-	}
+  public String getUuid() {
+    return uuid;
+  }
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
 
-	@Override
-	public String toString() {
-		return "CfdiRelacionado [uuid=" + uuid + "]";
-	}
-
+  @Override
+  public String toString() {
+    return "CfdiRelacionado [uuid=" + uuid + "]";
+  }
 }

@@ -19,16 +19,16 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Integer> {
   public Page<Empresa> findAllWithLinea(@Param("linea") String linea, Pageable pageable);
 
   @Query(
-      "select e from Empresa e where upper(e.tipo) like upper(:linea) and upper(e.informacionFiscal.rfc) like upper(:rfc)")
+      "select e from Empresa e where upper(e.tipo) like upper(:linea) and upper(e.rfc) like upper(:rfc)")
   public Page<Empresa> findByRfcIgnoreCaseContaining(
       @Param("rfc") String rfc, @Param("linea") String linea, Pageable pageable);
 
   @Query(
-      "select e from Empresa e where upper(e.tipo) like upper(:linea) and upper(e.informacionFiscal.razonSocial) like upper(:razonSocial)")
+      "select e from Empresa e where upper(e.tipo) like upper(:linea) and upper(e.razonSocial) like upper(:razonSocial)")
   public Page<Empresa> findByRazonSocialIgnoreCaseContaining(
       @Param("razonSocial") String razonSocial, @Param("linea") String linea, Pageable pageable);
 
-  @Query("select e from Empresa e where e.informacionFiscal.rfc = :rfc")
+  @Query("select e from Empresa e where e.rfc = :rfc")
   public Optional<Empresa> findByRfc(@Param("rfc") String rfc);
 
   public List<Empresa> findByTipoAndGiro(String tipo, Integer giroId);

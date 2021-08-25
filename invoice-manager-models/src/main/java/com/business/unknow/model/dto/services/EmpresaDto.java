@@ -1,27 +1,16 @@
 package com.business.unknow.model.dto.services;
 
-
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.business.unknow.Constants;
-import com.business.unknow.model.dto.files.ResourceFileDto;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
+import java.util.Date;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
-/**
- * @author ralfdemoledor
- *
- */
+/** @author ralfdemoledor */
 @Jacksonized
 @Builder
 @Getter
@@ -31,64 +20,75 @@ import lombok.extern.jackson.Jacksonized;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmpresaDto implements Serializable {
 
-	private static final long serialVersionUID = -5354660274346579595L;
+  private static final long serialVersionUID = -5354660274346579595L;
 
-	private int id;
+  private int id;
 
-	private Boolean activo;
-	private String estatusEmpresa;
-	private String tipo;
-	private Integer giro;
-	private String regimenFiscal;
+  private Boolean activo;
 
+  private String estatus;
 
-	private String rfc;
-	private String nombre;
-	private String razonSocial;
+  private Integer giro;
 
-	private String calle;
-	private String noExterior;
-	private String noInterior;
-	private String municipio;
-	private String estado;
-	private String pais;
-	private String cp;
+  private String tipo;
 
+  private String regimenFiscal;
 
-	private Integer anioAlta;
-	private String registroPatronal;
-	private String estatusJuridico;
-	private String estatusJuridico2;
-	public String representanteLegal;
-	public String ciec;  //  Clave de Identificación Electrónica Confidencial (CIEC). Ahora llamada solo Contraseña del SAT
+  private String rfc;
 
+  private String nombre;
 
+  private String razonSocial;
 
-	private String web;
+  private String calle;
 
-	private String correo;
-	private String pwCorreo;
-	private String dominioCorreo;
-	private String fiel; // FIEL (Firma Electrónica Avanzada), que es una contraseña para timbrado
-	private String noCertificado;
-	private LocalDate expiracionCertificado;
+  private String noExterior;
 
+  private String noInterior;
 
-	private String actividadSAT;
+  private String municipio;
 
-	@Builder.Default private List<DatoAnualEmpresaDto> ingresos = new ArrayList<>();
-	@Builder.Default private List<ResourceFileDto> documentos = new ArrayList<>();
+  private String colonia;
 
+  private String estado;
 
-	// TODO remove certificate and key dependencies
-	@Deprecated // this field will be removed after S3 migration is completed
-	private String certificado;
-	@Deprecated
-	private String llavePrivada;
+  private String pais;
 
+  private String cp;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
-	private Date fechaCreacion;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
-	private Date fechaActualizacion;
+  private Integer anioAlta;
+
+  private String registroPatronal;
+
+  private String estatusJuridico;
+
+  private String estatusJuridico2;
+
+  private String representanteLegal;
+
+  private String ciec;
+
+  private String fiel;
+
+  private String actividadSAT;
+
+  private String web;
+
+  private String correo;
+
+  private String pwCorreo;
+
+  private String dominioCorreo;
+
+  private String pwSat;
+
+  private String noCertificado;
+
+  private Date expiracionCertificado;
+
+  private String creador;
+
+  private Date fechaCreacion;
+
+  private Date fechaActualizacion;
 }

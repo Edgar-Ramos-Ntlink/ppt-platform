@@ -27,7 +27,5 @@ public class AbstractBuilderService {
             facturaDto.getRfcEmisor(),
             TipoArchivoEnum.KEY.name(),
             TipoArchivoEnum.KEY.getFormat());
-    empresaDto.setCertificado(certFile.getData());
-    empresaDto.setLlavePrivada(keyFile.getData());
   }
 }

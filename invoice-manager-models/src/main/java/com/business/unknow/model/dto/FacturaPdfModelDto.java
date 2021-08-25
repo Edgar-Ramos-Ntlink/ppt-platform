@@ -1,231 +1,279 @@
 package com.business.unknow.model.dto;
 
+import com.business.unknow.model.cfdi.Cfdi;
 import java.io.Serializable;
 import java.math.BigDecimal;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.business.unknow.model.cfdi.Cfdi;
-
 @XmlRootElement(name = "FacturaPdfModel")
 @XmlAccessorType(XmlAccessType.NONE)
 public class FacturaPdfModelDto implements Serializable {
 
-	private static final long serialVersionUID = -5413904708136266306L;
-	@XmlElement(name = "Qr")
-	private String qr;
-	@XmlElement(name = "CadenaOriginal")
-	private String cadenaOriginal;
-	@XmlElement(name = "folioPadre")
-	private String folioPadre;
-	@XmlElement(name = "TotalDesc")
-	private String totalDesc;
-	@XmlElement(name = "SubTotalDesc")
-	private String subTotalDesc;
-	@XmlElement(name = "UsoCfdiDesc")
-	private String usoCfdiDesc;
-	@XmlElement(name = "RegimenFiscalDesc")
-	private String regimenFiscalDesc;
-	@XmlElement(name = "FormaPagoDesc")
-	private String formaPagoDesc;
-	@XmlElement(name = "MetodoPagoDesc")
-	private String metodoPagoDesc;
-	@XmlElement(name = "DireccionEmisor")
-	private String direccionEmisor;
-	@XmlElement(name = "DireccionReceptor")
-	private String direccionReceptor;
-	@XmlElement(name = "TipoDeComprobanteDesc")
-	private String tipoDeComprobanteDesc;
-	@XmlElement(name = "Logotipo")
-	private String logotipo;
-	@XmlElement(name = "factura")
-	private Cfdi factura;
-	@XmlElement(name = "montoTotalDesc")
-	private String montoTotalDesc;
-	@XmlElement(name = "montoTotal")
-	private BigDecimal montoTotal;
-	@XmlElement(name = "TipoRelacion")
-	private String tipoRelacion;
-	@XmlElement(name = "Relacion")
-	private String relacion;
-	@XmlElement(name = "UUID")
-	private String uuid;
+  private static final long serialVersionUID = -5413904708136266306L;
 
-	public FacturaPdfModelDto() {
-		super();
-	}
+  @XmlElement(name = "Qr")
+  private String qr;
 
-	public FacturaPdfModelDto(String qr, String logotipo, Cfdi factura) {
-		super();
-		this.qr = qr;
-		this.logotipo = logotipo;
-		this.factura = factura;
-	}
+  @XmlElement(name = "CadenaOriginal")
+  private String cadenaOriginal;
 
-	public String getQr() {
-		return qr;
-	}
+  @XmlElement(name = "folioPadre")
+  private String folioPadre;
 
-	public void setQr(String qr) {
-		this.qr = qr;
-	}
+  @XmlElement(name = "TotalDesc")
+  private String totalDesc;
 
-	public String getLogotipo() {
-		return logotipo;
-	}
+  @XmlElement(name = "SubTotalDesc")
+  private String subTotalDesc;
 
-	public void setLogotipo(String logotipo) {
-		this.logotipo = logotipo;
-	}
+  @XmlElement(name = "UsoCfdiDesc")
+  private String usoCfdiDesc;
 
-	public Cfdi getFactura() {
-		return factura;
-	}
+  @XmlElement(name = "RegimenFiscalDesc")
+  private String regimenFiscalDesc;
 
-	public void setFactura(Cfdi factura) {
-		this.factura = factura;
-	}
+  @XmlElement(name = "FormaPagoDesc")
+  private String formaPagoDesc;
 
-	public String getCadenaOriginal() {
-		return cadenaOriginal;
-	}
+  @XmlElement(name = "MetodoPagoDesc")
+  private String metodoPagoDesc;
 
-	public void setCadenaOriginal(String cadenaOriginal) {
-		this.cadenaOriginal = cadenaOriginal;
-	}
+  @XmlElement(name = "DireccionEmisor")
+  private String direccionEmisor;
 
-	public String getDireccionEmisor() {
-		return direccionEmisor;
-	}
+  @XmlElement(name = "DireccionReceptor")
+  private String direccionReceptor;
 
-	public void setDireccionEmisor(String direccionEmisor) {
-		this.direccionEmisor = direccionEmisor;
-	}
+  @XmlElement(name = "TipoDeComprobanteDesc")
+  private String tipoDeComprobanteDesc;
 
-	public String getDireccionReceptor() {
-		return direccionReceptor;
-	}
+  @XmlElement(name = "Logotipo")
+  private String logotipo;
 
-	public void setDireccionReceptor(String direccionReceptor) {
-		this.direccionReceptor = direccionReceptor;
-	}
+  @XmlElement(name = "factura")
+  private Cfdi factura;
 
-	public String getTipoDeComprobanteDesc() {
-		return tipoDeComprobanteDesc;
-	}
+  @XmlElement(name = "montoTotalDesc")
+  private String montoTotalDesc;
 
-	public void setTipoDeComprobanteDesc(String tipoDeComprobanteDesc) {
-		this.tipoDeComprobanteDesc = tipoDeComprobanteDesc;
-	}
+  @XmlElement(name = "montoTotal")
+  private BigDecimal montoTotal;
 
-	public String getUsoCfdiDesc() {
-		return usoCfdiDesc;
-	}
+  @XmlElement(name = "TipoRelacion")
+  private String tipoRelacion;
 
-	public void setUsoCfdiDesc(String usoCfdiDesc) {
-		this.usoCfdiDesc = usoCfdiDesc;
-	}
+  @XmlElement(name = "Relacion")
+  private String relacion;
 
-	public String getRegimenFiscalDesc() {
-		return regimenFiscalDesc;
-	}
+  @XmlElement(name = "UUID")
+  private String uuid;
 
-	public void setRegimenFiscalDesc(String regimenFiscalDesc) {
-		this.regimenFiscalDesc = regimenFiscalDesc;
-	}
+  public FacturaPdfModelDto() {
+    super();
+  }
 
-	public String getFormaPagoDesc() {
-		return formaPagoDesc;
-	}
+  public FacturaPdfModelDto(String qr, String logotipo, Cfdi factura) {
+    super();
+    this.qr = qr;
+    this.logotipo = logotipo;
+    this.factura = factura;
+  }
 
-	public void setFormaPagoDesc(String formaPagoDesc) {
-		this.formaPagoDesc = formaPagoDesc;
-	}
+  public String getQr() {
+    return qr;
+  }
 
-	public String getMetodoPagoDesc() {
-		return metodoPagoDesc;
-	}
+  public void setQr(String qr) {
+    this.qr = qr;
+  }
 
-	public void setMetodoPagoDesc(String metodoPagoDesc) {
-		this.metodoPagoDesc = metodoPagoDesc;
-	}
+  public String getLogotipo() {
+    return logotipo;
+  }
 
-	public String getTotalDesc() {
-		return totalDesc;
-	}
+  public void setLogotipo(String logotipo) {
+    this.logotipo = logotipo;
+  }
 
-	public void setTotalDesc(String totalDesc) {
-		this.totalDesc = totalDesc;
-	}
+  public Cfdi getFactura() {
+    return factura;
+  }
 
-	public String getSubTotalDesc() {
-		return subTotalDesc;
-	}
+  public void setFactura(Cfdi factura) {
+    this.factura = factura;
+  }
 
-	public void setSubTotalDesc(String subTotalDesc) {
-		this.subTotalDesc = subTotalDesc;
-	}
+  public String getCadenaOriginal() {
+    return cadenaOriginal;
+  }
 
-	public String getFolioPadre() {
-		return folioPadre;
-	}
+  public void setCadenaOriginal(String cadenaOriginal) {
+    this.cadenaOriginal = cadenaOriginal;
+  }
 
-	public void setFolioPadre(String folioPadre) {
-		this.folioPadre = folioPadre;
-	}
+  public String getDireccionEmisor() {
+    return direccionEmisor;
+  }
 
-	public String getMontoTotalDesc() {
-		return montoTotalDesc;
-	}
+  public void setDireccionEmisor(String direccionEmisor) {
+    this.direccionEmisor = direccionEmisor;
+  }
 
-	public void setMontoTotalDesc(String montoTotalDesc) {
-		this.montoTotalDesc = montoTotalDesc;
-	}
+  public String getDireccionReceptor() {
+    return direccionReceptor;
+  }
 
-	public BigDecimal getMontoTotal() {
-		return montoTotal;
-	}
+  public void setDireccionReceptor(String direccionReceptor) {
+    this.direccionReceptor = direccionReceptor;
+  }
 
-	public void setMontoTotal(BigDecimal montoTotal) {
-		this.montoTotal = montoTotal;
-	}
+  public String getTipoDeComprobanteDesc() {
+    return tipoDeComprobanteDesc;
+  }
 
-	public String getTipoRelacion() {
-		return tipoRelacion;
-	}
+  public void setTipoDeComprobanteDesc(String tipoDeComprobanteDesc) {
+    this.tipoDeComprobanteDesc = tipoDeComprobanteDesc;
+  }
 
-	public void setTipoRelacion(String tipoRelacion) {
-		this.tipoRelacion = tipoRelacion;
-	}
+  public String getUsoCfdiDesc() {
+    return usoCfdiDesc;
+  }
 
-	public String getRelacion() {
-		return relacion;
-	}
+  public void setUsoCfdiDesc(String usoCfdiDesc) {
+    this.usoCfdiDesc = usoCfdiDesc;
+  }
 
-	public void setRelacion(String relacion) {
-		this.relacion = relacion;
-	}
+  public String getRegimenFiscalDesc() {
+    return regimenFiscalDesc;
+  }
 
-	public String getUuid() {
-		return uuid;
-	}
+  public void setRegimenFiscalDesc(String regimenFiscalDesc) {
+    this.regimenFiscalDesc = regimenFiscalDesc;
+  }
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
+  public String getFormaPagoDesc() {
+    return formaPagoDesc;
+  }
 
-	@Override
-	public String toString() {
-		return "FacturaPdfModelDto [qr=" + qr + ", cadenaOriginal=" + cadenaOriginal + ", folioPadre=" + folioPadre
-				+ ", totalDesc=" + totalDesc + ", subTotalDesc=" + subTotalDesc + ", usoCfdiDesc=" + usoCfdiDesc
-				+ ", regimenFiscalDesc=" + regimenFiscalDesc + ", formaPagoDesc=" + formaPagoDesc + ", metodoPagoDesc="
-				+ metodoPagoDesc + ", direccionEmisor=" + direccionEmisor + ", direccionReceptor=" + direccionReceptor
-				+ ", tipoDeComprobanteDesc=" + tipoDeComprobanteDesc + ", logotipo=" + logotipo + ", factura=" + factura
-				+ ", montoTotalDesc=" + montoTotalDesc + ", montoTotal=" + montoTotal + ", tipoRelacion=" + tipoRelacion
-				+ ", relacion=" + relacion + ", uuid=" + uuid + "]";
-	}
+  public void setFormaPagoDesc(String formaPagoDesc) {
+    this.formaPagoDesc = formaPagoDesc;
+  }
 
+  public String getMetodoPagoDesc() {
+    return metodoPagoDesc;
+  }
+
+  public void setMetodoPagoDesc(String metodoPagoDesc) {
+    this.metodoPagoDesc = metodoPagoDesc;
+  }
+
+  public String getTotalDesc() {
+    return totalDesc;
+  }
+
+  public void setTotalDesc(String totalDesc) {
+    this.totalDesc = totalDesc;
+  }
+
+  public String getSubTotalDesc() {
+    return subTotalDesc;
+  }
+
+  public void setSubTotalDesc(String subTotalDesc) {
+    this.subTotalDesc = subTotalDesc;
+  }
+
+  public String getFolioPadre() {
+    return folioPadre;
+  }
+
+  public void setFolioPadre(String folioPadre) {
+    this.folioPadre = folioPadre;
+  }
+
+  public String getMontoTotalDesc() {
+    return montoTotalDesc;
+  }
+
+  public void setMontoTotalDesc(String montoTotalDesc) {
+    this.montoTotalDesc = montoTotalDesc;
+  }
+
+  public BigDecimal getMontoTotal() {
+    return montoTotal;
+  }
+
+  public void setMontoTotal(BigDecimal montoTotal) {
+    this.montoTotal = montoTotal;
+  }
+
+  public String getTipoRelacion() {
+    return tipoRelacion;
+  }
+
+  public void setTipoRelacion(String tipoRelacion) {
+    this.tipoRelacion = tipoRelacion;
+  }
+
+  public String getRelacion() {
+    return relacion;
+  }
+
+  public void setRelacion(String relacion) {
+    this.relacion = relacion;
+  }
+
+  public String getUuid() {
+    return uuid;
+  }
+
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
+
+  @Override
+  public String toString() {
+    return "FacturaPdfModelDto [qr="
+        + qr
+        + ", cadenaOriginal="
+        + cadenaOriginal
+        + ", folioPadre="
+        + folioPadre
+        + ", totalDesc="
+        + totalDesc
+        + ", subTotalDesc="
+        + subTotalDesc
+        + ", usoCfdiDesc="
+        + usoCfdiDesc
+        + ", regimenFiscalDesc="
+        + regimenFiscalDesc
+        + ", formaPagoDesc="
+        + formaPagoDesc
+        + ", metodoPagoDesc="
+        + metodoPagoDesc
+        + ", direccionEmisor="
+        + direccionEmisor
+        + ", direccionReceptor="
+        + direccionReceptor
+        + ", tipoDeComprobanteDesc="
+        + tipoDeComprobanteDesc
+        + ", logotipo="
+        + logotipo
+        + ", factura="
+        + factura
+        + ", montoTotalDesc="
+        + montoTotalDesc
+        + ", montoTotal="
+        + montoTotal
+        + ", tipoRelacion="
+        + tipoRelacion
+        + ", relacion="
+        + relacion
+        + ", uuid="
+        + uuid
+        + "]";
+  }
 }

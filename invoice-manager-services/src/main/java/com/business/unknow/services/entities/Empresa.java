@@ -2,25 +2,28 @@ package com.business.unknow.services.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@ToString
 @Entity
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "EMPRESAS")
 public class Empresa implements Serializable {
@@ -32,31 +35,77 @@ public class Empresa implements Serializable {
   @Column(name = "ID_EMPRESA")
   private int id;
 
+  @Column(name = "ACTIVO")
+  private Boolean activo;
+
+  @Column(name = "ESTATUS")
+  private String estatus;
+
+  @Column(name = "GIRO_ID")
+  private Integer giro;
+
+  @Column(name = "LINEA")
+  private String tipo;
+
   @Column(name = "REGIMEN_FISCAL")
   private String regimenFiscal;
 
-  @Column(name = "REFERENCIA")
-  private String referencia;
+  @Column(name = "RFC")
+  private String rfc;
 
-  @Column(name = "CONTACTO_ADMIN")
-  private String contactoAdmin;
+  @Column(name = "NOMBRE")
+  private String nombre;
 
-  @Basic(optional = false)
-  @Column(name = "SUCURSAL")
-  private String sucursal;
+  @Column(name = "RAZON_SOCIAL")
+  private String razonSocial;
 
-  @Basic(optional = false)
-  @Column(name = "LUGAR_EXPEDICION")
-  private String lugarExpedicion;
+  @Column(name = "CALLE")
+  private String calle;
 
-  @Column(name = "NO_CERTIFICADO")
-  private String noCertificado;
+  @Column(name = "NO_EXT")
+  private String noExterior;
 
-  @Column(name = "PW_SAT")
-  private String pwSat;
+  @Column(name = "NO_INT")
+  private String noInterior;
 
-  @Column(name = "PW_CORREO")
-  private String pwCorreo;
+  @Column(name = "MUNICIPIO")
+  private String municipio;
+
+  @Column(name = "COLONIA")
+  private String colonia;
+
+  @Column(name = "ESTADO")
+  private String estado;
+
+  @Column(name = "PAIS")
+  private String pais;
+
+  @Column(name = "CODIGO_POSTAL")
+  private String cp;
+
+  @Column(name = "ANIO_ALTA")
+  private Integer anioAlta;
+
+  @Column(name = "REGISTRO_PATRONAL")
+  private String registroPatronal;
+
+  @Column(name = "ESTATUS_JURIDICO1")
+  private String estatusJuridico;
+
+  @Column(name = "ESTATUS_JURIDICO2")
+  private String estatusJuridico2;
+
+  @Column(name = "REPRESENTANTE_LEGAL")
+  private String representanteLegal;
+
+  @Column(name = "CIEC")
+  private String ciec;
+
+  @Column(name = "FIEL")
+  private String fiel;
+
+  @Column(name = "ACTIVIDAD_SAT")
+  private String actividadSAT;
 
   @Column(name = "WEB")
   private String web;
@@ -65,23 +114,23 @@ public class Empresa implements Serializable {
   @Column(name = "CORREO")
   private String correo;
 
-  @Column(name = "ENCABEZADO")
-  private String encabezado;
-
-  @Column(name = "PIE_DE_PAGINA")
-  private String piePagina;
-
-  @Column(name = "ACTIVO")
-  private Boolean activo;
-
-  @Column(name = "LINEA")
-  private String tipo;
+  @Column(name = "PW_CORREO")
+  private String pwCorreo;
 
   @Column(name = "DOMINIO_CORREO")
   private String dominioCorreo;
 
-  @Column(name = "GIRO_ID")
-  private Integer giro;
+  @Column(name = "PW_SAT")
+  private String pwSat;
+
+  @Column(name = "NO_CERTIFICADO")
+  private String noCertificado;
+
+  @Column(name = "EXPIRACION_CERTIFICADO")
+  private Date expiracionCertificado;
+
+  @Column(name = "CREADOR")
+  private String creador;
 
   @Temporal(TemporalType.TIMESTAMP)
   @CreatedDate
@@ -92,213 +141,4 @@ public class Empresa implements Serializable {
   @LastModifiedDate
   @Column(name = "FECHA_ACTUALIZACION")
   private Date fechaActualizacion;
-
-  @OneToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "RFC", referencedColumnName = "RFC")
-  private Contribuyente informacionFiscal;
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  public String getRegimenFiscal() {
-    return regimenFiscal;
-  }
-
-  public void setRegimenFiscal(String regimenFiscal) {
-    this.regimenFiscal = regimenFiscal;
-  }
-
-  public String getReferencia() {
-    return referencia;
-  }
-
-  public void setReferencia(String referencia) {
-    this.referencia = referencia;
-  }
-
-  public String getContactoAdmin() {
-    return contactoAdmin;
-  }
-
-  public void setContactoAdmin(String contactoAdmin) {
-    this.contactoAdmin = contactoAdmin;
-  }
-
-  public String getSucursal() {
-    return sucursal;
-  }
-
-  public void setSucursal(String sucursal) {
-    this.sucursal = sucursal;
-  }
-
-  public String getLugarExpedicion() {
-    return lugarExpedicion;
-  }
-
-  public void setLugarExpedicion(String lugarExpedicion) {
-    this.lugarExpedicion = lugarExpedicion;
-  }
-
-  public String getNoCertificado() {
-    return noCertificado;
-  }
-
-  public void setNoCertificado(String noCertificado) {
-    this.noCertificado = noCertificado;
-  }
-
-  public String getPwSat() {
-    return pwSat;
-  }
-
-  public void setPwSat(String pwSat) {
-    this.pwSat = pwSat;
-  }
-
-  public String getPwCorreo() {
-    return pwCorreo;
-  }
-
-  public void setPwCorreo(String pwCorreo) {
-    this.pwCorreo = pwCorreo;
-  }
-
-  public String getWeb() {
-    return web;
-  }
-
-  public void setWeb(String web) {
-    this.web = web;
-  }
-
-  public String getCorreo() {
-    return correo;
-  }
-
-  public void setCorreo(String correo) {
-    this.correo = correo;
-  }
-
-  public String getEncabezado() {
-    return encabezado;
-  }
-
-  public void setEncabezado(String encabezado) {
-    this.encabezado = encabezado;
-  }
-
-  public String getPiePagina() {
-    return piePagina;
-  }
-
-  public void setPiePagina(String piePagina) {
-    this.piePagina = piePagina;
-  }
-
-  public Boolean getActivo() {
-    return activo;
-  }
-
-  public void setActivo(Boolean activo) {
-    this.activo = activo;
-  }
-
-  public String getTipo() {
-    return tipo;
-  }
-
-  public void setTipo(String tipo) {
-    this.tipo = tipo;
-  }
-
-  public Integer getGiro() {
-    return giro;
-  }
-
-  public void setGiro(Integer giro) {
-    this.giro = giro;
-  }
-
-  public Date getFechaCreacion() {
-    return fechaCreacion;
-  }
-
-  public void setFechaCreacion(Date fechaCreacion) {
-    this.fechaCreacion = fechaCreacion;
-  }
-
-  public Date getFechaActualizacion() {
-    return fechaActualizacion;
-  }
-
-  public void setFechaActualizacion(Date fechaActualizacion) {
-    this.fechaActualizacion = fechaActualizacion;
-  }
-
-  public Contribuyente getInformacionFiscal() {
-    return informacionFiscal;
-  }
-
-  public void setInformacionFiscal(Contribuyente informacionFiscal) {
-    this.informacionFiscal = informacionFiscal;
-  }
-
-  public String getDominioCorreo() {
-    return dominioCorreo;
-  }
-
-  public void setDominioCorreo(String dominioCorreo) {
-    this.dominioCorreo = dominioCorreo;
-  }
-
-  @Override
-  public String toString() {
-    return "Empresa [id="
-        + id
-        + ", regimenFiscal="
-        + regimenFiscal
-        + ", referencia="
-        + referencia
-        + ", contactoAdmin="
-        + contactoAdmin
-        + ", sucursal="
-        + sucursal
-        + ", lugarExpedicion="
-        + lugarExpedicion
-        + ", noCertificado="
-        + noCertificado
-        + ", pwSat="
-        + pwSat
-        + ", pwCorreo="
-        + pwCorreo
-        + ", web="
-        + web
-        + ", correo="
-        + correo
-        + ", encabezado="
-        + encabezado
-        + ", piePagina="
-        + piePagina
-        + ", activo="
-        + activo
-        + ", tipo="
-        + tipo
-        + ", dominioCorreo="
-        + dominioCorreo
-        + ", giro="
-        + giro
-        + ", fechaCreacion="
-        + fechaCreacion
-        + ", fechaActualizacion="
-        + fechaActualizacion
-        + ", informacionFiscal="
-        + informacionFiscal
-        + "]";
-  }
 }

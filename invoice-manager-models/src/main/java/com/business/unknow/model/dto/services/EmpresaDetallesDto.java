@@ -4,14 +4,13 @@ import com.business.unknow.Constants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
+import java.util.Date;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
-
-import java.io.Serializable;
-import java.util.Date;
 
 @Jacksonized
 @Builder
@@ -21,16 +20,17 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmpresaDetallesDto implements Serializable {
-    private int id;
-    private String rfc;
-    private String tipo;
-    private String notificante;
-    private String area;
-    private Integer resumen;
-    private String detalle;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
-    private Date fechaCreacion;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
-    private Date fechaActualizacion;
+  private int id;
+  private String rfc;
+  private String tipo;
+  private String notificante;
+  private String area;
+  private Integer resumen;
+  private String detalle;
 
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+  private Date fechaCreacion;
+
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+  private Date fechaActualizacion;
 }

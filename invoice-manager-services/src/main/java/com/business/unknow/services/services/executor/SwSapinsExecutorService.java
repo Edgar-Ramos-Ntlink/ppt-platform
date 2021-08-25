@@ -5,6 +5,7 @@ import com.business.unknow.client.swsapiens.model.SwSapiensVersionEnum;
 import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
 import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
 import com.business.unknow.enums.FacturaStatusEnum;
+import com.business.unknow.enums.S3BucketsEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.context.FacturaContext;
@@ -14,6 +15,7 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.client.SwSapiensClient;
 import com.business.unknow.services.config.properties.GlocalConfigs;
 import com.business.unknow.services.config.properties.SwProperties;
+import com.business.unknow.services.services.S3FileService;
 import com.business.unknow.services.util.helpers.DateHelper;
 import com.business.unknow.services.util.helpers.FacturaHelper;
 import com.business.unknow.services.util.helpers.FileHelper;
@@ -42,6 +44,8 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
   @Autowired private SwProperties swProperties;
 
   @Autowired private GlocalConfigs glocalConfigs;
+
+  @Autowired private S3FileService s3service;
 
   public FacturaContext stamp(FacturaContext context) throws InvoiceManagerException {
     SwSapiensClient swSapiensClient = new SwSapiensClient();
@@ -130,6 +134,18 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
   public FacturaContext cancelarFactura(FacturaContext context) throws InvoiceManagerException {
     try {
       if (glocalConfigs.getEnvironment().equals("prod")) {
+
+        String llavePrivada =
+            s3service.getS3File(
+                S3BucketsEnum.EMPRESAS,
+                TipoArchivoEnum.KEY.name(),
+                context.getEmpresaDto().getRfc());
+        String certificado =
+            s3service.getS3File(
+                S3BucketsEnum.EMPRESAS,
+                TipoArchivoEnum.CERT.name(),
+                context.getEmpresaDto().getRfc());
+
         swSapiensClient
             .getSwSapiensClient(
                 swProperties.getHost(), "", swProperties.getUser(), swProperties.getPassword())
@@ -137,8 +153,8 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
                 context.getFacturaDto().getUuid(),
                 context.getEmpresaDto().getFiel(),
                 context.getEmpresaDto().getRfc(),
-                fileHelper.stringEncodeBase64(context.getEmpresaDto().getCertificado()),
-                fileHelper.stringEncodeBase64(context.getEmpresaDto().getLlavePrivada()));
+                fileHelper.stringEncodeBase64(certificado),
+                fileHelper.stringEncodeBase64(llavePrivada));
       }
       context.getFacturaDto().setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
       context.getFacturaDto().setFechaCancelacion(new Date());

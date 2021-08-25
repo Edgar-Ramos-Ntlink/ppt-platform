@@ -2,6 +2,8 @@ package com.business.unknow.services.services.translators;
 
 import com.business.unknow.Constants.FacturaComplemento;
 import com.business.unknow.Constants.FacturaConstants;
+import com.business.unknow.enums.S3BucketsEnum;
+import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.cfdi.CFdiRelacionados;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.CfdiRelacionado;
@@ -21,6 +23,7 @@ import com.business.unknow.model.dto.cfdi.RelacionadoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.mapper.factura.FacturaCfdiTranslatorMapper;
+import com.business.unknow.services.services.S3FileService;
 import com.business.unknow.services.util.helpers.CdfiHelper;
 import com.business.unknow.services.util.helpers.DateHelper;
 import com.business.unknow.services.util.helpers.FacturaHelper;
@@ -48,6 +51,8 @@ public class FacturaTranslator {
   @Autowired private FacturaCfdiTranslatorMapper facturaCfdiTranslatorMapper;
 
   @Autowired private SignHelper signHelper;
+
+  @Autowired private S3FileService s3service;
 
   private static final Logger log = LoggerFactory.getLogger(FacturaTranslator.class);
 
@@ -169,7 +174,8 @@ public class FacturaTranslator {
     }
   }
 
-  public void complementoToXmlSigned(FacturaContext context) throws InvoiceCommonException {
+  public void complementoToXmlSigned(FacturaContext context)
+      throws InvoiceCommonException, InvoiceManagerException {
     String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
     log.debug(context.getXml());
     xml = xml.replace(FacturaComplemento.TOTAL, FacturaComplemento.TOTAL_FINAL);
@@ -181,18 +187,21 @@ public class FacturaTranslator {
                 ? context.getFacturaDto().getFechaActualizacion()
                 : new Date());
     String cadenaOriginal = signHelper.getCadena(xml);
+
+    String llavePrivada =
+        s3service.getS3File(
+            S3BucketsEnum.EMPRESAS, TipoArchivoEnum.KEY.name(), context.getEmpresaDto().getRfc());
+
     String sello =
-        signHelper.getSign(
-            cadenaOriginal,
-            context.getEmpresaDto().getFiel(),
-            context.getEmpresaDto().getLlavePrivada());
+        signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getFiel(), llavePrivada);
     context.setXml(cdfiHelper.putsSign(xml, sello));
     if (context.getFacturaDto().getCfdi().getComplemento() == null) {
       context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());
     }
   }
 
-  public void facturaToXmlSigned(FacturaContext context) throws InvoiceCommonException {
+  public void facturaToXmlSigned(FacturaContext context)
+      throws InvoiceCommonException, InvoiceManagerException {
     String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
     xml =
         cdfiHelper.changeDate(
@@ -201,11 +210,11 @@ public class FacturaTranslator {
                 ? context.getFacturaDto().getFechaActualizacion()
                 : new Date());
     String cadenaOriginal = signHelper.getCadena(xml);
+    String llavePrivada =
+        s3service.getS3File(
+            S3BucketsEnum.EMPRESAS, TipoArchivoEnum.KEY.name(), context.getEmpresaDto().getRfc());
     String sello =
-        signHelper.getSign(
-            cadenaOriginal,
-            context.getEmpresaDto().getFiel(),
-            context.getEmpresaDto().getLlavePrivada());
+        signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getFiel(), llavePrivada);
     context.setXml(cdfiHelper.putsSign(xml, sello).replace("standalone=\"no\"", ""));
     context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());
   }

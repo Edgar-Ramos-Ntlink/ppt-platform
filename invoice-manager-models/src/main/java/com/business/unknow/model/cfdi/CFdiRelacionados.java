@@ -10,38 +10,40 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CFdiRelacionados {
 
-	@XmlAttribute(name = "TipoRelacion")
-	private String tipoRelacion;
+  @XmlAttribute(name = "TipoRelacion")
+  private String tipoRelacion;
 
-	@XmlElement(name = "CfdiRelacionado", namespace = "http://www.sat.gob.mx/cfd/3")
-	private CfdiRelacionado cfdiRelacionado;
-	
-	public CFdiRelacionados() {
-	}
+  @XmlElement(name = "CfdiRelacionado", namespace = "http://www.sat.gob.mx/cfd/3")
+  private CfdiRelacionado cfdiRelacionado;
 
-	public CFdiRelacionados(String tipoRelacion) {
-		this.tipoRelacion = tipoRelacion;
-	}
+  public CFdiRelacionados() {}
 
-	public String getTipoRelacion() {
-		return tipoRelacion;
-	}
+  public CFdiRelacionados(String tipoRelacion) {
+    this.tipoRelacion = tipoRelacion;
+  }
 
-	public void setTipoRelacion(String tipoRelacion) {
-		this.tipoRelacion = tipoRelacion;
-	}
+  public String getTipoRelacion() {
+    return tipoRelacion;
+  }
 
-	public CfdiRelacionado getCfdiRelacionado() {
-		return cfdiRelacionado;
-	}
+  public void setTipoRelacion(String tipoRelacion) {
+    this.tipoRelacion = tipoRelacion;
+  }
 
-	public void setCfdiRelacionado(CfdiRelacionado cfdiRelacionado) {
-		this.cfdiRelacionado = cfdiRelacionado;
-	}
+  public CfdiRelacionado getCfdiRelacionado() {
+    return cfdiRelacionado;
+  }
 
-	@Override
-	public String toString() {
-		return "CFdiRelacionados [tipoRelacion=" + tipoRelacion + ", cfdiRelacionado=" + cfdiRelacionado + "]";
-	}
+  public void setCfdiRelacionado(CfdiRelacionado cfdiRelacionado) {
+    this.cfdiRelacionado = cfdiRelacionado;
+  }
 
+  @Override
+  public String toString() {
+    return "CFdiRelacionados [tipoRelacion="
+        + tipoRelacion
+        + ", cfdiRelacionado="
+        + cfdiRelacionado
+        + "]";
+  }
 }

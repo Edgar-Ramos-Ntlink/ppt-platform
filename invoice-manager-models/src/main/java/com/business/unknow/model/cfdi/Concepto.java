@@ -1,7 +1,6 @@
 package com.business.unknow.model.cfdi;
 
 import java.math.BigDecimal;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -12,113 +11,138 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Concepto {
 
-	@XmlAttribute(name = "ClaveProdServ")
-	private String claveProdServ;
-	@XmlAttribute(name = "NoIdentificacion")
-	private String noIdentificacion;
-	@XmlAttribute(name = "Cantidad")
-	private BigDecimal cantidad;
-	@XmlAttribute(name = "ClaveUnidad")
-	private String claveUnidad;
-	@XmlAttribute(name = "Unidad")
-	private String unidad;
-	@XmlAttribute(name = "Descripcion")
-	private String descripcion;
-	@XmlAttribute(name = "ValorUnitario")
-	private BigDecimal valorUnitario;
-	@XmlAttribute(name = "Importe")
-	private BigDecimal importe;
-	@XmlAttribute(name = "Descuento")
-	private BigDecimal descuento;
-	@XmlElement(name = "Impuestos", namespace = "http://www.sat.gob.mx/cfd/3")
-	private ConceptoImpuesto impuestos;
+  @XmlAttribute(name = "ClaveProdServ")
+  private String claveProdServ;
 
-	public String getClaveProdServ() {
-		return claveProdServ;
-	}
+  @XmlAttribute(name = "NoIdentificacion")
+  private String noIdentificacion;
 
-	public void setClaveProdServ(String claveProdServ) {
-		this.claveProdServ = claveProdServ;
-	}
+  @XmlAttribute(name = "Cantidad")
+  private BigDecimal cantidad;
 
-	public String getNoIdentificacion() {
-		return noIdentificacion;
-	}
+  @XmlAttribute(name = "ClaveUnidad")
+  private String claveUnidad;
 
-	public void setNoIdentificacion(String noIdentificacion) {
-		this.noIdentificacion = noIdentificacion;
-	}
+  @XmlAttribute(name = "Unidad")
+  private String unidad;
 
-	public String getClaveUnidad() {
-		return claveUnidad;
-	}
+  @XmlAttribute(name = "Descripcion")
+  private String descripcion;
 
-	public void setClaveUnidad(String claveUnidad) {
-		this.claveUnidad = claveUnidad;
-	}
+  @XmlAttribute(name = "ValorUnitario")
+  private BigDecimal valorUnitario;
 
-	public String getUnidad() {
-		return unidad;
-	}
+  @XmlAttribute(name = "Importe")
+  private BigDecimal importe;
 
-	public void setUnidad(String unidad) {
-		this.unidad = unidad;
-	}
+  @XmlAttribute(name = "Descuento")
+  private BigDecimal descuento;
 
-	public String getDescripcion() {
-		return descripcion;
-	}
+  @XmlElement(name = "Impuestos", namespace = "http://www.sat.gob.mx/cfd/3")
+  private ConceptoImpuesto impuestos;
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
+  public String getClaveProdServ() {
+    return claveProdServ;
+  }
 
-	public BigDecimal getValorUnitario() {
-		return valorUnitario;
-	}
+  public void setClaveProdServ(String claveProdServ) {
+    this.claveProdServ = claveProdServ;
+  }
 
-	public void setValorUnitario(BigDecimal valorUnitario) {
-		this.valorUnitario = valorUnitario;
-	}
+  public String getNoIdentificacion() {
+    return noIdentificacion;
+  }
 
-	public BigDecimal getImporte() {
-		return importe;
-	}
+  public void setNoIdentificacion(String noIdentificacion) {
+    this.noIdentificacion = noIdentificacion;
+  }
 
-	public void setImporte(BigDecimal importe) {
-		this.importe = importe;
-	}
+  public String getClaveUnidad() {
+    return claveUnidad;
+  }
 
-	public BigDecimal getDescuento() {
-		return descuento;
-	}
+  public void setClaveUnidad(String claveUnidad) {
+    this.claveUnidad = claveUnidad;
+  }
 
-	public void setDescuento(BigDecimal descuento) {
-		this.descuento = descuento;
-	}
+  public String getUnidad() {
+    return unidad;
+  }
 
-	public ConceptoImpuesto getImpuestos() {
-		return impuestos;
-	}
+  public void setUnidad(String unidad) {
+    this.unidad = unidad;
+  }
 
-	public void setImpuestos(ConceptoImpuesto impuestos) {
-		this.impuestos = impuestos;
-	}
+  public String getDescripcion() {
+    return descripcion;
+  }
 
-	public BigDecimal getCantidad() {
-		return cantidad;
-	}
+  public void setDescripcion(String descripcion) {
+    this.descripcion = descripcion;
+  }
 
-	public void setCantidad(BigDecimal cantidad) {
-		this.cantidad = cantidad;
-	}
+  public BigDecimal getValorUnitario() {
+    return valorUnitario;
+  }
 
-	@Override
-	public String toString() {
-		return "Concepto [claveProdServ=" + claveProdServ + ", noIdentificacion=" + noIdentificacion + ", cantidad="
-				+ cantidad + ", claveUnidad=" + claveUnidad + ", unidad=" + unidad + ", descripcion=" + descripcion
-				+ ", valorUnitario=" + valorUnitario + ", importe=" + importe + ", descuento=" + descuento
-				+ ", impuestos=" + impuestos + "]";
-	}
+  public void setValorUnitario(BigDecimal valorUnitario) {
+    this.valorUnitario = valorUnitario;
+  }
 
+  public BigDecimal getImporte() {
+    return importe;
+  }
+
+  public void setImporte(BigDecimal importe) {
+    this.importe = importe;
+  }
+
+  public BigDecimal getDescuento() {
+    return descuento;
+  }
+
+  public void setDescuento(BigDecimal descuento) {
+    this.descuento = descuento;
+  }
+
+  public ConceptoImpuesto getImpuestos() {
+    return impuestos;
+  }
+
+  public void setImpuestos(ConceptoImpuesto impuestos) {
+    this.impuestos = impuestos;
+  }
+
+  public BigDecimal getCantidad() {
+    return cantidad;
+  }
+
+  public void setCantidad(BigDecimal cantidad) {
+    this.cantidad = cantidad;
+  }
+
+  @Override
+  public String toString() {
+    return "Concepto [claveProdServ="
+        + claveProdServ
+        + ", noIdentificacion="
+        + noIdentificacion
+        + ", cantidad="
+        + cantidad
+        + ", claveUnidad="
+        + claveUnidad
+        + ", unidad="
+        + unidad
+        + ", descripcion="
+        + descripcion
+        + ", valorUnitario="
+        + valorUnitario
+        + ", importe="
+        + importe
+        + ", descuento="
+        + descuento
+        + ", impuestos="
+        + impuestos
+        + "]";
+  }
 }

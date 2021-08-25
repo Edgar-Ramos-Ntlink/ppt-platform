@@ -1,27 +1,21 @@
-/**
- * 
- */
+/** */
 package com.business.unknow.model.dto.services;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 import com.business.unknow.Constants;
 import com.business.unknow.model.menu.MenuItem;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
-/**
- * @author eej000f
- *
- */
+/** @author eej000f */
 @Jacksonized
 @Builder
 @Getter
@@ -31,28 +25,27 @@ import lombok.extern.jackson.Jacksonized;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto implements Serializable {
 
-	private Integer id;
-	
-	private String email;
+  private Integer id;
 
-	private boolean activo;
+  private String email;
 
-	private String name;
-	
-	private String alias;
+  private boolean activo;
 
-	private String urlPicture;
+  private String name;
 
-	private List<RoleDto> roles;
-	
-	private List<MenuItem> menu;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
-	private Date fechaCreacion;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
-	private Date fechaActualizacion;
+  private String alias;
 
-	private static final long serialVersionUID = -4269713581531174125L;
+  private String urlPicture;
 
+  private List<RoleDto> roles;
+
+  private List<MenuItem> menu;
+
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+  private Date fechaCreacion;
+
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+  private Date fechaActualizacion;
+
+  private static final long serialVersionUID = -4269713581531174125L;
 }

@@ -42,7 +42,7 @@ public class DatoAnualEmpresaController {
             .orElseThrow(
                 () ->
                     new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "La observacion a modificar no existe"));
+                        HttpStatus.BAD_REQUEST, "El dato a modificar no no existe"));
 
     datos.remove(ob);
     observacion.setId(ob.getId());

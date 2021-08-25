@@ -10,20 +10,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/empresas")
 public class EmpresaDetallesController {
 
   @Autowired private EmpresaDetallesService service;
 
-  @GetMapping("/empresa-detalles/{rfc}/tipo/{tipo}")
+  @GetMapping("/{rfc}/detalles/tipo/{tipo}")
   public ResponseEntity<List<EmpresaDetallesDto>> findByRfcAndTipo(
       @PathVariable String rfc, @PathVariable String tipo) {
     return new ResponseEntity<>(service.findByRfcAndTipo(rfc, tipo), HttpStatus.OK);
   }
 
-  @PostMapping("/empresas-detalles")
+  @PostMapping("/detalles")
   public ResponseEntity<EmpresaDetallesDto> createEmpresaDetalle(
       @RequestBody @Valid EmpresaDetallesDto empresaDetallesDto) {
     return new ResponseEntity<>(service.createDetalle(empresaDetallesDto), HttpStatus.OK);
+  }
+
+  @DeleteMapping("/detalles/{id}")
+  public void deleteDetalleEmpresa(@PathVariable Integer id) {
+    service.deleteDetalle(id);
   }
 }

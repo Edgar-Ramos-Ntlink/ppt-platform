@@ -1,7 +1,6 @@
 package com.business.unknow.model.cfdi;
 
 import java.math.BigDecimal;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -11,113 +10,138 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ComplementoDocRelacionado {
 
-	@XmlAttribute(name = "Folio")
-	private String folio;
-	@XmlAttribute(name = "IdDocumento")
-	private String idDocumento;
-	@XmlAttribute(name = "ImpPagado")
-	private String impPagado;
-	@XmlAttribute(name = "ImpSaldoAnt")
-	private String impSaldoAnt;
-	@XmlAttribute(name = "ImpSaldoInsoluto")
-	private String impSaldoInsoluto;
-	@XmlAttribute(name = "MetodoDePagoDR")
-	private String metodoDePagoDR;
-	@XmlAttribute(name = "MonedaDR")
-	private String monedaDR;
-	@XmlAttribute(name = "NumParcialidad")
-	private int numParcialidad;
-	@XmlAttribute(name = "TipoCambioDR")
-	private BigDecimal tipoCambioDR;
-	@XmlAttribute(name = "Serie")
-	private String serie;
+  @XmlAttribute(name = "Folio")
+  private String folio;
 
-	public String getFolio() {
-		return folio;
-	}
+  @XmlAttribute(name = "IdDocumento")
+  private String idDocumento;
 
-	public void setFolio(String folio) {
-		this.folio = folio;
-	}
+  @XmlAttribute(name = "ImpPagado")
+  private String impPagado;
 
-	public String getIdDocumento() {
-		return idDocumento;
-	}
+  @XmlAttribute(name = "ImpSaldoAnt")
+  private String impSaldoAnt;
 
-	public void setIdDocumento(String idDocumento) {
-		this.idDocumento = idDocumento;
-	}
+  @XmlAttribute(name = "ImpSaldoInsoluto")
+  private String impSaldoInsoluto;
 
-	public String getImpPagado() {
-		return impPagado;
-	}
+  @XmlAttribute(name = "MetodoDePagoDR")
+  private String metodoDePagoDR;
 
-	public void setImpPagado(String impPagado) {
-		this.impPagado = impPagado;
-	}
+  @XmlAttribute(name = "MonedaDR")
+  private String monedaDR;
 
-	public String getImpSaldoAnt() {
-		return impSaldoAnt;
-	}
+  @XmlAttribute(name = "NumParcialidad")
+  private int numParcialidad;
 
-	public void setImpSaldoAnt(String impSaldoAnt) {
-		this.impSaldoAnt = impSaldoAnt;
-	}
+  @XmlAttribute(name = "TipoCambioDR")
+  private BigDecimal tipoCambioDR;
 
-	public String getImpSaldoInsoluto() {
-		return impSaldoInsoluto;
-	}
+  @XmlAttribute(name = "Serie")
+  private String serie;
 
-	public void setImpSaldoInsoluto(String impSaldoInsoluto) {
-		this.impSaldoInsoluto = impSaldoInsoluto;
-	}
+  public String getFolio() {
+    return folio;
+  }
 
-	public String getMetodoDePagoDR() {
-		return metodoDePagoDR;
-	}
+  public void setFolio(String folio) {
+    this.folio = folio;
+  }
 
-	public void setMetodoDePagoDR(String metodoDePagoDR) {
-		this.metodoDePagoDR = metodoDePagoDR;
-	}
+  public String getIdDocumento() {
+    return idDocumento;
+  }
 
-	public String getMonedaDR() {
-		return monedaDR;
-	}
+  public void setIdDocumento(String idDocumento) {
+    this.idDocumento = idDocumento;
+  }
 
-	public void setMonedaDR(String monedaDR) {
-		this.monedaDR = monedaDR;
-	}
+  public String getImpPagado() {
+    return impPagado;
+  }
 
-	public int getNumParcialidad() {
-		return numParcialidad;
-	}
+  public void setImpPagado(String impPagado) {
+    this.impPagado = impPagado;
+  }
 
-	public void setNumParcialidad(int numParcialidad) {
-		this.numParcialidad = numParcialidad;
-	}
+  public String getImpSaldoAnt() {
+    return impSaldoAnt;
+  }
 
-	public String getSerie() {
-		return serie;
-	}
+  public void setImpSaldoAnt(String impSaldoAnt) {
+    this.impSaldoAnt = impSaldoAnt;
+  }
 
-	public void setSerie(String serie) {
-		this.serie = serie;
-	}
+  public String getImpSaldoInsoluto() {
+    return impSaldoInsoluto;
+  }
 
-	public BigDecimal getTipoCambioDR() {
-		return tipoCambioDR;
-	}
+  public void setImpSaldoInsoluto(String impSaldoInsoluto) {
+    this.impSaldoInsoluto = impSaldoInsoluto;
+  }
 
-	public void setTipoCambioDR(BigDecimal tipoCambioDR) {
-		this.tipoCambioDR = tipoCambioDR;
-	}
+  public String getMetodoDePagoDR() {
+    return metodoDePagoDR;
+  }
 
-	@Override
-	public String toString() {
-		return "ComplementoDocRelacionado [folio=" + folio + ", idDocumento=" + idDocumento + ", impPagado=" + impPagado
-				+ ", impSaldoAnt=" + impSaldoAnt + ", impSaldoInsoluto=" + impSaldoInsoluto + ", metodoDePagoDR="
-				+ metodoDePagoDR + ", monedaDR=" + monedaDR + ", numParcialidad=" + numParcialidad + ", tipoCambioDR="
-				+ tipoCambioDR + ", serie=" + serie + "]";
-	}
+  public void setMetodoDePagoDR(String metodoDePagoDR) {
+    this.metodoDePagoDR = metodoDePagoDR;
+  }
 
+  public String getMonedaDR() {
+    return monedaDR;
+  }
+
+  public void setMonedaDR(String monedaDR) {
+    this.monedaDR = monedaDR;
+  }
+
+  public int getNumParcialidad() {
+    return numParcialidad;
+  }
+
+  public void setNumParcialidad(int numParcialidad) {
+    this.numParcialidad = numParcialidad;
+  }
+
+  public String getSerie() {
+    return serie;
+  }
+
+  public void setSerie(String serie) {
+    this.serie = serie;
+  }
+
+  public BigDecimal getTipoCambioDR() {
+    return tipoCambioDR;
+  }
+
+  public void setTipoCambioDR(BigDecimal tipoCambioDR) {
+    this.tipoCambioDR = tipoCambioDR;
+  }
+
+  @Override
+  public String toString() {
+    return "ComplementoDocRelacionado [folio="
+        + folio
+        + ", idDocumento="
+        + idDocumento
+        + ", impPagado="
+        + impPagado
+        + ", impSaldoAnt="
+        + impSaldoAnt
+        + ", impSaldoInsoluto="
+        + impSaldoInsoluto
+        + ", metodoDePagoDR="
+        + metodoDePagoDR
+        + ", monedaDR="
+        + monedaDR
+        + ", numParcialidad="
+        + numParcialidad
+        + ", tipoCambioDR="
+        + tipoCambioDR
+        + ", serie="
+        + serie
+        + "]";
+  }
 }
