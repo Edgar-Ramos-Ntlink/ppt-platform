@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,7 +30,9 @@ public class EmpresaService {
 
   @Autowired private EmpresaExecutorService empresaEvaluatorService;
 
-  @Autowired private EmpresaValidator empresaValidator;
+  @Autowired
+  @Qualifier("EmpresaValidator")
+  private EmpresaValidator empresaValidator;
 
   public Page<EmpresaDto> getEmpresasByParametros(
       Optional<String> rfc, Optional<String> razonSocial, String linea, int page, int size) {
