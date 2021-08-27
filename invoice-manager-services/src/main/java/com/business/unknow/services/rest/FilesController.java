@@ -11,6 +11,7 @@ import com.business.unknow.services.util.helpers.StringHelper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,8 +40,18 @@ public class FilesController {
         service.getFacturaFileByFolioAndType(folio, fileType), HttpStatus.OK);
   }
 
-  @GetMapping("/recursos/{recurso}/files/{fileType}/referencias/{referencia}")
-  public ResponseEntity<ResourceFileDto> getResourceFiles(
+  @GetMapping("/recursos/{recurso}/referencias/{referencia}/files")
+  public ResponseEntity<List<ResourceFileDto>> getResourcesByResourceType(
+      @PathVariable(name = "recurso") String recurso,
+      @PathVariable(name = "referencia") String referencia)
+      throws InvoiceManagerException {
+    return new ResponseEntity<>(
+        service.findResourcesByResourceType(S3BucketsEnum.valueOf(recurso), referencia),
+        HttpStatus.OK);
+  }
+
+  @GetMapping("/recursos/{recurso}/referencias/{referencia}/files/{fileType}")
+  public ResponseEntity<ResourceFileDto> getResourceFileByResourceTypeAndRefrence(
       @PathVariable(name = "recurso") String recurso,
       @PathVariable(name = "fileType") String fileType,
       @PathVariable(name = "referencia") String referencia)
@@ -74,7 +85,6 @@ public class FilesController {
   @PostMapping("/recursos/{recurso}/files")
   public ResponseEntity<Void> insertResourceFile(@RequestBody @Valid ResourceFileDto resourceFile)
       throws InvoiceManagerException, InvoiceCommonException {
-    resourceFile.setFormato(stringHelper.getFileFormatFromBase64(resourceFile.getData()));
     resourceFile.setFormato(stringHelper.getFileFormatFromBase64(resourceFile.getData()));
     resourceFile.setData(stringHelper.getFileDataFromBase64(resourceFile.getData()));
     service.upsertResourceFile(resourceFile);

@@ -10,6 +10,7 @@ import com.business.unknow.services.entities.ResourceFile;
 import com.business.unknow.services.mapper.ResourceFileMapper;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,13 @@ public class FilesService {
     } catch (Exception e) {
       throw new InvoiceManagerException(e.getMessage(), HttpStatus.CONFLICT.value());
     }
+  }
+
+  public List<ResourceFileDto> findResourcesByResourceType(
+      S3BucketsEnum resourceType, String referencia) {
+    List<ResourceFile> recursos =
+        resourceFileRepository.findByTipoRecursoAndReferencia(resourceType.name(), referencia);
+    return resourceFileMapper.getDtosFromEntities(recursos);
   }
 
   public ResourceFileDto getResourceFileByResourceReferenceAndType(

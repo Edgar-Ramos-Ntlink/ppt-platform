@@ -4,10 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@ToString
 @Entity
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "RESOURCE_FILES")
 public class ResourceFile implements Serializable {
@@ -37,52 +44,4 @@ public class ResourceFile implements Serializable {
   @CreatedDate
   @Column(name = "FECHA_CREACION")
   private Date fechaCreacion;
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getReferencia() {
-    return referencia;
-  }
-
-  public void setReferencia(String referencia) {
-    this.referencia = referencia;
-  }
-
-  public String getTipoArchivo() {
-    return tipoArchivo;
-  }
-
-  public void setTipoArchivo(String tipoArchivo) {
-    this.tipoArchivo = tipoArchivo;
-  }
-
-  public String getTipoRecurso() {
-    return tipoRecurso;
-  }
-
-  public void setTipoRecurso(String tipoRecurso) {
-    this.tipoRecurso = tipoRecurso;
-  }
-
-  public String getFormato() {
-    return formato;
-  }
-
-  public void setFormato(String formato) {
-    this.formato = formato;
-  }
-
-  public Date getFechaCreacion() {
-    return fechaCreacion;
-  }
-
-  public void setFechaCreacion(Date fechaCreacion) {
-    this.fechaCreacion = fechaCreacion;
-  }
 }

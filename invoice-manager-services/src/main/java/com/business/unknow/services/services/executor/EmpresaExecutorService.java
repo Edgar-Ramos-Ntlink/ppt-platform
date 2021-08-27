@@ -24,31 +24,7 @@ public class EmpresaExecutorService {
   @Autowired private FilesService filesService;
 
   public EmpresaDto createEmpresa(EmpresaDto empresaDto) {
-    /* String logo = empresaDto.getLogotipo();
-    filesService.upsertResourceFile(
-        new ResourceFileDto(
-            TipoArchivoEnum.CERT.name(),
-            empresaDto.getInformacionFiscal().getRfc(),
-            S3BucketsEnum.EMPRESAS.name(),
-            empresaDto.getCertificado(),
-            TipoArchivoEnum.CERT.getFormat()));
-    filesService.upsertResourceFile(
-        new ResourceFileDto(
-            TipoArchivoEnum.KEY.name(),
-            empresaDto.getInformacionFiscal().getRfc(),
-            S3BucketsEnum.EMPRESAS.name(),
-            empresaDto.getLlavePrivada(),
-            TipoArchivoEnum.KEY.getFormat()));
-    filesService.upsertResourceFile(
-        new ResourceFileDto(
-            TipoArchivoEnum.LOGO.name(),
-            empresaDto.getInformacionFiscal().getRfc(),
-            S3BucketsEnum.EMPRESAS.name(),
-            logo.substring(logo.indexOf("base64") + 7),
-            TipoArchivoEnum.LOGO.getFormat()));
-    Contribuyente contribuyente =
-        contribuyenteRepository.save(
-            contribuyenteMapper.getEntityFromContribuyenteDto(empresaDto.getInformacionFiscal()));*/
+
     Empresa empresa = empresaMapper.getEntityFromEmpresaDto(empresaDto);
     return empresaMapper.getEmpresaDtoFromEntity(empresaRepository.save(empresa));
   }

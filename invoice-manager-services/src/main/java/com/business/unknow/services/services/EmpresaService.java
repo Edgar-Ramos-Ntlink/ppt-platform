@@ -3,7 +3,6 @@ package com.business.unknow.services.services;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Empresa;
-import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.services.executor.EmpresaExecutorService;
@@ -30,9 +29,7 @@ public class EmpresaService {
 
   @Autowired private EmpresaExecutorService empresaEvaluatorService;
 
-  @Autowired private ContribuyenteMapper contribuyenteMapper;
-
-  private EmpresaValidator empresaValidator = new EmpresaValidator();
+  @Autowired private EmpresaValidator empresaValidator;
 
   public Page<EmpresaDto> getEmpresasByParametros(
       Optional<String> rfc, Optional<String> razonSocial, String linea, int page, int size) {
