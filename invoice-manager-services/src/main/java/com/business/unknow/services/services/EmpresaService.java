@@ -90,8 +90,9 @@ public class EmpresaService {
     return empresaEvaluatorService.createEmpresa(empresaDto);
   }
 
-  // TODO review this method, and update root values only
-  public EmpresaDto updateEmpresaInfo(EmpresaDto empresaDto, String rfc) {
+  public EmpresaDto updateEmpresaInfo(EmpresaDto empresaDto, String rfc) throws InvoiceManagerException {
+
+    empresaValidator.validatePostEmpresa(empresaDto);
     Empresa empresa =
         repository
             .findByRfc(rfc)
@@ -100,19 +101,10 @@ public class EmpresaService {
                     new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         String.format("El empresa con el rfc %s no existe", rfc)));
-    empresa.setTipo(empresaDto.getTipo());
-    empresa.setWeb(empresaDto.getWeb());
-    empresa.setPwSat(empresaDto.getFiel());
-    empresa.setCorreo(empresaDto.getCorreo());
 
-    empresa.setGiro(empresaDto.getGiro());
+    Empresa companyToSave = mapper.getEntityFromEmpresaDto(empresaDto);
+    companyToSave.setId(empresa.getId());
 
-    empresa.setRegimenFiscal(empresaDto.getRegimenFiscal());
-
-    empresa.setPwCorreo(empresaDto.getPwCorreo());
-    empresa.setActivo(empresaDto.getActivo());
-    empresa.setNoCertificado(empresaDto.getNoCertificado());
-
-    return mapper.getEmpresaDtoFromEntity(repository.save(empresa));
+    return mapper.getEmpresaDtoFromEntity(repository.save(companyToSave));
   }
 }

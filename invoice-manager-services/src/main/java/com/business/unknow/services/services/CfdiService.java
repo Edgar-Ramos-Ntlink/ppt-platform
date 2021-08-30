@@ -1,8 +1,6 @@
 /** */
 package com.business.unknow.services.services;
 
-import com.business.unknow.enums.FormaPagoEnum;
-import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
@@ -27,7 +25,7 @@ import com.business.unknow.services.repositories.facturas.EmisorRepository;
 import com.business.unknow.services.repositories.facturas.ImpuestoRepository;
 import com.business.unknow.services.repositories.facturas.ReceptorRepository;
 import com.business.unknow.services.repositories.facturas.RetencionRepository;
-import com.business.unknow.services.util.validators.AbstractValidator;
+import com.business.unknow.services.services.evaluations.CfdiValidator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
@@ -36,6 +34,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -69,7 +68,9 @@ public class CfdiService {
 
   @Autowired private CatalogCacheService cacheCatalogsService;
 
-  @Autowired private AbstractValidator validator = new AbstractValidator();
+  @Autowired
+  @Qualifier("CfdiValidator")
+  private CfdiValidator validator;
 
   private static final Logger log = LoggerFactory.getLogger(CfdiService.class);
 
@@ -159,7 +160,7 @@ public class CfdiService {
   }
 
   public CfdiDto insertNewCfdi(CfdiDto cfdi) throws InvoiceManagerException {
-    validateCfdi(cfdi);
+    validator.validateCfdi(cfdi);
     recalculateCfdiAmmounts(cfdi);
     Cfdi entity = repository.save(mapper.getEntityFromCfdiDto(cfdi));
     Emisor emisor = mapper.getEntityFromEmisorDto(cfdi.getEmisor());
@@ -214,7 +215,7 @@ public class CfdiService {
       }
     }
 
-    validateCfdi(cfdi);
+    validator.validateCfdi(cfdi);
     recalculateCfdiAmmounts(cfdi);
     repository
         .findById(id)
@@ -307,7 +308,7 @@ public class CfdiService {
                             HttpStatus.NOT_FOUND,
                             String.format("No se ecnontro CFDI con prefolio %d", idCfdi))));
     cfdi.getConceptos().add(newConcept);
-    validateCfdi(cfdi);
+    validator.validateCfdi(cfdi);
     recalculateCfdiAmmounts(cfdi);
     Cfdi entity = repository.save(mapper.getEntityFromCfdiDto(cfdi)); // Update CFDI ammounts
     Concepto conceptoEntity = mapper.getEntityFromConceptoDto(newConcept);
@@ -365,7 +366,7 @@ public class CfdiService {
                         new ResponseStatusException(
                             HttpStatus.NOT_FOUND,
                             String.format("No se encontro concepto con id %d", conceptoId))));
-    validateCfdi(cfdi);
+    validator.validateCfdi(cfdi);
     recalculateCfdiAmmounts(cfdi);
     repository.save(mapper.getEntityFromCfdiDto(cfdi)); // Update CFDI ammounts
     for (Impuesto impuesto : concepto.getImpuestos()) {
@@ -409,7 +410,7 @@ public class CfdiService {
                                 HttpStatus.NOT_FOUND,
                                 String.format("No se encontro concepto con id %d", conceptoId))));
     cfdi.getConceptos().set(index, concepto);
-    validateCfdi(cfdi);
+    validator.validateCfdi(cfdi);
     recalculateCfdiAmmounts(cfdi);
     Cfdi entity = repository.save(mapper.getEntityFromCfdiDto(cfdi));
     Concepto conceptoEntity = mapper.getEntityFromConceptoDto(concepto);
@@ -436,69 +437,6 @@ public class CfdiService {
     facturaService.recreatePdf(cfdi);
 
     return cfdi;
-  }
-
-  public void validateCfdi(CfdiDto cfdi) throws InvoiceManagerException {
-
-    validator.checkNotNull(cfdi.getEmisor(), "Emisor info");
-    validator.checkNotNull(cfdi.getEmisor().getRfc(), "RFC Emisor");
-    validator.checkNotNull(cfdi.getEmisor().getNombre(), "Razon social emisor");
-    validator.checkNotEmpty(cfdi.getEmisor().getNombre(), "Razon social emisor");
-    validator.checkNotNull(cfdi.getEmisor().getDireccion(), "Dirección emisor");
-    validator.checkNotEmpty(cfdi.getEmisor().getDireccion(), "Dirección emisor");
-    validator.checkNotNull(cfdi.getEmisor().getRegimenFiscal(), "Regimen fiscal emisor");
-
-    validator.checkNotNull(cfdi.getReceptor(), "Receptor info");
-    validator.checkNotNull(cfdi.getReceptor().getRfc(), "RFC receptor");
-    validator.checkNotNull(cfdi.getReceptor().getNombre(), "Razon social receptor");
-    validator.checkNotEmpty(cfdi.getReceptor().getNombre(), "Razon social receptor");
-    validator.checkNotNull(cfdi.getReceptor().getDireccion(), "Dirección receptor");
-    validator.checkNotEmpty(cfdi.getReceptor().getDireccion(), "Dirección receptor");
-    validator.checkNotNull(cfdi.getReceptor().getUsoCfdi(), "Uso CFDI receptor");
-
-    if (!cfdi.getMetodoPago().equals(MetodosPagoEnum.PPD.name())
-        && !cfdi.getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
-      throw new InvoiceManagerException(
-          "El metodo de pago de la factura solo puede ser PUE o PPD",
-          "Metodo de pago invalido",
-          HttpStatus.CONFLICT.value());
-    }
-
-    if (!cacheCatalogsService.getUsoCfdi(cfdi.getReceptor().getUsoCfdi()).isPresent()) {
-      throw new InvoiceManagerException(
-          "Uso de CFDI invalido", "Uso de CFDI invalido", HttpStatus.CONFLICT.value());
-    }
-
-    if (!cacheCatalogsService.getFormaPago(cfdi.getFormaPago()).isPresent()) {
-      throw new InvoiceManagerException(
-          String.format("La forma de pago %s es invalida", cfdi.getFormaPago()),
-          "Forma de pago invalida",
-          HttpStatus.CONFLICT.value());
-    }
-
-    if (FormaPagoEnum.EFECTIVO.getClave().equals(cfdi.getMetodoPago())) {
-      throw new InvoiceManagerException(
-          "En pagos en efectivo el monto a facturar no debe de ser superior a 2000 pesos",
-          "Metodo de pago invalido",
-          HttpStatus.CONFLICT.value());
-    }
-
-    if (cfdi.getConceptos().isEmpty()) {
-      throw new InvoiceManagerException(
-          "El CFDI no puede tener 0 conceptos",
-          "Numero de comceptos invalido",
-          HttpStatus.CONFLICT.value());
-    } else {
-      for (ConceptoDto conceptoDto : cfdi.getConceptos()) {
-        validator.checkNotNull(conceptoDto.getDescripcion(), "Descripción de concepto");
-        validator.checkNotEmpty(conceptoDto.getDescripcion(), "Descripción de concepto");
-        validator.checkNotNull(conceptoDto.getCantidad(), "cantidad concepto");
-        validator.checkNotNull(conceptoDto.getClaveProdServ(), "clave producto servicio ");
-        validator.checkNotNegative(conceptoDto.getImporte(), "Importe");
-        validator.checkNotNegative(conceptoDto.getCantidad(), "Cantidad");
-        validator.checkNotNegative(conceptoDto.getValorUnitario(), "valor unitario");
-      }
-    }
   }
 
   /**

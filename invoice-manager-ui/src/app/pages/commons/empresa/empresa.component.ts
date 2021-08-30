@@ -15,6 +15,7 @@ import { GenericPage } from '../../../models/generic-page';
 import { NbComponentStatus, NbDialogService, NbGlobalPhysicalPosition, NbToastrService } from '@nebular/theme';
 import { Observacion } from '../../../models/observacion';
 import { ObservacionPendientesComponent } from '../observacion-pendientes/observacion-pendientes.component';
+import { UsersData } from '../../../@core/data/users-data';
 
 @Component({
   selector: 'ngx-empresa',
@@ -24,6 +25,7 @@ import { ObservacionPendientesComponent } from '../observacion-pendientes/observ
 export class EmpresaComponent implements OnInit {
 
   public companyInfo: Empresa;
+  //TODO remove formInfo
   public formInfo: any = { rfc: '', message: '', coloniaId: '*', success: '', certificateFileName: '', keyFileName: '', logoFileName: '' };
   public coloniaId: number = 0;
   public colonias = [];
@@ -34,12 +36,13 @@ export class EmpresaComponent implements OnInit {
   public errorMessages: string[] = [];
   public cuentas: Cuenta[];
   public totalSaldos: number = 0;
- 
+
   constructor(private router: Router,
     private dialogService: NbDialogService,
     private toastrService: NbToastrService,
     private catalogsService: CatalogsData,
     private empresaService: CompaniesData,
+    private userService: UsersData,
     private resourcesService: FilesData,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
@@ -52,12 +55,7 @@ export class EmpresaComponent implements OnInit {
     this.companyInfo.regimenFiscal = '*';
     this.companyInfo.giro = '*';
     this.companyInfo.tipo = '*';
-    //TEST 
-
-
-    console.log(this.companyInfo.ingresos)
-    //TEST
-    this.companyInfo.informacionFiscal.pais = 'México';
+    this.companyInfo.pais = 'México';
     this.errorMessages = [];
     this.catalogsService.getAllGiros().then((giros: Catalogo[]) => this.girosCat = giros,
       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
@@ -66,47 +64,43 @@ export class EmpresaComponent implements OnInit {
           this.route.paramMap.subscribe(route => {
             const rfc = route.get('rfc');
             if (rfc !== '*') {
-              this.empresaService.getCompanyByRFC(rfc)
-                .subscribe((company: Empresa) => {
-                  this.companyInfo = company;
-                  this.companyInfo.ingresos = [new Ingresos("2015", 262727.446), new Ingresos("2016", 342626.55572), new Ingresos("2017", 24567.32334), new Ingresos("2018", 853527.223424), new Ingresos("2019", 422616.55), new Ingresos("2020", 6969992.22)];
-                  for (var i of this.companyInfo.ingresos) {
-                    this.totalSaldos = this.totalSaldos + i.cantidad;
-                  }
-                  this.companyInfo.observaciones = [new Observacion(3,"RF34646JU422","operaciones","Activacion","Reactiva esta empresa en el fin porfa","Alfredo"),new Observacion(2,"KDA2363673J","operaciones","Ajustes","Revisar los datos de esta empresa para mañana","Alberto"),new Observacion(1,"RH3308924RQE","contabilidad","Revicion","Hay que reanalizar el sistema en los dias siguientes por problemas en esta empresa","Juan")]
-                  this.formInfo.rfc = rfc;
-                  this.companyInfo.fielEmpresa = "VIGENTE";
-                  this.companyInfo.actividadSAT = "Otros servicios profesionales, científicos y técnicos 100%";
-                  console.log("cuentasR3R  "+rfc);
-                  this.accountsService.getCuentasByCompany(rfc)
-                    .subscribe(c => {
-                      this.cuentas = c;
-                      console.log("cuentas  "+this.cuentas);
-                      
-                    });
-                  this.catalogsService.getZipCodeInfo(company.informacionFiscal.cp).then(
-                    (data: ZipCodeInfo) => {
-                      this.colonias = data.colonias;
-                      let index = 0;
-                      this.formInfo.coloniaId = '*';
-                      data.colonias.forEach(element => {
-                        if (data.colonias[index] === company.informacionFiscal.localidad) {
-                          this.formInfo.coloniaId = index;
-                        }
-                        index++;
-                      });
-                    },
-                    (error: HttpErrorResponse) => console.error(error));
-                }, (error: HttpErrorResponse) => {
-                  let msg = error.error.message || `${error.statusText} : ${error.message}`;
-                  this.showToast('danger', 'Error', msg, true);
-                });
-              this.resourcesService.getResourceFile(rfc, 'EMPRESA', 'LOGO')
-                .subscribe(logo => this.logo = 'data:image/jpeg;base64,' + logo.data);
+              this.loadCompanyInfo(rfc);
             }
           }));
+  }
 
 
+  public async loadCompanyInfo(rfc: string): Promise<void> {
+
+    try {
+      this.companyInfo = await this.empresaService.getCompanyByRFC(rfc).toPromise();
+
+      this.cuentas = await this.accountsService.getCuentasByCompany(rfc).toPromise();
+
+      let cpInfo: ZipCodeInfo = await this.catalogsService.getZipCodeInfo(this.companyInfo.cp);
+
+      this.colonias = cpInfo.colonias;
+      let index = 0;
+      cpInfo.colonias.forEach(element => {
+        if (cpInfo.colonias[index] === this.companyInfo.municipio) {
+          this.formInfo.coloniaId = index;
+        }
+        index++;
+      });
+    } catch (error) {
+      let msg = error.error.message || `${error.statusText} : ${error.message}`;
+      this.showToast('danger', 'Error', msg, true);
+    }
+
+
+
+
+
+
+
+
+    /*this.resourcesService.getResourceFile(rfc, 'EMPRESA', 'LOGO')
+      .subscribe(logo => this.logo = 'data:image/jpeg;base64,' + logo.data);*/
 
   }
 
@@ -125,16 +119,17 @@ export class EmpresaComponent implements OnInit {
       this.colonias = [];
       this.catalogsService.getZipCodeInfo(zipcode).then(
         (data: ZipCodeInfo) => {
-          this.companyInfo.informacionFiscal.estado = data.estado;
-          this.companyInfo.informacionFiscal.municipio = data.municipio; this.colonias = data.colonias;
-          this.companyInfo.informacionFiscal.localidad = data.colonias[0];
+          this.colonias = data.colonias;
+          this.companyInfo.estado = data.estado;
+          this.companyInfo.municipio = data.municipio; 
+          this.companyInfo.colonia = data.colonias[0];
         },
         (error: HttpErrorResponse) => console.error(error));
     }
   }
 
   public onLocation(index: string) {
-    this.companyInfo.informacionFiscal.localidad = this.colonias[index];
+    this.companyInfo.colonia = this.colonias[index];
   }
 
   public onRegimenFiscalSelected(regimen: string) {
@@ -204,19 +199,24 @@ export class EmpresaComponent implements OnInit {
   }*/
 
   public async insertNewCompany() {
+
     try {
       let errorMessages = this.companiesValidatorService.validarEmpresa(this.companyInfo);
       if (errorMessages.length === 0) {
-        await this.empresaService.insertNewCompany(this.companyInfo).toPromise();
+        let user = this.userService.getUserInfo();
+        this.companyInfo.creador = (await user).email;
+        this.companyInfo = await this.empresaService.insertNewCompany(this.companyInfo).toPromise();
         this.showToast('info', 'Exito!', 'La empresa ha sido creada correctamente');
       } else {
-        let fullMessage = '';
+        let fullMessage = 'Falta información por dar de alta: [ ';
         for (const msg of errorMessages) {
-          fullMessage = `<p>${msg}</p>`;
+          fullMessage += ` ${msg}, `;
         }
-        this.showToast('warning', 'Algunos errores', fullMessage, true);
+        fullMessage+=' ]'
+        this.showToast('warning', 'Necesitas completar informacion adicional', fullMessage, true);
       }
     } catch (error) {
+      console.error(error);
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.showToast('danger', 'Error', msg, true);
     }
@@ -224,7 +224,7 @@ export class EmpresaComponent implements OnInit {
 
   public async updateCompany() {
     try {
-      await this.empresaService.updateCompany(this.companyInfo.informacionFiscal.rfc, this.companyInfo).toPromise();
+      await this.empresaService.updateCompany(this.companyInfo.rfc, this.companyInfo).toPromise();
       this.showToast('info', 'Exito!', 'La empresa ha sido actualizada correctamente');
     } catch (error) {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
@@ -235,7 +235,7 @@ export class EmpresaComponent implements OnInit {
   public async inactivateCompany() {
     this.companyInfo.activo = false;
     try {
-      await this.empresaService.updateCompany(this.companyInfo.informacionFiscal.rfc, this.companyInfo).toPromise();
+      await this.empresaService.updateCompany(this.companyInfo.rfc, this.companyInfo).toPromise();
       this.showToast('info', 'Exito!', 'La empresa ha sido desactivada satisfactoriamente');
     } catch (error) {
 
@@ -245,7 +245,7 @@ export class EmpresaComponent implements OnInit {
   public async activateCompany() {
     this.companyInfo.activo = true;
     try {
-      await this.empresaService.updateCompany(this.companyInfo.informacionFiscal.rfc, this.companyInfo).toPromise();
+      await this.empresaService.updateCompany(this.companyInfo.rfc, this.companyInfo).toPromise();
       this.showToast('info', 'Exito!', 'La empresa ha sido activada satisfactoriamente');
     } catch (error) {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
@@ -257,7 +257,7 @@ export class EmpresaComponent implements OnInit {
     const config = {
       status: type,
       destroyByClick: clickdestroy || false,
-      duration: 2500,
+      duration: 10000,
       hasIcon: true,
       position: NbGlobalPhysicalPosition.TOP_RIGHT,
       preventDuplicates: true,

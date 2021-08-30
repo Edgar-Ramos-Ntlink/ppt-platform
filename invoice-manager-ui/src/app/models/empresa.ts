@@ -11,7 +11,7 @@ export class Empresa {
     // datos genenerales
     public activo: boolean;
 
-    public estatusEmpresa:string; // Se calculara automaticamnete basado entre representanteLegal & correo & cert & key & cuentas
+    public estatus:string; // Se calculara automaticamnete basado entre representanteLegal & correo & cert & key & cuentas
     public giro: string;
     public tipo: string; // linea empresa
     public regimenFiscal: string;
@@ -24,7 +24,7 @@ export class Empresa {
     public municipio: string;
     public estado: string;
     public pais: string;
-    public localidad: string;
+    public colonia: string;
     public cp: string;
 
     // OPCIONAL, puede ser realizado despues de paso 1
@@ -54,7 +54,7 @@ export class Empresa {
     // contabilidad
 
     public actividadSAT: string;
-    public fielEmpresa: string;
+    public fiel: string;
     
     public ingresos : Ingresos[]; // lista de objetos con ingreosos anuales empresa
 
@@ -82,10 +82,13 @@ export class Empresa {
     public cuentas : Cuenta[];
 
     constructor() {
-        this.informacionFiscal = new Contribuyente();
-        this.documentos = [];
-        this.observaciones = [];
-        this.cuentas = [];
+        this.activo = false;
+        this.estatus = 'INACTIVO';
+        this.tipo= '*';
+        this.giro='*';
+        this.colonia = '*'
+        this.regimenFiscal = '*';
+        this.actividadSAT = "Otros servicios profesionales, científicos y técnicos 100%";
     }
 }
 //TODO extraer clase o a ver 

@@ -11,5 +11,4 @@ public interface DatoAnualEmpresaRepository extends JpaRepository<DatoAnualEmpre
 
   List<DatoAnualEmpresa> findByRfc(String rfc);
 
-  Optional<DatoAnualEmpresa> findByRfcTipoDatoAndAnio(String rfc, String tipoDato, Integer anio);
 }

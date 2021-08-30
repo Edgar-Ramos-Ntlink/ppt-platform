@@ -57,7 +57,7 @@ export class EmpresasComponent implements OnInit {
           const record: any = {};
           record.rfc = r.rfc;
           record.razonSocial = r.razonSocial;
-          record.direccion = `${r.calle} ${r.noExterior}, ${r.localidad} ${r.municipio} ${r.estado}, C.P. ${r.cp}`;
+          record.direccion = `${r.calle} ${r.noExterior}, ${r.municipio} ${r.municipio} ${r.estado}, C.P. ${r.cp}`;
           record.giro = this.girosCat.find(g => g.id === r.giro).nombre;
           record.tipo = r.tipo;
           record.correo = r.correo;

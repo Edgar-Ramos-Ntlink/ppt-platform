@@ -8,55 +8,16 @@ export class CompaniesValidatorService {
 
   camposObligatoriosEmpresa = [
     {
-      field: 'encabezado',
-      description: 'Encabezado',
-    },
-    {
-      field: 'tipo',
-      description: 'Linea',
-    },
-    {
-      field: 'piePagina',
-      description: 'Pie de página',
-    },
-    {
-      field: 'contactoAdmin',
-      description: 'Contacto',
-    },
-    {
-      field: 'correo',
-      description: 'Correo',
-    },
-    {
-      field: 'pwCorreo',
-      description: 'Password Correo',
-    },
-    {
-      field: 'pwSat',
-      description: 'Password Sat',
-    },
-    {
-      field: 'certificado',
-      description: 'Certificado',
-    },
-    {
-      field: 'llavePrivada',
-      description: 'Llave privada',
-    },
-    {
-      field: 'logotipo',
-      description: 'Logotipo',
-    },
-  ];
-
-  camposObligatoriosInformacionFiscal = [
-    {
       field: 'rfc',
       description: 'RFC',
     },
     {
       field: 'razonSocial',
       description: 'Razón Social',
+    },
+    {
+      field: 'nombre',
+      description: 'Nombre corto',
     },
     {
       field: 'cp',
@@ -71,13 +32,17 @@ export class CompaniesValidatorService {
       description: 'Estado',
     },
     {
-      field: 'localidad',
-      description: 'Localidad',
-    },
-    {
       field: 'calle',
       description: 'Calle',
     },
+    {
+      field: 'tipo',
+      description: 'Linea',
+    },
+  ];
+
+  camposObligatoriosInformacionFiscal = [
+    
   ];
 
   public validarEmpresa(empresa: Empresa) {
@@ -95,13 +60,6 @@ export class CompaniesValidatorService {
       messages.push("Se debe seleccionar la linea de empresa");
     }
 
-    this.camposObligatoriosInformacionFiscal.forEach(campo => {
-      if(empresa.informacionFiscal[campo.field] === null
-        || empresa.informacionFiscal[campo.field] === undefined
-        || empresa.informacionFiscal[campo.field] === '') {
-          messages.push(`El campo '${campo.description}' es obligatorio`);
-        }
-    });
 
     this.camposObligatoriosEmpresa.forEach(campo => {
       if (empresa[campo.field] === null

@@ -4,7 +4,7 @@
       <nb-card-header class="puff_center">Datos empresa
         <button type="button" class="btn btn-outline-danger float-right" *ngIf="companyInfo.activo"
           (click)="inactivateCompany()">Desactivar</button>
-        <button type="button" class="btn btn-outline-success float-right" *ngIf="!companyInfo.activo"
+        <button type="button" class="btn btn-outline-success float-right" *ngIf="!companyInfo.activo && companyInfo.id"
           (click)="activateCompany()">Activar</button>
       </nb-card-header>
       <nb-card-body>
@@ -60,7 +60,7 @@
                   <option value="*">Seleccionar</option>
                   <option *ngFor="let colonia of colonias; let i = index" [value]="i">{{colonia}}</option>
                 </select>
-                <input type="text" [(ngModel)]="companyInfo.localidad" class="form-control" fullWidth
+                <input type="text" [(ngModel)]="companyInfo.colonia" class="form-control" fullWidth
                   [disabled]="companyInfo.activo" *ngIf="companyInfo.activo" id="inputLocalidad" placeholder="Colonia">
               </div>
 
@@ -140,7 +140,7 @@
             </div>
             
           </nb-tab>
-          <nb-tab tabTitle="Datos digitales" *ngIf="formInfo.rfc != ''">
+          <nb-tab tabTitle="Datos digitales" *ngIf="companyInfo.id">
             <p class="font-weight-bold puff_center">Claves y accessos</p>
             <div class="row slide_4">
               <div class="col-sm-3">
@@ -194,12 +194,12 @@
                     <input type="file" class="custom-file-input" id="inputCertificateFile" accept=".cer"
                        (change)="certificateUploadListener($event)"
                       style="display:block;" aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputCertificateFile">{{formInfo.certificateFileName}}</label>
+                    <label class="custom-file-label" for="inputCertificateFile">{{companyInfo.certificateFileName}}</label>
                   </div>
                 </div>
               </div>
 
-              <div class="form-group col-md-3">
+              <!--div class="form-group col-md-3">
                 <label for="keyFile" class="label">Llave SAT</label>
                 <div class="input-group">
                   <div class="custom-file" id="keyFile">
@@ -209,9 +209,9 @@
                     <label class="custom-file-label" for="inputKeyFile">{{formInfo.keyFileName}}</label>
                   </div>
                 </div>
-              </div>
+              </div-->
             </div>
-            <label for="logoFile" class="label">Logotipo Empresa</label>
+            <!--label for="logoFile" class="label">Logotipo Empresa</label>
             <div class="row slide_4">
               <div class="form-group col-md-4" *ngIf="companyInfo.logotipo==undefined">
 
@@ -230,9 +230,9 @@
                   <img [src]="sanitize(logo)" style="height: 80px;">
                 </div>
               </div>
-            </div>
+            </div-->
           </nb-tab>
-          <nb-tab tabTitle="Legales" *ngIf="formInfo.rfc != ''">
+          <nb-tab tabTitle="Legales" *ngIf="companyInfo.id">
             <p class="font-weight-bold puff_center">Datos legales</p>
             <div class="row slide_1">
               <div class="col-md-6">
@@ -295,7 +295,7 @@
               </div>
             </div>  
           </nb-tab>
-          <nb-tab tabTitle="Cuentas bancarias" *ngIf="formInfo.rfc != ''">
+          <nb-tab tabTitle="Cuentas bancarias" *ngIf="companyInfo.id">
             <div class="row">
               <div class="col-md-12">
 
@@ -336,7 +336,7 @@
               </div>
             </div>
           </nb-tab>
-          <nb-tab tabTitle="Contabilidad" *ngIf="formInfo.rfc != ''">
+          <nb-tab tabTitle="Contabilidad" *ngIf="companyInfo.id">
             <div class="row">
 
               <div class="col-md-4">
@@ -442,7 +442,7 @@
 
           </nb-tab>
 
-          <nb-tab tabTitle="Observaciones y Pendientes" *ngIf="formInfo.rfc != ''">
+          <nb-tab tabTitle="Observaciones y Pendientes" *ngIf="companyInfo.id">
             <div class="row">
               <div class="col-md-12">
                 <div class="puff_center">
