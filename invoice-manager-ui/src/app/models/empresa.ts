@@ -88,7 +88,6 @@ export class Empresa {
         this.giro='*';
         this.colonia = '*'
         this.regimenFiscal = '*';
-        this.actividadSAT = "Otros servicios profesionales, científicos y técnicos 100%";
     }
 }
 //TODO extraer clase o a ver 

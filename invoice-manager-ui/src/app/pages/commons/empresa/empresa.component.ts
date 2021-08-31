@@ -16,6 +16,7 @@ import { NbComponentStatus, NbDialogService, NbGlobalPhysicalPosition, NbToastrS
 import { Observacion } from '../../../models/observacion';
 import { ObservacionPendientesComponent } from '../observacion-pendientes/observacion-pendientes.component';
 import { UsersData } from '../../../@core/data/users-data';
+import { ResourceFile } from '../../../models/resource-file';
 
 @Component({
   selector: 'ngx-empresa',
@@ -26,16 +27,24 @@ export class EmpresaComponent implements OnInit {
 
   public companyInfo: Empresa;
   //TODO remove formInfo
-  public formInfo: any = { rfc: '', message: '', coloniaId: '*', success: '', certificateFileName: '', keyFileName: '', logoFileName: '' };
+  public formInfo: any = { coloniaId: '*', logoFileName:'', keyFileName:'', certFileName:'' };
   public coloniaId: number = 0;
   public colonias = [];
   public paises = ['México'];
   public module: string = 'operaciones';
-  public logo: string = '';
+  
   public girosCat: Catalogo[] = [];
   public errorMessages: string[] = [];
   public cuentas: Cuenta[];
   public totalSaldos: number = 0;
+
+  public documents : ResourceFile[] =[];
+
+  public logo: ResourceFile;
+  public key: ResourceFile;
+  public cert: ResourceFile;
+
+
 
   constructor(private router: Router,
     private dialogService: NbDialogService,
@@ -74,30 +83,41 @@ export class EmpresaComponent implements OnInit {
 
     try {
       this.companyInfo = await this.empresaService.getCompanyByRFC(rfc).toPromise();
-
-      this.cuentas = await this.accountsService.getCuentasByCompany(rfc).toPromise();
-
       let cpInfo: ZipCodeInfo = await this.catalogsService.getZipCodeInfo(this.companyInfo.cp);
 
       this.colonias = cpInfo.colonias;
       let index = 0;
       cpInfo.colonias.forEach(element => {
-        if (cpInfo.colonias[index] === this.companyInfo.municipio) {
+        if (cpInfo.colonias[index] === this.companyInfo.colonia) {
+          console.log(`Colonia: ${this.companyInfo.colonia} with index : ${index}`)
           this.formInfo.coloniaId = index;
         }
         index++;
       });
+
+      this.accountsService.getCuentasByCompany(rfc).subscribe( cuentas => this.cuentas = cuentas,(error) => {
+        let msg = error.error.message || `${error.statusText} : ${error.message}`;
+        this.showToast('danger', 'Error', msg, true);
+      });
+
+      this.documents = await this.resourcesService.getResourcesByTypeAndReference('EMPRESAS',rfc).toPromise();
+      this.cert  = this.documents.find(d => d.tipoArchivo === 'CERT');
+      this.key  = this.documents.find(d => d.tipoArchivo === 'KEY');
+      if(this.documents.find(d => d.tipoArchivo === 'LOGO')) { // only logo needs to be loaded from backend
+        this.resourcesService.getResourceFile(rfc,'EMPRESAS','LOGO').subscribe((logo)=> this.logo = logo,(error) => {
+          let msg = error.error.message || `${error.statusText} : ${error.message}`;
+          this.showToast('danger', 'Error', msg, true);
+        });
+      }
+
+      // removing mandatory files
+      this.documents = this.documents.filter(d=>  d.tipoArchivo != 'LOGO' && d.tipoArchivo != 'CERT' && d.tipoArchivo != 'KEY' );
+
+
     } catch (error) {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.showToast('danger', 'Error', msg, true);
     }
-
-
-
-
-
-
-
 
     /*this.resourcesService.getResourceFile(rfc, 'EMPRESA', 'LOGO')
       .subscribe(logo => this.logo = 'data:image/jpeg;base64,' + logo.data);*/
@@ -145,9 +165,10 @@ export class EmpresaComponent implements OnInit {
   }
 
 
-  /*
-  logoUploadListener(event: any): void {
+
+  public logoUploadListener(event: any): void {
     const reader = new FileReader();
+    this.logo = new ResourceFile();
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       if (file.size > 200000) {
@@ -155,9 +176,21 @@ export class EmpresaComponent implements OnInit {
       } else {
         reader.readAsDataURL(file);
         reader.onload = () => {
-          this.formInfo.logoFileName = file.name;
-          this.companyInfo.logotipo = reader.result.toString();
-          this.logo = this.companyInfo.logotipo;
+          const filename = file.name as string;
+
+          this.formInfo.logoFileName =  filename;
+          this.logo.data = reader.result.toString();
+          this.logo.tipoRecurso = 'EMPRESAS';
+          this.logo.referencia = this.companyInfo.rfc;
+          this.logo.tipoArchivo = 'LOGO';
+          this.logo.formato = filename.substring(filename.indexOf('.'),filename.length);
+          this.resourcesService.insertResourceFile(this.logo)
+            .subscribe(()=> this.showToast('info', 'Exito!', 'El logo se cargo correctamente'),
+            (error)=>{
+              console.error(error);
+              let msg = error.error.message || `${error.statusText} : ${error.message}`;
+              this.showToast('danger', 'Error', msg, true);
+            });
         };
         reader.onerror = (error) => {
           this.errorMessages.push('Error parsing image file');
@@ -167,15 +200,27 @@ export class EmpresaComponent implements OnInit {
     }
   }
 
-  keyUploadListener(event: any): void {
+  public keyUploadListener(event: any): void {
     const reader = new FileReader();
+    this.key = new ResourceFile();
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.formInfo.keyFileName = file.name;
-        const data: string = reader.result.toString();
-        this.companyInfo.llavePrivada = data.substring(data.indexOf('base64') + 7, data.length);
+        this.key.data = reader.result.toString();
+        this.key.tipoRecurso = 'EMPRESAS';
+        this.key.referencia = this.companyInfo.rfc;
+        this.key.tipoArchivo = 'KEY';
+        this.key.formato = '.key';
+        this.resourcesService.insertResourceFile(this.key)
+        .subscribe(()=> this.showToast('info', 'Exito!', 'El Key se cargo correctamente'),
+            (error)=>{
+              console.error(error);
+              let msg = error.error.message || `${error.statusText} : ${error.message}`;
+              this.showToast('danger', 'Error', msg, true);
+            });
+        //this.companyInfo.llavePrivada = data.substring(data.indexOf('base64') + 7, data.length);
       };
       reader.onerror = (error) => {
         this.showToast('danger','Error', 'Error cargando la llave', true);
@@ -184,19 +229,31 @@ export class EmpresaComponent implements OnInit {
     }
   }
 
-  certificateUploadListener(event: any): void {
+  public certificateUploadListener(event: any): void {
     let reader = new FileReader();
+    this.cert = new ResourceFile();
     if (event.target.files && event.target.files.length > 0) {
       let file = event.target.files[0];
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.formInfo.certificateFileName = file.name;
-        const data: string = reader.result.toString();
-        this.companyInfo.certificado = data.substring(data.indexOf('base64') + 7, data.length);
+        this.cert.data = reader.result.toString();
+        this.cert.tipoRecurso = 'EMPRESAS';
+        this.cert.referencia = this.companyInfo.rfc;
+        this.cert.tipoArchivo = 'CERT';
+        this.cert.formato = '.cer';
+        this.resourcesService.insertResourceFile(this.cert)
+        .subscribe(()=> this.showToast('info', 'Exito!', 'El certificado se cargo correctamente'),
+            (error)=>{
+              console.error(error);
+              let msg = error.error.message || `${error.statusText} : ${error.message}`;
+              this.showToast('danger', 'Error', msg, true);
+            });
+        //this.companyInfo.certificado = data.substring(data.indexOf('base64') + 7, data.length);
       };
       reader.onerror = (error) => { this.showToast('danger','Error', 'Error cargando el certificado', true); };
     }
-  }*/
+  }
 
   public async insertNewCompany() {
 
