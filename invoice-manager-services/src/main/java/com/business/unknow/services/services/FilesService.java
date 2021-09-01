@@ -15,6 +15,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class FilesService {
@@ -90,15 +91,32 @@ public class FilesService {
   }
 
   public void upsertResourceFile(ResourceFileDto resourceFile) throws InvoiceManagerException {
-    byte[] decodedBytes = Base64.decode(resourceFile.getData());
-    ByteArrayOutputStream baos = new ByteArrayOutputStream(decodedBytes.length);
-    baos.write(decodedBytes, 0, decodedBytes.length);
-    s3FileService.upsertS3File(
-        S3BucketsEnum.findByValor(resourceFile.getTipoRecurso()),
-        resourceFile.getFormato(),
-        resourceFile.getReferencia(),
-        baos);
-    resourceFileRepository.save(resourceFileMapper.getEntityFromDto(resourceFile));
+
+    Optional<ResourceFile> file =
+        resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(
+            resourceFile.getTipoRecurso(),
+            resourceFile.getReferencia(),
+            resourceFile.getTipoArchivo());
+    if (file.isPresent()) { // prevents duplicated elements on RESOURCE_FILES table using same file
+      // type, resource type and reference
+      resourceFileRepository.delete(file.get());
+    }
+    if (resourceFile.getData().indexOf(",") < resourceFile.getData().length()) {
+      String[] fileInfo = resourceFile.getData().split(",");
+      resourceFile.setFormato(fileInfo[0].replaceFirst("data:", "").replaceFirst("base64", ""));
+      byte[] decodedBytes = Base64.decode(fileInfo[1]);
+      ByteArrayOutputStream baos = new ByteArrayOutputStream(decodedBytes.length);
+      baos.write(decodedBytes, 0, decodedBytes.length);
+      s3FileService.upsertS3File(
+          S3BucketsEnum.findByValor(resourceFile.getTipoRecurso()),
+          resourceFile.getFormato(),
+          resourceFile.getReferencia(),
+          baos);
+      resourceFileRepository.save(resourceFileMapper.getEntityFromDto(resourceFile));
+    } else {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "Los datos en base64 no fueron enviados correctamente");
+    }
   }
 
   public void deleteFacturaFile(String folio, String type) throws InvoiceManagerException {

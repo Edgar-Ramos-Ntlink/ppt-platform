@@ -90,7 +90,8 @@ public class EmpresaService {
     return empresaEvaluatorService.createEmpresa(empresaDto);
   }
 
-  public EmpresaDto updateEmpresaInfo(EmpresaDto empresaDto, String rfc) throws InvoiceManagerException {
+  public EmpresaDto updateEmpresaInfo(EmpresaDto empresaDto, String rfc)
+      throws InvoiceManagerException {
 
     empresaValidator.validatePostEmpresa(empresaDto);
     Empresa empresa =

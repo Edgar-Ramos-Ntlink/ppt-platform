@@ -89,7 +89,6 @@ export class EmpresaComponent implements OnInit {
       let index = 0;
       cpInfo.colonias.forEach(element => {
         if (cpInfo.colonias[index] === this.companyInfo.colonia) {
-          console.log(`Colonia: ${this.companyInfo.colonia} with index : ${index}`)
           this.formInfo.coloniaId = index;
         }
         index++;
@@ -109,26 +108,20 @@ export class EmpresaComponent implements OnInit {
           this.showToast('danger', 'Error', msg, true);
         });
       }
-
       // removing mandatory files
       this.documents = this.documents.filter(d=>  d.tipoArchivo != 'LOGO' && d.tipoArchivo != 'CERT' && d.tipoArchivo != 'KEY' );
-
-
     } catch (error) {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.showToast('danger', 'Error', msg, true);
     }
-
-    /*this.resourcesService.getResourceFile(rfc, 'EMPRESA', 'LOGO')
-      .subscribe(logo => this.logo = 'data:image/jpeg;base64,' + logo.data);*/
-
   }
 
   openObservaciones() {
     this.dialogService.open(ObservacionPendientesComponent);
   }
 
-  sanitize(url: string) {
+  sanitize(file: ResourceFile) {
+    const url = `data:${file.formato}base64,${file.data}`;
     return this.sanitizer.bypassSecurityTrustUrl(url);
   }
 
@@ -183,7 +176,6 @@ export class EmpresaComponent implements OnInit {
           this.logo.tipoRecurso = 'EMPRESAS';
           this.logo.referencia = this.companyInfo.rfc;
           this.logo.tipoArchivo = 'LOGO';
-          this.logo.formato = filename.substring(filename.indexOf('.'),filename.length);
           this.resourcesService.insertResourceFile(this.logo)
             .subscribe(()=> this.showToast('info', 'Exito!', 'El logo se cargo correctamente'),
             (error)=>{
@@ -212,7 +204,6 @@ export class EmpresaComponent implements OnInit {
         this.key.tipoRecurso = 'EMPRESAS';
         this.key.referencia = this.companyInfo.rfc;
         this.key.tipoArchivo = 'KEY';
-        this.key.formato = '.key';
         this.resourcesService.insertResourceFile(this.key)
         .subscribe(()=> this.showToast('info', 'Exito!', 'El Key se cargo correctamente'),
             (error)=>{
@@ -241,7 +232,6 @@ export class EmpresaComponent implements OnInit {
         this.cert.tipoRecurso = 'EMPRESAS';
         this.cert.referencia = this.companyInfo.rfc;
         this.cert.tipoArchivo = 'CERT';
-        this.cert.formato = '.cer';
         this.resourcesService.insertResourceFile(this.cert)
         .subscribe(()=> this.showToast('info', 'Exito!', 'El certificado se cargo correctamente'),
             (error)=>{
