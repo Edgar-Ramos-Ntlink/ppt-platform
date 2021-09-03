@@ -37,7 +37,6 @@ import { GenerarComplementoComponent } from './generar-complemento/generar-compl
 import { MulticomplementosComponent } from './multicomplementos/multicomplementos.component';
 import { CuentasBancariasComponent } from './cuentas-bancarias/cuentas-bancarias.component';
 import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.component';
-import { ObservacionPendientesComponent } from './observacion-pendientes/observacion-pendientes.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +58,6 @@ import { ObservacionPendientesComponent } from './observacion-pendientes/observa
     CuentasBancariasComponent,
     CuentasBancariasComponent,
     CuentaBancariaComponent,
-    ObservacionPendientesComponent
   ],
   imports: [
     CommonModule,
@@ -97,7 +95,6 @@ import { ObservacionPendientesComponent } from './observacion-pendientes/observa
     ConceptosComponent,
     CfdiComponent,
     AsignacionPagosComponent,
-    ObservacionPendientesComponent,
     CuentasBancariasComponent,
     FormsModule,
     CommonModule,

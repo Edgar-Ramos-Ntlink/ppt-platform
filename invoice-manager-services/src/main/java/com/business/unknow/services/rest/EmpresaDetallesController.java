@@ -27,6 +27,12 @@ public class EmpresaDetallesController {
     return new ResponseEntity<>(service.createDetalle(empresaDetallesDto), HttpStatus.OK);
   }
 
+  @PutMapping("/detalles/{id}")
+  public ResponseEntity<EmpresaDetallesDto> updateEmpresaDetalle(
+      @RequestBody @Valid EmpresaDetallesDto empresaDetallesDto) {
+    return new ResponseEntity<>(service.createDetalle(empresaDetallesDto), HttpStatus.OK);
+  }
+
   @DeleteMapping("/detalles/{id}")
   public void deleteDetalleEmpresa(@PathVariable Integer id) {
     service.deleteDetalle(id);

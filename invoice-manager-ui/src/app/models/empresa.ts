@@ -1,6 +1,5 @@
 import { Contribuyente } from './contribuyente';
 import { Cuenta } from './cuenta';
-import { Observacion } from './observacion';
 import { ResourceFile } from './resource-file';
 
 export class Empresa {
@@ -29,7 +28,7 @@ export class Empresa {
 
     // OPCIONAL, puede ser realizado despues de paso 1
     // legal
-    public anioAlta: number;
+    public anioAlta: string;
     public registroPatronal: string;
     public estatusJuridico: string;
     public estatusJuridico2: string;
@@ -64,8 +63,6 @@ export class Empresa {
     public fechaActualizacion: Date;
     public informacionFiscal: Contribuyente; // Se refactiorizara como elemento raiz
     
-    
-    public documentos: ResourceFile[];
     // DOCUMENTOS
     //public logotipo: string;  se adjunta como documento
     //public llavePrivada: string; se adjunta como documento
@@ -75,18 +72,13 @@ export class Empresa {
     // comprobante domicilio empresa
     // INE representate legal
 
-    // OPCIONAL, puede ser realizado despues de paso 1
-    public observaciones : Observacion[];
-
-    // OPCIONAL, puede ser realizado despues de paso 1
-    public cuentas : Cuenta[];
-
     constructor() {
         this.activo = false;
         this.estatus = 'INACTIVO';
         this.tipo= '*';
         this.giro='*';
-        this.colonia = '*'
+        this.colonia = '*';
+        this.anioAlta = '*';
         this.regimenFiscal = '*';
     }
 }

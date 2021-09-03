@@ -301,37 +301,47 @@
           <nb-tab tabTitle="Cuentas bancarias" *ngIf="companyInfo.id">
             <div class="row">
               <div class="col-md-12">
+                <div class="clearfix">
+                  <div class="row float-left" style="margin-right: 1px;">
+                    <p class="font-weight-bold puff_center">Cuentas bancarias</p>
+                  </div>
+                  <div class="row float-right" style="margin-right: 1px;">
+                    <button type="button" (click)="openDetallesDialog(dialog, undefined, 'OBSERVACION')" style=" margin-left:25px;"  class="btn btn-primary float-right">Nuevo Cuenta</button>
+                  </div>
+                </div>
+                <br/>
 
-                <div class="puff_center">
-                  <p class="font-weight-bold puff_center">Cuentas Bancarias Relacionadas a la Empresa</p>
+                <div class="puff_center" *ngIf="cuentas.length === 0" class="alert alert-primary" role="alert">
+                  No hay cuentas bancarias registradas para la empresa
                 </div>
 
-
-                <div class="puff_center" *ngIf="cuentas === undefined" class="alert alert-primary" role="alert">
-                  No se encontraron resultados
-                </div>
-
-                <div class="table-responsive slide_1" *ngIf="cuentas !== undefined">
+                <div class="table-responsive slide_1" *ngIf="cuentas.length > 0">
                   <table class="table table-sm">
                     <thead class="thead-dark">
                       <tr>
 
-                        <th scope="col">BANCO</th>  
-                        <th scope="col">NO_CUENTA</th>
+                        <th class="text-center">ACCIONES</th>
+                        <th scope="col">BANCO</th>
+                        <th scope="col">CUENTA</th>
                         <th scope="col">CLABE</th>
-                        <th scope="col">fechaCreacion</th>
-                        <th scope="col">fechaActualizacion</th>
-
+                        <th scope="col">DOMICILIO</th>
+                        <th scope="col">SUCURSAL</th>
+                        <th scope="col">FECHA</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr *ngFor="let fila of cuentas">
 
+                        <td scope="row" class="text-center"> 
+                          <button class="btn d-inline p-2 btn-outline-danger" (click)= "deleteDetail(fila.id)"><i class="fa fa-trash"></i></button>
+                          <button class="btn d-inline p-2 btn-outline-primary" (click)= "openDetallesDialog(dialog,fila)"><i class="fa fa-search"></i></button>
+                        </td>
                         <td scope="row">{{fila.banco}}</td>
                         <td scope="row">{{fila.cuenta}}</td>
                         <td scope="row">{{fila.clabe}}</td>
+                        <td scope="row">{{fila.domicilioBanco}}</td>
+                        <td scope="row">{{fila.sucursal}}</td>
                         <td scope="row">{{fila.fechaCreacion}}</td>
-                        <td scope="row">{{fila.fechaActualizacion}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -385,171 +395,152 @@
 
             </div>
 
-
             <div class="row">
-              <div class="col-md-10">
+              <div class="col-md-12">
+                <div class="clearfix">
+                  <div class="row float-left" style="margin-right: 1px;">
+                    <p class="font-weight-bold puff_center">Ingresos anuales</p>
+                  </div>
+                  <div class="row float-right" style="margin-right: 1px;">
+                    <button type="button" (click)="openDetallesDialog(dialog, undefined, 'OBSERVACION')" style=" margin-left:25px;"  class="btn btn-primary float-right">Nuevo Ingreso</button>
+                  </div>
+                </div>
+                <br/>
 
-                <div class="puff_center">
-                  <p class="font-weight-bold puff_center">Lista de Ingresos Relacionadas a la Empresa</p>
+                <div class="puff_center" *ngIf="ingresos.length === 0" class="alert alert-primary" role="alert">
+                  No hay ingresos registrados para la empresa
                 </div>
 
-
-                <div class="puff_center" *ngIf="companyInfo.ingresos === undefined" class="alert alert-primary" role="alert">
-                  No se encontraron resultados de Ingresos
-                </div>
-
-                <div class="table-responsive slide_1" *ngIf="companyInfo.ingresos !== undefined">
+                <div class="table-responsive slide_1" *ngIf="ingresos.length > 0">
                   <table class="table table-sm">
                     <thead class="thead-dark">
-                      <tr >
+                      <tr>
 
-                       
-                        <th scope="col" *ngFor="let fila of companyInfo.ingresos" ><div *ngIf="companyInfo.anioAlta <= fila.ano">{{fila.ano}}</div></th>
-                        <th scope="col" >Total:</th>
-                        
+                        <th class="text-center">ACCIONES</th>
+                        <th scope="col">TIPO</th>
+                        <th scope="col">AÑO</th>
+                        <th scope="col">DETALLE</th>
+                        <th scope="col">CREADOR</th>
+                        <th scope="col">FECHA</th>
 
                       </tr>
                     </thead>
                     <tbody>
-                      <tr >
+                      <tr *ngFor="let fila of ingresos">
 
-                        <td scope="row" *ngFor="let fila of companyInfo.ingresos" ><div *ngIf="companyInfo.anioAlta <= fila.ano">${{fila.cantidad}}</div></td>
-                        <th scope="col" >{{totalSaldos}}</th>
+                        <td scope="row" class="text-center"> 
+                          <button class="btn d-inline p-2 btn-outline-danger" (click)= "deleteDetail(fila.id)"><i class="fa fa-trash"></i></button>
+                          <button class="btn d-inline p-2 btn-outline-primary" (click)= "openDetallesDialog(dialog,fila)"><i class="fa fa-search"></i></button>
+                        </td>
+                        <td scope="row">{{fila.tipo}}</td>
+                        <td scope="row">{{fila.anio}}</td>
+                        <td scope="row">{{fila.detalle}}</td>
+                        <td scope="row">{{fila.creador}}</td>
+                        <td scope="row">{{fila.fechaCreacion}}</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
-              <div class="col-md-2">
-                <label for="inputAlta" class="label">Desdel año</label>
-                <select selected="*" id="inputAlta" style="display:block" fullWidth class="form-control"
-                   [(ngModel)]="companyInfo.anioAlta">
-                  <option value="*">Seleccionar</option>
-                  
-                  <option value="2009">2009</option>
-                  <option value="2010">2010</option>
-                  <option value="2011">2011</option>
-                  <option value="2012">2012</option>
-                  <option value="2013">2013</option>
-                  <option value="2014">2014</option>
-                  <option value="2015">2015</option>
-                  <option value="2016">2016</option>
-                  <option value="2017">2017</option>
-                  <option value="2018">2018</option>
-                  <option value="2019">2019</option>
-                  <option value="2020">2020</option>
-                  <option value="2021">2021</option>
-                </select>
-              </div>
             </div>
-
           </nb-tab>
 
           <nb-tab tabTitle="Observaciones y Pendientes" *ngIf="companyInfo.id">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="puff_center">
-                 
-                  <button type="button" (click)="openObservaciones()" style=" margin-left:25px;"  class="btn btn-primary float-right">Nueva Observacion</button>
-                  <button type="button" (click)="openObservaciones()" style=" margin-left:25px;" class="btn btn-primary float-right">Nuevo Pendiente</button>
-                </div>
-              </div>
-              
-            </div>
+            
             <div class="row">
               <div class="col-md-12">
 
-             
 
-                <div class="puff_center">
-                  <p class="font-weight-bold puff_center">Observaciones de la Empresa</p>
+                <div class="clearfix">
+                  <div class="row float-left" style="margin-right: 1px;">
+                    <p class="font-weight-bold puff_center">Observaciones</p>
+                  </div>
+                  <div class="row float-right" style="margin-right: 1px;">
+                    <button type="button" (click)="openDetallesDialog(dialog, undefined, 'OBSERVACION')" style=" margin-left:25px;"  class="btn btn-primary float-right">Nueva Observacion</button>
+                  </div>
                 </div>
-                <div class="puff_center" *ngIf="companyInfo.observaciones === undefined" class="alert alert-primary" role="alert">
-                  No se encontraron resultados de Observaciones
+                <br/>
+
+                <div class="puff_center" *ngIf="observaciones.length === 0" class="alert alert-primary" role="alert">
+                  No hay observaciones para la empresa
                 </div>
 
-                <div class="table-responsive slide_1" *ngIf="companyInfo.observaciones !== undefined">
+                <div class="table-responsive slide_1" *ngIf="observaciones.length > 0">
                   <table class="table table-sm">
                     <thead class="thead-dark">
                       <tr>
 
-                        <th class="text-center">Acciones</th>
+                        <th class="text-center">ACCIONES</th>
+                        <th scope="col">AREA</th>
                         <th scope="col">RESUMEN</th>
-                        <th scope="col">DETALLES</th>
                         <th scope="col">NOTIFICANTE</th>
-                      
+                        <th scope="col">FECHA</th>
 
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let fila of companyInfo.observaciones">
+                      <tr *ngFor="let fila of observaciones">
 
-                        <td scope="row" *ngIf="module === fila.area" class="text-center"> <button class="btn d-inline p-2 btn-outline-danger" (click)= "redirectToEmpresa(fila.rfc)"><i class="fa fa-trash"></i></button></td>
-                        <td scope="row" *ngIf="module === fila.area">{{fila.observacion}}</td>
-                        <td scope="row" *ngIf="module === fila.area">{{fila.detalles}}</td>
-                        <td scope="row" *ngIf="module === fila.area">{{fila.notificante}}</td>
+                        <td scope="row" class="text-center"> 
+                          <button class="btn d-inline p-2 btn-outline-danger" (click)= "deleteDetail(fila.id)"><i class="fa fa-trash"></i></button>
+                          <button class="btn d-inline p-2 btn-outline-primary" (click)= "openDetallesDialog(dialog,fila)"><i class="fa fa-search"></i></button>
+                        </td>
+                        <td scope="row">{{fila.area}}</td>
+                        <td scope="row">{{fila.resumen}}</td>
+                        <td scope="row">{{fila.notificante}}</td>
+                        <td scope="row">{{fila.fechaCreacion}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="clearfix">
+                  <div class="row float-left" style="margin-right: 1px;">
+                    <p class="font-weight-bold puff_center">Pendientes</p>
+                  </div>
+                  <div class="row float-right" style="margin-right: 1px;">
+                    <button type="button" (click)="openDetallesDialog(dialog, undefined, 'PENDIENTE')" style=" margin-left:25px;" class="btn btn-primary float-right">Nuevo Pendiente</button>
+                  </div>
+                </div>
+                <br/>
+                <div class="puff_center" *ngIf="pendientes.length === 0" class="alert alert-primary" role="alert">
+                  No hay pendientes para la empresa
+                </div>
+
+                <div class="table-responsive slide_1" *ngIf="pendientes.length > 0">
+                  <table class="table table-sm">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th class="text-center">ACCIONES</th>
+                        <th scope="col">AREA</th>
+                        <th scope="col">RESUMEN</th>
+                        <th scope="col">NOTIFICANTE</th>
+                        <th scope="col">FECHA</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let fila of pendientes">
+
+                        <td scope="row" class="text-center"> 
+                          <button class="btn d-inline p-2 btn-outline-danger" (click)= "deleteDetail(fila.id)"><i class="fa fa-trash"></i></button>
+                          <button class="btn d-inline p-2 btn-outline-primary" (click)= "openDetallesDialog(dialog,fila)"><i class="fa fa-search"></i></button>
+                        </td>
+                        <td scope="row">{{fila.area}}</td>
+                        <td scope="row">{{fila.resumen}}</td>
+                        <td scope="row">{{fila.notificante}}</td>
+                        <td scope="row">{{fila.fechaCreacion}}</td>
                     
                       </tr>
                     </tbody>
                   </table>
                 </div>
-                <div class="clearfix">
-                  <ul class="pagination float-right" >
-                    <li class="page-item" ><button class="btn page-link"
-                        (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
-                    <li class="page-item" ><button class="btn page-link"
-                        (click)="updateDataTable(page.number-1,page.size)">{{1}}</button></li>
-                    <li class="page-item" ><button class="btn page-link"
-                        (click)="updateDataTable(page.number+1,page.size)">{{2}}</button></li>
-                    <li class="page-item"><button class="btn page-link"
-                        (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
-                  </ul>
-                </div>
-
-                <div class="puff_center">
-                  <p class="font-weight-bold puff_center">Pendientes de la Empresa</p>
-                </div>
-                <div class="puff_center" *ngIf="companyInfo.observaciones === undefined" class="alert alert-primary" role="alert">
-                  No se encontraron resultados de Observaciones
-                </div>
-
-                <div class="table-responsive slide_1" *ngIf="companyInfo.observaciones !== undefined">
-                  <table class="table table-sm">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th class="text-center">Acciones</th>
-                        <th scope="col">RESUMEN</th>
-                        <th scope="col">DETALLES</th>
-                        <th scope="col">NOTIFICANTE</th>
-                        
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let fila of companyInfo.observaciones">
-
-                        <td scope="row" *ngIf="module === fila.area" class="text-center"> <button class="btn d-inline p-2 btn-outline-danger" (click)= "redirectToEmpresa(fila.rfc)"><i class="fa fa-trash"></i></button></td>
-                        <td scope="row" *ngIf="module === fila.area">{{fila.observacion}}</td>
-                        <td scope="row" *ngIf="module === fila.area">{{fila.detalles}}</td>
-                        <td scope="row" *ngIf="module === fila.area">{{fila.notificante}}</td>
-                    
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div class="clearfix">
-                  <ul class="pagination float-right" >
-                    <li class="page-item" ><button class="btn page-link"
-                        (click)="updateDataTable(0,page.size)"><i class="nb-arrow-left"></i></button></li>
-                    <li class="page-item" ><button class="btn page-link"
-                        (click)="updateDataTable(page.number-1,page.size)">{{1}}</button></li>
-                    <li class="page-item" ><button class="btn page-link"
-                        (click)="updateDataTable(page.number+1,page.size)">{{2}}</button></li>
-                    <li class="page-item"><button class="btn page-link"
-                        (click)="updateDataTable(page.totalPages-1,page.size)"><i class="nb-arrow-right"></i></button></li>
-                  </ul>
-                </div>
               </div>
             </div>
+
           </nb-tab>
         </nb-tabset>
       </nb-card-body>
@@ -571,3 +562,48 @@
       </nb-card-footer>
     </nb-card>
   </div>
+
+  <ng-template #dialog let-data let-ref="dialogRef">
+    <nb-card>
+      <nb-card-header>
+          <div class="clearfix">
+              <p class="h8 float-left font-weight-bold">NUEVO {{data.tipo}}</p>
+          </div>
+  
+      </nb-card-header>
+      <br>
+      <nb-card-body>
+          <div style="width: 30vw; ">
+              <!-- <p class="font-weight-bold">Paso 1 Cargar informacion de acredor y deudor</p> -->
+              <div class="row">
+                  <div class="col-md-3">
+                      <label for="Resumen" class="font-weight-bold">Resumen :</label>
+                  </div>
+                  <div class="col-md-9">
+                      <div class="form-group">
+                          <input type="text" [(ngModel)]="data.resumen" class="form-control" fullWidth
+                              id="Resumen" placeholder="Descripcion corta">
+                      </div>
+                  </div>
+              </div>
+  
+              <div class="row">
+                  <div class="col-md-3">
+                      <label for="Detalle" class="font-weight-bold">Detalle :</label>
+                  </div>
+                  <div class="col-md-9">
+                      <div class="form-group">
+                        <textarea class="form-control" fullWidth id="inputdetails" rows="3" [(ngModel)]="data.detalle" placeholder="Expliación detallada"></textarea>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
+        &nbsp;&nbsp;
+        <button class="btn btn-success" (click)="ref.close(data)" *ngIf="!data.id">Guardar</button>
+        <button class="btn btn-success" (click)="ref.close(data)" *ngIf="data.id">Actualizar</button>
+      </nb-card-footer>
+  </nb-card>
+  </ng-template>

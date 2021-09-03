@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Empresa, Ingresos } from '../../../models/empresa';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
@@ -11,12 +11,12 @@ import { CompaniesValidatorService } from '../../../@core/util-services/companie
 import { FilesData } from '../../../@core/data/files-data';
 import { CuentasData } from '../../../@core/data/cuentas-data';
 import { Cuenta } from '../../../models/cuenta';
-import { GenericPage } from '../../../models/generic-page';
 import { NbComponentStatus, NbDialogService, NbGlobalPhysicalPosition, NbToastrService } from '@nebular/theme';
-import { Observacion } from '../../../models/observacion';
-import { ObservacionPendientesComponent } from '../observacion-pendientes/observacion-pendientes.component';
 import { UsersData } from '../../../@core/data/users-data';
 import { ResourceFile } from '../../../models/resource-file';
+import { DetalleEmpresa } from '../../../models/detalle-empresa';
+import { User } from '../../../models/user';
+import { DatoAnualEmpresa } from '../../../models/dato-anual-empresa';
 
 @Component({
   selector: 'ngx-empresa',
@@ -26,35 +26,39 @@ import { ResourceFile } from '../../../models/resource-file';
 export class EmpresaComponent implements OnInit {
 
   public companyInfo: Empresa;
-  //TODO remove formInfo
-  public formInfo: any = { coloniaId: '*', logoFileName:'', keyFileName:'', certFileName:'' };
+  public loading: boolean = false;
+  public user: User;
+
+  public formInfo: any = { coloniaId: '*', logoFileName: '', keyFileName: '', certFileName: '' };
   public coloniaId: number = 0;
   public colonias = [];
   public paises = ['México'];
   public module: string = 'operaciones';
-  
+
+  public years: string[]=[];
   public girosCat: Catalogo[] = [];
   public errorMessages: string[] = [];
-  public cuentas: Cuenta[];
-  public totalSaldos: number = 0;
 
-  public documents : ResourceFile[] =[];
+  public documents: ResourceFile[] = [];
+  public observaciones: DetalleEmpresa[] = [];
+  public pendientes: DetalleEmpresa[] = [];
+  public cuentas: Cuenta[] = [];
+  public ingresos: DatoAnualEmpresa[] = [];
 
   public logo: ResourceFile;
   public key: ResourceFile;
   public cert: ResourceFile;
 
-
-
-  constructor(private router: Router,
+  constructor(
     private dialogService: NbDialogService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private sanitizer: DomSanitizer,
     private toastrService: NbToastrService,
     private catalogsService: CatalogsData,
     private empresaService: CompaniesData,
     private userService: UsersData,
     private resourcesService: FilesData,
-    private route: ActivatedRoute,
-    private sanitizer: DomSanitizer,
     private accountsService: CuentasData,
     private companiesValidatorService: CompaniesValidatorService) { }
 
@@ -66,6 +70,12 @@ export class EmpresaComponent implements OnInit {
     this.companyInfo.tipo = '*';
     this.companyInfo.pais = 'México';
     this.errorMessages = [];
+
+    this.userService.getUserInfo().then(user => this.user = user, (error) => {
+      let msg = error.error.message || `${error.statusText} : ${error.message}`;
+      this.showToast('danger', 'Error', msg, true);
+    });
+
     this.catalogsService.getAllGiros().then((giros: Catalogo[]) => this.girosCat = giros,
       (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
         || `${error.statusText} : ${error.message}`)).then(() =>
@@ -80,7 +90,7 @@ export class EmpresaComponent implements OnInit {
 
 
   public async loadCompanyInfo(rfc: string): Promise<void> {
-
+    this.loading = true;
     try {
       this.companyInfo = await this.empresaService.getCompanyByRFC(rfc).toPromise();
       let cpInfo: ZipCodeInfo = await this.catalogsService.getZipCodeInfo(this.companyInfo.cp);
@@ -94,31 +104,40 @@ export class EmpresaComponent implements OnInit {
         index++;
       });
 
-      this.accountsService.getCuentasByCompany(rfc).subscribe( cuentas => this.cuentas = cuentas,(error) => {
+      this.empresaService.getCompaniesDetails(rfc, 'OBSERVACION').subscribe(observaciones => this.observaciones = observaciones, (error) => {
         let msg = error.error.message || `${error.statusText} : ${error.message}`;
         this.showToast('danger', 'Error', msg, true);
       });
 
-      this.documents = await this.resourcesService.getResourcesByTypeAndReference('EMPRESAS',rfc).toPromise();
-      this.cert  = this.documents.find(d => d.tipoArchivo === 'CERT');
-      this.key  = this.documents.find(d => d.tipoArchivo === 'KEY');
-      if(this.documents.find(d => d.tipoArchivo === 'LOGO')) { // only logo needs to be loaded from backend
-        this.resourcesService.getResourceFile(rfc,'EMPRESAS','LOGO').subscribe((logo)=> this.logo = logo,(error) => {
+      this.empresaService.getCompaniesDetails(rfc, 'PENDIENTE').subscribe(pendientes => this.pendientes = pendientes, (error) => {
+        let msg = error.error.message || `${error.statusText} : ${error.message}`;
+        this.showToast('danger', 'Error', msg, true);
+      });
+
+      this.accountsService.getCuentasByCompany(rfc).subscribe(cuentas => this.cuentas = cuentas, (error) => {
+        let msg = error.error.message || `${error.statusText} : ${error.message}`;
+        this.showToast('danger', 'Error', msg, true);
+      });
+
+      this.documents = await this.resourcesService.getResourcesByTypeAndReference('EMPRESAS', rfc).toPromise();
+      this.cert = this.documents.find(d => d.tipoArchivo === 'CERT');
+      this.key = this.documents.find(d => d.tipoArchivo === 'KEY');
+      if (this.documents.find(d => d.tipoArchivo === 'LOGO')) { // only logo needs to be loaded from backend
+        this.resourcesService.getResourceFile(rfc, 'EMPRESAS', 'LOGO').subscribe((logo) => this.logo = logo, (error) => {
           let msg = error.error.message || `${error.statusText} : ${error.message}`;
           this.showToast('danger', 'Error', msg, true);
         });
       }
       // removing mandatory files
-      this.documents = this.documents.filter(d=>  d.tipoArchivo != 'LOGO' && d.tipoArchivo != 'CERT' && d.tipoArchivo != 'KEY' );
+      this.documents = this.documents.filter(d => d.tipoArchivo != 'LOGO' && d.tipoArchivo != 'CERT' && d.tipoArchivo != 'KEY');
     } catch (error) {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.showToast('danger', 'Error', msg, true);
     }
+    this.loading = false;
   }
 
-  openObservaciones() {
-    this.dialogService.open(ObservacionPendientesComponent);
-  }
+
 
   sanitize(file: ResourceFile) {
     const url = `data:${file.formato}base64,${file.data}`;
@@ -134,7 +153,7 @@ export class EmpresaComponent implements OnInit {
         (data: ZipCodeInfo) => {
           this.colonias = data.colonias;
           this.companyInfo.estado = data.estado;
-          this.companyInfo.municipio = data.municipio; 
+          this.companyInfo.municipio = data.municipio;
           this.companyInfo.colonia = data.colonias[0];
         },
         (error: HttpErrorResponse) => console.error(error));
@@ -165,24 +184,24 @@ export class EmpresaComponent implements OnInit {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       if (file.size > 200000) {
-        this.showToast('warning','Error', 'La imagen del logo es demasiado grande', true);
+        this.showToast('warning', 'Error', 'La imagen del logo es demasiado grande', true);
       } else {
         reader.readAsDataURL(file);
         reader.onload = () => {
           const filename = file.name as string;
 
-          this.formInfo.logoFileName =  filename;
+          this.formInfo.logoFileName = filename;
           this.logo.data = reader.result.toString();
           this.logo.tipoRecurso = 'EMPRESAS';
           this.logo.referencia = this.companyInfo.rfc;
           this.logo.tipoArchivo = 'LOGO';
           this.resourcesService.insertResourceFile(this.logo)
-            .subscribe(()=> this.showToast('info', 'Exito!', 'El logo se cargo correctamente'),
-            (error)=>{
-              console.error(error);
-              let msg = error.error.message || `${error.statusText} : ${error.message}`;
-              this.showToast('danger', 'Error', msg, true);
-            });
+            .subscribe(() => this.showToast('info', 'Exito!', 'El logo se cargo correctamente'),
+              (error) => {
+                console.error(error);
+                let msg = error.error.message || `${error.statusText} : ${error.message}`;
+                this.showToast('danger', 'Error', msg, true);
+              });
         };
         reader.onerror = (error) => {
           this.errorMessages.push('Error parsing image file');
@@ -205,16 +224,15 @@ export class EmpresaComponent implements OnInit {
         this.key.referencia = this.companyInfo.rfc;
         this.key.tipoArchivo = 'KEY';
         this.resourcesService.insertResourceFile(this.key)
-        .subscribe(()=> this.showToast('info', 'Exito!', 'El Key se cargo correctamente'),
-            (error)=>{
+          .subscribe(() => this.showToast('info', 'Exito!', 'El Key se cargo correctamente'),
+            (error) => {
               console.error(error);
               let msg = error.error.message || `${error.statusText} : ${error.message}`;
               this.showToast('danger', 'Error', msg, true);
             });
-        //this.companyInfo.llavePrivada = data.substring(data.indexOf('base64') + 7, data.length);
       };
       reader.onerror = (error) => {
-        this.showToast('danger','Error', 'Error cargando la llave', true);
+        this.showToast('danger', 'Error', 'Error cargando la llave', true);
         console.error(error);
       };
     }
@@ -233,15 +251,14 @@ export class EmpresaComponent implements OnInit {
         this.cert.referencia = this.companyInfo.rfc;
         this.cert.tipoArchivo = 'CERT';
         this.resourcesService.insertResourceFile(this.cert)
-        .subscribe(()=> this.showToast('info', 'Exito!', 'El certificado se cargo correctamente'),
-            (error)=>{
+          .subscribe(() => this.showToast('info', 'Exito!', 'El certificado se cargo correctamente'),
+            (error) => {
               console.error(error);
               let msg = error.error.message || `${error.statusText} : ${error.message}`;
               this.showToast('danger', 'Error', msg, true);
             });
-        //this.companyInfo.certificado = data.substring(data.indexOf('base64') + 7, data.length);
       };
-      reader.onerror = (error) => { this.showToast('danger','Error', 'Error cargando el certificado', true); };
+      reader.onerror = (error) => { this.showToast('danger', 'Error', 'Error cargando el certificado', true); };
     }
   }
 
@@ -250,8 +267,7 @@ export class EmpresaComponent implements OnInit {
     try {
       let errorMessages = this.companiesValidatorService.validarEmpresa(this.companyInfo);
       if (errorMessages.length === 0) {
-        let user = this.userService.getUserInfo();
-        this.companyInfo.creador = (await user).email;
+        this.companyInfo.creador = this.user.email;
         this.companyInfo = await this.empresaService.insertNewCompany(this.companyInfo).toPromise();
         this.showToast('info', 'Exito!', 'La empresa ha sido creada correctamente');
       } else {
@@ -259,7 +275,7 @@ export class EmpresaComponent implements OnInit {
         for (const msg of errorMessages) {
           fullMessage += ` ${msg}, `;
         }
-        fullMessage+=' ]'
+        fullMessage += ' ]'
         this.showToast('warning', 'Necesitas completar informacion adicional', fullMessage, true);
       }
     } catch (error) {
@@ -297,6 +313,50 @@ export class EmpresaComponent implements OnInit {
     } catch (error) {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.showToast('danger', 'Error', msg, true);
+    }
+  }
+
+  public async openDetallesDialog(dialog: TemplateRef<any>, detail: DetalleEmpresa, type?: string) {
+
+    const detalle = detail || new DetalleEmpresa(this.companyInfo.rfc, this.module, this.user.email, type);
+
+    try {
+
+      let result = await this.dialogService.open(dialog, { context: detalle }).onClose.toPromise();
+
+      if (result) {
+        this.loading = true;
+        if (result.id) { // update detail
+          await this.empresaService.updateComanyDetail(detalle).toPromise();
+          this.loadCompanyInfo(this.companyInfo.rfc);
+        } else {
+          await this.empresaService.insertComanyDetail(detalle).toPromise();
+          this.loadCompanyInfo(this.companyInfo.rfc);
+        }
+      }
+    } catch (error) {
+      let msg = error.error.message || `${error.statusText} : ${error.message}`;
+      this.showToast('danger', 'Error', msg, true);
+    }
+    this.loading = false;
+  }
+
+  public async deleteDetail(id: number) {
+    this.loading = true;
+    try {
+      await this.empresaService.deleteCompanyDetail(id).toPromise();
+      this.loadCompanyInfo(this.companyInfo.rfc);
+    } catch (error) {
+      let msg = error.error.message || `${error.statusText} : ${error.message}`;
+      this.showToast('danger', 'Error', msg, true);
+    }
+    this.loading = false;
+  }
+
+  private calculateYears(){
+    const start = new Date().getFullYear() - 10;
+    for (let index = start; index < start+10 ; index++) {
+      this.years.push(index.toString());
     }
   }
 

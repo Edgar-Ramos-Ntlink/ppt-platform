@@ -10,7 +10,6 @@ import { DonwloadFileService } from '../../@core/util-services/download-file-ser
 import { LineaXComponent } from './linea-x/linea-x.component';
 import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion-pagos.component';
 import { ValidacionPagoComponent } from '../commons/pagos/validacion-pago/validacion-pago.component';
-import { ObservacionPendientesComponent } from '../commons/observacion-pendientes/observacion-pendientes.component';
 
 
 @NgModule({
@@ -24,7 +23,7 @@ import { ObservacionPendientesComponent } from '../commons/observacion-pendiente
     OperacionesRoutingModule,
     CommonsModule,
   ],
-  entryComponents: [ValidacionDevolucionComponent,AsignacionPagosComponent, ObservacionPendientesComponent, ValidacionPagoComponent],
+  entryComponents: [ValidacionDevolucionComponent,AsignacionPagosComponent, ValidacionPagoComponent],
   providers: [ DownloadCsvService , DonwloadFileService ],
 })
 export class OperacionesModule { }

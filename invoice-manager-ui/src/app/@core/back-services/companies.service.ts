@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Empresa } from '../../models/empresa';
+import { DetalleEmpresa } from '../../models/detalle-empresa';
 
 @Injectable({
   providedIn: 'root',
@@ -43,5 +44,22 @@ export class CompaniesService {
 
   public updateCompany(rfc:string,empresa: Empresa): Observable<Object> {
     return this.httpClient.put(`../api/empresas/${rfc}`,empresa);
+  }
+
+
+  public getCompaniesDetails(rfc: string, type : string): Observable<Object> {
+    return this.httpClient.get(`../api/empresas/${rfc}/detalles/tipo/${type}`);
+  }
+
+  public insertComanyDetail(detail: DetalleEmpresa): Observable<Object> {
+    return this.httpClient.post('../api/empresas/detalles',detail);
+  }
+
+  public updateComanyDetail(detail: DetalleEmpresa): Observable<Object> {
+    return this.httpClient.put(`../api/empresas/detalles/${detail.id}`,detail);
+  }
+
+  public deleteCompanyDetail(detailId: number): Observable<Object> {
+    return this.httpClient.delete(`../api/empresas/detalles/${detailId}`);
   }
 }

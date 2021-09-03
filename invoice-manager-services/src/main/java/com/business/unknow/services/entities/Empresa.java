@@ -84,7 +84,7 @@ public class Empresa implements Serializable {
   private String cp;
 
   @Column(name = "ANIO_ALTA")
-  private Integer anioAlta;
+  private String anioAlta;
 
   @Column(name = "REGISTRO_PATRONAL")
   private String registroPatronal;

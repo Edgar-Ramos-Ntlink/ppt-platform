@@ -56,7 +56,7 @@ public class EmpresaDto implements Serializable {
 
   private String cp;
 
-  private Integer anioAlta;
+  private String anioAlta;
 
   private String registroPatronal;
 

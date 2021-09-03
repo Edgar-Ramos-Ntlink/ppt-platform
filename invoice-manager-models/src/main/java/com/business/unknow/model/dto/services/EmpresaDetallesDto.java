@@ -25,7 +25,7 @@ public class EmpresaDetallesDto implements Serializable {
   private String tipo;
   private String notificante;
   private String area;
-  private Integer resumen;
+  private String resumen;
   private String detalle;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
