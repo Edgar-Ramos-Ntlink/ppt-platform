@@ -204,13 +204,13 @@ export class LineaXComponent implements OnInit {
   onCompanySelected(companyId: string) {
     this.companyInfo = this.companiesCat.find(c => c.id === Number(companyId));
     // TODO Mover todo esta logica a un servicio de contrsuccion
-    this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-    this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial.toUpperCase();
+    this.factura.rfcEmisor = this.companyInfo.rfc;
+    this.factura.razonSocialEmisor = this.companyInfo.razonSocial.toUpperCase();
     this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
-    this.factura.cfdi.emisor.rfc = this.companyInfo.informacionFiscal.rfc;
-    this.factura.cfdi.emisor.nombre = this.companyInfo.informacionFiscal.razonSocial.toUpperCase();
-    this.factura.cfdi.lugarExpedicion = this.companyInfo.informacionFiscal.cp;
-    this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
+    this.factura.cfdi.emisor.rfc = this.companyInfo.rfc;
+    this.factura.cfdi.emisor.nombre = this.companyInfo.razonSocial.toUpperCase();
+    this.factura.cfdi.lugarExpedicion = this.companyInfo.cp;
+    this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateCompanyAddress(this.companyInfo);
   }
 
   buscarClientInfo( razonSocial: string) {

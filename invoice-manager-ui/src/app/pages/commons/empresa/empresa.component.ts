@@ -64,6 +64,7 @@ export class EmpresaComponent implements OnInit {
 
   ngOnInit() {
     this.module = this.router.url.split('/')[2];
+    
     this.companyInfo = new Empresa();
     this.companyInfo.regimenFiscal = '*';
     this.companyInfo.giro = '*';
@@ -71,6 +72,7 @@ export class EmpresaComponent implements OnInit {
     this.companyInfo.pais = 'México';
     this.errorMessages = [];
 
+    this.calculateYears();
     this.userService.getUserInfo().then(user => this.user = user, (error) => {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.showToast('danger', 'Error', msg, true);
@@ -355,7 +357,7 @@ export class EmpresaComponent implements OnInit {
 
   private calculateYears(){
     const start = new Date().getFullYear() - 10;
-    for (let index = start; index < start+10 ; index++) {
+    for (let index = start; index < start+20 ; index++) {
       this.years.push(index.toString());
     }
   }

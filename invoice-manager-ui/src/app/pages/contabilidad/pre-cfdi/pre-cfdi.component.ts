@@ -206,13 +206,13 @@ export class PreCfdiComponent implements OnInit {
 
   onEmnisorSelected(companyId: string) {
     this.companyInfo = this.emisoresCat.find(c => c.id === Number(companyId));
-    this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-    this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial.toUpperCase();
+    this.factura.rfcEmisor = this.companyInfo.rfc;
+    this.factura.razonSocialEmisor = this.companyInfo.razonSocial.toUpperCase();
     this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
-    this.factura.cfdi.emisor.rfc = this.companyInfo.informacionFiscal.rfc;
-    this.factura.cfdi.emisor.nombre = this.companyInfo.informacionFiscal.razonSocial.toUpperCase();
-    this.factura.cfdi.lugarExpedicion = this.companyInfo.informacionFiscal.cp;
-    this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
+    this.factura.cfdi.emisor.rfc = this.companyInfo.rfc;
+    this.factura.cfdi.emisor.nombre = this.companyInfo.razonSocial.toUpperCase();
+    this.factura.cfdi.lugarExpedicion = this.companyInfo.cp;
+    this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateCompanyAddress(this.companyInfo);
   }
 
   onReceptorSelected(companyId: string) {
@@ -278,22 +278,22 @@ export class PreCfdiComponent implements OnInit {
     this.factura.solicitante = this.user.email;
     if (this.clientInfo === undefined || this.clientInfo.rfc === undefined) {
       this.errorMessages.push('La informacion del cliente es insuficiente o no esta presente.');
-    } else if (this.companyInfo === undefined || this.companyInfo.informacionFiscal === undefined) {
+    } else if (this.companyInfo === undefined ) {
       this.errorMessages.push('La informacion de la empresa es insuficiente o no esta presente.');
     } else {
-      this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-      this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
+      this.factura.rfcEmisor = this.companyInfo.rfc;
+      this.factura.razonSocialEmisor = this.companyInfo.razonSocial;
       this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
-      this.factura.cfdi.emisor.rfc = this.companyInfo.informacionFiscal.rfc;
-      this.factura.cfdi.emisor.nombre = this.companyInfo.informacionFiscal.razonSocial;
-      this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-      this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial;
+      this.factura.cfdi.emisor.rfc = this.companyInfo.rfc;
+      this.factura.cfdi.emisor.nombre = this.companyInfo.razonSocial;
+      this.factura.rfcEmisor = this.companyInfo.rfc;
+      this.factura.razonSocialEmisor = this.companyInfo.razonSocial;
 
       this.factura.rfcRemitente = this.clientInfo.rfc;
       this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
       this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
       this.factura.cfdi.receptor.nombre = this.clientInfo.razonSocial;
-      this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
+      this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateCompanyAddress(this.companyInfo);
       this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo);
 
       this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'B';
@@ -493,13 +493,13 @@ onCompanySelected(companyId: string) {
   this.companyInfo = this.emisoresCat.find(c => c.id === Number(companyId));
   this.companyInfo = this.companiesCat.find(c => c.id === Number(companyId));
   // TODO Mover todo esta logica a un servicio de contrsuccion
-  this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-  this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial.toUpperCase();
+  this.factura.rfcEmisor = this.companyInfo.rfc;
+  this.factura.razonSocialEmisor = this.companyInfo.razonSocial.toUpperCase();
   this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
-  this.factura.cfdi.emisor.rfc = this.companyInfo.informacionFiscal.rfc;
-  this.factura.cfdi.emisor.nombre = this.companyInfo.informacionFiscal.razonSocial.toUpperCase();
-  this.factura.cfdi.lugarExpedicion = this.companyInfo.informacionFiscal.cp;
-  this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
+  this.factura.cfdi.emisor.rfc = this.companyInfo.rfc;
+  this.factura.cfdi.emisor.nombre = this.companyInfo.razonSocial.toUpperCase();
+  this.factura.cfdi.lugarExpedicion = this.companyInfo.cp;
+  this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateCompanyAddress(this.companyInfo);
 
   console.log("selected " +this.factura.cfdi.emisor.rfc);
 }
