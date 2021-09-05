@@ -34,35 +34,8 @@ export class Empresa {
     public estatusJuridico2: string;
     public representanteLegal: string;
     public ciec: string; //  Clave de Identificación Electrónica Confidencial (CIEC). Ahora llamada solo Contraseña del SAT
+    public fiel: string; // FIEL (Firma Electrónica Avanzada), que es una contrasenia para timbrado
 
-
-    // PASO 2 carga de datos digitales
-    // datos digitales
-    public web: string;
-    public correo: string;
-    public pwCorreo: string;
-    public dominioCorreo: string;
-
-    
-    public pwSat: string; // talvez sea reemplazada por  FIEL (Firma Electrónica Avanzada), que es una contrasenia para timbrado
-    public noCertificado: string;
-    public expiracionCertificado: Date;
-    
-    
-    // OPCIONAL, puede ser realizado despues de paso 1
-    // contabilidad
-
-    public actividadSAT: string;
-    public fiel: string;
-    
-    public ingresos : Ingresos[]; // lista de objetos con ingreosos anuales empresa
-
-
-    public creador: string;
-    public fechaCreacion: Date;
-    public fechaActualizacion: Date;
-    public informacionFiscal: Contribuyente; // Se refactiorizara como elemento raiz
-    
     // DOCUMENTOS
     //public logotipo: string;  se adjunta como documento
     //public llavePrivada: string; se adjunta como documento
@@ -71,6 +44,29 @@ export class Empresa {
     // Acta constitutiva
     // comprobante domicilio empresa
     // INE representate legal
+
+    // PASO 2 carga de datos digitales
+    // datos digitales
+    public web: string;
+    public correo: string;
+    public pwCorreo: string;
+    public dominioCorreo: string;
+    public pwSat: string; //sera reemplazada por la  FIEL (Firma Electrónica Avanzada), que es una contrasenia para timbrado
+    
+    
+    
+    // OPCIONAL, puede ser realizado despues de paso 1
+    // contabilidad
+
+    // FIEL
+    // CIEC
+    public actividadSAT: string;
+    public noCertificado: string;
+    public expiracionCertificado: Date;
+
+    public creador: string;
+    public fechaCreacion: Date;
+    public fechaActualizacion: Date;
 
     constructor() {
         this.activo = false;

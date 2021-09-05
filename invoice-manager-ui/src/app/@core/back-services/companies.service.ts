@@ -51,15 +51,27 @@ export class CompaniesService {
     return this.httpClient.get(`../api/empresas/${rfc}/detalles/tipo/${type}`);
   }
 
-  public insertComanyDetail(detail: DetalleEmpresa): Observable<Object> {
+  public insertCompanyDetail(detail: DetalleEmpresa): Observable<Object> {
     return this.httpClient.post('../api/empresas/detalles',detail);
   }
 
-  public updateComanyDetail(detail: DetalleEmpresa): Observable<Object> {
+  public updateCompanyDetail(detail: DetalleEmpresa): Observable<Object> {
     return this.httpClient.put(`../api/empresas/detalles/${detail.id}`,detail);
   }
 
   public deleteCompanyDetail(detailId: number): Observable<Object> {
     return this.httpClient.delete(`../api/empresas/detalles/${detailId}`);
+  }
+
+  public getCompanyAnualData(rfc: string): Observable<Object> {
+    return this.httpClient.get(`../api/empresas/${rfc}/datos`);
+  }
+
+  public insertCompanyAnualData(dato: DetalleEmpresa): Observable<Object> {
+    return this.httpClient.post(`../api/empresas/${dato.rfc}/datos`,dato);
+  }
+
+  public deleteCompanyAnualData(rfc: string, id: number): Observable<Object> {
+    return this.httpClient.delete(`../api/empresas/${rfc}/datos/${id}`);
   }
 }

@@ -21,7 +21,7 @@ public class DatoAnualEmpresa implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "ID", nullable = false)
+  @Column(name = "ID")
   private Integer id;
 
   @Column(name = "RFC")

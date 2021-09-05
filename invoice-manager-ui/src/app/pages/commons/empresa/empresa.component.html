@@ -15,24 +15,23 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="inputRFC" class="label">RFC</label>
-                  <input type="text" [(ngModel)]="companyInfo.rfc" class="form-control" fullWidth
-                    id="inputRFC" placeholder="RFC Empresa"
-                    [disabled]="companyInfo.id!==undefined || companyInfo.activo">
+                  <input type="text" [(ngModel)]="companyInfo.rfc" class="form-control" fullWidth id="inputRFC"
+                    placeholder="RFC Empresa" [disabled]="companyInfo.id!==undefined || companyInfo.activo">
                 </div>
               </div>
               <div class="col-md-5">
                 <div class="form-group">
                   <label for="inputSocialReason" class="label">Razón Social</label>
-                  <input type="text" [(ngModel)]="companyInfo.razonSocial" class="form-control"
-                    fullWidth [disabled]="companyInfo.activo" id="inputSocialReason" placeholder="Razón Social">
+                  <input type="text" [(ngModel)]="companyInfo.razonSocial" class="form-control" fullWidth
+                    [disabled]="companyInfo.activo" id="inputSocialReason" placeholder="Razón Social">
                 </div>
               </div>
 
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="inputShortName" class="label">Nombre Corto</label>
-                  <input type="text" [(ngModel)]="companyInfo.nombre" class="form-control"
-                    fullWidth [disabled]="companyInfo.activo" id="inputShortName" placeholder="Nombre corto">
+                  <input type="text" [(ngModel)]="companyInfo.nombre" class="form-control" fullWidth
+                    [disabled]="companyInfo.activo" id="inputShortName" placeholder="Nombre corto">
                 </div>
               </div>
 
@@ -48,9 +47,9 @@
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="inputZipCode" class="label">Código Postal</label>
-                  <input type="text" [(ngModel)]="companyInfo.cp"
-                    (ngModelChange)="zipCodeInfo($event)" [disabled]="companyInfo.activo" class="form-control" fullWidth
-                    id="inputZipCode" placeholder="00300">
+                  <input type="text" [(ngModel)]="companyInfo.cp" (ngModelChange)="zipCodeInfo($event)"
+                    [disabled]="companyInfo.activo" class="form-control" fullWidth id="inputZipCode"
+                    placeholder="00300">
                 </div>
               </div>
               <div class="col-sm-6">
@@ -68,14 +67,14 @@
             <div class="row slide_3">
               <div class="col-sm-4">
                 <label for="inputState" class="label">Estado</label>
-                <input type="text" [(ngModel)]="companyInfo.estado" class="form-control" fullWidth
-                  id="inputState" [disabled]="companyInfo.activo" placeholder="Estado">
+                <input type="text" [(ngModel)]="companyInfo.estado" class="form-control" fullWidth id="inputState"
+                  [disabled]="companyInfo.activo" placeholder="Estado">
               </div>
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="inputCity" class="label">Municipio/Delegación</label>
-                  <input type="text" [(ngModel)]="companyInfo.municipio" class="form-control"
-                    fullWidth id="inputCity" [disabled]="companyInfo.activo" placeholder="Municipio/Delegación">
+                  <input type="text" [(ngModel)]="companyInfo.municipio" class="form-control" fullWidth id="inputCity"
+                    [disabled]="companyInfo.activo" placeholder="Municipio/Delegación">
                 </div>
               </div>
             </div>
@@ -83,22 +82,22 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="inputCalle" class="label">Calle</label>
-                  <input type="text" [(ngModel)]="companyInfo.calle" class="form-control" fullWidth
-                    id="inputCalle" [disabled]="companyInfo.activo" placeholder="Calle">
+                  <input type="text" [(ngModel)]="companyInfo.calle" class="form-control" fullWidth id="inputCalle"
+                    [disabled]="companyInfo.activo" placeholder="Calle">
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="inputExterior" class="label">No exterior</label>
-                  <input type="text" [(ngModel)]="companyInfo.noExterior" class="form-control"
-                    fullWidth [disabled]="companyInfo.activo" id="inputExterior" placeholder="No exterior">
+                  <input type="text" [(ngModel)]="companyInfo.noExterior" class="form-control" fullWidth
+                    [disabled]="companyInfo.activo" id="inputExterior" placeholder="No exterior">
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="inputInterior" class="label">No interior</label>
-                  <input type="text" [(ngModel)]="companyInfo.noInterior" class="form-control"
-                    fullWidth [disabled]="companyInfo.activo" id="inputInterior" placeholder="No interior">
+                  <input type="text" [(ngModel)]="companyInfo.noInterior" class="form-control" fullWidth
+                    [disabled]="companyInfo.activo" id="inputInterior" placeholder="No interior">
                 </div>
               </div>
             </div>
@@ -138,162 +137,217 @@
                 </select>
               </div>
             </div>
-            
+
           </nb-tab>
           <nb-tab tabTitle="Datos digitales" *ngIf="companyInfo.id">
-            <p class="font-weight-bold puff_center">Claves y accessos</p>
+            <p class="font-weight-bold puff_center">Datos correo empresa</p>
             <div class="row slide_4">
-              <div class="col-sm-3">
+              <div class="col-sm-4">
                 <div class="form-group">
                   <label for="inputEmail" class="label">Correo Empresa</label>
-                  <input type="email" [(ngModel)]="companyInfo.correo" class="form-control"  fullWidth id="inputEmail"
-                     placeholder="Email">
+                  <input type="email" [(ngModel)]="companyInfo.correo" class="form-control" fullWidth id="inputEmail"  [disabled]="companyInfo.activo"
+                    placeholder="Email">
                 </div>
               </div>
-              <div class="col-sm-2">
+              <div class="col-sm-4">
                 <div class="form-group">
                   <label for="inputPassword" class="label">Contraseña correo</label>
-                  <input type="password" [(ngModel)]="companyInfo.pwCorreo" class="form-control" fullWidth
-                    id="inputPassword"  placeholder="Password">
+                  <input type="password" [(ngModel)]="companyInfo.pwCorreo" class="form-control" fullWidth  [disabled]="companyInfo.activo"
+                    id="inputPassword" placeholder="Password">
                 </div>
               </div>
-              <div class="col-sm-1">
-                <label for="dominioCorreo" class="label">Dom.Corre.</label>
-                <input type="text" [(ngModel)]="companyInfo.dominioCorreo" class="form-control" fullWidth
-                   id="dominioCorreo" placeholder="@tiendalocal">
+              <div class="col-sm-4">
+                <label for="dominioCorreo" class="label">Dominio Correo</label>
+                <input type="text" [(ngModel)]="companyInfo.dominioCorreo" class="form-control" fullWidth  [disabled]="companyInfo.activo"
+                  id="dominioCorreo" placeholder="@tiendalocal">
               </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="inputPasswordSAT" class="label">Contraseña SAT</label>
-                  <input type="password" [(ngModel)]="companyInfo.pwSat" class="form-control" fullWidth
-                    id="inputPasswordSAT" placeholder="Contraseña SAT">
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="noCert" class="label">No de certificado</label>
-                  <input type="text" [(ngModel)]="companyInfo.noCertificado" class="form-control" fullWidth
-                     id="noCert" placeholder="0000000000">
-                </div>
-              </div>
+
             </div>
-           
 
-            <p class="font-weight-bold puff_center">Datos facturacion</p>
+            <p class="font-weight-bold puff_center">Datos adicionales</p>
 
-            <div class="row slide_4">
-              <div class="col-md-6">
-                <label for="inputWeb" class="label">Sitio web</label>
-                <input type="text" [(ngModel)]="companyInfo.web" class="form-control" fullWidth
-                   id="inputWeb" placeholder="www.mi-empresa.com">
-              </div>
-              <div class="form-group col-md-3">
-                <label for="certFile" class="label">Certificado SAT</label>
-
-                <div class="input-group"  *ngIf="cert === undefined">
-                  <div class="custom-file" id="certFile">
-                    <input type="file" class="custom-file-input" id="inputCertificateFile" accept=".cer"
-                       (change)="certificateUploadListener($event)"
-                      style="display:block;" aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputCertificateFile">{{companyInfo.certificateFileName}}</label>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group col-md-3">
-                <label for="keyFile" class="label">Llave SAT</label>
+            <div class="row">
+              <div class="col-sm-6">
                 
-                <div class="input-group" *ngIf="key === undefined">
-                  <div class="custom-file" id="keyFile" >
-                    <input type="file" class="custom-file-input" id="inputKeyFile" accept=".key"
-                       (change)="keyUploadListener($event)" style="display:block;"
-                      aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputKeyFile">{{formInfo.keyFileName}}</label>
+
+                <div class="row slide_4">
+                  <div class="col-md-12">
+                    <label for="inputWeb" class="label">Sitio web</label>
+                    <input type="text" [(ngModel)]="companyInfo.web" class="form-control" fullWidth id="inputWeb"  [disabled]="companyInfo.activo"
+                      placeholder="www.mi-empresa.com">
+                  </div>
+
+                </div>
+                <label for="logoFile" class="label">Logotipo Empresa</label>
+
+                <div class="row slide_4">
+                  <div class="form-group col-md-12">
+
+                    <div class="input-group">
+                      <div class="custom-file" id="logoFile">
+                        <input type="file" class="custom-file-input" id="inputLogoFile" accept="image/*"  [disabled]="companyInfo.activo"
+                          (change)="logoUploadListener($event)" style="display:block;"
+                          aria-describedby="inputGroupFileAddon01">
+                        <label class="custom-file-label" for="inputLogoFile">{{formInfo.logoFileName}}</label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <label for="logoFile" class="label">Logotipo Empresa</label>
-
-            <div class="row slide_4">
-              <div class="form-group col-md-4" *ngIf="logo  === undefined">
-
-                <div class="input-group">
-                  <div class="custom-file" id="logoFile">
-                    <input type="file" class="custom-file-input" id="inputLogoFile" accept="image/*"
-                     (change)="logoUploadListener($event)" style="display:block;"
-                      aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputLogoFile">{{formInfo.logoFileName}}</label>
+              <div class="col-sm-6">
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-6" *ngIf="logo != undefined">
+                    <div>
+                      <img [src]="sanitize(logo)" style="height: 120px;">
+                    </div>
                   </div>
-                </div>
-
-              </div>
-              <div class="col-md-4" *ngIf="logo != undefined">
-                <div>
-                  <img [src]="sanitize(logo)" style="height: 80px;">
+                  <div class="col"></div>
                 </div>
               </div>
             </div>
+
+
           </nb-tab>
           <nb-tab tabTitle="Legales" *ngIf="companyInfo.id">
             <p class="font-weight-bold puff_center">Datos legales</p>
             <div class="row slide_1">
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <div class="form-group">
                   <label for="inputRepresentante" class="label">Representante Legal</label>
-                  <input type="text" [(ngModel)]="companyInfo.representanteLegal" class="form-control" fullWidth
+                  <input type="text" [(ngModel)]="companyInfo.representanteLegal" class="form-control" fullWidth  [disabled]="companyInfo.activo"
                     id="inputRepresentante" placeholder="Nombre representante legal"
                     [disabled]="companyInfo.id===undefined || companyInfo.activo">
                 </div>
               </div>
-              <div class="col-sm-3">
-                <label for="inputAlta" class="label">Año Alta</label>
-                <select selected="*" id="inputAlta" style="display:block" fullWidth class="form-control"
-                   [(ngModel)]="companyInfo.anioAlta">
-                  <option value="*">Seleccionar</option>
-                  <option *ngFor="let year of years" [value]="year">{{year}}</option>
-                </select>
-              </div>
-
-              <div class="col-md-3">
+              
+              <div class="col-md-4">
                 <div class="form-group">
-                  <label for="inputShortName" class="label">Nombre Corto</label>
-                  <input type="text" [(ngModel)]="companyInfo.nombre" class="form-control"
-                    fullWidth  id="inputShortName" placeholder="Nombre corto">
+                  <label for="estatusJuridico" class="label">Estatus Juridico</label>
+                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico" class="form-control" fullWidth  [disabled]="companyInfo.activo"
+                    id="estatusJuridico" placeholder="EstatusJuridico">
                 </div>
               </div>
-
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="estatusJuridico2" class="label">Estatus Juridico 2</label>
+                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico2" class="form-control" fullWidth  [disabled]="companyInfo.activo"
+                    id="estatusJuridico2" placeholder="Estatus Juridico 2">
+                </div>
+              </div>
             </div>
+            <p class="font-weight-bold puff_center">Datos Fiscales</p>
             <div class="row slide_1">
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="registroPatronal" class="label">Registro Patronal</label>
-                  <input type="text" [(ngModel)]="companyInfo.registroPatronal" class="form-control"
-                    fullWidth  id="inputShortName" placeholder="Registro Patronal">
+                  <input type="text" [(ngModel)]="companyInfo.registroPatronal" class="form-control" fullWidth  [disabled]="companyInfo.activo"
+                    id="inputShortName" placeholder="Registro Patronal">
                 </div>
               </div>
+              
               <div class="col-md-3">
                 <div class="form-group">
-                  <label for="estatusJuridico" class="label">Estatus Juridico</label>
-                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico" class="form-control"
-                    fullWidth  id="estatusJuridico" placeholder="EstatusJuridico">
+                  <label for="ciec" class="label">CIEC(Clave de Identificación Electrónica Confidencial)</label>
+                  <input type="password" [(ngModel)]="companyInfo.ciec" class="form-control" fullWidth id="ciec"  [disabled]="companyInfo.activo"
+                    placeholder="Clave de Identificación Electrónica Confidencial">
                 </div>
               </div>
+
               <div class="col-md-3">
                 <div class="form-group">
-                  <label for="estatusJuridico2" class="label">Estatus Juridico 2</label>
-                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico2" class="form-control"
-                    fullWidth  id="estatusJuridico2" placeholder="Estatus Juridico 2">
+                  <label for="fiel" class="label">FIEL(Firma Electrónica Avanzada)</label>
+                  <input type="password" [(ngModel)]="companyInfo.fiel" class="form-control" fullWidth  [disabled]="companyInfo.activo"
+                    id="fiel" placeholder="Firma Electrónica Avanzada">
                 </div>
               </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="ciec" class="label">Contraseña del SAT</label>
-                  <input type="password" [(ngModel)]="companyInfo.ciec" class="form-control" fullWidth
-                    id="ciec" placeholder="Contraseña del SAT">
+
+              <div class="col-sm-2">
+                <label for="inputAlta" class="label">Año Alta</label>
+                <select selected="*" id="inputAlta" style="display:block" fullWidth class="form-control"  [disabled]="companyInfo.activo"
+                  [(ngModel)]="companyInfo.anioAlta">
+                  <option value="*">Seleccionar</option>
+                  <option *ngFor="let year of years" [value]="year">{{year}}</option>
+                </select>
+              </div>
+            </div>
+
+            <p class="font-weight-bold puff_center">Documentos empresa</p>
+
+            <div class="row">
+
+              <div class="col-sm-6">
+                
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label for="inputDocType" class="label">Tipo Documento</label>
+                    <select selected="*" id="inputDocType" style="display:block" fullWidth class="form-control"  [disabled]="companyInfo.activo"
+                      [(ngModel)]="formInfo.doctType">
+                      <option value="*">Seleccionar</option>
+                      <option value="CERT">Certificado(.cer)</option>
+                      <option value="KEY">Llave(.key)</option>
+                      <option value="LOGO">Logotipo</option>
+                      <option value="INE">INE Representante</option>
+                      <option value="ACTA">Acta Constitutiva</option>
+                      <option value="DOMICILIO">Comprobante domicilio</option>
+                      <option value="IMSS">Alta IMSS</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-sm-9">
+                    <label for="certFile" class="label">Documento Relacionado</label>
+      
+                    <div class="input-group">
+                      <div class="custom-file" id="documentFile">
+                        <input type="file" class="custom-file-input" id="documentFile"  [disabled]="companyInfo.activo"
+                          accept=".pdf,.xls,.xlsx,.doc, .docx,image/*" (change)="fileDataUploadListener($event,formInfo.doctType)"
+                          style="display:block;" aria-describedby="inputDocFile">
+                        <label class="custom-file-label" for="inputDocFile">{{formInfo.fileDataName}}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br/>
+
+                <div class="clearfix">
+                  <div class="row float-right" style="margin-right: 1px;">
+                    <button type="button" (click)="fileDocumentUpload()" style=" margin-left:25px;"  [disabled]="companyInfo.activo"
+                      class="btn btn-primary float-right">Cargar documento</button>
+                  </div>
                 </div>
               </div>
-            </div>  
+
+              <div class="col-sm-6">
+                <br/>
+                <br/>
+                <div class="puff_center" *ngIf="documents.length === 0" class="alert alert-primary" role="alert">
+                  No hay documentos relacionados a la empresa
+                </div>
+
+                <div class="table-responsive slide_1" *ngIf="documents.length > 0">
+                  <table class="table table-sm">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th class="text-center">DESCARGA</th>
+                        <th scope="col">TIPO ARCHIVO</th>
+                        <th scope="col">FECHA</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let fila of documents">
+
+                        <td scope="row" class="text-center">
+                          <button class="btn d-inline btn-outline-primary" (click)="downloadFile(fila)">
+                            <i class="fa fa-download"></i></button>
+                        </td>
+                        <td scope="row">{{fila.tipoArchivo}}</td>
+                        <td scope="row">{{fila.fechaCreacion}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
+            </div>
           </nb-tab>
           <nb-tab tabTitle="Cuentas bancarias" *ngIf="companyInfo.id">
             <div class="row">
@@ -303,10 +357,11 @@
                     <p class="font-weight-bold puff_center">Cuentas bancarias</p>
                   </div>
                   <div class="row float-right" style="margin-right: 1px;">
-                    <button type="button" (click)="openDetallesDialog(dialog, undefined, 'OBSERVACION')" style=" margin-left:25px;"  class="btn btn-primary float-right">Nuevo Cuenta</button>
+                    <button type="button" (click)="openAccountDialog(acccountDialog)" style=" margin-left:25px;"
+                      class="btn btn-primary float-right">Nueva Cuenta</button>
                   </div>
                 </div>
-                <br/>
+                <br />
 
                 <div class="puff_center" *ngIf="cuentas.length === 0" class="alert alert-primary" role="alert">
                   No hay cuentas bancarias registradas para la empresa
@@ -316,28 +371,27 @@
                   <table class="table table-sm">
                     <thead class="thead-dark">
                       <tr>
-
                         <th class="text-center">ACCIONES</th>
                         <th scope="col">BANCO</th>
                         <th scope="col">CUENTA</th>
                         <th scope="col">CLABE</th>
-                        <th scope="col">DOMICILIO</th>
                         <th scope="col">SUCURSAL</th>
+                        <th scope="col">DOMICILIO</th>
                         <th scope="col">FECHA</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr *ngFor="let fila of cuentas">
 
-                        <td scope="row" class="text-center"> 
-                          <button class="btn d-inline p-2 btn-outline-danger" (click)= "deleteDetail(fila.id)"><i class="fa fa-trash"></i></button>
-                          <button class="btn d-inline p-2 btn-outline-primary" (click)= "openDetallesDialog(dialog,fila)"><i class="fa fa-search"></i></button>
+                        <td scope="row" class="text-center">
+                          <button class="btn d-inline p-2 btn-outline-danger" (click)="deleteAccount(fila.id)"><i
+                              class="fa fa-trash"></i></button>
                         </td>
                         <td scope="row">{{fila.banco}}</td>
                         <td scope="row">{{fila.cuenta}}</td>
                         <td scope="row">{{fila.clabe}}</td>
-                        <td scope="row">{{fila.domicilioBanco}}</td>
                         <td scope="row">{{fila.sucursal}}</td>
+                        <td scope="row">{{fila.domicilioBanco}}</td>
                         <td scope="row">{{fila.fechaCreacion}}</td>
                       </tr>
                     </tbody>
@@ -349,47 +403,47 @@
           <nb-tab tabTitle="Contabilidad" *ngIf="companyInfo.id">
             <div class="row">
 
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="form-group">
-                  <label for="creador" class="label">Creador</label>
-                  <input type="text" [(ngModel)]="companyInfo.creador" class="form-control"
-                    fullWidth id="creador" placeholder="Creador">
+                  <label for="ciec" class="label">CIEC(Clave de Identificación Electrónica Confidencial)</label>
+                  <input type="password" [(ngModel)]="companyInfo.ciec" class="form-control" fullWidth id="ciec"  [disabled]="companyInfo.activo"
+                    placeholder="Clave de Identificación Electrónica Confidencial">
                 </div>
               </div>
 
-              <div class="col-md-4">
-                <label for="fechaCreacion" class="label">Fecha de Creacion</label>
-                <input nbInput placeholder="Fecha de Creacion" [nbDatepicker]="fechaCreacion" fullWidth style="display:block;"
-                  class="form-control" [(ngModel)]="companyInfo.fechaCreacion">
-                <nb-datepicker #fechaCreacion></nb-datepicker>
-              </div>
-              <div class="col-md-4">
-                <label for="fechaActualizacion" class="label">Fecha de Actualizacion</label>
-                <input nbInput placeholder="Fecha de Actualizacion" [nbDatepicker]="fechaActualizacion" fullWidth style="display:block;"
-                  class="form-control" [(ngModel)]="companyInfo.fechaActualizacion">
-                <nb-datepicker #fechaActualizacion></nb-datepicker>
-              </div>
-
-            </div>
-            <div class="row">
-
-              <div class="col-md-6">
+              <div class="col-md-3">
                 <div class="form-group">
-                  <label for="Fiel" class="label">Fiel de la empresa</label>
-                  <input type="text" [(ngModel)]="companyInfo.fielEmpresa" class="form-control"
-                    fullWidth id="Fiel" placeholder="Fiel de la empresa">
+                  <label for="fiel" class="label">FIEL(Firma Electrónica Avanzada)</label>
+                  <input type="password" [(ngModel)]="companyInfo.fiel" class="form-control" fullWidth  [disabled]="companyInfo.activo"
+                    id="fiel" placeholder="Firma Electrónica Avanzada">
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="Actividad" class="label">Actividad SAT</label>
-                  <input type="text" [(ngModel)]="companyInfo.actividadSAT" class="form-control"
-                    fullWidth id="Actividad" placeholder="Actividad Sat">
+                  <input type="text" [(ngModel)]="companyInfo.actividadSAT" class="form-control" fullWidth  [disabled]="companyInfo.activo"
+                    id="Actividad" placeholder="Actividad Sat">
                 </div>
               </div>
-             
 
+            </div>
+            <div class="row">
+
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="noCert" class="label">No de certificado</label>
+                  <input type="text" [(ngModel)]="companyInfo.noCertificado" class="form-control" fullWidth id="noCert"  [disabled]="companyInfo.activo"
+                    placeholder="0000000000">
+                </div>
+              </div>
+
+              <div class="col-3">
+                <label for="expiracionCertificado" class="label">Expiración certificado</label>
+                <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpicker" fullWidth style="display:block;" id= "expiracionCertificado"  [disabled]="companyInfo.activo"
+                  [(ngModel)]="companyInfo.expiracionCertificado">
+                <nb-datepicker #expirationpicker></nb-datepicker>
+              </div>
             </div>
 
             <div class="row">
@@ -399,10 +453,11 @@
                     <p class="font-weight-bold puff_center">Ingresos anuales</p>
                   </div>
                   <div class="row float-right" style="margin-right: 1px;">
-                    <button type="button" (click)="openDetallesDialog(dialog, undefined, 'OBSERVACION')" style=" margin-left:25px;"  class="btn btn-primary float-right">Nuevo Ingreso</button>
+                    <button type="button" (click)="openAnualDataDialog(dataDialog)" style=" margin-left:25px;"
+                      class="btn btn-primary float-right">Nuevo Ingreso</button>
                   </div>
                 </div>
-                <br/>
+                <br />
 
                 <div class="puff_center" *ngIf="ingresos.length === 0" class="alert alert-primary" role="alert">
                   No hay ingresos registrados para la empresa
@@ -425,15 +480,17 @@
                     <tbody>
                       <tr *ngFor="let fila of ingresos">
 
-                        <td scope="row" class="text-center"> 
-                          <button class="btn d-inline p-2 btn-outline-danger" (click)= "deleteDetail(fila.id)"><i class="fa fa-trash"></i></button>
-                          <button class="btn d-inline p-2 btn-outline-primary" (click)= "openDetallesDialog(dialog,fila)"><i class="fa fa-search"></i></button>
+                        <td scope="row" class="text-center">
+                          <button class="btn d-inline mr-2 ml-2 btn-outline-danger"
+                            (click)="deleteAnualData(fila.id)"><i class="fa fa-trash"></i></button>
+                          <button class="btn d-inline mr-2 ml-2 btn-outline-primary"
+                            (click)="downloadDocumentData(fila.link)"><i class="fa fa-download"></i></button>
                         </td>
-                        <td scope="row">{{fila.tipo}}</td>
+                        <td scope="row">{{fila.tipoDato}}</td>
                         <td scope="row">{{fila.anio}}</td>
                         <td scope="row">{{fila.detalle}}</td>
                         <td scope="row">{{fila.creador}}</td>
-                        <td scope="row">{{fila.fechaCreacion}}</td>
+                        <td scope="row">{{fila.creacion}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -443,7 +500,7 @@
           </nb-tab>
 
           <nb-tab tabTitle="Observaciones y Pendientes" *ngIf="companyInfo.id">
-            
+
             <div class="row">
               <div class="col-md-12">
 
@@ -453,10 +510,11 @@
                     <p class="font-weight-bold puff_center">Observaciones</p>
                   </div>
                   <div class="row float-right" style="margin-right: 1px;">
-                    <button type="button" (click)="openDetallesDialog(dialog, undefined, 'OBSERVACION')" style=" margin-left:25px;"  class="btn btn-primary float-right">Nueva Observacion</button>
+                    <button type="button" (click)="openDetallesDialog(detailDialog, undefined, 'OBSERVACION')"
+                      style=" margin-left:25px;" class="btn btn-primary float-right">Nueva Observacion</button>
                   </div>
                 </div>
-                <br/>
+                <br />
 
                 <div class="puff_center" *ngIf="observaciones.length === 0" class="alert alert-primary" role="alert">
                   No hay observaciones para la empresa
@@ -478,9 +536,11 @@
                     <tbody>
                       <tr *ngFor="let fila of observaciones">
 
-                        <td scope="row" class="text-center"> 
-                          <button class="btn d-inline p-2 btn-outline-danger" (click)= "deleteDetail(fila.id)"><i class="fa fa-trash"></i></button>
-                          <button class="btn d-inline p-2 btn-outline-primary" (click)= "openDetallesDialog(dialog,fila)"><i class="fa fa-search"></i></button>
+                        <td scope="row" class="text-center">
+                          <button class="btn d-inline mr-2 ml-2 btn-outline-danger" (click)="deleteDetail(fila.id)"><i
+                              class="fa fa-trash"></i></button>
+                          <button class="btn d-inline mr-2 ml-2 btn-outline-primary"
+                            (click)="openDetallesDialog(detailDialog,fila)"><i class="fa fa-search"></i></button>
                         </td>
                         <td scope="row">{{fila.area}}</td>
                         <td scope="row">{{fila.resumen}}</td>
@@ -500,10 +560,11 @@
                     <p class="font-weight-bold puff_center">Pendientes</p>
                   </div>
                   <div class="row float-right" style="margin-right: 1px;">
-                    <button type="button" (click)="openDetallesDialog(dialog, undefined, 'PENDIENTE')" style=" margin-left:25px;" class="btn btn-primary float-right">Nuevo Pendiente</button>
+                    <button type="button" (click)="openDetallesDialog(detailDialog, undefined, 'PENDIENTE')"
+                      style=" margin-left:25px;" class="btn btn-primary float-right">Nuevo Pendiente</button>
                   </div>
                 </div>
-                <br/>
+                <br />
                 <div class="puff_center" *ngIf="pendientes.length === 0" class="alert alert-primary" role="alert">
                   No hay pendientes para la empresa
                 </div>
@@ -522,15 +583,17 @@
                     <tbody>
                       <tr *ngFor="let fila of pendientes">
 
-                        <td scope="row" class="text-center"> 
-                          <button class="btn d-inline p-2 btn-outline-danger" (click)= "deleteDetail(fila.id)"><i class="fa fa-trash"></i></button>
-                          <button class="btn d-inline p-2 btn-outline-primary" (click)= "openDetallesDialog(dialog,fila)"><i class="fa fa-search"></i></button>
+                        <td scope="row" class="text-center">
+                          <button class="btn d-inline p-2 btn-outline-danger" (click)="deleteDetail(fila.id)"><i
+                              class="fa fa-trash"></i></button>
+                          <button class="btn d-inline p-2 btn-outline-primary"
+                            (click)="openDetallesDialog(detailDialog,fila)"><i class="fa fa-search"></i></button>
                         </td>
                         <td scope="row">{{fila.area}}</td>
                         <td scope="row">{{fila.resumen}}</td>
                         <td scope="row">{{fila.notificante}}</td>
                         <td scope="row">{{fila.fechaCreacion}}</td>
-                    
+
                       </tr>
                     </tbody>
                   </table>
@@ -543,64 +606,189 @@
       </nb-card-body>
 
       <nb-card-footer>
-        <small *ngIf="companyInfo.activo !== true" id="emailHelp" class="form-text text-muted">La activacion de la
-          empresa
-          se realizara manualmente notificando al departamento de soporte.</small>
         <div class="form-inline">
           <button type="button" *ngIf="companyInfo.id == undefined" (click)="insertNewCompany()" nbButton
             status="primary">GUARDAR</button>
           <button type="button" *ngIf="companyInfo.id != undefined" (click)="updateCompany()" nbButton
             [disabled]="companyInfo.activo" status="primary">ACTUALIZAR</button>
         </div>
-        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
-          <p *ngFor="let message of errorMessages">{{message}}</p>
-        </div>
-
       </nb-card-footer>
     </nb-card>
   </div>
 
-  <ng-template #dialog let-data let-ref="dialogRef">
+  <!-- Company accounts dialog -->
+
+  <ng-template #acccountDialog let-data let-ref="dialogRef">
     <nb-card>
       <nb-card-header>
-          <div class="clearfix">
-              <p class="h8 float-left font-weight-bold">NUEVO {{data.tipo}}</p>
-          </div>
-  
+        <div class="clearfix">
+          <p class="h8 float-left font-weight-bold">Datos de la cuenta bancaria</p>
+        </div>
+
       </nb-card-header>
       <br>
       <nb-card-body>
-          <div style="width: 30vw; ">
-              <!-- <p class="font-weight-bold">Paso 1 Cargar informacion de acredor y deudor</p> -->
-              <div class="row">
-                  <div class="col-md-3">
-                      <label for="Resumen" class="font-weight-bold">Resumen :</label>
-                  </div>
-                  <div class="col-md-9">
-                      <div class="form-group">
-                          <input type="text" [(ngModel)]="data.resumen" class="form-control" fullWidth
-                              id="Resumen" placeholder="Descripcion corta">
-                      </div>
-                  </div>
-              </div>
-  
-              <div class="row">
-                  <div class="col-md-3">
-                      <label for="Detalle" class="font-weight-bold">Detalle :</label>
-                  </div>
-                  <div class="col-md-9">
-                      <div class="form-group">
-                        <textarea class="form-control" fullWidth id="inputdetails" rows="3" [(ngModel)]="data.detalle" placeholder="Expliación detallada"></textarea>
-                      </div>
-                  </div>
-              </div>
+        <div style="width: 40vw; ">
+          <div class="row">
+            <div class="col-2">
+              <label for="inputBanco" class="label">Banco</label>
+              <select id="inputBanco" style="display:block;" class="form-control" [(ngModel)]="data.banco" name="banco">
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let bank of banksCat" [value]="bank.nombre">{{bank.nombre}}</option>
+              </select>
+            </div>
+            <div class="col-4">
+              <label for="cuenta" class="label">N° Cuenta</label>
+              <input id="cuenta" class="form-control" fullWidth type="text" [(ngModel)]="data.cuenta" fullWidth
+                placeholder="Numero de cuenta">
+            </div>
+            <div class="col-6">
+              <label for="clave" class="label">Clave</label>
+              <input id="clave" class="form-control" fullWidth type="text" [(ngModel)]="data.clabe" fullWidth
+                placeholder="Clave Bancaria">
+            </div>
           </div>
+
+          <div class="row">
+            <div class="col-5">
+              <label for="location" class="label">Sucursal</label>
+              <input id="location" class="form-control" fullWidth type="text" [(ngModel)]="data.sucursal" fullWidth
+                placeholder="Descripcion corta sucursal">
+            </div>
+            <div class="col-7">
+              <label for="address" class="label">Clave</label>
+              <input id="address" class="form-control" fullWidth type="text" [(ngModel)]="data.domicilioBanco" fullWidth
+                placeholder="Direccion de sucursal - opcional">
+            </div>
+          </div>
+        </div>
       </nb-card-body>
       <nb-card-footer>
-        <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
-        &nbsp;&nbsp;
-        <button class="btn btn-success" (click)="ref.close(data)" *ngIf="!data.id">Guardar</button>
-        <button class="btn btn-success" (click)="ref.close(data)" *ngIf="data.id">Actualizar</button>
+        <div class="clearfix">
+          <button class="btn btn-warning float-right mr-2 ml-2" (click)="ref.close(undefined)">Salir</button>
+          <button class="btn btn-success float-right mr-2 ml-2" (click)="ref.close(data)"
+            *ngIf="!data.id">Guardar</button>
+        </div>
+
       </nb-card-footer>
-  </nb-card>
+    </nb-card>
+  </ng-template>
+
+  <!-- Company anual Data dialog -->
+
+  <ng-template #dataDialog let-data let-ref="dialogRef">
+    <nb-card>
+      <nb-card-header>
+        <div class="clearfix">
+          <p class="h8 float-left font-weight-bold">Dato anual de la empresa</p>
+        </div>
+
+      </nb-card-header>
+      <br>
+      <nb-card-body>
+        <div style="width: 30vw; ">
+          <div class="row">
+            <div class="col-4">
+              <label for="inputYear" class="label">Año</label>
+              <select id="inputYear" style="display:block;" class="form-control" [(ngModel)]="data.anio" name="year">
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let year of years" [value]="year">{{year}}</option>
+              </select>
+            </div>
+            <div class="col-8">
+              <label for="dataDetail" class="label">Detalle</label>
+              <input id="dataDetail" class="form-control" fullWidth type="text" [(ngModel)]="data.detalle" fullWidth
+                placeholder="Descripcion corta del dato">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">
+              <label for="inputDataType" class="label">Tipo Dato</label>
+              <select id="inputDataType" style="display:block;" class="form-control" [(ngModel)]="data.tipoDato"
+                name="inputDataType">
+                <option value="INGRESO">Ingreso anual</option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-8">
+              <label for="certFile" class="label">Documento Relacionado</label>
+
+              <div class="input-group">
+                <div class="custom-file" id="anualDataFile">
+                  <input type="file" class="custom-file-input" id="anualDataFile"
+                    accept=".pdf,.xls,.xlsx,.doc, .docx,image/*" (change)="fileDataUploadListener($event)"
+                    style="display:block;" aria-describedby="inputAnualDataFile">
+                  <label class="custom-file-label" for="inputAnualDataFile">{{formInfo.fileDataName}}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <div class="clearfix">
+          <button class="btn btn-warning float-right mr-2 ml-2" (click)="ref.close(undefined)">Salir</button>
+
+          <button class="btn btn-success float-right mr-2 ml-2" (click)="ref.close(data)"
+            *ngIf="!data.id">Guardar</button>
+          <button class="btn btn-success float-right mr-2 ml-2" (click)="ref.close(data)"
+            *ngIf="data.id">Actualizar</button>
+        </div>
+
+      </nb-card-footer>
+    </nb-card>
+  </ng-template>
+
+  <!-- Company details dialog -->
+
+  <ng-template #detailDialog let-data let-ref="dialogRef">
+    <nb-card>
+      <nb-card-header>
+        <div class="clearfix">
+          <p class="h8 float-left font-weight-bold">NUEVO {{data.tipo}}</p>
+        </div>
+
+      </nb-card-header>
+      <br>
+      <nb-card-body>
+        <div style="width: 30vw; ">
+
+          <div class="row">
+            <div class="col-md-3">
+              <label for="Resumen" class="font-weight-bold">Resumen :</label>
+            </div>
+            <div class="col-md-9">
+              <div class="form-group">
+                <input type="text" [(ngModel)]="data.resumen" class="form-control" fullWidth id="Resumen"
+                  placeholder="Descripcion corta">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3">
+              <label for="Detalle" class="font-weight-bold">Detalle :</label>
+            </div>
+            <div class="col-md-9">
+              <div class="form-group">
+                <textarea class="form-control" fullWidth id="inputdetails" rows="3" [(ngModel)]="data.detalle"
+                  placeholder="Expliación detallada"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <div class="clearfix">
+          <button class="btn btn-warning float-right mr-2 ml-2" (click)="ref.close(undefined)">Salir</button>
+
+          <button class="btn btn-success float-right mr-2 ml-2" (click)="ref.close(data)"
+            *ngIf="!data.id">Guardar</button>
+          <button class="btn btn-success float-right mr-2 ml-2" (click)="ref.close(data)"
+            *ngIf="data.id">Actualizar</button>
+        </div>
+
+      </nb-card-footer>
+    </nb-card>
   </ng-template>
