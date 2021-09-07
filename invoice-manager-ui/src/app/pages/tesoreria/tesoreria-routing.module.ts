@@ -7,6 +7,8 @@ import { DevolutionsDetailsComponent } from '../commons/devolutions-details/devo
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
 import { CuentasBancariasComponent } from '../commons/cuentas-bancarias/cuentas-bancarias.component';
 import { CuentaBancariaComponent } from '../commons/cuenta-bancaria/cuenta-bancaria.component';
+import { EmpresasComponent } from '../commons/empresas/empresas.component';
+import { EmpresaComponent } from '../commons/empresa/empresa.component';
 
 
 
@@ -41,7 +43,13 @@ const routes: Routes = [{
     {
       path: 'cuenta-bancaria/:empresa/:cuenta',
       component: CuentaBancariaComponent,
-    }
+    }, {
+      path: 'empresas',
+      component: EmpresasComponent,
+    }, {
+      path: 'empresa/:rfc',
+      component: EmpresaComponent,
+    },
   ]
 }]; 
 

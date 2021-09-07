@@ -7,6 +7,8 @@ import { ClientesComponent } from '../commons/clientes/clientes.component';
 import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
 import { UserComponent } from './user/user.component';
+import { EmpresasComponent } from '../commons/empresas/empresas.component';
+import { EmpresaComponent } from '../commons/empresa/empresa.component';
 
 const routes: Routes = [{
   path: '',
@@ -27,6 +29,12 @@ const routes: Routes = [{
     }, {
       path: 'cliente/:rfc/:promotor',
       component: ClienteComponent,
+    }, {
+      path: 'empresas',
+      component: EmpresasComponent,
+    }, {
+      path: 'empresa/:rfc',
+      component: EmpresaComponent,
     }, {
       path: 'reportes',
       component: InvoiceReportsComponent,

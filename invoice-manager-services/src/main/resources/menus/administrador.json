@@ -7,6 +7,10 @@
 			"link": "/pages/administracion/usuarios"
 		},
 		{
+			"title": "Empresas",
+			"link": "/pages/administracion/empresas"
+		},
+		{
 			"title": "Clientes",
 			"link": "/pages/administracion/clientes"
 		},
