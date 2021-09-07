@@ -67,7 +67,7 @@ export class PreCfdiComponent implements OnInit {
     lineaEmisor: 'B', lineaReceptor: 'A', usoCfdi: '*', payType: '*',
     clientRfc: '*',clientName: '', companyRfc: '', giro: '*', empresa: '*'  };
 
-  public clientInfo: Contribuyente;
+  public clientInfo: Empresa;
   public companyInfo: Empresa;
 
   public loading: boolean = false;
@@ -216,12 +216,12 @@ export class PreCfdiComponent implements OnInit {
   }
 
   onReceptorSelected(companyId: string) {
-    this.clientInfo = this.receptoresCat.find(c => c.id === Number(companyId)).informacionFiscal;
+    this.clientInfo = this.receptoresCat.find(c => c.id === Number(companyId));
     this.factura.rfcRemitente = this.clientInfo.rfc;
     this.factura.razonSocialRemitente = this.clientInfo.razonSocial.toUpperCase();
     this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
     this.factura.cfdi.receptor.nombre = this.clientInfo.razonSocial.toUpperCase();
-    this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo);
+    this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateCompanyAddress(this.clientInfo);
   }
 
   onPayMethodSelected(clave: string) {
@@ -294,7 +294,7 @@ export class PreCfdiComponent implements OnInit {
       this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
       this.factura.cfdi.receptor.nombre = this.clientInfo.razonSocial;
       this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateCompanyAddress(this.companyInfo);
-      this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo);
+      this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateCompanyAddress(this.clientInfo);
 
       this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'B';
       this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'A';
@@ -529,13 +529,13 @@ onClientSelected(id: string) {
   const value = +id;
   if (!isNaN(value)) {
     const client = this.clientsCat.find(c => c.id === Number(value));
-    this.clientInfo = client.informacionFiscal;
+
     // mover esta logica a un servicio de construccion
-    this.factura.rfcRemitente = this.clientInfo.rfc;
-    this.factura.razonSocialRemitente = this.clientInfo.razonSocial.toUpperCase();
-    this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
-    this.factura.cfdi.receptor.nombre = this.clientInfo.razonSocial.toUpperCase();
-    this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(this.clientInfo);
+    this.factura.rfcRemitente = client.informacionFiscal.rfc;
+    this.factura.razonSocialRemitente = client.informacionFiscal.razonSocial.toUpperCase();
+    this.factura.cfdi.receptor.rfc = client.informacionFiscal.rfc;
+    this.factura.cfdi.receptor.nombre = client.informacionFiscal.razonSocial.toUpperCase();
+    this.factura.cfdi.receptor.direccion = this.cfdiValidator.generateAddress(client.informacionFiscal);
     if (!client.activo) {
       this.errorMessages.push(`El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema.`);
       this.errorMessages.push('Notifique al departamento de operaciones,puede proceder a solicitar el pre-CFDI');

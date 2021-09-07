@@ -35,6 +35,7 @@ export class EmpresaComponent implements OnInit {
   public colonias = [];
   public paises = ['México'];
   public module: string = 'operaciones';
+  public isAdministrator : boolean = false;
 
   public years: string[] = [];
   public girosCat: Catalogo[] = [];
@@ -74,7 +75,10 @@ export class EmpresaComponent implements OnInit {
     this.companyInfo.pais = 'México';
 
     this.calculateYears();
-    this.userService.getUserInfo().then(user => this.user = user, (error) => {
+    this.userService.getUserInfo().then(user => {
+      this.user = user;
+      this.isAdministrator = user.roles.find(u=>u.role == 'ADMINISTRADOR')!= undefined;
+    }, (error) => {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.showToast('danger', 'Error', msg, true);
     });

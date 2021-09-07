@@ -1,0 +1,14 @@
+{
+	"title": "Legal",
+	"icon": "layout-outline",
+	"children": [
+		{
+			"title": "Empresas",
+			"link": "/pages/operaciones/empresas"
+		},
+		{
+			"title": "Cuentas Bancarias",
+			"link": "/pages/operaciones/cuentas-bancarias"
+		}
+	]
+}

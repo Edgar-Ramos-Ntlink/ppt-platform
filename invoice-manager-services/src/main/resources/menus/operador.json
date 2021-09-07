@@ -41,7 +41,7 @@
 		},
 		{
 			"title": "Cuentas Bancarias",
-			"link": "/pages/tesoreria/cuentas-bancarias"
+			"link": "/pages/operaciones/cuentas-bancarias"
 		}
 	]
 }
