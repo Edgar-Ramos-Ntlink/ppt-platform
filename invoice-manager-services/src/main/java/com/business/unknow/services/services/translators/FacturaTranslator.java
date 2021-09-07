@@ -190,7 +190,9 @@ public class FacturaTranslator {
 
     String llavePrivada =
         s3service.getS3File(
-            S3BucketsEnum.EMPRESAS, TipoArchivoEnum.KEY.name(), context.getEmpresaDto().getRfc());
+            S3BucketsEnum.EMPRESAS,
+            TipoArchivoEnum.KEY.getFormat(),
+            context.getEmpresaDto().getRfc());
 
     String sello =
         signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getFiel(), llavePrivada);
@@ -212,7 +214,9 @@ public class FacturaTranslator {
     String cadenaOriginal = signHelper.getCadena(xml);
     String llavePrivada =
         s3service.getS3File(
-            S3BucketsEnum.EMPRESAS, TipoArchivoEnum.KEY.name(), context.getEmpresaDto().getRfc());
+            S3BucketsEnum.EMPRESAS,
+            TipoArchivoEnum.KEY.getFormat(),
+            context.getEmpresaDto().getRfc());
     String sello =
         signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getFiel(), llavePrivada);
     context.setXml(cdfiHelper.putsSign(xml, sello).replace("standalone=\"no\"", ""));

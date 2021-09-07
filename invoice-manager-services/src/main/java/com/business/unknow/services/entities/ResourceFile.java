@@ -37,6 +37,10 @@ public class ResourceFile implements Serializable {
   private String tipoRecurso;
 
   @NotEmpty
+  @Column(name = "EXTENSION")
+  private String extension;
+
+  @NotEmpty
   @Column(name = "FORMATO")
   private String formato;
 

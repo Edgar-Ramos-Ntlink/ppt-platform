@@ -213,6 +213,7 @@ export class EmpresaComponent implements OnInit {
           this.logo.tipoRecurso = 'EMPRESAS';
           this.logo.referencia = this.companyInfo.rfc;
           this.logo.tipoArchivo = 'LOGO';
+          this.logo.extension= filename.substring(filename.indexOf('.'),filename.length);
           this.resourcesService.insertResourceFile(this.logo)
             .subscribe(() => this.showToast('info', 'Exito!', 'El logo se cargo correctamente'),
               (error) => {
@@ -258,6 +259,7 @@ export class EmpresaComponent implements OnInit {
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.formInfo.fileDataName = file.name;
+        this.formInfo.extension= file.name.substring(file.name.indexOf('.'),file.name.length);
         this.dataFile.data = reader.result.toString();
       };
       reader.onerror = (error) => { this.showToast('danger', 'Error', 'Error cargando el archivo', true); };

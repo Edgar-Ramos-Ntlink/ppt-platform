@@ -117,7 +117,7 @@ export class PagoFacturaComponent implements OnInit {
   }
 
   sendPayment() {
-
+    const filename=this.paymentForm.filename;
     this.newPayment.solicitante = this.user.email;
     const payment  = {... this.newPayment};
     payment.facturas[0].folio = this.factura.folio;
@@ -134,6 +134,7 @@ export class PagoFacturaComponent implements OnInit {
           resourceFile.tipoRecurso = 'PAGOS';
           resourceFile.referencia  = `${result.id}`;
           resourceFile.data = payment.documento;
+          resourceFile.extension=filename.substring(filename.indexOf('.'),filename.length);
           this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));
           this.paymentsService.getPaymentsByFolio(this.factura.folio)
           .subscribe((payments: PagoBase[]) => {
