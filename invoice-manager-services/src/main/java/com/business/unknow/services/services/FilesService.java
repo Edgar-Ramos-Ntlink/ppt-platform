@@ -135,7 +135,7 @@ public class FilesService {
       ResourceFile file = resourceFile.get();
       s3FileService.deleteS3File(
           S3BucketsEnum.findByValor(file.getTipoRecurso()),
-          file.getFormato(),
+          file.getExtension(),
           file.getReferencia());
       resourceFileRepository.delete(file);
     }
