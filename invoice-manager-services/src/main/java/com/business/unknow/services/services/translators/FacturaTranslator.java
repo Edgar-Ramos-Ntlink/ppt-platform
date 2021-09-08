@@ -123,6 +123,9 @@ public class FacturaTranslator {
       Cfdi cfdi =
           facturaCfdiTranslatorMapper.complementoRootInfo(
               context.getFacturaDto().getCfdi(), context.getEmpresaDto());
+      cfdi.setCertificado(
+              s3service.getS3File(
+                      S3BucketsEnum.EMPRESAS, TipoArchivoEnum.CERT.getFormat(), cfdi.getEmisor().getRfc()));
       for (ConceptoDto concepto : context.getFacturaDto().getCfdi().getConceptos()) {
         cfdi.getConceptos().add(facturaCfdiTranslatorMapper.complementoConcepto(concepto));
       }
