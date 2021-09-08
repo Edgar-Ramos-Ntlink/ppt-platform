@@ -10,5 +10,7 @@ public interface ResourceFileMapper {
 
   ResourceFile getEntityFromDto(ResourceFileDto dto);
 
+  ResourceFileDto getDtoFromEntity(ResourceFile entity);
+
   List<ResourceFileDto> getDtosFromEntities(List<ResourceFile> entities);
 }

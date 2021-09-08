@@ -53,20 +53,23 @@ public class FilesService {
       S3BucketsEnum resource, String reference, String type, String format)
       throws InvoiceManagerException {
     try {
+      ResourceFileDto resourceFileDto = null;
       Optional<ResourceFile> entity =
           resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(
               resource.name(), reference, type);
-      ResourceFileDto resourceFileDto = new ResourceFileDto();
-      resourceFileDto.setReferencia(reference);
-      resourceFileDto.setTipoArchivo(resource.name());
       if (entity.isPresent()) {
-        resourceFileDto.setFormato(entity.get().getFormato());
+        resourceFileDto = resourceFileMapper.getDtoFromEntity(entity.get());
       } else {
-        resourceFileDto.setFormato(format);
+        throw new InvoiceManagerException(
+            String.format(
+                "Error obteniendo el recurso %s de la referencia %s del tipo %s ",
+                resource, reference, type),
+            HttpStatus.CONFLICT.value());
       }
-      String data = s3FileService.getS3File(resource, resourceFileDto.getFormato(), reference);
+      String data =
+          s3FileService.getS3File(
+              resource, resourceFileDto.getExtension(), resourceFileDto.getReferencia());
       resourceFileDto.setData(data);
-      resourceFileDto.setTipoArchivo(type);
       if (type.equals(TipoArchivoEnum.IMAGEN.name())) {
         String dataRecalculated =
             String.format(
@@ -97,8 +100,7 @@ public class FilesService {
             resourceFile.getTipoRecurso(),
             resourceFile.getReferencia(),
             resourceFile.getTipoArchivo());
-    if (file.isPresent()) { // prevents duplicated elements on RESOURCE_FILES table using same file
-      // type, resource type and reference
+    if (file.isPresent()) {
       resourceFileRepository.delete(file.get());
     }
     if (resourceFile.getData().indexOf(",") < resourceFile.getData().length()) {
@@ -109,7 +111,7 @@ public class FilesService {
       baos.write(decodedBytes, 0, decodedBytes.length);
       s3FileService.upsertS3File(
           S3BucketsEnum.findByValor(resourceFile.getTipoRecurso()),
-          resourceFile.getFormato(),
+          resourceFile.getExtension(),
           resourceFile.getReferencia(),
           baos);
       resourceFileRepository.save(resourceFileMapper.getEntityFromDto(resourceFile));

@@ -149,6 +149,7 @@ export class MulticomplementosComponent implements OnInit {
   }
 
   sendPayment() {
+    const filename=this.paymentForm.filename;
     this.successMesagge = '';
     this.payErrorMessages = [];
     const payment  = {... this.newPayment};
@@ -169,6 +170,7 @@ export class MulticomplementosComponent implements OnInit {
           const resourceFile = new ResourceFile();
           resourceFile.tipoArchivo = 'IMAGEN';
           resourceFile.tipoRecurso = 'PAGOS';
+          resourceFile.extension = filename.substring(filename.indexOf('.'),filename.length);
           resourceFile.referencia  = `${result.id}`;
           resourceFile.data = payment.documento;
           this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));

@@ -90,6 +90,8 @@ let PagosComponent = class PagosComponent {
         }, (error) => this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
     }
     sendPayment() {
+        
+        const filename=this.paymentForm.filename;
         this.newPayment.folioPadre = this.factura.folio;
         this.newPayment.folio = this.factura.folio;
         this.newPayment.tipoPago = 'INGRESO';
@@ -105,6 +107,7 @@ let PagosComponent = class PagosComponent {
                 const resourceFile = new ResourceFile();
                 resourceFile.tipoArchivo = 'IMAGEN';
                 resourceFile.tipoRecurso = 'PAGOS';
+                resourceFile.extension = filename.substring(filename.indexOf('.'),filename.length);
                 resourceFile.referencia = `${result.id}_${result.folio}`;
                 resourceFile.data = payment.documento;
                 this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));
