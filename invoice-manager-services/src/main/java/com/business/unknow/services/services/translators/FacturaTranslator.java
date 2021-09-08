@@ -61,6 +61,10 @@ public class FacturaTranslator {
       Cfdi cfdi =
           facturaCfdiTranslatorMapper.cdfiRootInfo(
               context.getFacturaDto(), context.getEmpresaDto());
+
+      cfdi.setCertificado(
+          s3service.getS3File(
+              S3BucketsEnum.EMPRESAS, TipoArchivoEnum.CERT.getFormat(), cfdi.getEmisor().getRfc()));
       BigDecimal totalImpuestos = new BigDecimal(0);
       BigDecimal totalRetenciones = new BigDecimal(0);
       List<Translado> impuestos = new ArrayList<>();

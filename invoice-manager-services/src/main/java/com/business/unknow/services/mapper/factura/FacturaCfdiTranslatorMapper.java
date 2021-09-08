@@ -39,8 +39,6 @@ public interface FacturaCfdiTranslatorMapper {
     @Mapping(source = "facturaDto.cfdi.descuento", target = "descuento"),
     @Mapping(source = "facturaDto.cfdi.moneda", target = "moneda"),
     @Mapping(source = "facturaDto.cfdi.tipoDeComprobante", target = "tipoDeComprobante"),
-    // TODO Review colateral efects
-    // @Mapping(source = "empresaDto.certificado", target = "certificado"),
     @Mapping(source = "empresaDto.noCertificado", target = "noCertificado"),
     @Mapping(source = "facturaDto.cfdi.sello", target = "sello"),
     @Mapping(source = "empresaDto.cp", target = "lugarExpedicion")
