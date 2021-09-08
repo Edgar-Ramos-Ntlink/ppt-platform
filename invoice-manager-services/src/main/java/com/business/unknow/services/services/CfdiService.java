@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.services.services;
 
 import com.business.unknow.model.dto.cfdi.CfdiDto;
@@ -478,7 +477,7 @@ public class CfdiService {
                             BigDecimal.ZERO,
                             (i1, i2) -> i1.add(i2))) // suma importe retencioness por concepto
             .reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2))
-            .setScale(2, BigDecimal.ROUND_HALF_UP);
+            .setScale(2, RoundingMode.HALF_UP);
     BigDecimal impuestos =
         cfdi.getConceptos().stream()
             .map(
@@ -489,7 +488,7 @@ public class CfdiService {
                             BigDecimal.ZERO,
                             (i1, i2) -> i1.add(i2))) // suma importe impuestos por concepto
             .reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2))
-            .setScale(2, BigDecimal.ROUND_HALF_UP);
+            .setScale(2, RoundingMode.HALF_UP);
 
     BigDecimal total = subtotal.add(impuestos).subtract(retenciones);
     log.info(
@@ -500,10 +499,9 @@ public class CfdiService {
 
     cfdi.setImpuestosTrasladados(impuestos);
     cfdi.setImpuestosRetenidos(retenciones);
-    cfdi.setSubtotal(subtotal.setScale(2, BigDecimal.ROUND_HALF_UP));
-    cfdi.setTotal(total.setScale(2, BigDecimal.ROUND_HALF_UP));
-    cfdi.setDescuento(BigDecimal.ZERO); // los descuentos no estan soportados
-
+    cfdi.setSubtotal(subtotal.setScale(2, RoundingMode.HALF_UP));
+    cfdi.setTotal(total.setScale(2, RoundingMode.HALF_UP));
+    cfdi.setDescuento(BigDecimal.ZERO);
     return cfdi;
   }
 

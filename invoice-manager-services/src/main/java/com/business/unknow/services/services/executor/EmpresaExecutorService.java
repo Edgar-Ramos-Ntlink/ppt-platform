@@ -24,7 +24,6 @@ public class EmpresaExecutorService {
   @Autowired private FilesService filesService;
 
   public EmpresaDto createEmpresa(EmpresaDto empresaDto) {
-
     Empresa empresa = empresaMapper.getEntityFromEmpresaDto(empresaDto);
     return empresaMapper.getEmpresaDtoFromEntity(empresaRepository.save(empresa));
   }

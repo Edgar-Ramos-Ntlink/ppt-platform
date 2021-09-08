@@ -29,6 +29,7 @@ import com.business.unknow.services.util.helpers.DateHelper;
 import com.business.unknow.services.util.helpers.FacturaHelper;
 import com.business.unknow.services.util.helpers.SignHelper;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -94,14 +95,14 @@ public class FacturaTranslator {
 
       if (!totalImpuestos.equals(BigDecimal.ZERO)) {
         cfdi.getImpuestos()
-            .setTotalImpuestosTrasladados(totalImpuestos.setScale(2, BigDecimal.ROUND_HALF_UP));
+            .setTotalImpuestosTrasladados(totalImpuestos.setScale(2, RoundingMode.HALF_UP));
       } else {
         cfdi.getImpuestos().setTotalImpuestosTrasladados(null);
       }
 
       if (!totalRetenciones.equals(BigDecimal.ZERO)) {
         cfdi.getImpuestos()
-            .setTotalImpuestosRetenidos(totalRetenciones.setScale(2, BigDecimal.ROUND_HALF_UP));
+            .setTotalImpuestosRetenidos(totalRetenciones.setScale(2, RoundingMode.HALF_UP));
       } else {
         cfdi.getImpuestos().setTotalImpuestosRetenidos(null);
       }
@@ -163,7 +164,7 @@ public class FacturaTranslator {
                 cfdiPago
                     .getImportePagado()
                     .multiply(cfdiPago.getTipoCambioDr())
-                    .setScale(2, BigDecimal.ROUND_DOWN));
+                    .setScale(2, RoundingMode.DOWN));
       }
       complementoPago.setMonto(montoTotal.toString());
       cfdi.setComplemento(complemento);

@@ -21,7 +21,7 @@ import com.business.unknow.services.util.helpers.FacturaHelper;
 import com.business.unknow.services.util.helpers.FileHelper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -78,7 +78,7 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
       outputStream.write(
           Base64.getDecoder()
               .decode(
-                  fileHelper.stringEncodeBase64(qr.getData()).getBytes(Charset.forName("UTF-8"))));
+                  fileHelper.stringEncodeBase64(qr.getData()).getBytes(StandardCharsets.UTF_8)));
       qr.setOutputStream(outputStream);
       FacturaFileDto xml = new FacturaFileDto();
       xml.setFolio(context.getFacturaDto().getFolio());
@@ -89,14 +89,14 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
       outputStream.write(
           Base64.getDecoder()
               .decode(
-                  fileHelper.stringEncodeBase64(xml.getData()).getBytes(Charset.forName("UTF-8"))));
+                  fileHelper.stringEncodeBase64(xml.getData()).getBytes(StandardCharsets.UTF_8)));
       xml.setOutputStream(outputStreamXml);
       files.add(qr);
       files.add(xml);
       context.setFacturaFilesDto(files);
     } catch (IOException i) {
       throw new InvoiceManagerException(
-          String.format("Error exporting s3 file", i.getMessage(), i.getMessage()),
+          String.format("Error exporting s3 file %s %s", i.getMessage(), i.getMessage()),
           i.getMessage(),
           HttpStatus.SC_CONFLICT);
     } catch (SwSapiensClientException e) {

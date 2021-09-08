@@ -40,7 +40,7 @@ public class UserService {
 
   private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-  private ObjectMapper objMapper = new ObjectMapper();
+  private final ObjectMapper objMapper = new ObjectMapper();
 
   public Page<UserDto> getAllUsersByParams(
       String status, String email, String alias, int page, int size) {

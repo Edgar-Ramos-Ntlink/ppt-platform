@@ -4,7 +4,6 @@ import com.business.unknow.enums.S3BucketsEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
-import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.FilesService;
 import com.business.unknow.services.util.helpers.StringHelper;
@@ -43,8 +42,7 @@ public class FilesController {
   @GetMapping("/recursos/{recurso}/referencias/{referencia}/files")
   public ResponseEntity<List<ResourceFileDto>> getResourcesByResourceType(
       @PathVariable(name = "recurso") String recurso,
-      @PathVariable(name = "referencia") String referencia)
-      throws InvoiceManagerException {
+      @PathVariable(name = "referencia") String referencia) {
     return new ResponseEntity<>(
         service.findResourcesByResourceType(S3BucketsEnum.valueOf(recurso), referencia),
         HttpStatus.OK);
@@ -84,7 +82,7 @@ public class FilesController {
 
   @PostMapping("/recursos/{recurso}/files")
   public ResponseEntity<Void> insertResourceFile(@RequestBody @Valid ResourceFileDto resourceFile)
-      throws InvoiceManagerException, InvoiceCommonException {
+      throws InvoiceManagerException {
     service.upsertResourceFile(resourceFile);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
