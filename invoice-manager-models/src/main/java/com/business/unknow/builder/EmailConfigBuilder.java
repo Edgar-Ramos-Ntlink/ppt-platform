@@ -52,7 +52,7 @@ public class EmailConfigBuilder extends AbstractBuilder<EmailConfig> {
   }
 
   public EmailConfigBuilder addReceptors(String receptors) {
-    for(String receptor:receptors.split(",")){
+    for (String receptor : receptors.split(",")) {
       addReceptor(receptor);
     }
     return this;

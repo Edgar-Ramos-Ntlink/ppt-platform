@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FilesData } from '../data/files-data';
 import { InvoicesData } from '../data/invoices-data';
 
 @Injectable({
@@ -7,14 +8,8 @@ import { InvoicesData } from '../data/invoices-data';
 export class DonwloadFileService {
 
 
-  constructor(private invoiceService: InvoicesData) { }
+  constructor(private resourcesService: FilesData) { }
 
-  public exportFiles(folio: string, filename: string) {
-    this.invoiceService.getInvoiceFiles(folio).subscribe(files => {
-      this.downloadFile(files.xml, `${filename}.xml`, 'text/xml;charset=utf8;');
-      this.downloadFile(files.pdf, `${filename}.pdf`, 'application/pdf;')
-    });
-  }
 
 
   public downloadFile(data: any, filename: string, fileType: string) {

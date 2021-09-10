@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TimbradoBuilderService extends AbstractBuilderService {
+public class TimbradoBuilderService {
 
   @Autowired private EmpresaRepository empresaRepository;
 
@@ -41,7 +41,6 @@ public class TimbradoBuilderService extends AbstractBuilderService {
                             String.format(
                                 "La empresa con el rfc no existe %s", facturaDto.getRfcEmisor()),
                             HttpStatus.SC_NOT_FOUND)));
-    getEmpresaFiles(empresaDto, facturaDto);
     return new FacturaContextBuilder()
         .setFacturaDto(factura)
         .setEmpresaDto(empresaDto)
@@ -65,7 +64,6 @@ public class TimbradoBuilderService extends AbstractBuilderService {
                                 "La empresa con el rfc no existe",
                                 currentFacturaDto.getRfcEmisor()),
                             HttpStatus.SC_NOT_FOUND)));
-    getEmpresaFiles(empresaDto, currentFacturaDto);
     List<PagoDto> pagosFactura = null;
     if (TipoDocumentoEnum.FACTURA.getDescripcion().equals(facturaDto.getTipoDocumento())) {
       pagosFactura = pagosService.findPagosByFolio(folio);

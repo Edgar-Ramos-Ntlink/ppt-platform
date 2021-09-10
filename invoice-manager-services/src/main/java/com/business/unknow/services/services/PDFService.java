@@ -76,20 +76,14 @@ public class PDFService {
     try {
       logo =
           filesService.getResourceFileByResourceReferenceAndType(
-              S3BucketsEnum.EMPRESAS,
-              TipoArchivoEnum.LOGO.name(),
-              facturaDto.getRfcEmisor(),
-              TipoArchivoEnum.LOGO.getFormat());
+              S3BucketsEnum.EMPRESAS, TipoArchivoEnum.LOGO.name(), facturaDto.getRfcEmisor());
     } catch (InvoiceManagerException e) {
       log.info(String.format("%s file for logo not found", facturaDto.getFolio()));
     }
     try {
       logo =
           filesService.getResourceFileByResourceReferenceAndType(
-              S3BucketsEnum.EMPRESAS,
-              TipoArchivoEnum.LOGO.name(),
-              facturaDto.getRfcEmisor(),
-              TipoArchivoEnum.LOGO.getFormat());
+              S3BucketsEnum.EMPRESAS, TipoArchivoEnum.LOGO.name(), facturaDto.getRfcEmisor());
     } catch (InvoiceManagerException e) {
       log.info(String.format("%s file for Qr not found", facturaDto.getFolio()));
     }
@@ -161,10 +155,7 @@ public class PDFService {
     try {
       logo =
           filesService.getResourceFileByResourceReferenceAndType(
-              S3BucketsEnum.EMPRESAS,
-              TipoArchivoEnum.LOGO.name(),
-              facturaDto.getRfcEmisor(),
-              TipoArchivoEnum.LOGO.getFormat());
+              S3BucketsEnum.EMPRESAS, TipoArchivoEnum.LOGO.name(), facturaDto.getRfcEmisor());
     } catch (InvoiceManagerException e) {
       log.info(String.format("%s file for Qr not found", facturaDto.getFolio()));
     }

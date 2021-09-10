@@ -56,10 +56,7 @@ public class FilesController {
       throws InvoiceManagerException {
     return new ResponseEntity<>(
         service.getResourceFileByResourceReferenceAndType(
-            S3BucketsEnum.findByValor(recurso),
-            referencia,
-            fileType,
-            TipoArchivoEnum.valueOf(fileType).getFormat()),
+            S3BucketsEnum.findByValor(recurso), referencia, fileType),
         HttpStatus.OK);
   }
 

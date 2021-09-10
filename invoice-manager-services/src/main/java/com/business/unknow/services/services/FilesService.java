@@ -50,8 +50,7 @@ public class FilesService {
   }
 
   public ResourceFileDto getResourceFileByResourceReferenceAndType(
-      S3BucketsEnum resource, String reference, String type, String format)
-      throws InvoiceManagerException {
+      S3BucketsEnum resource, String reference, String type) throws InvoiceManagerException {
     try {
       ResourceFileDto resourceFileDto = null;
       Optional<ResourceFile> entity =

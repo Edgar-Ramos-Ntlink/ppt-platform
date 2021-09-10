@@ -22,6 +22,10 @@ export class FilesService {
     return this.httpClient.get(`../api/recursos/${tipoRecurso}/referencias/${referencia}/files`);
   }
 
+  public getResourceFileFromUrl(path:string):Observable<any>{
+    return this.httpClient.get(`../api/${path}`);
+  }
+
   public insertFacturaFile(file:ResourceFile):Observable<any>{
     return this.httpClient.post(`../api/facturas/${file.folio}/files`,file);
   }
