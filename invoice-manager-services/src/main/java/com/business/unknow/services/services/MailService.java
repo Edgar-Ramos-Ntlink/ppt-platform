@@ -1,4 +1,4 @@
-package com.business.unknow.services.util.helpers;
+package com.business.unknow.services.services;
 
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.config.EmailConfig;
@@ -19,10 +19,12 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
 import javax.mail.util.ByteArrayDataSource;
+import org.springframework.stereotype.Service;
 
-public class MailHelper {
+@Service
+public class MailService {
 
-  public void enviarCorreo(EmailConfig emailConfig) throws InvoiceCommonException {
+  public void sendEmail(EmailConfig emailConfig) throws InvoiceCommonException {
 
     Properties props = System.getProperties();
     props.put("mail.smtp.host", emailConfig.getDominio());

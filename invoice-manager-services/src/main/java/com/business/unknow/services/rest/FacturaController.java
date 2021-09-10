@@ -115,7 +115,7 @@ public class FacturaController {
   public ResponseEntity<FacturaContext> renviarCorreos(
       @PathVariable String folio, @RequestBody @Valid FacturaDto facturaDto)
       throws InvoiceManagerException {
-    return new ResponseEntity<>(service.renviarCorreo(folio, facturaDto), HttpStatus.OK);
+    return new ResponseEntity<>(service.resendEmail(folio, facturaDto), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/complementos")

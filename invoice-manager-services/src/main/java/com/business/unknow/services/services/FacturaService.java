@@ -660,17 +660,17 @@ public class FacturaService {
       devolucionService.generarDevoluciones(facturaContext.getFacturaDto());
     }
     final FacturaContext fc = facturaContext;
-    CompletableFuture.supplyAsync(() -> enviarCorreo(fc));
+    CompletableFuture.supplyAsync(() -> sendEmail(fc));
     return facturaContext;
   }
 
-  private Boolean enviarCorreo(FacturaContext fc) {
+  private Boolean sendEmail(FacturaContext fc) {
     try {
       if (fc.getFacturaDto().getLineaRemitente().equals("CLIENTE")) {
         try {
-          timbradoExecutorService.sentEmail(fc, TipoEmail.SEMEL_JACK);
+          timbradoExecutorService.sendEmail(fc, TipoEmail.SEMEL_JACK);
         } catch (InvoiceManagerException e) {
-          timbradoExecutorService.sentEmail(fc, TipoEmail.GMAIL);
+          timbradoExecutorService.sendEmail(fc, TipoEmail.GMAIL);
         }
       }
       return true;
@@ -783,11 +783,11 @@ public class FacturaService {
     pdfService.generateInvoicePDF(factura, null);
   }
 
-  public FacturaContext renviarCorreo(String folio, FacturaDto facturaDto)
+  public FacturaContext resendEmail(String folio, FacturaDto facturaDto)
       throws InvoiceManagerException {
     FacturaContext facturaContext =
         facturaBuilderService.buildEmailContext(folio, getFacturaByFolio(folio));
-    timbradoExecutorService.sentEmail(facturaContext, TipoEmail.GMAIL);
+    timbradoExecutorService.sendEmail(facturaContext, TipoEmail.GMAIL);
     return facturaContext;
   }
 
