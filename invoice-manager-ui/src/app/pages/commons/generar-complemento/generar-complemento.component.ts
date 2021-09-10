@@ -6,7 +6,6 @@ import { Catalogo } from '../../../models/catalogos/catalogo';
 import { PagoBase } from '../../../models/pago-base';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { HttpErrorResponse } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-generar-complemento',

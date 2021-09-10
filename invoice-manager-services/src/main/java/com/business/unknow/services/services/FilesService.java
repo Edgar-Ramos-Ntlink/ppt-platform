@@ -70,13 +70,6 @@ public class FilesService {
           s3FileService.getS3File(
               resource, resourceFileDto.getExtension(), resourceFileDto.getReferencia());
       resourceFileDto.setData(data);
-      if (type.equals(TipoArchivoEnum.IMAGEN.name())) {
-        String dataRecalculated =
-            String.format(
-                "data:image/%s;base64,%s",
-                resourceFileDto.getFormato().replace(".", ""), resourceFileDto.getData());
-        resourceFileDto.setData(dataRecalculated);
-      }
       return resourceFileDto;
     } catch (Exception e) {
       throw new InvoiceManagerException(

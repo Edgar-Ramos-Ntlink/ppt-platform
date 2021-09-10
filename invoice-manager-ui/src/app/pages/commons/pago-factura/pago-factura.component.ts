@@ -8,7 +8,6 @@ import { PaymentsData } from '../../../@core/data/payments-data';
 import { CuentasData } from '../../../@core/data/cuentas-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { PagosValidatorService } from '../../../@core/util-services/pagos-validator.service';
-import { InvoicesData } from '../../../@core/data/invoices-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ResourceFile } from '../../../models/resource-file';
 import { PagoFactura } from '../../../models/pago-factura';
@@ -38,8 +37,7 @@ export class PagoFacturaComponent implements OnInit {
   constructor(private paymentsService: PaymentsData,
     private accountsService: CuentasData,
     private fileService: FilesData,
-    private paymentValidator: PagosValidatorService,
-    private invoiceService: InvoicesData) {
+    private paymentValidator: PagosValidatorService) {
       this.factura = new Factura();
       this.newPayment.moneda = 'MXN';
       this.newPayment.facturas = [new PagoFactura()];
@@ -94,7 +92,6 @@ export class PagoFacturaComponent implements OnInit {
         reader.readAsDataURL(file);
         reader.onload = () => {
           this.paymentForm.filename = file.name;
-          this.newPayment.documento = reader.result.toString();
         };
         reader.onerror = (error) => { this.payErrorMessages.push('Error parsing image file'); };
       }

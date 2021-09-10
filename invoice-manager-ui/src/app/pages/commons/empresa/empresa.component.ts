@@ -17,7 +17,6 @@ import { ResourceFile } from '../../../models/resource-file';
 import { DetalleEmpresa } from '../../../models/detalle-empresa';
 import { User } from '../../../models/user';
 import { DatoAnualEmpresa } from '../../../models/dato-anual-empresa';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'ngx-empresa',
@@ -56,7 +55,6 @@ export class EmpresaComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    public datepipe: DatePipe,
     private toastrService: NbToastrService,
     private catalogsService: CatalogsData,
     private empresaService: CompaniesData,
