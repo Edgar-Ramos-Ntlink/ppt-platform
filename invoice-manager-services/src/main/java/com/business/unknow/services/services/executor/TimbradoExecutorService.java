@@ -18,8 +18,8 @@ import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.services.FilesService;
+import com.business.unknow.services.services.MailService;
 import com.business.unknow.services.services.S3FileService;
-import com.business.unknow.services.util.helpers.MailHelper;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
@@ -41,7 +41,7 @@ public class TimbradoExecutorService {
 
   @Autowired private CfdiMapper cfdiMapper;
 
-  @Autowired private MailHelper mailHelper;
+  @Autowired private MailService mailService;
 
   @Autowired private FilesService filesService;
 
@@ -62,7 +62,7 @@ public class TimbradoExecutorService {
     }
   }
 
-  public void sentEmail(FacturaContext context, TipoEmail tipoEmail)
+  public void sendEmail(FacturaContext context, TipoEmail tipoEmail)
       throws InvoiceManagerException {
     if (context.getFacturaDto().getLineaEmisor().equals(LineaEmpresaEnum.A.name())) {
       Client client =
@@ -129,7 +129,7 @@ public class TimbradoExecutorService {
                       pdf.getData()))
               .setCuerpo("Su factura timbrada es:");
       try {
-        mailHelper.enviarCorreo(emailBuilder.build());
+        mailService.sendEmail(emailBuilder.build());
       } catch (InvoiceCommonException e) {
         e.printStackTrace();
         throw new InvoiceManagerException(

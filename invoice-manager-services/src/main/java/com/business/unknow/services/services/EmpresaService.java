@@ -30,6 +30,8 @@ public class EmpresaService {
 
   @Autowired private EmpresaExecutorService empresaEvaluatorService;
 
+  @Autowired private NotificationHandlerService notificationHandlerService;
+
   @Autowired
   @Qualifier("EmpresaValidator")
   private EmpresaValidator empresaValidator;
@@ -87,6 +89,8 @@ public class EmpresaService {
           String.format("La empresa %s ya existe", empresaDto.getRfc()),
           HttpStatus.CONFLICT.value());
     }
+    notificationHandlerService.sendNotification(
+        "NUEVA_EMPRESA", String.format("Se creo la empresa %s", empresaDto.getRazonSocial()));
     return empresaEvaluatorService.createEmpresa(empresaDto);
   }
 
@@ -103,6 +107,13 @@ public class EmpresaService {
                         HttpStatus.NOT_FOUND,
                         String.format("El empresa con el rfc %s no existe", rfc)));
 
+    if(empresa.getActivo()&&!empresaDto.getActivo()){
+      notificationHandlerService.sendNotification(
+              "DESACTIVACION_EMPRESA", String.format("Se desactivo la empresa %s", empresaDto.getRazonSocial()));
+    }else  if(!empresa.getActivo()&&empresaDto.getActivo()){
+      notificationHandlerService.sendNotification(
+              "ACTIVACION_EMPRESA", String.format("Se activo la empresa %s", empresaDto.getRazonSocial()));
+    }
     Empresa companyToSave = mapper.getEntityFromEmpresaDto(empresaDto);
     companyToSave.setId(empresa.getId());
 

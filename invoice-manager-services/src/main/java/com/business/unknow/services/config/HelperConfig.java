@@ -49,11 +49,6 @@ public class HelperConfig {
   }
 
   @Bean
-  public MailHelper getMailHelper() {
-    return new MailHelper();
-  }
-
-  @Bean
   public NumberTranslatorHelper getNumberTranslatorHelper() {
     return new NumberTranslatorHelper();
   }
