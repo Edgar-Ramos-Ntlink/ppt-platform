@@ -23,7 +23,7 @@ export class FilesService {
   }
 
   public getResourceFileFromUrl(path:string):Observable<any>{
-    return this.httpClient.get(`../api/${path}`);
+    return this.httpClient.get(`../api${path}`);
   }
 
   public insertFacturaFile(file:ResourceFile):Observable<any>{

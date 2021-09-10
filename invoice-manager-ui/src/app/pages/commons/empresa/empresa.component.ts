@@ -17,6 +17,7 @@ import { ResourceFile } from '../../../models/resource-file';
 import { DetalleEmpresa } from '../../../models/detalle-empresa';
 import { User } from '../../../models/user';
 import { DatoAnualEmpresa } from '../../../models/dato-anual-empresa';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 
 @Component({
   selector: 'ngx-empresa',
@@ -56,6 +57,7 @@ export class EmpresaComponent implements OnInit {
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private toastrService: NbToastrService,
+    private downloadService: DonwloadFileService,
     private catalogsService: CatalogsData,
     private empresaService: CompaniesData,
     private userService: UsersData,
@@ -367,8 +369,7 @@ export class EmpresaComponent implements OnInit {
           this.dataFile.referencia = `${this.companyInfo.rfc}-${result.tipoDato}-${result.anio}`;
           this.dataFile.tipoArchivo = `${result.tipoDato}`;
           await this.resourcesService.insertResourceFile(this.dataFile).toPromise();
-
-          result.link = `../api/recursos/EMPRESAS/referencias/${this.companyInfo.rfc}-${result.tipoDato}-${result.anio}/files/${result.tipoDato}`;
+          result.link = `/recursos/EMPRESAS/referencias/${this.companyInfo.rfc}-${result.tipoDato}-${result.anio}/files/${result.tipoDato}`;
         }
         await this.empresaService.insertCompanyAnualData(result).toPromise();
         this.showToast('info', 'Dato anual creado!', `El dato se cargo exitosamente`);
@@ -470,6 +471,15 @@ export class EmpresaComponent implements OnInit {
       this.showToast('danger', 'Error', msg, true);
     }
     this.loading = false;
+  }
+
+  public downloadDocumentData(dato : DatoAnualEmpresa){
+    this.downloadService.dowloadResourceFile(dato.link,`${dato.rfc}_${dato.tipoDato}_${dato.anio}`)
+  }
+
+  public downloadFile(file: ResourceFile){
+    const path: string =  `/recursos/${file.tipoRecurso}/referencias/${file.referencia}/files/${file.tipoArchivo}`;
+    this.downloadService.dowloadResourceFile(path,`${file.referencia}_${file.tipoArchivo}`);
   }
 
   private calculateYears() {

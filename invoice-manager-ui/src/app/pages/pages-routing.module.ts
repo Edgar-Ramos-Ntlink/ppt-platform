@@ -27,6 +27,11 @@ const routes: Routes = [{
         .then(m => m.OperacionesModule),
     },
     {
+      path: 'legal',
+      loadChildren: ()=> import('./legal/legal.module')
+        .then(m => m.LegalModule),
+    },
+    {
       path: 'contabilidad',
       loadChildren: () => import('./contabilidad/contabilidad.module')
         .then(m => m.ContabilidadModule),

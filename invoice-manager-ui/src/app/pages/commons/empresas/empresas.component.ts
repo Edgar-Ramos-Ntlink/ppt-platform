@@ -84,6 +84,10 @@ export class EmpresasComponent implements OnInit {
         this.router.navigate([`./pages/operaciones/empresas`],
           { queryParams: params });
         break;
+      case 'legal':
+        this.router.navigate([`./pages/legal/empresas`],
+          { queryParams: params });
+        break;
       case 'contabilidad':
         this.router.navigate([`./pages/contabilidad/empresas`],
           { queryParams: params });

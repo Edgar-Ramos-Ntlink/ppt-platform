@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ResourceFile } from '../../models/resource-file';
 import { FilesData } from '../data/files-data';
 import { InvoicesData } from '../data/invoices-data';
 
@@ -11,6 +12,10 @@ export class DonwloadFileService {
   constructor(private resourcesService: FilesData) { }
 
 
+  public async dowloadResourceFile(url: string,filename: string){
+    const file: ResourceFile = await this.resourcesService.getResourceFileFromUrl(url).toPromise();
+    this.downloadFile(file.data,`${filename}${file.extension}`,file.formato);
+  }
 
   public downloadFile(data: any, filename: string, fileType: string) {
     console.log(`Downloading ${filename} ...`)

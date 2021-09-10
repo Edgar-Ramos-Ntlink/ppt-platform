@@ -6,6 +6,8 @@
           (click)="inactivateCompany()">Desactivar</button>
         <button type="button" class="btn btn-outline-success float-right" *ngIf="!companyInfo.activo && companyInfo.id"
           (click)="activateCompany()">Activar</button>
+
+          {{ module}}
       </nb-card-header>
       <nb-card-body>
         <nb-tabset fullWidth>
@@ -485,7 +487,7 @@
                           <button class="btn d-inline mr-2 ml-2 btn-outline-danger"
                             (click)="deleteAnualData(fila.id)"><i class="fa fa-trash"></i></button>
                           <button class="btn d-inline mr-2 ml-2 btn-outline-primary"
-                            (click)="downloadDocumentData(fila.link)"><i class="fa fa-download"></i></button>
+                            (click)="downloadDocumentData(fila)"><i class="fa fa-download"></i></button>
                         </td>
                         <td scope="row">{{fila.tipoDato}}</td>
                         <td scope="row">{{fila.anio}}</td>
