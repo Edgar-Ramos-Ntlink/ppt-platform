@@ -213,7 +213,7 @@ export class EmpresaComponent implements OnInit {
           this.logo.tipoRecurso = 'EMPRESAS';
           this.logo.referencia = this.companyInfo.rfc;
           this.logo.tipoArchivo = 'LOGO';
-          this.logo.extension= filename.substring(filename.indexOf('.'),filename.length);
+          this.logo.extension= filename.substring(filename.lastIndexOf('.'),filename.length);
           this.resourcesService.insertResourceFile(this.logo)
             .subscribe(() => this.showToast('info', 'Exito!', 'El logo se cargo correctamente'),
               (error) => {
@@ -232,6 +232,7 @@ export class EmpresaComponent implements OnInit {
 
   public async fileDocumentUpload(): Promise<void> {
     try {
+      this.loading = true;
       this.dataFile.tipoRecurso = 'EMPRESAS';
       this.dataFile.referencia = this.companyInfo.rfc;
       this.dataFile.tipoArchivo = this.formInfo.doctType;
@@ -247,6 +248,7 @@ export class EmpresaComponent implements OnInit {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.showToast('danger', 'Error', msg, true);
     }
+    this.loading = false;
   }
 
 
@@ -259,7 +261,7 @@ export class EmpresaComponent implements OnInit {
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.formInfo.fileDataName = file.name;
-        this.formInfo.extension= file.name.substring(file.name.indexOf('.'),file.name.length);
+        this.dataFile.extension= file.name.substring(file.name.lastIndexOf('.'),file.name.length);
         this.dataFile.data = reader.result.toString();
       };
       reader.onerror = (error) => { this.showToast('danger', 'Error', 'Error cargando el archivo', true); };
@@ -297,20 +299,24 @@ export class EmpresaComponent implements OnInit {
   }
 
   public async inactivateCompany() {
-    this.companyInfo.activo = false;
-    this.companyInfo.estatus = 'INACTIVA';
+    const company = {... this.companyInfo};
+    company.activo = false;
+    company.estatus = 'INACTIVA';
+    this.loading = true;
     try {
-      await this.empresaService.updateCompany(this.companyInfo.rfc, this.companyInfo).toPromise();
+      this.companyInfo = await this.empresaService.updateCompany(this.companyInfo.rfc, company).toPromise();
       this.showToast('info', 'Exito!', 'La empresa ha sido desactivada satisfactoriamente');
     } catch (error) {
-
+      let msg = error.error.message || `${error.statusText} : ${error.message}`;
+      this.showToast('danger', 'Error', msg, true);
     }
+    this.loading = false;
   }
 
   public async activateCompany() {
 
     try {
-
+      this.loading = true;
       const cert = this.documents.find(d => d.tipoArchivo === 'CERT');
       const key = this.documents.find(d => d.tipoArchivo === 'KEY');
       const logo = this.documents.find(d => d.tipoArchivo === 'LOGO');
@@ -332,15 +338,17 @@ export class EmpresaComponent implements OnInit {
       }
 
       if (cert && key && logo && this.companyInfo.noCertificado) {
-        this.companyInfo.activo = true;
-        this.companyInfo.estatus = 'ACTIVA';
-        await this.empresaService.updateCompany(this.companyInfo.rfc, this.companyInfo).toPromise();
+        const company = {... this.companyInfo};
+        company.activo = true;
+        company.estatus = 'ACTIVA';
+        this.companyInfo = await this.empresaService.updateCompany(this.companyInfo.rfc, company).toPromise();
         this.showToast('info', 'Exito!', 'La empresa ha sido activada satisfactoriamente');
       }
     } catch (error) {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.showToast('danger', 'Error', msg, true);
     }
+    this.loading = false;
   }
 
 

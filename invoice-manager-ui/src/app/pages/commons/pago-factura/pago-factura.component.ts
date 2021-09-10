@@ -109,9 +109,6 @@ export class PagoFacturaComponent implements OnInit {
             this.invoicePayments = payments;
             this.myEvent.emit(this.factura.cfdi.id.toString());
           });
-        this.invoiceService.getComplementosInvoice(this.factura.folio)
-          .subscribe(complementos => {this.factura.complementos = complementos;
-          });
       }, (error: HttpErrorResponse) =>
       this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
@@ -140,10 +137,6 @@ export class PagoFacturaComponent implements OnInit {
           .subscribe((payments: PagoBase[]) => {
             this.invoicePayments = payments;
             this.loading = false; });
-            if (this.factura.metodoPago === 'PPD') {
-              this.invoiceService.getComplementosInvoice(this.factura.folio)
-                .subscribe(complementos => this.factura.complementos = complementos);
-            }
             this.myEvent.emit(this.factura.cfdi.id.toString());          
         }, (error: HttpErrorResponse) => {
           this.loading = false;

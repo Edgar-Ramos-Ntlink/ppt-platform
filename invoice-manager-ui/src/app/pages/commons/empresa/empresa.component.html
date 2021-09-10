@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-12">
-    <nb-card>
+    <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
       <nb-card-header class="puff_center">Datos empresa
         <button type="button" class="btn btn-outline-danger float-right" *ngIf="companyInfo.activo"
           (click)="inactivateCompany()">Desactivar</button>
@@ -163,6 +163,23 @@
               </div>
 
             </div>
+            <div class="row">
+
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="noCert" class="label">No de certificado</label>
+                  <input type="text" [(ngModel)]="companyInfo.noCertificado" class="form-control" fullWidth id="noCert"  [disabled]="companyInfo.activo"
+                    placeholder="0000000000">
+                </div>
+              </div>
+
+              <div class="col-3">
+                <label for="expiracionCertificado" class="label">Expiración certificado</label>
+                <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpicker" fullWidth style="display:block;" id= "expiracionCertificado"  [disabled]="companyInfo.activo"
+                  [(ngModel)]="companyInfo.expiracionCertificado">
+                <nb-datepicker #expirationpicker></nb-datepicker>
+              </div>
+            </div>
 
             <p class="font-weight-bold puff_center">Datos adicionales</p>
 
@@ -299,7 +316,7 @@
                     <div class="input-group">
                       <div class="custom-file" id="documentFile">
                         <input type="file" class="custom-file-input" id="documentFile"  [disabled]="companyInfo.activo"
-                          accept=".pdf,.xls,.xlsx,.doc, .docx,image/*" (change)="fileDataUploadListener($event,formInfo.doctType)"
+                          accept=".pdf,.xls,.xlsx,.doc, .docx,image/*" (change)="fileDataUploadListener($event)"
                           style="display:block;" aria-describedby="inputDocFile">
                         <label class="custom-file-label" for="inputDocFile">{{formInfo.fileDataName}}</label>
                       </div>
@@ -310,7 +327,7 @@
 
                 <div class="clearfix">
                   <div class="row float-right" style="margin-right: 1px;">
-                    <button type="button" (click)="fileDocumentUpload()" style=" margin-left:25px;"  [disabled]="companyInfo.activo"
+                    <button type="button" (click)="fileDocumentUpload()" style=" margin-left:25px;"  [disabled]="companyInfo.activo || dataFile == undefined"
                       class="btn btn-primary float-right">Cargar documento</button>
                   </div>
                 </div>
@@ -428,23 +445,7 @@
               </div>
 
             </div>
-            <div class="row">
-
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="noCert" class="label">No de certificado</label>
-                  <input type="text" [(ngModel)]="companyInfo.noCertificado" class="form-control" fullWidth id="noCert"  [disabled]="companyInfo.activo"
-                    placeholder="0000000000">
-                </div>
-              </div>
-
-              <div class="col-3">
-                <label for="expiracionCertificado" class="label">Expiración certificado</label>
-                <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpicker" fullWidth style="display:block;" id= "expiracionCertificado"  [disabled]="companyInfo.activo"
-                  [(ngModel)]="companyInfo.expiracionCertificado">
-                <nb-datepicker #expirationpicker></nb-datepicker>
-              </div>
-            </div>
+            
 
             <div class="row">
               <div class="col-md-12">
