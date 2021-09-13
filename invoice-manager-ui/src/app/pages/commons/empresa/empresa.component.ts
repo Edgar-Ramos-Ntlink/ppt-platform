@@ -158,8 +158,8 @@ export class EmpresaComponent implements OnInit {
 
 
   sanitize(file: ResourceFile) {
-    const url = `data:${file.formato}base64,${file.data}`;
-    return this.sanitizer.bypassSecurityTrustUrl(url);
+      const url = `data:${file.formato}base64,${file.data}`;
+      return this.sanitizer.bypassSecurityTrustUrl(url);
   }
 
 
@@ -199,6 +199,7 @@ export class EmpresaComponent implements OnInit {
   public logoUploadListener(event: any): void {
     const reader = new FileReader();
     this.logo = new ResourceFile();
+    this.loading = true;
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       if (file.size > 200000) {
@@ -215,14 +216,19 @@ export class EmpresaComponent implements OnInit {
           this.logo.tipoArchivo = 'LOGO';
           this.logo.extension= filename.substring(filename.lastIndexOf('.'),filename.length);
           this.resourcesService.insertResourceFile(this.logo)
-            .subscribe(() => this.showToast('info', 'Exito!', 'El logo se cargo correctamente'),
-              (error) => {
+            .subscribe(() => {
+              this.showToast('info', 'Exito!', 'El logo se cargo correctamente');
+              this.loading = false;
+              this.loadCompanyInfo(this.companyInfo.rfc);
+              },(error) => {
                 console.error(error);
+                this.loading = false;
                 let msg = error.error.message || `${error.statusText} : ${error.message}`;
                 this.showToast('danger', 'Error', msg, true);
               });
         };
         reader.onerror = (error) => {
+          this.loading = false;
           this.showToast('danger', 'Error', 'Error parsing image file', true);
           console.error(error);
         };

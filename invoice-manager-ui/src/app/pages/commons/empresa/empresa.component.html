@@ -538,10 +538,12 @@
                       <tr *ngFor="let fila of observaciones">
 
                         <td scope="row" class="text-center">
-                          <button class="btn d-inline mr-2 ml-2 btn-outline-danger" (click)="deleteDetail(fila.id)" [disabled]="fila.area!= module && !isAdministrator"><i
-                              class="fa fa-trash"></i></button>
-                          <button class="btn d-inline mr-2 ml-2 btn-outline-primary" [disabled]="fila.area!= module && !isAdministrator"
-                            (click)="openDetallesDialog(detailDialog,fila)"><i class="fa fa-search"></i></button>
+                          <button class="btn d-inline mr-2 ml-2" [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-danger': fila.area === module || isAdministrator}" 
+                          (click)="deleteDetail(fila.id)" [disabled]="fila.area!= module && !isAdministrator">
+                            <i class="fa fa-trash"></i></button>
+                          <button class="btn d-inline mr-2 ml-2" [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
+                          [disabled]="fila.area!= module && !isAdministrator" (click)="openDetallesDialog(detailDialog,fila)">
+                            <i class="fa fa-search"></i></button>
                         </td>
                         <td scope="row">{{fila.area}}</td>
                         <td scope="row">{{fila.resumen}}</td>
@@ -585,9 +587,11 @@
                       <tr *ngFor="let fila of pendientes">
 
                         <td scope="row" class="text-center">
-                          <button class="btn d-inline p-2 btn-outline-danger" (click)="deleteDetail(fila.id)" [disabled]="fila.area!= module && !isAdministrator"><i
-                              class="fa fa-trash"></i></button>
-                          <button class="btn d-inline p-2 btn-outline-primary" [disabled]="fila.area!= module && !isAdministrator"
+                          <button class="btn d-inline mr-2 ml-2" [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-danger': fila.area === module || isAdministrator}"
+                          (click)="deleteDetail(fila.id)" [disabled]="fila.area!= module && !isAdministrator">
+                            <i class="fa fa-trash"></i></button>
+                          <button class="btn d-inline mr-2 ml-2" [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
+                          [disabled]="fila.area!= module && !isAdministrator"
                             (click)="openDetallesDialog(detailDialog,fila)" ><i class="fa fa-search"></i></button>
                         </td>
                         <td scope="row">{{fila.area}}</td>
