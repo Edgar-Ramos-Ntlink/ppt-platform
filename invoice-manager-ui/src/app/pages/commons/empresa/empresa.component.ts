@@ -30,7 +30,7 @@ export class EmpresaComponent implements OnInit {
   public loading: boolean = false;
   public user: User;
 
-  public formInfo: any = { coloniaId: '*', logoFileName: '', keyFileName: '', certFileName: '', fileDataName: '', doctType: '*', docFileName: '' };
+  public formInfo: any = { coloniaId: '*', logoFileName: '', fileDataName: '', doctType: '*', showCiec:false, showFiel:false };
   public coloniaId: number = 0;
   public colonias = [];
   public paises = ['México'];
@@ -157,11 +157,18 @@ export class EmpresaComponent implements OnInit {
 
 
 
-  sanitize(file: ResourceFile) {
+  public sanitize(file: ResourceFile) {
       const url = `data:${file.formato}base64,${file.data}`;
       return this.sanitizer.bypassSecurityTrustUrl(url);
   }
 
+  public toogleCiec(){
+    this.formInfo.showCiec = !this.formInfo.showCiec;
+  }
+
+  public toogleFiel(){
+    this.formInfo.showFiel = !this.formInfo.showFiel;
+  }
 
   public zipCodeInfo(zipcode: String) {
     let zc = new String(zipcode);
