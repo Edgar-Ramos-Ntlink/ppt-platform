@@ -26,6 +26,12 @@ public class ClienteValidator extends AbstractValidator {
     checkNotEmpty(dto.getInformacionFiscal().getRfc(), "RFC");
     checkNotNull(dto.getInformacionFiscal().getCorreo(), "Correo");
     checkNotEmpty(dto.getInformacionFiscal().getCorreo(), "Correo");
+    if (dto.getNotas() == null || dto.getNotas().isEmpty()) {
+      throw new InvoiceManagerException(
+          "Debe tener nota o Archivo Fiscal.",
+          "Debe tener nota o Archivo Fiscal para poder ser creado.",
+          Constants.BAD_REQUEST);
+    }
     if (dto.getPorcentajeCliente().compareTo(BigDecimal.ZERO) < 0) {
       throw new InvoiceManagerException(
           "El porcentaje debe ser positivo",

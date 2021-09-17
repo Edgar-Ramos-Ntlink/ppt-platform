@@ -172,6 +172,14 @@ public class Client implements Serializable {
     this.informacionFiscal = informacionFiscal;
   }
 
+  public String getNotas() {
+    return notas;
+  }
+
+  public void setNotas(String notas) {
+    this.notas = notas;
+  }
+
   @Override
   public String toString() {
     return "Client [id="
