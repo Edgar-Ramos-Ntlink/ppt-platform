@@ -506,7 +506,7 @@ export class EmpresaComponent implements OnInit {
     const config = {
       status: type,
       destroyByClick: clickdestroy || false,
-      duration: 10000,
+      duration: 8000,
       hasIcon: true,
       position: NbGlobalPhysicalPosition.TOP_RIGHT,
       preventDuplicates: true,

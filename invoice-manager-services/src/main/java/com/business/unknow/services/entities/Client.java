@@ -40,6 +40,9 @@ public class Client implements Serializable {
   @Column(name = "ACTIVO")
   private Boolean activo;
 
+  @Column(name = "NOTAS")
+  private String notas;
+
   @NotEmpty
   @Column(name = "CORREO_PROMOTOR")
   private String correoPromotor;

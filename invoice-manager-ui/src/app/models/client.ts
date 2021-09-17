@@ -4,6 +4,7 @@ export class Client {
 
     public id: number;
     public activo: boolean;
+    public notas: string;
     public porcentajePromotor: number;
     public porcentajeCliente: number;
     public porcentajeDespacho: number;

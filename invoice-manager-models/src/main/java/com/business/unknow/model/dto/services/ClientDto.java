@@ -26,6 +26,7 @@ public class ClientDto implements Serializable {
 
   private int id;
   private Boolean activo;
+  private String notas;
   private BigDecimal porcentajePromotor;
   private BigDecimal porcentajeCliente;
   private BigDecimal porcentajeDespacho;

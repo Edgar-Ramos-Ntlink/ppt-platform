@@ -7,6 +7,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ZipCodeInfo } from '../../../models/zip-code-info';
 import { UsersData } from '../../../@core/data/users-data';
 import { ClientsValidatorService } from '../../../@core/util-services/clients-validator.service';
+import { NbComponentStatus, NbGlobalPhysicalPosition, NbToastrService } from '@nebular/theme';
+import { ResourceFile } from '../../../models/resource-file';
+import { FilesData } from '../../../@core/data/files-data';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 
 @Component({
   selector: 'ngx-cliente',
@@ -18,11 +22,19 @@ export class ClienteComponent implements OnInit {
   public module: string = 'promotor';
   public clientInfo: Client;
   public messages: string[] = [];
-  public formInfo: any = {rfc: '', coloniaId: '*', success: ''};
+  public formInfo: any = {rfc: '', coloniaId: '*', success: '', fileDataName:''};
   public coloniaId: number= 0;
   public colonias = [];
   public paises = ['México'];
-  constructor(private clientService: ClientsData,
+  public loading : boolean = false;
+
+  private dataFile: ResourceFile;
+  
+
+  constructor(private toastrService: NbToastrService,
+              private resourcesService: FilesData,
+              private downloadService: DonwloadFileService,
+              private clientService: ClientsData,
               private clientValidatorService: ClientsValidatorService,
               private userService: UsersData,
               private catalogsService: CatalogsData,
@@ -37,7 +49,6 @@ export class ClienteComponent implements OnInit {
     this.route.paramMap.subscribe(route => {
       const rfc = route.get('rfc');
       const promotor = route.get('promotor');
-      console.log(promotor);
       if (rfc !== '*') {
         this.clientService.getClientsByPromotorAndRfc(promotor,rfc)
         .subscribe((client: Client) => {
@@ -137,6 +148,64 @@ export class ClienteComponent implements OnInit {
         this.clientInfo.activo = true;
         this.formInfo.status = error.status;
       });
+  }
+
+  public fileDataUploadListener(event: any): void {
+    let reader = new FileReader();
+    this.dataFile = new ResourceFile();
+    if (event.target.files && event.target.files.length > 0) {
+      let file = event.target.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.formInfo.fileDataName = file.name;
+        this.dataFile.extension= file.name.substring(file.name.lastIndexOf('.'),file.name.length);
+        this.dataFile.data = reader.result.toString();
+      };
+      reader.onerror = (error) => { this.showToast('danger', 'Error', 'Error cargando el archivo', true); };
+    }
+  }
+
+  public async uploadFile(): Promise<void> {
+    try {
+      this.loading = true;
+      this.dataFile.tipoRecurso = 'CLIENTES';
+      this.dataFile.referencia = this.clientInfo.id.toString();
+      this.dataFile.tipoArchivo = 'DOCUMENTO';
+      await this.resourcesService.insertResourceFile(this.dataFile).toPromise();
+      this.showToast('info', 'Exito!', 'El archivo se cargo correctamente');
+      //this.loadCompanyInfo(this.companyInfo.rfc);
+      this.formInfo.fileDataName = '';
+      this.formInfo.doctType = '*';
+    } catch (error) {
+      console.error(error);
+      this.formInfo.fileDataName = '';
+      this.formInfo.doctType = '*';
+      let msg = error.error.message || `${error.statusText} : ${error.message}`;
+      this.showToast('danger', 'Error', msg, true);
+    }
+    this.loading = false;
+  }
+
+  public downloadFile(){
+    const path: string =  `/recursos/CLIENTES/referencias/${this.clientInfo.id}/files/DOCUMENTO`;
+    this.downloadService.dowloadResourceFile(path,`DocumentoRelacionado_${this.clientInfo.informacionFiscal.rfc}`);
+  }
+
+  private showToast(type: NbComponentStatus, title: string, body: string, clickdestroy?: boolean) {
+    const config = {
+      status: type,
+      destroyByClick: clickdestroy || false,
+      duration: 8000,
+      hasIcon: true,
+      position: NbGlobalPhysicalPosition.TOP_RIGHT,
+      preventDuplicates: true,
+    };
+    const titleContent = title ? `${title}` : 'xxxx';
+
+    this.toastrService.show(
+      body,
+      titleContent,
+      config);
   }
 
 }
