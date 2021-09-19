@@ -88,12 +88,7 @@
           </button>
          <!--  <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button> -->
         </div>
-        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
-          <p *ngFor="let message of errorMessages">{{message}}</p>
-        </div>
-        <div class="alert alert-success" *ngIf="successMessage!=undefined" role="alert">
-          {{successMessage}}
-        </div>
+        
         <br>
         
         <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">

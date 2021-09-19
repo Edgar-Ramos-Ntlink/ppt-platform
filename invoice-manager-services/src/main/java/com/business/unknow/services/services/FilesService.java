@@ -61,9 +61,9 @@ public class FilesService {
       } else {
         throw new InvoiceManagerException(
             String.format(
-                "Error obteniendo el recurso %s de la referencia %s del tipo %s ",
-                resource, reference, type),
-            HttpStatus.CONFLICT.value());
+                "No se encuentra el %s en los archivos de %s con la referencia : %s ",
+                type, resource, reference),
+            HttpStatus.NOT_FOUND.value());
       }
       String data =
           s3FileService.getS3File(
@@ -73,8 +73,8 @@ public class FilesService {
     } catch (Exception e) {
       throw new InvoiceManagerException(
           String.format(
-              "Error obteniendo el recurso %s de la referencia %s del tipo %s con el error:%s",
-              resource, reference, type, e.getMessage()),
+              "No se encuentra el %s en los archivos de %s con la referencia : %s ",
+              type, resource, reference),
           HttpStatus.CONFLICT.value());
     }
   }

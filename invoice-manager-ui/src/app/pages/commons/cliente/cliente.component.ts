@@ -11,6 +11,7 @@ import { NbComponentStatus, NbGlobalPhysicalPosition, NbToastrService } from '@n
 import { ResourceFile } from '../../../models/resource-file';
 import { FilesData } from '../../../@core/data/files-data';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'ngx-cliente',
@@ -21,25 +22,25 @@ export class ClienteComponent implements OnInit {
 
   public module: string = 'promotor';
   public clientInfo: Client;
-  public messages: string[] = [];
-  public formInfo: any = {rfc: '', coloniaId: '*', success: '', fileDataName:''};
-  public coloniaId: number= 0;
+  public formInfo: any = { rfc: '', coloniaId: '*', fileDataName: '' };
+  public coloniaId: number = 0;
   public colonias = [];
   public paises = ['México'];
-  public loading : boolean = false;
+  public loading: boolean = false;
 
+  private currentUser: User;
   private dataFile: ResourceFile;
-  
+
 
   constructor(private toastrService: NbToastrService,
-              private resourcesService: FilesData,
-              private downloadService: DonwloadFileService,
-              private clientService: ClientsData,
-              private clientValidatorService: ClientsValidatorService,
-              private userService: UsersData,
-              private catalogsService: CatalogsData,
-              private route: ActivatedRoute,
-              private router: Router) { }
+    private resourcesService: FilesData,
+    private downloadService: DonwloadFileService,
+    private clientService: ClientsData,
+    private clientValidatorService: ClientsValidatorService,
+    private userService: UsersData,
+    private catalogsService: CatalogsData,
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
     this.module = this.router.url.split('/')[2];
@@ -49,48 +50,85 @@ export class ClienteComponent implements OnInit {
     this.route.paramMap.subscribe(route => {
       const rfc = route.get('rfc');
       const promotor = route.get('promotor');
+      this.userService.getUserInfo().then(user => this.currentUser = user);
       if (rfc !== '*') {
-        this.clientService.getClientsByPromotorAndRfc(promotor,rfc)
-        .subscribe((client: Client) => {
-          this.clientInfo = client;
-          this.formInfo.rfc = rfc;
-          this.catalogsService.getZipCodeInfo(client.informacionFiscal.cp).then((data: ZipCodeInfo) => {
-            this.colonias = data.colonias;
-            let index = 0;
-            this.formInfo.coloniaId = '*';
-            data.colonias.forEach(element => {
-              if ( data.colonias[index] === client.informacionFiscal.localidad) {
-                this.formInfo.coloniaId = index;
-              }
-              index ++;
-            });
-          });
-        }, (error: HttpErrorResponse) => {this.formInfo.message = error.error.message ||
-                  `${error.statusText} : ${error.message}`; this.formInfo.status = error.status;});
-        }});
+        this.loadClientInfo(rfc, promotor);
+      }
+    });
   }
 
-  public updateClient() {
-    this.formInfo.success = '';
-    this.messages = [];
-    this.messages = this.clientValidatorService.validarCliente(this.clientInfo);
-    this.clientService.updateClient(this.clientInfo).subscribe(client => { this.formInfo.success = 'Cliente actualizado exitosamente'; this.clientInfo = client; },
-      (error: HttpErrorResponse) => {this.messages.push(error.error.message); this.formInfo.message = error.error.message || `${error.statusText} : ${error.message}`; this.formInfo.status = error.status });
-  }
-
-  public insertClient() {
-    this.formInfo.success = '';
-    this.messages = [];
-    
-    this.userService.getUserInfo().then(user => this.clientInfo.correoPromotor = user.email)
-      .then(() => {
-        this.messages = this.clientValidatorService.validarCliente(this.clientInfo);
-        if (this.messages.length === 0) {
-        this.clientService.insertNewClient(this.clientInfo)
-          .subscribe(client => { this.formInfo.success = 'Cliente guardado exitosamente'; this.clientInfo = client; },
-          (error: HttpErrorResponse) => this.messages.push(error.error.message || `${error.statusText} : ${error.message}`));
+  public async loadClientInfo(rfc: string, promotor: string) {
+    this.loading = true;
+    try {
+      this.formInfo.rfc = rfc;
+      this.clientInfo = await this.clientService.getClientsByPromotorAndRfc(promotor, rfc).toPromise();
+      const data: ZipCodeInfo = await this.catalogsService.getZipCodeInfo(this.clientInfo.informacionFiscal.cp);
+      this.colonias = data.colonias;
+      let index = 0;
+      this.formInfo.coloniaId = '*';
+      data.colonias.forEach(element => {
+        if (data.colonias[index] === this.clientInfo.informacionFiscal.localidad) {
+          this.formInfo.coloniaId = index;
         }
+        index++;
       });
+      this.dataFile = await this.resourcesService.getResourceFile(this.clientInfo.id.toString(),'CLIENTES','DOCUMENTO').toPromise();
+      this.loading = false;
+    } catch (error) {
+      let msg = error.error.message || `${error.statusText} : ${error.message}`;
+      this.showToast('danger', 'Error', msg, true);
+      this.loading = false;
+    }
+  }
+
+  public async updateClient() {
+    this.loading = true;
+    try {
+      const errors: string[] = this.clientValidatorService.validarCliente(this.clientInfo);
+      if (errors.length > 0) {
+        for (const err of errors) {
+          this.showToast('warning', 'Falta información', err);
+        }
+        this.loading = false;
+        return;
+      }
+      this.clientInfo = await this.clientService.updateClient(this.clientInfo).toPromise();
+      this.showToast('info', 'Exito!', 'La información del cliente fue actualizada satisfactoriamente');
+    } catch (error) {
+      let msg = error.error.message || `${error.statusText} : ${error.message}`;
+      this.showToast('danger', 'Error', msg, true);
+    }
+    this.loading = false;
+  }
+
+  public async insertClient() {
+    const client: Client = { ...this.clientInfo };
+    this.loading = true;
+    try {
+      const errors: string[] = this.clientValidatorService.validarCliente(client);
+      if (errors.length > 0) {
+        for (const err of errors) {
+          this.showToast('warning', 'Falta información', err);
+        }
+        this.loading = false;
+        return;
+      }
+      client.correoPromotor = this.currentUser.email;
+      this.clientInfo = await this.clientService.insertNewClient(client).toPromise();
+
+      if(this.dataFile !== undefined){
+        await this.uploadFile();
+      } else{
+        this.showToast('warning', 'Falta comprobante cédula fiscal', 'Sin comprobante de cédula fiscal del cliente, no se procederá a timbrar la factura correspondiente de cliente.');
+      }
+      this.showToast('info', 'Exito!', 'Cliente creado correctamente');
+      this.loading = false;
+    } catch (error) {
+      let msg = error.error.message || `${error.statusText} : ${error.message}`;
+      this.showToast('danger', 'Error', msg, true);
+      this.loading = false;
+    }
+
   }
 
   public onLocation(index: string) {
@@ -99,55 +137,62 @@ export class ClienteComponent implements OnInit {
     }
   }
 
-  public zipCodeInfo(zc: string){
-    if( zc.length > 4 && zc.length < 6) {
+  public zipCodeInfo(zc: string) {
+    if (zc.length > 4 && zc.length < 6) {
       this.colonias = [];
       this.catalogsService.getZipCodeInfo(zc).then(
-          (data:ZipCodeInfo) => {
+        (data: ZipCodeInfo) => {
           this.clientInfo.informacionFiscal.estado = data.estado;
           this.clientInfo.informacionFiscal.municipio = data.municipio;
-          this.colonias = data.colonias; 
+          this.colonias = data.colonias;
           this.clientInfo.informacionFiscal.localidad = data.colonias[0];
-          if (data.colonias.length < 1 ) {
+          if (data.colonias.length < 1) {
             alert(`No se ha encontrado información pata el codigo postal ${zc}`);
           }
-          }, (error: HttpErrorResponse) => alert(error.error.message || error.statusText));
+        }, (error: HttpErrorResponse) => {
+          let msg = error.error.message || `${error.statusText} : ${error.message}`;
+          this.showToast('danger', 'Error', msg, true);
+        });
     }
   }
 
   public validatePercentages() {
-    if ( this.clientInfo.correoContacto === undefined || this.clientInfo.correoContacto.length < 1) {
+    if (this.clientInfo.correoContacto === undefined || this.clientInfo.correoContacto.length < 1) {
       this.clientInfo.correoContacto = 'Sin asignar';
       this.clientInfo.porcentajeContacto = 0;
       this.clientInfo.porcentajeDespacho = 16 - this.clientInfo.porcentajeCliente - this.clientInfo.porcentajePromotor;
     }
   }
 
-  public toggleOn() {
-    this.clientInfo.activo = true;
-    this.formInfo.success = '';
-    this.messages = [];
-    this.messages = this.clientValidatorService.validarCliente(this.clientInfo);
-    this.clientService.updateClient(this.clientInfo)
-    .subscribe(client => { this.formInfo.success = 'Cliente activado exitosamente'; this.clientInfo = client; },
-      (error: HttpErrorResponse) => {
-        this.messages.push(error.error.message || `${error.statusText} : ${error.message}`);
-        this.clientInfo.activo = false;
-        this.formInfo.status = error.status;
-      });
+  public async toggleOn() {
+
+    const client: Client = { ... this.clientInfo };
+    client.activo = true;
+    this.loading = true;
+    try {
+
+      this.clientInfo = await this.clientService.updateClient(client).toPromise();
+      this.showToast('info', 'Exito!', 'Cliente activado exitosamente');
+    } catch (error) {
+      let msg = error.error.message || `${error.statusText} : ${error.message}`;
+      this.showToast('danger', 'Error', msg, true);
+    }
+    this.loading = false;
   }
 
-  public toggleOff() {
-    this.clientInfo.activo = false;
-    this.formInfo.success = '';
-    this.messages = [];
-    this.clientService.updateClient(this.clientInfo)
-    .subscribe(client => { this.formInfo.success = 'Cliente desactivado exitosamente'; this.clientInfo = client; },
-      (error: HttpErrorResponse) => {
-        this.messages.push(error.error.message || `${error.statusText} : ${error.message}`);
-        this.clientInfo.activo = true;
-        this.formInfo.status = error.status;
-      });
+  public async toggleOff() {
+    const client: Client = { ... this.clientInfo };
+    client.activo = false;
+    this.loading = true;
+    try {
+
+      this.clientInfo = await this.clientService.updateClient(client).toPromise();
+      this.showToast('info', 'Exito!', 'Cliente activado exitosamente');
+    } catch (error) {
+      let msg = error.error.message || `${error.statusText} : ${error.message}`;
+      this.showToast('danger', 'Error', msg, true);
+    }
+    this.loading = false;
   }
 
   public fileDataUploadListener(event: any): void {
@@ -158,7 +203,7 @@ export class ClienteComponent implements OnInit {
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.formInfo.fileDataName = file.name;
-        this.dataFile.extension= file.name.substring(file.name.lastIndexOf('.'),file.name.length);
+        this.dataFile.extension = file.name.substring(file.name.lastIndexOf('.'), file.name.length);
         this.dataFile.data = reader.result.toString();
       };
       reader.onerror = (error) => { this.showToast('danger', 'Error', 'Error cargando el archivo', true); };
@@ -186,9 +231,9 @@ export class ClienteComponent implements OnInit {
     this.loading = false;
   }
 
-  public downloadFile(){
-    const path: string =  `/recursos/CLIENTES/referencias/${this.clientInfo.id}/files/DOCUMENTO`;
-    this.downloadService.dowloadResourceFile(path,`DocumentoRelacionado_${this.clientInfo.informacionFiscal.rfc}`);
+  public downloadFile() {
+    const path: string = `/recursos/CLIENTES/referencias/${this.clientInfo.id}/files/DOCUMENTO`;
+    this.downloadService.dowloadResourceFile(path, `DocumentoRelacionado_${this.clientInfo.informacionFiscal.rfc}`);
   }
 
   private showToast(type: NbComponentStatus, title: string, body: string, clickdestroy?: boolean) {

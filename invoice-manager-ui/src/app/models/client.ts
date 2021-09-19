@@ -25,7 +25,4 @@ export class Client {
         this.informacionFiscal = new Contribuyente();
     }
 
-    public getPercentagesSum() {
-        return this.porcentajePromotor + this.porcentajeCliente + this.porcentajeDespacho + this.porcentajeContacto;
-    }
 }
