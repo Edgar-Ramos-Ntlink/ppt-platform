@@ -9,7 +9,7 @@ import { Cfdi } from '../../../models/factura/cfdi';
 import { Client } from '../../../models/client';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
@@ -58,7 +58,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     private filesService: FilesData,
     private downloadService: DonwloadFileService,
     private toastrService: NbToastrService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
     this.userService.getUserInfo().then(user => this.user = user as User);
@@ -255,6 +256,14 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
       this.showToast('danger', 'Error', msg, true);
     }
     this.loading = false;
+  }
+
+  public returnToSourceFact(idCfdi:number){
+    this.router.navigate([`./pages/operaciones/revision/${idCfdi}`]);
+  }
+
+  public goToRelacionado(idCfdi:number){
+    this.router.navigate([`./pages/operaciones/revision/${idCfdi}`]);
   }
 
   public downloadPdf(folio: string) {

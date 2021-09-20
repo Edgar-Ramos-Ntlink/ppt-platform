@@ -3,28 +3,43 @@
     <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
       <nb-card-header>
         <div class="clearfix" *ngIf="preFolio !== '*'">
-          <p class="h6 float-left puff_center">CFDI Promotor</p> <span class="badge badge-primary" style="margin-left: 10px;" 
-          *ngIf="factura" >{{factura.statusFactura}}</span>
-          <button nbButton status="success" size="small" (click)="revalidateInvoice()" [nbSpinner]="loading" class="float-right puff_center"
-              [disabled]="loading" nbSpinnerStatus="success"  *ngIf="factura.statusFactura.indexOf('Rechazo')===0"
-              nbSpinnerSize="small" nbSpinnerMessage="">
-               revalidar Factura<i class="fa fa-check" style="margin-left: 10px;"></i>
+          <p class="h6 float-left puff_center">CFDI Promotor</p> <span class="badge badge-primary"
+            style="margin-left: 10px;" *ngIf="factura">{{factura.statusFactura}}</span>
+          <button nbButton status="success" size="small" (click)="revalidateInvoice()" [nbSpinner]="loading"
+            class="float-right puff_center ml-1 mr-1" [disabled]="loading" nbSpinnerStatus="success"
+            *ngIf="factura.statusFactura.indexOf('Rechazo')===0" nbSpinnerSize="small" nbSpinnerMessage="">
+            revalidar Factura<i class="fa fa-check" style="margin-left: 10px;"></i>
           </button>
-          <button type="button" class="btn btn-sm btn-outline-primary float-right" (click)="downloadPdf(factura.folio)">
+          <button type="button" class="btn btn-sm btn-outline-primary float-right ml-1 mr-1"
+            (click)="downloadPdf(factura.folio)">
             <i class="fa fa-file-pdf"></i>
           </button>
           <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
-            class="btn btn-sm btn-outline-primary float-right" (click)="downloadXml(factura.folio)">
+            class="btn btn-sm btn-outline-primary float-right ml-1 mr-1" (click)="downloadXml(factura.folio)">
             <i class="fa fa-code"></i>
           </button>
+
+          <button type="button" *ngIf="factura.idCfdiRelacionado"
+            class="btn btn-sm btn-outline-success float-right ml-1 mr-1"
+            (click)="goToRelacionado(factura.idCfdiRelacionado)">
+            <i class="fa fa-link"></i>
+          </button>
+          <button type="button" *ngIf="factura.idCfdiRelacionadoPadre"
+            class="btn btn-sm btn-outline-success float-right ml-1 mr-1"
+            (click)="returnToSourceFact(factura.idCfdiRelacionadoPadre)">
+            <i class="fa fa-arrow-left"></i>
+          </button>
+          <span class="badge badge-secondary ml-1 mr-1 float-right" *ngIf="factura.cfdi.id">
+            <strong *ngIf="factura.cfdi.relacionado">CFDI RELACIONADO : {{factura.cfdi.relacionado.relacion}}</strong>
+          </span>
         </div>
         <p *ngIf="preFolio == '*'" class="h6 float-left ">Pre Cfdi</p>
       </nb-card-header>
-      <nb-card-body >
-        <div class="slide_1" *ngIf="preFolio === '*' " >
+      <nb-card-body>
+        <div class="slide_1" *ngIf="preFolio === '*' ">
           <p class="font-weight-bold ">Información Emisor y Receptor</p>
           <div class="row">
-            
+
             <div class="col-sm-3">
               <div class="form-group ">
                 <label for="inputGiro" class="label">Giro Empresa</label>
@@ -47,9 +62,9 @@
             </div>
             <div class="col-md-3">
               <label for="inputCliente" class="label">Razón social</label>
-              <div class=""  >
-                <input type="text" [(ngModel)]="formInfo.clientName"  
-                class="form-control" fullWidth (ngModelChange)="buscarClientInfo($event)" placeholder="Razón social">
+              <div class="">
+                <input type="text" [(ngModel)]="formInfo.clientName" class="form-control" fullWidth
+                  (ngModelChange)="buscarClientInfo($event)" placeholder="Razón social">
               </div>
             </div>
             <div class="col-md-3">
@@ -65,20 +80,21 @@
             </div>
           </div>
         </div>
-      
-          <ngx-cfdi  [(cfdi)]="factura.cfdi" [pagos]="pagosCfdi" [module] = "'P'" (cfdiEvent)="getInvoiceInfoByIdCdfi($event)"
-            [allowEdit]="factura.tipoDocumento !== 'Complemento' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria')">
-          </ngx-cfdi>
-          
-          <div class="row" *ngIf="factura.cfdi && factura.statusDetail && factura.statusDetail.length > 0">
-            <div class="col-sm-12">
-              <label for="inputdesc" class="label">Descripción Rechazo CFDI</label>
-              <div class="alert alert-danger" role="alert">
-                {{factura.statusDetail}}
-              </div>
+
+        <ngx-cfdi [(cfdi)]="factura.cfdi" [pagos]="pagosCfdi" [module]="'P'"
+          (cfdiEvent)="getInvoiceInfoByIdCdfi($event)"
+          [allowEdit]="factura.tipoDocumento !== 'Complemento' && (factura.folio === undefined || factura.statusFactura=='Validacion operaciones' || factura.statusFactura=='Validacion tesoreria')">
+        </ngx-cfdi>
+
+        <div class="row" *ngIf="factura.cfdi && factura.statusDetail && factura.statusDetail.length > 0">
+          <div class="col-sm-12">
+            <label for="inputdesc" class="label">Descripción Rechazo CFDI</label>
+            <div class="alert alert-danger" role="alert">
+              {{factura.statusDetail}}
             </div>
           </div>
-        
+        </div>
+
         <br>
 
         <div class="row slide_3" *ngIf="factura.idCfdi === undefined">
@@ -86,15 +102,17 @@
             [disabled]="loading" nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
             SOLICITAR CFDI
           </button>
-         <!--  <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button> -->
+          <!--  <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button> -->
         </div>
-        
+
         <br>
-        
-        <div *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">
-          <ngx-pago-factura [factura]="factura" [user]="user" (myEvent)="getInvoiceInfoByIdCdfi($event)"></ngx-pago-factura>
+
+        <div
+          *ngIf="factura.folio!=undefined && (factura.statusFactura!='Rechazo Operaciones' && factura.statusFactura!='Cancelada')">
+          <ngx-pago-factura [factura]="factura" [user]="user" (myEvent)="getInvoiceInfoByIdCdfi($event)">
+          </ngx-pago-factura>
         </div>
-      
+
 
       </nb-card-body>
     </nb-card>
