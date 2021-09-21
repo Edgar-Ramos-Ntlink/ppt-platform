@@ -97,7 +97,6 @@
           <th scope="col" class="text-center">Descripcion</th>
           <th scope="col" class="text-center">Valor Unitario</th>
           <th scope="col" class="text-center">Impuesto</th>
-          <th scope="col" class="text-center">Retencion</th>
           <th scope="col" class="text-center">Importe</th>
         </tr>
       </thead>
@@ -115,37 +114,36 @@
           <td scope="row" class="text-center">{{fila.descripcion}}</td>
           <td scope="row" class="text-center">{{fila.valorUnitario | currency : cfdi.moneda :'symbol':'.2-6'}}</td>
           <td scope="row" class="text-center">{{calcularImportes(fila.impuestos) | currency :cfdi.moneda:'symbol':'.2-6'}}</td>
-          <td scope="row" class="text-center">{{calcularImportes(fila.retenciones) | currency :cfdi.moneda:'symbol':'.2-6'}}</td>
           <td scope="row" class="text-center">{{fila.importe | currency :cfdi.moneda:'symbol':'.2-6'}}</td>
         </tr>
         <tr>
-          <td *ngIf="!allowEdit" colspan="7">
+          <td *ngIf="!allowEdit" colspan="6">
           </td>
-          <td *ngIf="allowEdit" colspan="8">
+          <td *ngIf="allowEdit" colspan="7">
           </td>
           <td class="text-center"><p class="font-weight-bold">Subtotal</p></td>
           <td class="text-center">{{cfdi.subtotal | currency :cfdi.moneda:'symbol':'.2'}}</td>
         </tr>
         <tr>
-          <td *ngIf="!allowEdit" colspan="7">
+          <td *ngIf="!allowEdit" colspan="6">
           </td>
-          <td *ngIf="allowEdit" colspan="8">
+          <td *ngIf="allowEdit" colspan="7">
           </td>
           <td class="text-center"><p class="font-weight-bold">Impuestos Trasladados:</p></td>
           <td class="text-center">{{getTotalImpuestos(cfdi.conceptos) | currency :cfdi.moneda:'symbol':'.2'}}</td>
         </tr>
         <tr>
-          <td *ngIf="!allowEdit" colspan="7">
+          <td *ngIf="!allowEdit" colspan="6">
           </td>
-          <td *ngIf="allowEdit" colspan="8">
+          <td *ngIf="allowEdit" colspan="7">
           </td>
           <td class="text-center" ><p class="font-weight-bold">Impuestos Retenidos:</p></td>
           <td class="text-center">{{getTotalRetenciones(cfdi.conceptos) | currency :cfdi.moneda:'symbol':'.2'}}</td>
         </tr>
         <tr>
-          <td *ngIf="!allowEdit" colspan="7">
+          <td *ngIf="!allowEdit" colspan="6">
           </td>
-          <td *ngIf="allowEdit" colspan="8">
+          <td *ngIf="allowEdit" colspan="7">
           </td>
           <td class="text-center" ><p class="font-weight-bold">Total</p></td>
           <td class="text-center" >{{cfdi.total | currency :cfdi.moneda:'symbol':'.2'}}</td>
