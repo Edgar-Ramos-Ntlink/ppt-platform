@@ -119,7 +119,7 @@ export class ClienteComponent implements OnInit {
       if(this.dataFile !== undefined){
         await this.uploadFile();
       } else{
-        this.showToast('warning', 'Falta comprobante cédula fiscal', 'Sin comprobante de cédula fiscal del cliente, no se procederá a timbrar la factura correspondiente de cliente.');
+        this.showToast('warning', 'Falta comprobante situación fiscal', 'Sin comprobante de situación fiscal del cliente, no se procederá a timbrar la factura correspondiente de cliente.');
       }
       this.showToast('info', 'Exito!', 'Cliente creado correctamente');
       this.loading = false;

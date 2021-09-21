@@ -92,6 +92,7 @@ export class PagoFacturaComponent implements OnInit {
         reader.readAsDataURL(file);
         reader.onload = () => {
           this.paymentForm.filename = file.name;
+          this.newPayment.documento = reader.result.toString();
         };
         reader.onerror = (error) => { this.payErrorMessages.push('Error parsing image file'); };
       }

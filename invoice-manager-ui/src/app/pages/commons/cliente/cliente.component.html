@@ -8,7 +8,7 @@
           <button type="button" class="btn btn-outline-success float-right" *ngIf="!clientInfo.activo &&  module != 'promotor'" (click)="toggleOn()">Activar</button>
           <button type="button" class="btn btn-outline-danger float-right" *ngIf="clientInfo.activo &&  module != 'promotor'" (click)="toggleOff()">Desactivar</button>
           <div class="alert alert-warning float-right" *ngIf="dataFile === undefined" role="alert">
-            El cliente no cuenta con comprobante de cedula fiscal, favor de cargarlo en la sección de datos adicionales o agregar una nota con una razón válida.
+            El cliente no cuenta con comprobante de situación fiscal, favor de cargarlo en la sección de datos adicionales o agregar una nota con una justificación válida.
           </div>
         </div>
 
