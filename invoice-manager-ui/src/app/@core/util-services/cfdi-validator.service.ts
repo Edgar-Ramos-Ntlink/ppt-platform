@@ -8,6 +8,7 @@ import { ClaveUnidad } from '../../models/catalogos/clave-unidad';
 import { Contribuyente } from '../../models/contribuyente';
 import { add, subtract, bignumber, multiply, number } from 'mathjs';
 import { CfdiService } from '../back-services/cfdi.service';
+import { Empresa } from '../../models/empresa';
 
 @Injectable({
   providedIn: 'root',
@@ -117,6 +118,32 @@ export class CfdiValidatorService {
     }
     return address.toUpperCase().trim();
   }
+
+  public generateCompanyAddress(company: Empresa) {
+    let address = `${company.calle}`.trim();
+    if (company.noExterior !== undefined && company.noExterior !== null) {
+      address += ' ';
+      address += `${company.noExterior}`.trim();
+    }
+    if (company.noInterior !== undefined && company.noInterior !== null) {
+      address += `,${company.noInterior}`.trim();
+    }
+    if ( company.colonia !== undefined && company.colonia !== null ) {
+      address += `,${company.colonia}`.trim();
+    }
+    if ( company.municipio !== undefined && company.municipio != null ) {
+      address += `,${company.municipio}`.trim();
+    }
+    if ( company.estado !== undefined && company.estado !== null ) {
+      address += `,${company.estado}`.trim();
+    }
+    if ( company.estado !== undefined && company.estado !== null ) {
+      address += `,C.P. ${company.cp}`.trim();
+    }
+    return address.toUpperCase().trim();
+  }
+
+
 
   public validarCfdi(cfdi: Cfdi): string[] {
     const messages: string[] = [];

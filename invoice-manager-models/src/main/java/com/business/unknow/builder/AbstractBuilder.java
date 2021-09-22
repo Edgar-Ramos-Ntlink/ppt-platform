@@ -1,26 +1,22 @@
 package com.business.unknow.builder;
 
 public abstract class AbstractBuilder<T> {
-	protected T instance;
+  protected T instance;
 
-	public AbstractBuilder(T instance) {
-		this.instance = instance;
-		setDefaults();
-	}
+  public AbstractBuilder(T instance) {
+    this.instance = instance;
+    setDefaults();
+  }
 
-	protected void setDefaults() {
+  protected void setDefaults() {}
 
-	}
+  public T build() {
+    inject();
+    validate();
+    return instance;
+  }
 
-	public T build() {
-		inject();
-		validate();
-		return instance;
-	}
+  public void validate() {}
 
-	public void validate() {
-	}
-
-	public void inject() {
-	}
+  public void inject() {}
 }

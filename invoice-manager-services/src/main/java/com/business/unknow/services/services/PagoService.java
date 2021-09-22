@@ -1,11 +1,7 @@
 package com.business.unknow.services.services;
 
 import com.business.unknow.builder.PagoBuilder;
-import com.business.unknow.enums.FacturaStatusEnum;
-import com.business.unknow.enums.FormaPagoEnum;
-import com.business.unknow.enums.MetodosPagoEnum;
-import com.business.unknow.enums.RevisionPagosEnum;
-import com.business.unknow.enums.TipoDocumentoEnum;
+import com.business.unknow.enums.*;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
@@ -28,6 +24,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -47,7 +44,9 @@ public class PagoService {
 
   @Autowired private PagoMapper mapper;
 
-  @Autowired private PagoEvaluatorService pagoEvaluatorService;
+  @Autowired
+  @Qualifier("PagoValidator")
+  private PagoEvaluatorService pagoEvaluatorService;
 
   @Autowired private FilesService filesService;
 
@@ -425,13 +424,18 @@ public class PagoService {
       if (TipoDocumentoEnum.COMPLEMENTO.equals(
           TipoDocumentoEnum.findByDesc(fact.getTipoDocumento()))) {
         facturaService.deleteFactura(fact.getFolio());
-        filesService.deleteS3File(fact.getFolio(), "PDF");
+        filesService.deleteFacturaFile(fact.getFolio(), "PDF");
       }
     }
-    for (PagoFactura pagoFactura : facturaPagosRepository.findByPagoId(payment.getId())) {
-      facturaPagosRepository.delete(pagoFactura);
-    }
-    filesService.deleteResourceFileByResourceReferenceAndType("PAGO", idPago.toString(), "IMAGEN");
+
+    filesService.deleteResourceFileByResourceReferenceAndType(
+        "PAGOS", idPago.toString(), TipoArchivoEnum.IMAGEN.name());
     repository.delete(mapper.getEntityFromPagoDto(payment));
+  }
+
+  public void delePagoFacturas(int id) {
+    for (PagoFactura pagoFactura : facturaPagosRepository.findByPagoId(id)) {
+      facturaPagosRepository.deleteById(pagoFactura.getId());
+    }
   }
 }

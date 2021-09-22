@@ -1,42 +1,46 @@
 package com.business.unknow.model.cfdi;
 
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlAccessType;
 
 @XmlRootElement(name = "Complemento", namespace = "http://www.sat.gob.mx/cfd/3")
 @XmlAccessorType(XmlAccessType.NONE)
 public class Complemento {
 
-	@XmlElement(name = "Pagos", namespace = "http://www.sat.gob.mx/Pagos")
-	private ComplementoPagos complemntoPago;
-	@XmlElement(name = "TimbreFiscalDigital",namespace = "http://www.sat.gob.mx/TimbreFiscalDigital")
-	private TimbreFiscalDigital timbreFiscalDigital;
+  @XmlElement(name = "Pagos", namespace = "http://www.sat.gob.mx/Pagos")
+  private ComplementoPagos complemntoPago;
 
-	public Complemento() {
-		complemntoPago = new ComplementoPagos();
-	}
+  @XmlElement(name = "TimbreFiscalDigital", namespace = "http://www.sat.gob.mx/TimbreFiscalDigital")
+  private TimbreFiscalDigital timbreFiscalDigital;
 
-	public ComplementoPagos getComplemntoPago() {
-		return complemntoPago;
-	}
+  public Complemento() {
+    complemntoPago = new ComplementoPagos();
+  }
 
-	public void setComplemntoPago(ComplementoPagos complemntoPago) {
-		this.complemntoPago = complemntoPago;
-	}
+  public ComplementoPagos getComplemntoPago() {
+    return complemntoPago;
+  }
 
-	public TimbreFiscalDigital getTimbreFiscalDigital() {
-		return timbreFiscalDigital;
-	}
+  public void setComplemntoPago(ComplementoPagos complemntoPago) {
+    this.complemntoPago = complemntoPago;
+  }
 
-	public void setTimbreFiscalDigital(TimbreFiscalDigital timbreFiscalDigital) {
-		this.timbreFiscalDigital = timbreFiscalDigital;
-	}
+  public TimbreFiscalDigital getTimbreFiscalDigital() {
+    return timbreFiscalDigital;
+  }
 
-	@Override
-	public String toString() {
-		return "Complemento [complemntoPago=" + complemntoPago + ", timbreFiscalDigital=" + timbreFiscalDigital + "]";
-	}
+  public void setTimbreFiscalDigital(TimbreFiscalDigital timbreFiscalDigital) {
+    this.timbreFiscalDigital = timbreFiscalDigital;
+  }
 
+  @Override
+  public String toString() {
+    return "Complemento [complemntoPago="
+        + complemntoPago
+        + ", timbreFiscalDigital="
+        + timbreFiscalDigital
+        + "]";
+  }
 }

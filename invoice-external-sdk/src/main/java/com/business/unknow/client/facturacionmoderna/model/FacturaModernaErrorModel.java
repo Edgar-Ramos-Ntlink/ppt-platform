@@ -9,31 +9,34 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class FacturaModernaErrorModel {
 
-	@XmlElement(name = "faultcode")
-	private String faultcode;
+  @XmlElement(name = "faultcode")
+  private String faultcode;
 
-	@XmlElement(name = "faultstring")
-	private String faultstring;
+  @XmlElement(name = "faultstring")
+  private String faultstring;
 
-	public String getFaultcode() {
-		return faultcode;
-	}
+  public String getFaultcode() {
+    return faultcode;
+  }
 
-	public void setFaultcode(String faultcode) {
-		this.faultcode = faultcode;
-	}
+  public void setFaultcode(String faultcode) {
+    this.faultcode = faultcode;
+  }
 
-	public String getFaultstring() {
-		return faultstring;
-	}
+  public String getFaultstring() {
+    return faultstring;
+  }
 
-	public void setFaultstring(String faultstring) {
-		this.faultstring = faultstring;
-	}
+  public void setFaultstring(String faultstring) {
+    this.faultstring = faultstring;
+  }
 
-	@Override
-	public String toString() {
-		return "FacturaModernaErrorModel [faultcode=" + faultcode + ", faultstring=" + faultstring + "]";
-	}
-
+  @Override
+  public String toString() {
+    return "FacturaModernaErrorModel [faultcode="
+        + faultcode
+        + ", faultstring="
+        + faultstring
+        + "]";
+  }
 }

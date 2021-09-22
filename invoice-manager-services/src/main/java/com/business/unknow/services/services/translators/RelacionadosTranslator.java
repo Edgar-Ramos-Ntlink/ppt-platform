@@ -46,7 +46,7 @@ public class RelacionadosTranslator {
     return facturaDto;
   }
 
-  private FacturaDto updateBaseInfoSustitucion(FacturaDto facturaDto) {
+  private void updateBaseInfoSustitucion(FacturaDto facturaDto) {
     facturaDto.setCadenaOriginalTimbrado(null);
     facturaDto.setFechaTimbrado(null);
     facturaDto.setFolio(null);
@@ -103,7 +103,6 @@ public class RelacionadosTranslator {
       facturaDto.getCfdi().setRelacionado(relacionadoDto);
       facturaDto.setUuid(null);
     }
-    return facturaDto;
   }
 
   public FacturaDto notaCreditoFactura(FacturaDto facturaDto) {
@@ -119,7 +118,7 @@ public class RelacionadosTranslator {
     }
   }
 
-  private FacturaDto updateBaseInfoNotaCredito(FacturaDto facturaDto) {
+  private void updateBaseInfoNotaCredito(FacturaDto facturaDto) {
     facturaDto.setCadenaOriginalTimbrado(null);
     facturaDto.setFechaTimbrado(null);
     facturaDto.setFolio(null);
@@ -169,6 +168,5 @@ public class RelacionadosTranslator {
     relacionadoDto.setTipoRelacion("01");
     facturaDto.getCfdi().setRelacionado(relacionadoDto);
     facturaDto.setUuid(null);
-    return facturaDto;
   }
 }

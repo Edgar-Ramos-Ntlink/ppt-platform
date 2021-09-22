@@ -20,7 +20,7 @@ import com.business.unknow.services.util.helpers.FacturaHelper;
 import com.business.unknow.services.util.helpers.FileHelper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -114,9 +114,7 @@ public class NtinkExecutorService extends AbstractPackExecutor {
                   FacturaConstants.FACTURA_DATE_FORMAT));
       context.getFacturaDto().setCadenaOriginalTimbrado(getCadenaOriginalTimbrado(currentCfdi));
       String selloSat = currentCfdi.getComplemento().getTimbreFiscalDigital().getSelloSAT();
-      context
-          .getFacturaDto()
-          .setSelloCfd(selloSat.substring(selloSat.length() - 8, selloSat.length()));
+      context.getFacturaDto().setSelloCfd(selloSat.substring(selloSat.length() - 8));
       List<FacturaFileDto> files = new ArrayList<>();
       if (response.getCfdi() != null) {
         FacturaFileDto xml = new FacturaFileDto();
@@ -126,7 +124,7 @@ public class NtinkExecutorService extends AbstractPackExecutor {
         xml.setData(fileHelper.stringEncodeBase64(response.getCfdi()));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         outputStream.write(
-            Base64.getDecoder().decode(xml.getData().getBytes(Charset.forName("UTF-8"))));
+            Base64.getDecoder().decode(xml.getData().getBytes(StandardCharsets.UTF_8)));
         xml.setOutputStream(outputStream);
         files.add(xml);
       }
@@ -137,27 +135,26 @@ public class NtinkExecutorService extends AbstractPackExecutor {
       qr.setFileFormat(TipoArchivoEnum.QR);
       qr.setData(response.getQrCodeBase64());
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      outputStream.write(
-          Base64.getDecoder().decode(qr.getData().getBytes(Charset.forName("UTF-8"))));
+      outputStream.write(Base64.getDecoder().decode(qr.getData().getBytes(StandardCharsets.UTF_8)));
       qr.setOutputStream(outputStream);
       files.add(qr);
     } catch (IOException i) {
       throw new InvoiceManagerException(
-          String.format("Error exporting s3 file", i.getMessage(), i.getMessage()),
+          String.format("Error exporting s3 file %s %s", i.getMessage(), i.getMessage()),
           i.getMessage(),
           HttpStatus.SC_CONFLICT);
     } catch (NtlinkClientException e) {
       e.printStackTrace();
       throw new InvoiceManagerException(
           String.format(
-              "Error Stamping in facturacion moderna:  Error:%s detail:%s",
+              "Error Timbrando con NTLINK:  Error:%s detail:%s",
               e.getMessage(), e.getErrorMessage().getMessageDetail()),
           e.getMessage(),
           HttpStatus.SC_CONFLICT);
     } catch (InvoiceCommonException e) {
       throw new InvoiceManagerException(
           String.format(
-              "Error Stamping in facturacion moderna: Error:%s detail:%s",
+              "Error Timbrando con NTLINK: Error:%s detail:%s",
               e.getMessage(), e.getErrorMessage().getDeveloperMessage()),
           e.getMessage(),
           HttpStatus.SC_CONFLICT);

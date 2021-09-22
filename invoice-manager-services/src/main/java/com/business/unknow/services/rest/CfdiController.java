@@ -8,9 +8,11 @@ import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.CfdiService;
 import com.business.unknow.services.services.FacturaService;
+import com.business.unknow.services.services.evaluations.CfdiValidator;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,18 +33,22 @@ public class CfdiController {
 
   @Autowired private CfdiService cfdiService;
 
+  @Autowired
+  @Qualifier("CfdiValidator")
+  private CfdiValidator validator;
+
   // CFDI
   @PostMapping("/validacion")
   public ResponseEntity<String> validateCfdi(@RequestBody @Valid CfdiDto cfdi)
       throws InvoiceManagerException {
-    cfdiService.validateCfdi(cfdi);
+    validator.validateCfdi(cfdi);
     return new ResponseEntity<>("VALIDA", HttpStatus.OK);
   }
 
   @PostMapping("/calcular/montos")
   public ResponseEntity<CfdiDto> calculateMontosCfdi(@RequestBody @Valid CfdiDto cfdi)
       throws InvoiceManagerException {
-    cfdiService.validateCfdi(cfdi);
+    validator.validateCfdi(cfdi);
     return new ResponseEntity<>(cfdiService.recalculateCfdiAmmounts(cfdi), HttpStatus.OK);
   }
 

@@ -40,7 +40,7 @@ public class UserService {
 
   private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-  private ObjectMapper objMapper = new ObjectMapper();
+  private final ObjectMapper objMapper = new ObjectMapper();
 
   public Page<UserDto> getAllUsersByParams(
       String status, String email, String alias, int page, int size) {
@@ -106,7 +106,7 @@ public class UserService {
   }
 
   public UserDto getUserInfo(Authentication auth) throws IOException {
-    UserDto user = new UserDto();
+    UserDto user = UserDto.builder().build();
     OidcUser oidcUser = (OidcUser) auth.getPrincipal();
     if (oidcUser != null && oidcUser.getAttributes() != null && oidcUser.getEmail() != null) {
       log.info("Looking roles from : {}", oidcUser.getEmail());

@@ -204,13 +204,13 @@ export class LineaXComponent implements OnInit {
   onCompanySelected(companyId: string) {
     this.companyInfo = this.companiesCat.find(c => c.id === Number(companyId));
     // TODO Mover todo esta logica a un servicio de contrsuccion
-    this.factura.rfcEmisor = this.companyInfo.informacionFiscal.rfc;
-    this.factura.razonSocialEmisor = this.companyInfo.informacionFiscal.razonSocial.toUpperCase();
+    this.factura.rfcEmisor = this.companyInfo.rfc;
+    this.factura.razonSocialEmisor = this.companyInfo.razonSocial.toUpperCase();
     this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
-    this.factura.cfdi.emisor.rfc = this.companyInfo.informacionFiscal.rfc;
-    this.factura.cfdi.emisor.nombre = this.companyInfo.informacionFiscal.razonSocial.toUpperCase();
-    this.factura.cfdi.lugarExpedicion = this.companyInfo.informacionFiscal.cp;
-    this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateAddress(this.companyInfo.informacionFiscal);
+    this.factura.cfdi.emisor.rfc = this.companyInfo.rfc;
+    this.factura.cfdi.emisor.nombre = this.companyInfo.razonSocial.toUpperCase();
+    this.factura.cfdi.lugarExpedicion = this.companyInfo.cp;
+    this.factura.cfdi.emisor.direccion = this.cfdiValidator.generateCompanyAddress(this.companyInfo);
   }
 
   buscarClientInfo( razonSocial: string) {
@@ -402,11 +402,9 @@ export class LineaXComponent implements OnInit {
         this.invoiceService.generateInvoiceComplement(this.factura.folio, this.payment)
         .subscribe(complement => {
           this.getInvoiceInfoByPreFolio(this.preFolio);
-        //  this.loadConceptos();
         }, ( error: HttpErrorResponse) => {
           this.errorMessages.push((error.error != null && error.error !== undefined)
             ? error.error.message : `${error.statusText} : ${error.message}`);
-      //    this.loadConceptos();
           this.loading = false;
         });
       }else {
@@ -414,22 +412,6 @@ export class LineaXComponent implements OnInit {
       }
   }
 
-  private loadConceptos() {
-    this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a);
-          this.invoiceService.getComplementosInvoice(this.factura.folio)
-          .pipe(
-            map((facturas: Factura[]) => {
-              return facturas.map(record => {
-                record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
-                return record;
-              });
-            })).subscribe(complementos => {
-            this.factura.complementos = complementos;
-            this.calculatePaymentSum(complementos);
-            this.getInvoiceInfoByPreFolio(this.preFolio);
-            this.loading = false;
-          });
-  }
 
   calculatePaymentSum(complementos: Factura[]) {
     if (complementos.length === 0) {

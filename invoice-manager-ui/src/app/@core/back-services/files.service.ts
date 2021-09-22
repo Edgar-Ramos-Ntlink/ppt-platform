@@ -15,7 +15,15 @@ export class FilesService {
     return this.httpClient.get(`../api/facturas/${folio}/files/${tipoArchivo}`);
   }
   public getResourceFile(referencia:string,tipoRecurso:string,tipoArchivo:string):Observable<any>{
-    return this.httpClient.get(`../api/recursos/${tipoRecurso}/files/${tipoArchivo}/referencias/${referencia}`);
+    return this.httpClient.get(`../api/recursos/${tipoRecurso}/referencias/${referencia}/files/${tipoArchivo}`);
+  }
+
+  public getResourcesByTypeAndReference(tipoRecurso: string,referencia:string): Observable<any>{
+    return this.httpClient.get(`../api/recursos/${tipoRecurso}/referencias/${referencia}/files`);
+  }
+
+  public getResourceFileFromUrl(path:string):Observable<any>{
+    return this.httpClient.get(`../api${path}`);
   }
 
   public insertFacturaFile(file:ResourceFile):Observable<any>{

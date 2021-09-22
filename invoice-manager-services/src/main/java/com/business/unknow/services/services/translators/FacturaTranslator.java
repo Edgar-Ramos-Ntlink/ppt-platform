@@ -2,6 +2,8 @@ package com.business.unknow.services.services.translators;
 
 import com.business.unknow.Constants.FacturaComplemento;
 import com.business.unknow.Constants.FacturaConstants;
+import com.business.unknow.enums.S3BucketsEnum;
+import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.cfdi.CFdiRelacionados;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.CfdiRelacionado;
@@ -21,11 +23,13 @@ import com.business.unknow.model.dto.cfdi.RelacionadoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.mapper.factura.FacturaCfdiTranslatorMapper;
+import com.business.unknow.services.services.S3FileService;
 import com.business.unknow.services.util.helpers.CdfiHelper;
 import com.business.unknow.services.util.helpers.DateHelper;
 import com.business.unknow.services.util.helpers.FacturaHelper;
 import com.business.unknow.services.util.helpers.SignHelper;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +53,8 @@ public class FacturaTranslator {
 
   @Autowired private SignHelper signHelper;
 
+  @Autowired private S3FileService s3service;
+
   private static final Logger log = LoggerFactory.getLogger(FacturaTranslator.class);
 
   public FacturaContext translateFactura(FacturaContext context) throws InvoiceManagerException {
@@ -56,6 +62,10 @@ public class FacturaTranslator {
       Cfdi cfdi =
           facturaCfdiTranslatorMapper.cdfiRootInfo(
               context.getFacturaDto(), context.getEmpresaDto());
+
+      cfdi.setCertificado(
+          s3service.getS3File(
+              S3BucketsEnum.EMPRESAS, TipoArchivoEnum.CERT.getFormat(), cfdi.getEmisor().getRfc()));
       BigDecimal totalImpuestos = new BigDecimal(0);
       BigDecimal totalRetenciones = new BigDecimal(0);
       List<Translado> impuestos = new ArrayList<>();
@@ -85,14 +95,14 @@ public class FacturaTranslator {
 
       if (!totalImpuestos.equals(BigDecimal.ZERO)) {
         cfdi.getImpuestos()
-            .setTotalImpuestosTrasladados(totalImpuestos.setScale(2, BigDecimal.ROUND_HALF_UP));
+            .setTotalImpuestosTrasladados(totalImpuestos.setScale(2, RoundingMode.HALF_UP));
       } else {
         cfdi.getImpuestos().setTotalImpuestosTrasladados(null);
       }
 
       if (!totalRetenciones.equals(BigDecimal.ZERO)) {
         cfdi.getImpuestos()
-            .setTotalImpuestosRetenidos(totalRetenciones.setScale(2, BigDecimal.ROUND_HALF_UP));
+            .setTotalImpuestosRetenidos(totalRetenciones.setScale(2, RoundingMode.HALF_UP));
       } else {
         cfdi.getImpuestos().setTotalImpuestosRetenidos(null);
       }
@@ -113,6 +123,9 @@ public class FacturaTranslator {
       Cfdi cfdi =
           facturaCfdiTranslatorMapper.complementoRootInfo(
               context.getFacturaDto().getCfdi(), context.getEmpresaDto());
+      cfdi.setCertificado(
+          s3service.getS3File(
+              S3BucketsEnum.EMPRESAS, TipoArchivoEnum.CERT.getFormat(), cfdi.getEmisor().getRfc()));
       for (ConceptoDto concepto : context.getFacturaDto().getCfdi().getConceptos()) {
         cfdi.getConceptos().add(facturaCfdiTranslatorMapper.complementoConcepto(concepto));
       }
@@ -154,7 +167,7 @@ public class FacturaTranslator {
                 cfdiPago
                     .getImportePagado()
                     .multiply(cfdiPago.getTipoCambioDr())
-                    .setScale(2, BigDecimal.ROUND_DOWN));
+                    .setScale(2, RoundingMode.DOWN));
       }
       complementoPago.setMonto(montoTotal.toString());
       cfdi.setComplemento(complemento);
@@ -169,7 +182,8 @@ public class FacturaTranslator {
     }
   }
 
-  public void complementoToXmlSigned(FacturaContext context) throws InvoiceCommonException {
+  public void complementoToXmlSigned(FacturaContext context)
+      throws InvoiceCommonException, InvoiceManagerException {
     String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
     log.debug(context.getXml());
     xml = xml.replace(FacturaComplemento.TOTAL, FacturaComplemento.TOTAL_FINAL);
@@ -181,18 +195,23 @@ public class FacturaTranslator {
                 ? context.getFacturaDto().getFechaActualizacion()
                 : new Date());
     String cadenaOriginal = signHelper.getCadena(xml);
+
+    String llavePrivada =
+        s3service.getS3File(
+            S3BucketsEnum.EMPRESAS,
+            TipoArchivoEnum.KEY.getFormat(),
+            context.getEmpresaDto().getRfc());
+
     String sello =
-        signHelper.getSign(
-            cadenaOriginal,
-            context.getEmpresaDto().getPwSat(),
-            context.getEmpresaDto().getLlavePrivada());
+        signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getFiel(), llavePrivada);
     context.setXml(cdfiHelper.putsSign(xml, sello));
     if (context.getFacturaDto().getCfdi().getComplemento() == null) {
       context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());
     }
   }
 
-  public void facturaToXmlSigned(FacturaContext context) throws InvoiceCommonException {
+  public void facturaToXmlSigned(FacturaContext context)
+      throws InvoiceCommonException, InvoiceManagerException {
     String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
     xml =
         cdfiHelper.changeDate(
@@ -201,11 +220,13 @@ public class FacturaTranslator {
                 ? context.getFacturaDto().getFechaActualizacion()
                 : new Date());
     String cadenaOriginal = signHelper.getCadena(xml);
+    String llavePrivada =
+        s3service.getS3File(
+            S3BucketsEnum.EMPRESAS,
+            TipoArchivoEnum.KEY.getFormat(),
+            context.getEmpresaDto().getRfc());
     String sello =
-        signHelper.getSign(
-            cadenaOriginal,
-            context.getEmpresaDto().getPwSat(),
-            context.getEmpresaDto().getLlavePrivada());
+        signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getFiel(), llavePrivada);
     context.setXml(cdfiHelper.putsSign(xml, sello).replace("standalone=\"no\"", ""));
     context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());
   }

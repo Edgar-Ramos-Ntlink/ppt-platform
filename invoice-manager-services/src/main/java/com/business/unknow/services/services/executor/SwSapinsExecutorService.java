@@ -5,6 +5,7 @@ import com.business.unknow.client.swsapiens.model.SwSapiensVersionEnum;
 import com.business.unknow.client.swsapiens.util.SwSapiensClientException;
 import com.business.unknow.client.swsapiens.util.SwSapiensConfig;
 import com.business.unknow.enums.FacturaStatusEnum;
+import com.business.unknow.enums.S3BucketsEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.context.FacturaContext;
@@ -14,12 +15,13 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.client.SwSapiensClient;
 import com.business.unknow.services.config.properties.GlocalConfigs;
 import com.business.unknow.services.config.properties.SwProperties;
+import com.business.unknow.services.services.S3FileService;
 import com.business.unknow.services.util.helpers.DateHelper;
 import com.business.unknow.services.util.helpers.FacturaHelper;
 import com.business.unknow.services.util.helpers.FileHelper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -42,6 +44,8 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
   @Autowired private SwProperties swProperties;
 
   @Autowired private GlocalConfigs glocalConfigs;
+
+  @Autowired private S3FileService s3service;
 
   public FacturaContext stamp(FacturaContext context) throws InvoiceManagerException {
     SwSapiensClient swSapiensClient = new SwSapiensClient();
@@ -74,7 +78,7 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
       outputStream.write(
           Base64.getDecoder()
               .decode(
-                  fileHelper.stringEncodeBase64(qr.getData()).getBytes(Charset.forName("UTF-8"))));
+                  fileHelper.stringEncodeBase64(qr.getData()).getBytes(StandardCharsets.UTF_8)));
       qr.setOutputStream(outputStream);
       FacturaFileDto xml = new FacturaFileDto();
       xml.setFolio(context.getFacturaDto().getFolio());
@@ -85,14 +89,14 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
       outputStream.write(
           Base64.getDecoder()
               .decode(
-                  fileHelper.stringEncodeBase64(xml.getData()).getBytes(Charset.forName("UTF-8"))));
+                  fileHelper.stringEncodeBase64(xml.getData()).getBytes(StandardCharsets.UTF_8)));
       xml.setOutputStream(outputStreamXml);
       files.add(qr);
       files.add(xml);
       context.setFacturaFilesDto(files);
     } catch (IOException i) {
       throw new InvoiceManagerException(
-          String.format("Error exporting s3 file", i.getMessage(), i.getMessage()),
+          String.format("Error exporting s3 file %s %s", i.getMessage(), i.getMessage()),
           i.getMessage(),
           HttpStatus.SC_CONFLICT);
     } catch (SwSapiensClientException e) {
@@ -130,15 +134,27 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
   public FacturaContext cancelarFactura(FacturaContext context) throws InvoiceManagerException {
     try {
       if (glocalConfigs.getEnvironment().equals("prod")) {
+
+        String llavePrivada =
+            s3service.getS3File(
+                S3BucketsEnum.EMPRESAS,
+                TipoArchivoEnum.KEY.name(),
+                context.getEmpresaDto().getRfc());
+        String certificado =
+            s3service.getS3File(
+                S3BucketsEnum.EMPRESAS,
+                TipoArchivoEnum.CERT.name(),
+                context.getEmpresaDto().getRfc());
+
         swSapiensClient
             .getSwSapiensClient(
                 swProperties.getHost(), "", swProperties.getUser(), swProperties.getPassword())
             .cancel(
                 context.getFacturaDto().getUuid(),
-                context.getEmpresaDto().getPwSat(),
-                context.getEmpresaDto().getInformacionFiscal().getRfc(),
-                fileHelper.stringEncodeBase64(context.getEmpresaDto().getCertificado()),
-                fileHelper.stringEncodeBase64(context.getEmpresaDto().getLlavePrivada()));
+                context.getEmpresaDto().getFiel(),
+                context.getEmpresaDto().getRfc(),
+                fileHelper.stringEncodeBase64(certificado),
+                fileHelper.stringEncodeBase64(llavePrivada));
       }
       context.getFacturaDto().setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
       context.getFacturaDto().setFechaCancelacion(new Date());

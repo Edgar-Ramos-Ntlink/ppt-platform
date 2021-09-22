@@ -9,7 +9,6 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-/** @author ralfdemoledor */
 @Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface PagoMapper {
 

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** @author eej000f */
 @RestController
 @RequestMapping("/api")
 public class EmpresaController {
@@ -55,8 +54,9 @@ public class EmpresaController {
   }
 
   @PutMapping("/empresas/{rfc}")
-  public ResponseEntity<EmpresaDto> updateClient(
-      @PathVariable String rfc, @RequestBody @Valid EmpresaDto empresa) {
+  public ResponseEntity<EmpresaDto> updateEmpresa(
+      @PathVariable String rfc, @RequestBody @Valid EmpresaDto empresa)
+      throws InvoiceManagerException {
     return new ResponseEntity<>(service.updateEmpresaInfo(empresa, rfc), HttpStatus.OK);
   }
 }

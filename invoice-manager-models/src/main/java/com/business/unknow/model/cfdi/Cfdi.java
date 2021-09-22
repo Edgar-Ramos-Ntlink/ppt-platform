@@ -1,9 +1,9 @@
 package com.business.unknow.model.cfdi;
 
+import com.business.unknow.Constants.CfdiConstants;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -11,248 +11,302 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.business.unknow.Constants.CfdiConstants;
-
 @XmlRootElement(name = "Comprobante", namespace = "http://www.sat.gob.mx/cfd/3")
 @XmlAccessorType(XmlAccessType.NONE)
 public class Cfdi {
 
-	@XmlAttribute(name = "Version")
-	private String version = CfdiConstants.FACTURA_VERSION;
-	@XmlAttribute(name = "Serie")
-	private String serie;
-	@XmlAttribute(name = "Folio")
-	private String folio;
-	@XmlAttribute(name = "Fecha")
-	private String fecha;
-	@XmlAttribute(name = "Sello")
-	private String sello;
-	@XmlAttribute(name = "FormaPago")
-	private String formaPago;
-	@XmlAttribute(name = "NoCertificado")
-	private String noCertificado;
-	@XmlAttribute(name = "Certificado")
-	private String certificado;
-	@XmlAttribute(name = "SubTotal")
-	private BigDecimal subtotal;
-	@XmlAttribute(name = "Descuento")
-	private BigDecimal descuento;
-	@XmlAttribute(name = "TipoCambio")
-	private BigDecimal tipoCambio;
-	@XmlAttribute(name = "Moneda")
-	private String moneda;
-	@XmlAttribute(name = "Total")
-	private BigDecimal total;
-	@XmlAttribute(name = "TipoDeComprobante")
-	private String tipoDeComprobante;
-	@XmlAttribute(name = "MetodoPago")
-	private String metodoPago;
-	@XmlAttribute(name = "LugarExpedicion")
-	private String lugarExpedicion;
-	@XmlElement(name = "CfdiRelacionados", namespace = "http://www.sat.gob.mx/cfd/3")
-	private CFdiRelacionados cFdiRelacionados;
-	@XmlElement(name = "Emisor", namespace = "http://www.sat.gob.mx/cfd/3")
-	private Emisor emisor;
-	@XmlElement(name = "Receptor", namespace = "http://www.sat.gob.mx/cfd/3")
-	private Receptor receptor;
-	@XmlElementWrapper(name = "Conceptos", namespace = "http://www.sat.gob.mx/cfd/3")
-	@XmlElement(name = "Concepto", namespace = "http://www.sat.gob.mx/cfd/3")
-	private List<Concepto> conceptos;
-	@XmlElement(name = "Impuestos", namespace = "http://www.sat.gob.mx/cfd/3")
-	private Impuesto impuestos;
-	@XmlElement(name = "Complemento", namespace = "http://www.sat.gob.mx/cfd/3")
-	private Complemento complemento;
-	
-	public Cfdi() {
-		this.conceptos = new ArrayList<>();
-		this.impuestos = new Impuesto();
-	}
+  @XmlAttribute(name = "Version")
+  private String version = CfdiConstants.FACTURA_VERSION;
 
-	public String getVersion() {
-		return version;
-	}
+  @XmlAttribute(name = "Serie")
+  private String serie;
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+  @XmlAttribute(name = "Folio")
+  private String folio;
 
-	public String getSerie() {
-		return serie;
-	}
+  @XmlAttribute(name = "Fecha")
+  private String fecha;
 
-	public void setSerie(String serie) {
-		this.serie = serie;
-	}
+  @XmlAttribute(name = "Sello")
+  private String sello;
 
-	public String getFolio() {
-		return folio;
-	}
+  @XmlAttribute(name = "FormaPago")
+  private String formaPago;
 
-	public void setFolio(String folio) {
-		this.folio = folio;
-	}
+  @XmlAttribute(name = "NoCertificado")
+  private String noCertificado;
 
-	public String getFecha() {
-		return fecha;
-	}
+  @XmlAttribute(name = "Certificado")
+  private String certificado;
 
-	public void setFecha(String fecha) {
-		this.fecha = fecha;
-	}
+  @XmlAttribute(name = "SubTotal")
+  private BigDecimal subtotal;
 
-	public String getSello() {
-		return sello;
-	}
+  @XmlAttribute(name = "Descuento")
+  private BigDecimal descuento;
 
-	public void setSello(String sello) {
-		this.sello = sello;
-	}
+  @XmlAttribute(name = "TipoCambio")
+  private BigDecimal tipoCambio;
 
-	public String getFormaPago() {
-		return formaPago;
-	}
+  @XmlAttribute(name = "Moneda")
+  private String moneda;
 
-	public void setFormaPago(String formaPago) {
-		this.formaPago = formaPago;
-	}
+  @XmlAttribute(name = "Total")
+  private BigDecimal total;
 
-	public String getNoCertificado() {
-		return noCertificado;
-	}
+  @XmlAttribute(name = "TipoDeComprobante")
+  private String tipoDeComprobante;
 
-	public void setNoCertificado(String noCertificado) {
-		this.noCertificado = noCertificado;
-	}
+  @XmlAttribute(name = "MetodoPago")
+  private String metodoPago;
 
-	public String getCertificado() {
-		return certificado;
-	}
+  @XmlAttribute(name = "LugarExpedicion")
+  private String lugarExpedicion;
 
-	public void setCertificado(String certificado) {
-		this.certificado = certificado;
-	}
+  @XmlElement(name = "CfdiRelacionados", namespace = "http://www.sat.gob.mx/cfd/3")
+  private CFdiRelacionados cFdiRelacionados;
 
-	public BigDecimal getSubtotal() {
-		return subtotal;
-	}
+  @XmlElement(name = "Emisor", namespace = "http://www.sat.gob.mx/cfd/3")
+  private Emisor emisor;
 
-	public void setSubtotal(BigDecimal subtotal) {
-		this.subtotal = subtotal;
-	}
+  @XmlElement(name = "Receptor", namespace = "http://www.sat.gob.mx/cfd/3")
+  private Receptor receptor;
 
-	public BigDecimal getDescuento() {
-		return descuento;
-	}
+  @XmlElementWrapper(name = "Conceptos", namespace = "http://www.sat.gob.mx/cfd/3")
+  @XmlElement(name = "Concepto", namespace = "http://www.sat.gob.mx/cfd/3")
+  private List<Concepto> conceptos;
 
-	public BigDecimal getTipoCambio() {
-		return tipoCambio;
-	}
+  @XmlElement(name = "Impuestos", namespace = "http://www.sat.gob.mx/cfd/3")
+  private Impuesto impuestos;
 
-	public void setTipoCambio(BigDecimal tipoCambio) {
-		this.tipoCambio = tipoCambio;
-	}
+  @XmlElement(name = "Complemento", namespace = "http://www.sat.gob.mx/cfd/3")
+  private Complemento complemento;
 
-	public void setDescuento(BigDecimal descuento) {
-		this.descuento = descuento;
-	}
+  public Cfdi() {
+    this.conceptos = new ArrayList<>();
+    this.impuestos = new Impuesto();
+  }
 
-	public String getMoneda() {
-		return moneda;
-	}
+  public String getVersion() {
+    return version;
+  }
 
-	public void setMoneda(String moneda) {
-		this.moneda = moneda;
-	}
+  public void setVersion(String version) {
+    this.version = version;
+  }
 
-	public BigDecimal getTotal() {
-		return total;
-	}
+  public String getSerie() {
+    return serie;
+  }
 
-	public void setTotal(BigDecimal total) {
-		this.total = total;
-	}
+  public void setSerie(String serie) {
+    this.serie = serie;
+  }
 
-	public String getTipoDeComprobante() {
-		return tipoDeComprobante;
-	}
+  public String getFolio() {
+    return folio;
+  }
 
-	public void setTipoDeComprobante(String tipoDeComprobante) {
-		this.tipoDeComprobante = tipoDeComprobante;
-	}
+  public void setFolio(String folio) {
+    this.folio = folio;
+  }
 
-	public String getMetodoPago() {
-		return metodoPago;
-	}
+  public String getFecha() {
+    return fecha;
+  }
 
-	public void setMetodoPago(String metodoPago) {
-		this.metodoPago = metodoPago;
-	}
+  public void setFecha(String fecha) {
+    this.fecha = fecha;
+  }
 
-	public String getLugarExpedicion() {
-		return lugarExpedicion;
-	}
+  public String getSello() {
+    return sello;
+  }
 
-	public void setLugarExpedicion(String lugarExpedicion) {
-		this.lugarExpedicion = lugarExpedicion;
-	}
+  public void setSello(String sello) {
+    this.sello = sello;
+  }
 
-	public Emisor getEmisor() {
-		return emisor;
-	}
+  public String getFormaPago() {
+    return formaPago;
+  }
 
-	public void setEmisor(Emisor emisor) {
-		this.emisor = emisor;
-	}
+  public void setFormaPago(String formaPago) {
+    this.formaPago = formaPago;
+  }
 
-	public Receptor getReceptor() {
-		return receptor;
-	}
+  public String getNoCertificado() {
+    return noCertificado;
+  }
 
-	public void setReceptor(Receptor receptor) {
-		this.receptor = receptor;
-	}
+  public void setNoCertificado(String noCertificado) {
+    this.noCertificado = noCertificado;
+  }
 
-	public List<Concepto> getConceptos() {
-		return conceptos;
-	}
+  public String getCertificado() {
+    return certificado;
+  }
 
-	public void setConceptos(List<Concepto> conceptos) {
-		this.conceptos = conceptos;
-	}
+  public void setCertificado(String certificado) {
+    this.certificado = certificado;
+  }
 
-	public Impuesto getImpuestos() {
-		return impuestos;
-	}
+  public BigDecimal getSubtotal() {
+    return subtotal;
+  }
 
-	public void setImpuestos(Impuesto impuestos) {
-		this.impuestos = impuestos;
-	}
+  public void setSubtotal(BigDecimal subtotal) {
+    this.subtotal = subtotal;
+  }
 
-	public Complemento getComplemento() {
-		return complemento;
-	}
+  public BigDecimal getDescuento() {
+    return descuento;
+  }
 
-	public void setComplemento(Complemento complemento) {
-		this.complemento = complemento;
-	}
+  public BigDecimal getTipoCambio() {
+    return tipoCambio;
+  }
 
-	public CFdiRelacionados getcFdiRelacionados() {
-		return cFdiRelacionados;
-	}
+  public void setTipoCambio(BigDecimal tipoCambio) {
+    this.tipoCambio = tipoCambio;
+  }
 
-	public void setcFdiRelacionados(CFdiRelacionados cFdiRelacionados) {
-		this.cFdiRelacionados = cFdiRelacionados;
-	}
+  public void setDescuento(BigDecimal descuento) {
+    this.descuento = descuento;
+  }
 
-	@Override
-	public String toString() {
-		return "Cfdi [version=" + version + ", serie=" + serie + ", folio=" + folio + ", fecha=" + fecha + ", sello="
-				+ sello + ", formaPago=" + formaPago + ", noCertificado=" + noCertificado + ", certificado="
-				+ certificado + ", subtotal=" + subtotal + ", descuento=" + descuento + ", tipoCambio=" + tipoCambio
-				+ ", moneda=" + moneda + ", total=" + total + ", tipoDeComprobante=" + tipoDeComprobante
-				+ ", metodoPago=" + metodoPago + ", lugarExpedicion=" + lugarExpedicion + ", emisor=" + emisor
-				+ ", receptor=" + receptor + ", conceptos=" + conceptos + ", impuestos=" + impuestos + ", complemento="
-				+ complemento + ", cFdiRelacionados=" + cFdiRelacionados + "]";
-	}
+  public String getMoneda() {
+    return moneda;
+  }
 
+  public void setMoneda(String moneda) {
+    this.moneda = moneda;
+  }
+
+  public BigDecimal getTotal() {
+    return total;
+  }
+
+  public void setTotal(BigDecimal total) {
+    this.total = total;
+  }
+
+  public String getTipoDeComprobante() {
+    return tipoDeComprobante;
+  }
+
+  public void setTipoDeComprobante(String tipoDeComprobante) {
+    this.tipoDeComprobante = tipoDeComprobante;
+  }
+
+  public String getMetodoPago() {
+    return metodoPago;
+  }
+
+  public void setMetodoPago(String metodoPago) {
+    this.metodoPago = metodoPago;
+  }
+
+  public String getLugarExpedicion() {
+    return lugarExpedicion;
+  }
+
+  public void setLugarExpedicion(String lugarExpedicion) {
+    this.lugarExpedicion = lugarExpedicion;
+  }
+
+  public Emisor getEmisor() {
+    return emisor;
+  }
+
+  public void setEmisor(Emisor emisor) {
+    this.emisor = emisor;
+  }
+
+  public Receptor getReceptor() {
+    return receptor;
+  }
+
+  public void setReceptor(Receptor receptor) {
+    this.receptor = receptor;
+  }
+
+  public List<Concepto> getConceptos() {
+    return conceptos;
+  }
+
+  public void setConceptos(List<Concepto> conceptos) {
+    this.conceptos = conceptos;
+  }
+
+  public Impuesto getImpuestos() {
+    return impuestos;
+  }
+
+  public void setImpuestos(Impuesto impuestos) {
+    this.impuestos = impuestos;
+  }
+
+  public Complemento getComplemento() {
+    return complemento;
+  }
+
+  public void setComplemento(Complemento complemento) {
+    this.complemento = complemento;
+  }
+
+  public CFdiRelacionados getcFdiRelacionados() {
+    return cFdiRelacionados;
+  }
+
+  public void setcFdiRelacionados(CFdiRelacionados cFdiRelacionados) {
+    this.cFdiRelacionados = cFdiRelacionados;
+  }
+
+  @Override
+  public String toString() {
+    return "Cfdi [version="
+        + version
+        + ", serie="
+        + serie
+        + ", folio="
+        + folio
+        + ", fecha="
+        + fecha
+        + ", sello="
+        + sello
+        + ", formaPago="
+        + formaPago
+        + ", noCertificado="
+        + noCertificado
+        + ", subtotal="
+        + subtotal
+        + ", descuento="
+        + descuento
+        + ", tipoCambio="
+        + tipoCambio
+        + ", moneda="
+        + moneda
+        + ", total="
+        + total
+        + ", tipoDeComprobante="
+        + tipoDeComprobante
+        + ", metodoPago="
+        + metodoPago
+        + ", lugarExpedicion="
+        + lugarExpedicion
+        + ", emisor="
+        + emisor
+        + ", receptor="
+        + receptor
+        + ", conceptos="
+        + conceptos
+        + ", impuestos="
+        + impuestos
+        + ", complemento="
+        + complemento
+        + ", cFdiRelacionados="
+        + cFdiRelacionados
+        + "]";
+  }
 }

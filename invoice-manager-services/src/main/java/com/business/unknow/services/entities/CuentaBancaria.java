@@ -39,6 +39,12 @@ public class CuentaBancaria implements Serializable {
   @Column(name = "CLABE ")
   private String clabe;
 
+  @Column(name = "DOMICILIO_BANCO ")
+  private String domicilioBanco;
+
+  @Column(name = "SUCURSAL ")
+  private String sucursal;
+
   @Temporal(TemporalType.TIMESTAMP)
   @CreatedDate
   @Column(name = "FECHA_CREACION")
@@ -105,22 +111,49 @@ public class CuentaBancaria implements Serializable {
     this.fechaActualizacion = fechaActualizacion;
   }
 
+  public String getDomicilioBanco() {
+    return domicilioBanco;
+  }
+
+  public void setDomicilioBanco(String domicilioBanco) {
+    this.domicilioBanco = domicilioBanco;
+  }
+
+  public String getSucursal() {
+    return sucursal;
+  }
+
+  public void setSucursal(String sucursal) {
+    this.sucursal = sucursal;
+  }
+
   @Override
   public String toString() {
-    return "CuentaBancaria [id="
+    return "CuentaBancaria{"
+        + "id="
         + id
-        + ", empresa="
+        + ", empresa='"
         + empresa
-        + ", banco="
+        + '\''
+        + ", banco='"
         + banco
-        + ", cuenta="
+        + '\''
+        + ", cuenta='"
         + cuenta
-        + ", clabe="
+        + '\''
+        + ", clabe='"
         + clabe
+        + '\''
+        + ", domicilioBanco='"
+        + domicilioBanco
+        + '\''
+        + ", sucursal='"
+        + sucursal
+        + '\''
         + ", fechaCreacion="
         + fechaCreacion
         + ", fechaActualizacion="
         + fechaActualizacion
-        + "]";
+        + '}';
   }
 }

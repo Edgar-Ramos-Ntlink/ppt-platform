@@ -9,20 +9,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.NONE)
 public class NtlinkCancelResponseModel {
 
-	@XmlElement(name = "CancelaCfdiResult", namespace = "a")
-	private String cancelaCfdiResult;
+  @XmlElement(name = "CancelaCfdiResult", namespace = "a")
+  private String cancelaCfdiResult;
 
-	public String getCancelaCfdiResult() {
-		return cancelaCfdiResult;
-	}
+  public String getCancelaCfdiResult() {
+    return cancelaCfdiResult;
+  }
 
-	public void setCancelaCfdiResult(String cancelaCfdiResult) {
-		this.cancelaCfdiResult = cancelaCfdiResult;
-	}
+  public void setCancelaCfdiResult(String cancelaCfdiResult) {
+    this.cancelaCfdiResult = cancelaCfdiResult;
+  }
 
-	@Override
-	public String toString() {
-		return "NtlinkCancelResponseModel [cancelaCfdiResult=" + cancelaCfdiResult + "]";
-	}
-
+  @Override
+  public String toString() {
+    return "NtlinkCancelResponseModel [cancelaCfdiResult=" + cancelaCfdiResult + "]";
+  }
 }

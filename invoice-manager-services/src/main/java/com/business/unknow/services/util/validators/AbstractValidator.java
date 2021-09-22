@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AbstractValidator {
+public abstract class AbstractValidator {
 
   protected static final String ATTRIBUTE_REQUIRED = "Attribute required.";
   protected static final String ATTRIBUTE_REQUIRED_MESSAGE = "Error, el campo [%s] no fue enviado.";

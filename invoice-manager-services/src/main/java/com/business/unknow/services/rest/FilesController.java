@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.services.rest;
 
 import com.business.unknow.enums.S3BucketsEnum;
@@ -7,9 +6,11 @@ import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.FilesService;
+import com.business.unknow.services.util.helpers.StringHelper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,12 +23,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** @author ralfdemoledor */
 @RestController
 @RequestMapping("/api")
 public class FilesController {
 
   @Autowired private FilesService service;
+
+  @Autowired private StringHelper stringHelper;
 
   @GetMapping("/facturas/{folio}/files/{fileType}")
   public ResponseEntity<FacturaFileDto> getFacturaFiles(
@@ -37,14 +39,24 @@ public class FilesController {
         service.getFacturaFileByFolioAndType(folio, fileType), HttpStatus.OK);
   }
 
-  @GetMapping("/recursos/{recurso}/files/{fileType}/referencias/{referencia}")
-  public ResponseEntity<ResourceFileDto> getResourceFiles(
+  @GetMapping("/recursos/{recurso}/referencias/{referencia}/files")
+  public ResponseEntity<List<ResourceFileDto>> getResourcesByResourceType(
+      @PathVariable(name = "recurso") String recurso,
+      @PathVariable(name = "referencia") String referencia) {
+    return new ResponseEntity<>(
+        service.findResourcesByResourceType(S3BucketsEnum.valueOf(recurso), referencia),
+        HttpStatus.OK);
+  }
+
+  @GetMapping("/recursos/{recurso}/referencias/{referencia}/files/{fileType}")
+  public ResponseEntity<ResourceFileDto> getResourceFileByResourceTypeAndRefrence(
       @PathVariable(name = "recurso") String recurso,
       @PathVariable(name = "fileType") String fileType,
       @PathVariable(name = "referencia") String referencia)
       throws InvoiceManagerException {
     return new ResponseEntity<>(
-        service.getResourceFileByResourceReferenceAndType(recurso, referencia, fileType),
+        service.getResourceFileByResourceReferenceAndType(
+            S3BucketsEnum.findByValor(recurso), referencia, fileType),
         HttpStatus.OK);
   }
 
@@ -54,8 +66,8 @@ public class FilesController {
     try {
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
       bos.write(Base64.getDecoder().decode(facturaFile.getData()));
-      service.upsertS3File(
-          S3BucketsEnum.FACTURAS,
+      service.upsertFacturaFile(
+          S3BucketsEnum.CFDIS,
           TipoArchivoEnum.valueOf(facturaFile.getTipoArchivo()).getFormat(),
           facturaFile.getFolio(),
           bos);
@@ -66,13 +78,15 @@ public class FilesController {
   }
 
   @PostMapping("/recursos/{recurso}/files")
-  public ResponseEntity<Void> insertResourceFile(@RequestBody @Valid ResourceFileDto resourceFile) {
+  public ResponseEntity<Void> insertResourceFile(@RequestBody @Valid ResourceFileDto resourceFile)
+      throws InvoiceManagerException {
     service.upsertResourceFile(resourceFile);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @DeleteMapping("/recursos/files/{id}")
-  public ResponseEntity<Void> deleteRecursoFile(@PathVariable Integer id) {
+  public ResponseEntity<Void> deleteRecursoFile(@PathVariable Integer id)
+      throws InvoiceManagerException {
     service.deleteResourceFile(id);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }

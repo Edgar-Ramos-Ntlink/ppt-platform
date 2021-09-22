@@ -5,6 +5,7 @@ import {
   NbActionsModule,
   NbButtonModule,
   NbCardModule,
+  NbTabsetModule,
   NbCheckboxModule,
   NbDatepickerModule,
   NbInputModule,
@@ -30,7 +31,7 @@ import { InvoiceReportsComponent } from './invoice-reports/invoice-reports.compo
 import { DevolutionsDetailsComponent } from './devolutions-details/devolutions-details.component';
 import { CfdiComponent } from './cfdi/cfdi.component';
 import { AsignacionPagosComponent } from './asignacion-pagos/asignacion-pagos.component';
-import {AutocompleteLibModule} from 'angular-ng-autocomplete';
+import { AutocompleteLibModule} from 'angular-ng-autocomplete';
 import { PagoFacturaComponent } from './pago-factura/pago-factura.component';
 import { GenerarComplementoComponent } from './generar-complemento/generar-complemento.component';
 import { MulticomplementosComponent } from './multicomplementos/multicomplementos.component';
@@ -56,12 +57,13 @@ import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.compo
     MulticomplementosComponent,
     CuentasBancariasComponent,
     CuentasBancariasComponent,
-    CuentaBancariaComponent
+    CuentaBancariaComponent,
   ],
   imports: [
     CommonModule,
     AutocompleteLibModule,
     FormsModule,
+    NbTabsetModule,
     NbActionsModule,
     NbButtonModule,
     NbCardModule,
@@ -96,6 +98,7 @@ import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.compo
     CuentasBancariasComponent,
     FormsModule,
     CommonModule,
+    NbTabsetModule,
     NbActionsModule,
     NbButtonModule,
     NbCardModule,

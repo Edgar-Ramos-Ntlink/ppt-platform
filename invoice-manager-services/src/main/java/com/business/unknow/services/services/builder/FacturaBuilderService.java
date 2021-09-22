@@ -45,7 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FacturaBuilderService extends AbstractBuilderService {
+public class FacturaBuilderService {
 
   @Autowired private EmpresaRepository empresaRepository;
 
@@ -73,7 +73,6 @@ public class FacturaBuilderService extends AbstractBuilderService {
                             "Pago a credito no encontrado",
                             String.format("No existe El emisor %s", facturaDto.getRfcEmisor()),
                             HttpStatus.SC_NOT_FOUND)));
-    getEmpresaFiles(empresaDto, facturaDto);
     return new FacturaContextBuilder()
         .setEmpresaDto(empresaDto)
         .setFacturaDto(facturaDto)
@@ -118,7 +117,7 @@ public class FacturaBuilderService extends AbstractBuilderService {
     CfdiDtoBuilder cfdiBuilder =
         new CfdiDtoBuilder()
             .setVersion(ComplementoPpdDefaults.VERSION_CFDI)
-            .setLugarExpedicion(facturaContext.getEmpresaDto().getInformacionFiscal().getCp())
+            .setLugarExpedicion(facturaContext.getEmpresaDto().getCp())
             .setMoneda(ComplementoPpdDefaults.MONEDA)
             .setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
             .setFormaPago(

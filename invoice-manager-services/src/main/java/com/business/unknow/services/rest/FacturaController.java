@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** @author eej000f */
 @RestController
 @RequestMapping("/api/facturas")
 public class FacturaController {
@@ -116,7 +115,7 @@ public class FacturaController {
   public ResponseEntity<FacturaContext> renviarCorreos(
       @PathVariable String folio, @RequestBody @Valid FacturaDto facturaDto)
       throws InvoiceManagerException {
-    return new ResponseEntity<>(service.renviarCorreo(folio, facturaDto), HttpStatus.OK);
+    return new ResponseEntity<>(service.resendEmail(folio, facturaDto), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/complementos")

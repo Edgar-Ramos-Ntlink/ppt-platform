@@ -11,12 +11,12 @@
 			"link": "/pages/tesoreria/historial-pagos"
 		},
 		{
-			"title": "Devoluciones",
-			"link": "/pages/tesoreria/devoluciones"
-		},
-		{
 			"title": "Cuentas Bancarias",
 			"link": "/pages/tesoreria/cuentas-bancarias"
+		},
+		{
+			"title": "Empresas",
+			"link": "/pages/tesoreria/empresas"
 		},
 		{
 			"title": "Reportes Facturas",

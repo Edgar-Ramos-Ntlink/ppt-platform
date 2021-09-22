@@ -1,5 +1,3 @@
 package com.business.unknow.model.dto.pagos;
 
-public class PagoReportDto {
-
-}
+public class PagoReportDto {}

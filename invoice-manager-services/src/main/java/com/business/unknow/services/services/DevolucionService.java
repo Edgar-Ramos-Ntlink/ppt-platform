@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.services.services;
 
 import com.business.unknow.enums.TipoDocumentoEnum;
@@ -19,8 +18,8 @@ import com.business.unknow.services.services.builder.DevolucionesBuilderService;
 import com.business.unknow.services.services.executor.DevolucionExecutorService;
 import com.business.unknow.services.util.validators.DevolucionValidator;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -52,7 +51,7 @@ public class DevolucionService {
 
   @Autowired private DevolucionExecutorService devolucionExecutorService;
 
-  private DevolucionValidator devolucionValidator = new DevolucionValidator();
+  private final DevolucionValidator devolucionValidator = new DevolucionValidator();
 
   public Page<DevolucionDto> getDevolucionesByParams(
       Optional<String> receptorType, Optional<String> idReceptor, int page, int size) {
@@ -82,24 +81,10 @@ public class DevolucionService {
     BigDecimal result = repository.findMontoByParams(tipoReceptor, idReceptor);
 
     if (result == null || result.compareTo(BigDecimal.ZERO) == 0) {
-      return new BigDecimal(0.0);
+      return BigDecimal.ZERO;
     } else {
-      return result.setScale(2, BigDecimal.ROUND_DOWN);
+      return result.setScale(2, RoundingMode.DOWN);
     }
-  }
-
-  public DevolucionDto insertDevolution(DevolucionDto devolucion) {
-    return mapper.getDevolucionDtoFromEntity(
-        repository.save(mapper.getEntityFromDevolucionDto(devolucion)));
-  }
-
-  public List<PagoDevolucionDto> solicitudDevoluciones(List<PagoDevolucionDto> solicitudes)
-      throws InvoiceManagerException {
-    List<PagoDevolucionDto> pagos = new ArrayList<>();
-    for (PagoDevolucionDto dto : solicitudes) {
-      pagos.add(solicitudDevolucion(dto));
-    }
-    return pagos;
   }
 
   public List<DevolucionDto> getDevolucionesByFolio(String folio) {
@@ -200,7 +185,7 @@ public class DevolucionService {
       String idReceptor,
       int page,
       int size) {
-    Page<PagoDevolucion> result = new PageImpl<>(new ArrayList<>());
+    Page<PagoDevolucion> result = null;
     if (folio.isPresent()) {
       result = pagoDevolucionRepository.findByFolioFactura(folio.get(), PageRequest.of(0, 10));
     } else if (tipoReceptor.length() > 0 && idReceptor.length() > 0) {

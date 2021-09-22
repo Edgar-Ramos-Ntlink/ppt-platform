@@ -91,6 +91,7 @@ public class ClientService {
 
   public ClientDto insertNewClient(ClientDto cliente) throws InvoiceManagerException {
     clientValidator.validatePostCliente(cliente);
+    cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().trim());
     Optional<Contribuyente> entity =
         contribuyenteRepository.findByRfc(cliente.getInformacionFiscal().getRfc());
     Optional<Client> client =

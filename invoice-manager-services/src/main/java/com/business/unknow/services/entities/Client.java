@@ -40,6 +40,9 @@ public class Client implements Serializable {
   @Column(name = "ACTIVO")
   private Boolean activo;
 
+  @Column(name = "NOTAS")
+  private String notas;
+
   @NotEmpty
   @Column(name = "CORREO_PROMOTOR")
   private String correoPromotor;
@@ -167,6 +170,14 @@ public class Client implements Serializable {
 
   public void setInformacionFiscal(Contribuyente informacionFiscal) {
     this.informacionFiscal = informacionFiscal;
+  }
+
+  public String getNotas() {
+    return notas;
+  }
+
+  public void setNotas(String notas) {
+    this.notas = notas;
   }
 
   @Override
