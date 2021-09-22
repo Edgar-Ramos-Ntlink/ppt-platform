@@ -169,9 +169,13 @@
                 <label class="custom-file-label" style="background-color: #f7f9fc;" for="inputDocFile">{{formInfo.fileDataName}}</label>
               </div>
             </div>
-            <button class="btn d-inline btn-outline-success mt-2 ml-2 mr-2" (click)="uploadFile()" *ngIf="clientInfo.id !== undefined" [disabled]="clientInfo.activo || formInfo.fileDataName.length == 0">
+            <small id="clientFileHelp" *ngIf="dataFile != undefined" class="form-text text-primary">El cliente ya cuenta con constancia de situacion fiscal</small>
+            <small id="clientFileHelp" *ngIf="dataFile == undefined" class="form-text text-danger">La constancia de situacion fiscal es un documento requerido</small>
+            <button class="btn d-inline mt-2 ml-2 mr-2" [ngClass]="{'btn-outline-success': !clientInfo.activo && formInfo.fileDataName.length > 0 , 'btn-outline-secondary': clientInfo.activo || formInfo.fileDataName.length == 0 }" 
+              (click)="uploadFile()" *ngIf="clientInfo.id !== undefined" [disabled]="clientInfo.activo || formInfo.fileDataName.length == 0">
               <i class="fa fa-upload"></i></button>
-            <button class="btn d-inline btn-outline-primary mt-2 ml-2 mr-2" (click)="downloadFile()" *ngIf="clientInfo.id !== undefined" [disabled]="clientInfo.activo || !dataFile">
+            <button class="btn d-inline mt-2 ml-2 mr-2" [ngClass]="{'btn-outline-primary': !clientInfo.activo && dataFile!= undefined && dataFile.id != undefined, 'btn-outline-secondary': clientInfo.activo || !dataFile || dataFile.id ==undefined}" 
+            (click)="downloadFile()" *ngIf="clientInfo.id !== undefined" [disabled]="clientInfo.activo || !dataFile || dataFile.id ==undefined">
                 <i class="fa fa-download"></i></button>
           </div>
         </div>
@@ -179,9 +183,9 @@
         
         <div class="puff_center" class="form-inline">
           <button type="button" *ngIf="clientInfo.id === undefined && module === 'promotor'"
-            [disabled]="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) !== 16 && formInfo.message !== undefined"
+            [disabled]="loading"
             (click)="insertClient()" nbButton status="primary">GUARDAR</button>
-          <button type="button"  *ngIf="clientInfo.id !== undefined && !clientInfo.activo" [disabled]="(clientInfo.porcentajeContacto + clientInfo.porcentajeDespacho + clientInfo.porcentajeCliente + clientInfo.porcentajePromotor) !== 16 && formInfo.message !== undefined" (click)="updateClient()" nbButton
+          <button type="button"  *ngIf="clientInfo.id !== undefined && !clientInfo.activo" [disabled]="loading" (click)="updateClient()" nbButton
             status="primary">ACTUALIZAR</button>
         </div>
       </nb-card-body>

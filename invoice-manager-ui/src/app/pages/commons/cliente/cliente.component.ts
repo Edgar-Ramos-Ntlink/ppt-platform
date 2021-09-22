@@ -72,13 +72,12 @@ export class ClienteComponent implements OnInit {
         }
         index++;
       });
-      this.dataFile = await this.resourcesService.getResourceFile(this.clientInfo.id.toString(),'CLIENTES','DOCUMENTO').toPromise();
-      this.loading = false;
     } catch (error) {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.showToast('danger', 'Error', msg, true);
-      this.loading = false;
     }
+    this.loading = false;
+    this.dataFile = await this.resourcesService.getResourceFile(this.clientInfo.id.toString(),'CLIENTES','DOCUMENTO').toPromise();
   }
 
   public async updateClient() {
@@ -221,6 +220,7 @@ export class ClienteComponent implements OnInit {
       //this.loadCompanyInfo(this.companyInfo.rfc);
       this.formInfo.fileDataName = '';
       this.formInfo.doctType = '*';
+      this.loadClientInfo(this.clientInfo.informacionFiscal.rfc, this.clientInfo.correoPromotor)
     } catch (error) {
       console.error(error);
       this.formInfo.fileDataName = '';
