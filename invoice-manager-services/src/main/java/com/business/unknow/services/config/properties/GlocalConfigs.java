@@ -8,20 +8,43 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "invoce")
 public class GlocalConfigs {
 
-	@Value("${invoce.environment}")
-	private String environment;
+  @Value("${invoce.environment}")
+  private String environment;
 
-	public String getEnvironment() {
-		return environment;
-	}
+  @Value("${invoce.email}")
+  private String email;
 
-	public void setEnvironment(String environment) {
-		this.environment = environment;
-	}
+  @Value("${invoce.email-pw}")
+  private String emailPw;
 
-	@Override
-	public String toString() {
-		return "GlocalConfigs [environment=" + environment + "]";
-	}
+  @Value("${invoce.email-host}")
+  private String emailHost;
 
+  @Value("${invoce.email-port}")
+  private String emailPort;
+
+  public String getEnvironment() {
+    return environment;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public String getEmailPw() {
+    return emailPw;
+  }
+
+  public String getEmailHost() {
+    return emailHost;
+  }
+
+  public String getEmailPort() {
+    return emailPort;
+  }
+
+  @Override
+  public String toString() {
+    return "GlocalConfigs [environment=" + environment + "]";
+  }
 }

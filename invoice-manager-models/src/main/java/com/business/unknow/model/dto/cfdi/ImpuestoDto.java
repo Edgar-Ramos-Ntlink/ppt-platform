@@ -1,83 +1,92 @@
 package com.business.unknow.model.dto.cfdi;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ImpuestoDto implements Serializable{
+public class ImpuestoDto implements Serializable {
 
-	private static final long serialVersionUID = 3241569278979852126L;
-	private Integer id;
-	private BigDecimal base;
-	private String impuesto;
-	private String tipoFactor;
-	private BigDecimal tasaOCuota;
-	private BigDecimal importe;
-	
-	public ImpuestoDto() {
-	}
-	
-	public ImpuestoDto(BigDecimal base, BigDecimal importe, BigDecimal tasaOcuota) {
-		this.base = base;
-		this.importe = importe;
-		this.tasaOCuota = tasaOcuota;
-	}
+  private static final long serialVersionUID = 3241569278979852126L;
+  private Integer id;
+  private BigDecimal base;
+  private String impuesto;
+  private String tipoFactor;
+  private BigDecimal tasaOCuota;
+  private BigDecimal importe;
 
-	public Integer getId() {
-		return id;
-	}
+  public ImpuestoDto() {}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getImpuesto() {
-		return impuesto;
-	}
+  public ImpuestoDto(BigDecimal base, BigDecimal importe, BigDecimal tasaOcuota) {
+    this.base = base;
+    this.importe = importe;
+    this.tasaOCuota = tasaOcuota;
+  }
 
-	public void setImpuesto(String impuesto) {
-		this.impuesto = impuesto;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public String getTipoFactor() {
-		return tipoFactor;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public void setTipoFactor(String tipoFactor) {
-		this.tipoFactor = tipoFactor;
-	}
-	
-	public BigDecimal getBase() {
-		return base;
-	}
+  public String getImpuesto() {
+    return impuesto;
+  }
 
-	public void setBase(BigDecimal base) {
-		this.base = base;
-	}
+  public void setImpuesto(String impuesto) {
+    this.impuesto = impuesto;
+  }
 
-	public BigDecimal getTasaOCuota() {
-		return tasaOCuota;
-	}
+  public String getTipoFactor() {
+    return tipoFactor;
+  }
 
-	public void setTasaOCuota(BigDecimal tasaOCuota) {
-		this.tasaOCuota = tasaOCuota;
-	}
+  public void setTipoFactor(String tipoFactor) {
+    this.tipoFactor = tipoFactor;
+  }
 
-	public BigDecimal getImporte() {
-		return importe;
-	}
+  public BigDecimal getBase() {
+    return base;
+  }
 
-	public void setImporte(BigDecimal importe) {
-		this.importe = importe;
-	}
+  public void setBase(BigDecimal base) {
+    this.base = base;
+  }
 
-	@Override
-	public String toString() {
-		return "ImpuestoDto [id=" + id + ", base=" + base + ", impuesto=" + impuesto + ", tipoFactor=" + tipoFactor
-				+ ", tasaOCuota=" + tasaOCuota + ", importe=" + importe + "]";
-	}
+  public BigDecimal getTasaOCuota() {
+    return tasaOCuota;
+  }
 
+  public void setTasaOCuota(BigDecimal tasaOCuota) {
+    this.tasaOCuota = tasaOCuota;
+  }
+
+  public BigDecimal getImporte() {
+    return importe;
+  }
+
+  public void setImporte(BigDecimal importe) {
+    this.importe = importe;
+  }
+
+  @Override
+  public String toString() {
+    return "ImpuestoDto [id="
+        + id
+        + ", base="
+        + base
+        + ", impuesto="
+        + impuesto
+        + ", tipoFactor="
+        + tipoFactor
+        + ", tasaOCuota="
+        + tasaOCuota
+        + ", importe="
+        + importe
+        + "]";
+  }
 }

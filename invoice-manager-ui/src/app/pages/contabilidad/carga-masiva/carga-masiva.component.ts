@@ -176,25 +176,25 @@ export class CargaMasivaComponent implements OnInit {
   private async buildFacturaFromTransfer(transfer: any, emisorCompany: Empresa, receptorCompany: Empresa): Promise<Factura> {
     const factura = new Factura();
     factura.rfcEmisor = transfer.RFC_EMISOR;
-    factura.razonSocialEmisor = emisorCompany.informacionFiscal.razonSocial;
+    factura.razonSocialEmisor = emisorCompany.razonSocial;
     factura.lineaEmisor = this.params.lineaDeposito;
     factura.rfcRemitente = transfer.RFC_RECEPTOR;
-    factura.razonSocialRemitente = receptorCompany.informacionFiscal.razonSocial;
+    factura.razonSocialRemitente = receptorCompany.razonSocial;
     factura.lineaRemitente = this.params.lineaRetiro;
     factura.metodoPago = transfer.METODO_PAGO;
     factura.statusFactura = '8';
     factura.solicitante = this.user.email;
     const cfdi = new Cfdi();
-    cfdi.receptor.nombre = receptorCompany.informacionFiscal.razonSocial;
+    cfdi.receptor.nombre = receptorCompany.razonSocial;
     cfdi.receptor.rfc = transfer.RFC_RECEPTOR;
     cfdi.receptor.usoCfdi = 'P01';
-    cfdi.receptor.direccion = this.cfdiValidator.generateAddress(receptorCompany.informacionFiscal);
-    cfdi.emisor.nombre = emisorCompany.informacionFiscal.razonSocial;
+    cfdi.receptor.direccion = this.cfdiValidator.generateCompanyAddress(receptorCompany);
+    cfdi.emisor.nombre = emisorCompany.razonSocial;
 
     cfdi.emisor.rfc = transfer.RFC_EMISOR;
     cfdi.emisor.regimenFiscal = emisorCompany.regimenFiscal;
     cfdi.formaPago = transfer.FORMA_PAGO.toString();
-    cfdi.emisor.direccion = this.cfdiValidator.generateAddress(emisorCompany.informacionFiscal);
+    cfdi.emisor.direccion = this.cfdiValidator.generateCompanyAddress(emisorCompany);
     cfdi.moneda = 'MXN';
     cfdi.total = transfer.TOTAL;
     cfdi.subtotal = transfer.IMPORTE;

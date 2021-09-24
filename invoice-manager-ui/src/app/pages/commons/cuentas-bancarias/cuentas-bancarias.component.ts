@@ -57,7 +57,7 @@ export class CuentasBancariasComponent implements OnInit {
           this.catalogsService.getBancos().then(banks => this.banksCat = banks);
 
           if(params.empresa){    
-            this.companiesService.getCompanyByRFC(params.empresa) .subscribe((company: Empresa) => { this.filterParams.empresarazon = company.informacionFiscal.razonSocial;});      
+            this.companiesService.getCompanyByRFC(params.empresa) .subscribe((company: Empresa) => { this.filterParams.empresarazon = company.razonSocial;});      
           }
       
           this.getEmpresas();
@@ -128,8 +128,8 @@ export class CuentasBancariasComponent implements OnInit {
     this.companiesService.getCompanies({ page: 0, size: 10000})
       .pipe(map((Page: GenericPage<Empresa>) => Page.content))   
       .subscribe(companies => {        
-            this.empresasRfc = companies.map(c => c.informacionFiscal.rfc);   
-            this.empresasRazonSocial = companies.map(c => c.informacionFiscal.razonSocial).map(function(x){ return x.toUpperCase(); });         
+            this.empresasRfc = companies.map(c => c.rfc);   
+            this.empresasRazonSocial = companies.map(c => c.razonSocial).map((x)=> x.toUpperCase());         
       },
         (error: HttpErrorResponse) =>
           this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));

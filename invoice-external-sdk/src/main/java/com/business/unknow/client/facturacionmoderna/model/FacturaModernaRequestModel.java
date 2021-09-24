@@ -2,117 +2,135 @@ package com.business.unknow.client.facturacionmoderna.model;
 
 public class FacturaModernaRequestModel {
 
-	private String user;
-	private String userPass;
-	private String rfc;
-	private String xml;
-	private String uuid;
-	private Boolean generarTxt;
-	private Boolean generarPdf;
-	private Boolean generarCbb;
+  private String user;
+  private String userPass;
+  private String rfc;
+  private String xml;
+  private String uuid;
+  private Boolean generarTxt;
+  private Boolean generarPdf;
+  private Boolean generarCbb;
 
-	public FacturaModernaRequestModel() {
-	}
+  public FacturaModernaRequestModel() {}
 
-	public FacturaModernaRequestModel(String user, String userPass, String rfc, String xml, Boolean generarTxt,
-			Boolean generarPdf, Boolean generarCbb) {
-		this.user = user;
-		this.userPass = userPass;
-		this.rfc = rfc;
-		this.xml = xml;
-		this.generarTxt = generarTxt;
-		this.generarPdf = generarPdf;
-		this.generarCbb = generarCbb;
-	}
-	
-	public FacturaModernaRequestModel(String user, String userPass, String rfc, String uuid) {
-		this.user = user;
-		this.userPass = userPass;
-		this.rfc = rfc;
-		this.uuid=uuid;
-	}
+  public FacturaModernaRequestModel(
+      String user,
+      String userPass,
+      String rfc,
+      String xml,
+      Boolean generarTxt,
+      Boolean generarPdf,
+      Boolean generarCbb) {
+    this.user = user;
+    this.userPass = userPass;
+    this.rfc = rfc;
+    this.xml = xml;
+    this.generarTxt = generarTxt;
+    this.generarPdf = generarPdf;
+    this.generarCbb = generarCbb;
+  }
 
-	public String getUser() {
-		return user;
-	}
+  public FacturaModernaRequestModel(String user, String userPass, String rfc, String uuid) {
+    this.user = user;
+    this.userPass = userPass;
+    this.rfc = rfc;
+    this.uuid = uuid;
+  }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+  public String getUser() {
+    return user;
+  }
 
-	public String getUserPass() {
-		return userPass;
-	}
+  public void setUser(String user) {
+    this.user = user;
+  }
 
-	public void setUserPass(String userPass) {
-		this.userPass = userPass;
-	}
+  public String getUserPass() {
+    return userPass;
+  }
 
-	public String getRfc() {
-		return rfc;
-	}
+  public void setUserPass(String userPass) {
+    this.userPass = userPass;
+  }
 
-	public void setRfc(String rfc) {
-		this.rfc = rfc;
-	}
+  public String getRfc() {
+    return rfc;
+  }
 
-	public String getXml() {
-		return xml;
-	}
+  public void setRfc(String rfc) {
+    this.rfc = rfc;
+  }
 
-	public void setXml(String xml) {
-		this.xml = xml;
-	}
+  public String getXml() {
+    return xml;
+  }
 
-	public Boolean isGenerarTxt() {
-		return generarTxt;
-	}
+  public void setXml(String xml) {
+    this.xml = xml;
+  }
 
-	public void setGenerarTxt(Boolean generarTxt) {
-		this.generarTxt = generarTxt;
-	}
+  public Boolean isGenerarTxt() {
+    return generarTxt;
+  }
 
-	public Boolean isGenerarPdf() {
-		return generarPdf;
-	}
+  public void setGenerarTxt(Boolean generarTxt) {
+    this.generarTxt = generarTxt;
+  }
 
-	public void setGenerarPdf(Boolean generarPdf) {
-		this.generarPdf = generarPdf;
-	}
+  public Boolean isGenerarPdf() {
+    return generarPdf;
+  }
 
-	public Boolean isGenerarCbb() {
-		return generarCbb;
-	}
+  public void setGenerarPdf(Boolean generarPdf) {
+    this.generarPdf = generarPdf;
+  }
 
-	public void setGenerarCbb(Boolean generarCbb) {
-		this.generarCbb = generarCbb;
-	}
+  public Boolean isGenerarCbb() {
+    return generarCbb;
+  }
 
-	public String getUuid() {
-		return uuid;
-	}
+  public void setGenerarCbb(Boolean generarCbb) {
+    this.generarCbb = generarCbb;
+  }
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
+  public String getUuid() {
+    return uuid;
+  }
 
-	public Boolean getGenerarTxt() {
-		return generarTxt;
-	}
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
 
-	public Boolean getGenerarPdf() {
-		return generarPdf;
-	}
+  public Boolean getGenerarTxt() {
+    return generarTxt;
+  }
 
-	public Boolean getGenerarCbb() {
-		return generarCbb;
-	}
+  public Boolean getGenerarPdf() {
+    return generarPdf;
+  }
 
-	@Override
-	public String toString() {
-		return "FacturaModernaRequestModel [user=" + user + ", userPass=" + userPass + ", rfc=" + rfc + ", xml=" + xml
-				+ ", uuid=" + uuid + ", generarTxt=" + generarTxt + ", generarPdf=" + generarPdf + ", generarCbb="
-				+ generarCbb + "]";
-	}
+  public Boolean getGenerarCbb() {
+    return generarCbb;
+  }
 
+  @Override
+  public String toString() {
+    return "FacturaModernaRequestModel [user="
+        + user
+        + ", userPass="
+        + userPass
+        + ", rfc="
+        + rfc
+        + ", xml="
+        + xml
+        + ", uuid="
+        + uuid
+        + ", generarTxt="
+        + generarTxt
+        + ", generarPdf="
+        + generarPdf
+        + ", generarCbb="
+        + generarCbb
+        + "]";
+  }
 }

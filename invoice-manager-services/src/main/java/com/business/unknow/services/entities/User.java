@@ -3,7 +3,6 @@ package com.business.unknow.services.entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -14,7 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -24,82 +22,105 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "USERS")
 public class User implements Serializable {
 
-	private static final long serialVersionUID = 5310702474972292849L;
+  private static final long serialVersionUID = 5310702474972292849L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_USER")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID_USER")
+  private Integer id;
 
-	@Column(name = "ACTIVO")
-	private boolean activo;
-	
-	@Column(name = "CORREO")
-	private String email;
-	
-	@Column(name = "ALIAS")
-	private String alias;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
-	@Column(name = "FECHA_CREACION")
-	private Date fechaCreacion;
+  @Column(name = "ACTIVO")
+  private boolean activo;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
-	@Column(name = "FECHA_ACTUALIZACION")
-	private Date fechaActualizacion;
-	
-	@OneToMany(mappedBy="user")
-	private List<Role> roles;
+  @Column(name = "CORREO")
+  private String email;
 
-	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public boolean isActivo() {
-		return activo;
-	}
-	public void setActivo(boolean activo) {
-		this.activo = activo;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getAlias() {
-		return alias;
-	}
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-	public List<Role> getRoles() {
-		return roles;
-	}
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
+  @Column(name = "ALIAS")
+  private String alias;
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", roles=" + roles + ", activo=" + activo + ", correo=" + email + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
-	}
+  @Temporal(TemporalType.TIMESTAMP)
+  @CreatedDate
+  @Column(name = "FECHA_CREACION")
+  private Date fechaCreacion;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @LastModifiedDate
+  @Column(name = "FECHA_ACTUALIZACION")
+  private Date fechaActualizacion;
+
+  @OneToMany(mappedBy = "user")
+  private List<Role> roles;
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public boolean isActivo() {
+    return activo;
+  }
+
+  public void setActivo(boolean activo) {
+    this.activo = activo;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getAlias() {
+    return alias;
+  }
+
+  public void setAlias(String alias) {
+    this.alias = alias;
+  }
+
+  public Date getFechaCreacion() {
+    return fechaCreacion;
+  }
+
+  public void setFechaCreacion(Date fechaCreacion) {
+    this.fechaCreacion = fechaCreacion;
+  }
+
+  public Date getFechaActualizacion() {
+    return fechaActualizacion;
+  }
+
+  public void setFechaActualizacion(Date fechaActualizacion) {
+    this.fechaActualizacion = fechaActualizacion;
+  }
+
+  public List<Role> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(List<Role> roles) {
+    this.roles = roles;
+  }
+
+  @Override
+  public String toString() {
+    return "User [id="
+        + id
+        + ", roles="
+        + roles
+        + ", activo="
+        + activo
+        + ", correo="
+        + email
+        + ", fechaCreacion="
+        + fechaCreacion
+        + ", fechaActualizacion="
+        + fechaActualizacion
+        + "]";
+  }
 }

@@ -2,7 +2,6 @@ package com.business.unknow.services.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -23,235 +21,266 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "CONTRIBUYENTES")
 public class Contribuyente implements Serializable {
 
-	private static final long serialVersionUID = -262866475157657093L;
+  private static final long serialVersionUID = -262866475157657093L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CONTRIBUYENTE")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID_CONTRIBUYENTE")
+  private Integer id;
 
-	@Basic(optional = false)
-	@Column(name = "RFC")
-	private String rfc;
+  @Basic(optional = false)
+  @Column(name = "RFC")
+  private String rfc;
 
-	@Column(name = "GIRO")
-	private String giro;
-	
-	@Column(name = "MORAL")
-	private boolean moral;
+  @Column(name = "GIRO")
+  private String giro;
 
-	@Column(name = "NOMBRE")
-	private String nombre;
+  @Column(name = "MORAL")
+  private boolean moral;
 
-	@Column(name = "CURP")
-	private String curp;
+  @Column(name = "NOMBRE")
+  private String nombre;
 
-	@Column(name = "RAZON_SOCIAL")
-	private String razonSocial;
+  @Column(name = "CURP")
+  private String curp;
 
-	@Column(name = "CALLE")
-	private String calle;
+  @Column(name = "RAZON_SOCIAL")
+  private String razonSocial;
 
-	@Column(name = "NO_EXTERIOR")
-	private String noExterior;
+  @Column(name = "CALLE")
+  private String calle;
 
-	@Column(name = "NO_INTERIOR")
-	private String noInterior;
+  @Column(name = "NO_EXTERIOR")
+  private String noExterior;
 
-	@Column(name = "MUNICIPIO")
-	private String municipio;
+  @Column(name = "NO_INTERIOR")
+  private String noInterior;
 
-	@Column(name = "LOCALIDAD")
-	private String localidad;
+  @Column(name = "MUNICIPIO")
+  private String municipio;
 
-	@Column(name = "ESTADO")
-	private String estado;
+  @Column(name = "LOCALIDAD")
+  private String localidad;
 
-	@Column(name = "PAIS")
-	private String pais;
+  @Column(name = "ESTADO")
+  private String estado;
 
-	@Column(name = "COO")
-	private String coo;
+  @Column(name = "PAIS")
+  private String pais;
 
-	@Column(name = "CODIGO_POSTAL")
-	private String cp;
+  @Column(name = "COO")
+  private String coo;
 
-	@Basic(optional = false)
-	@Column(name = "CORREO")
-	private String correo;
+  @Column(name = "CODIGO_POSTAL")
+  private String cp;
 
-	@Column(name = "TELEFONO")
-	private String telefono;
+  @Basic(optional = false)
+  @Column(name = "CORREO")
+  private String correo;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
-	@Column(name = "FECHA_CREACION")
-	private Date fechaCreacion;
+  @Column(name = "TELEFONO")
+  private String telefono;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
-	@Column(name = "FECHA_ACTUALIZACION")
-	private Date fechaActualizacion;
+  @Temporal(TemporalType.TIMESTAMP)
+  @CreatedDate
+  @Column(name = "FECHA_CREACION")
+  private Date fechaCreacion;
 
-	public Integer getId() {
-		return id;
-	}
+  @Temporal(TemporalType.TIMESTAMP)
+  @LastModifiedDate
+  @Column(name = "FECHA_ACTUALIZACION")
+  private Date fechaActualizacion;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public String getRfc() {
-		return rfc;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public void setRfc(String rfc) {
-		this.rfc = rfc;
-	}
+  public String getRfc() {
+    return rfc;
+  }
 
-	public String getGiro() {
-		return giro;
-	}
+  public void setRfc(String rfc) {
+    this.rfc = rfc;
+  }
 
-	public void setGiro(String giro) {
-		this.giro = giro;
-	}
+  public String getGiro() {
+    return giro;
+  }
 
-	public String getNombre() {
-		return nombre;
-	}
+  public void setGiro(String giro) {
+    this.giro = giro;
+  }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+  public String getNombre() {
+    return nombre;
+  }
 
-	public String getCurp() {
-		return curp;
-	}
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
 
-	public void setCurp(String curp) {
-		this.curp = curp;
-	}
+  public String getCurp() {
+    return curp;
+  }
 
-	public String getRazonSocial() {
-		return razonSocial;
-	}
+  public void setCurp(String curp) {
+    this.curp = curp;
+  }
 
-	public void setRazonSocial(String razonSocial) {
-		this.razonSocial = razonSocial;
-	}
+  public String getRazonSocial() {
+    return razonSocial;
+  }
 
-	public String getCalle() {
-		return calle;
-	}
+  public void setRazonSocial(String razonSocial) {
+    this.razonSocial = razonSocial;
+  }
 
-	public void setCalle(String calle) {
-		this.calle = calle;
-	}
+  public String getCalle() {
+    return calle;
+  }
 
-	public String getNoExterior() {
-		return noExterior;
-	}
+  public void setCalle(String calle) {
+    this.calle = calle;
+  }
 
-	public void setNoExterior(String noExterior) {
-		this.noExterior = noExterior;
-	}
+  public String getNoExterior() {
+    return noExterior;
+  }
 
-	public String getNoInterior() {
-		return noInterior;
-	}
+  public void setNoExterior(String noExterior) {
+    this.noExterior = noExterior;
+  }
 
-	public void setNoInterior(String noInterior) {
-		this.noInterior = noInterior;
-	}
+  public String getNoInterior() {
+    return noInterior;
+  }
 
-	public String getMunicipio() {
-		return municipio;
-	}
+  public void setNoInterior(String noInterior) {
+    this.noInterior = noInterior;
+  }
 
-	public void setMunicipio(String municipio) {
-		this.municipio = municipio;
-	}
+  public String getMunicipio() {
+    return municipio;
+  }
 
-	public String getLocalidad() {
-		return localidad;
-	}
+  public void setMunicipio(String municipio) {
+    this.municipio = municipio;
+  }
 
-	public void setLocalidad(String localidad) {
-		this.localidad = localidad;
-	}
+  public String getLocalidad() {
+    return localidad;
+  }
 
-	public String getEstado() {
-		return estado;
-	}
+  public void setLocalidad(String localidad) {
+    this.localidad = localidad;
+  }
 
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
+  public String getEstado() {
+    return estado;
+  }
 
-	public String getPais() {
-		return pais;
-	}
+  public void setEstado(String estado) {
+    this.estado = estado;
+  }
 
-	public void setPais(String pais) {
-		this.pais = pais;
-	}
+  public String getPais() {
+    return pais;
+  }
 
-	public String getCoo() {
-		return coo;
-	}
+  public void setPais(String pais) {
+    this.pais = pais;
+  }
 
-	public void setCoo(String coo) {
-		this.coo = coo;
-	}
+  public String getCoo() {
+    return coo;
+  }
 
-	public String getCp() {
-		return cp;
-	}
+  public void setCoo(String coo) {
+    this.coo = coo;
+  }
 
-	public void setCp(String cp) {
-		this.cp = cp;
-	}
+  public String getCp() {
+    return cp;
+  }
 
-	public String getCorreo() {
-		return correo;
-	}
+  public void setCp(String cp) {
+    this.cp = cp;
+  }
 
-	public void setCorreo(String correo) {
-		this.correo = correo;
-	}
+  public String getCorreo() {
+    return correo;
+  }
 
-	public String getTelefono() {
-		return telefono;
-	}
+  public void setCorreo(String correo) {
+    this.correo = correo;
+  }
 
-	public void setTelefono(String telefono) {
-		this.telefono = telefono;
-	}
+  public String getTelefono() {
+    return telefono;
+  }
 
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
+  public void setTelefono(String telefono) {
+    this.telefono = telefono;
+  }
 
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
+  public Date getFechaCreacion() {
+    return fechaCreacion;
+  }
 
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
+  public void setFechaCreacion(Date fechaCreacion) {
+    this.fechaCreacion = fechaCreacion;
+  }
 
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
+  public Date getFechaActualizacion() {
+    return fechaActualizacion;
+  }
 
-	@Override
-	public String toString() {
-		return "Contribuyente [rfc=" + rfc + ", giro=" + giro + ", nombre=" + nombre + ", curp=" + curp
-				+ ", razonSocial=" + razonSocial + ", calle=" + calle + ", noExterior=" + noExterior + ", noInterior="
-				+ noInterior + ", municipio=" + municipio + ", localidad=" + localidad + ", estado=" + estado
-				+ ", pais=" + pais + ", coo=" + coo + ", cp=" + cp + ", correo=" + correo + ", telefono=" + telefono
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + "]";
-	}
+  public void setFechaActualizacion(Date fechaActualizacion) {
+    this.fechaActualizacion = fechaActualizacion;
+  }
 
+  @Override
+  public String toString() {
+    return "Contribuyente [rfc="
+        + rfc
+        + ", giro="
+        + giro
+        + ", nombre="
+        + nombre
+        + ", curp="
+        + curp
+        + ", razonSocial="
+        + razonSocial
+        + ", calle="
+        + calle
+        + ", noExterior="
+        + noExterior
+        + ", noInterior="
+        + noInterior
+        + ", municipio="
+        + municipio
+        + ", localidad="
+        + localidad
+        + ", estado="
+        + estado
+        + ", pais="
+        + pais
+        + ", coo="
+        + coo
+        + ", cp="
+        + cp
+        + ", correo="
+        + correo
+        + ", telefono="
+        + telefono
+        + ", fechaCreacion="
+        + fechaCreacion
+        + ", fechaActualizacion="
+        + fechaActualizacion
+        + "]";
+  }
 }

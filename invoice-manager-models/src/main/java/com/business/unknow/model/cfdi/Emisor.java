@@ -9,40 +9,41 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Emisor {
 
-	@XmlAttribute(name = "Rfc")
-	private String rfc;
-	@XmlAttribute(name = "Nombre")
-	private String nombre;
-	@XmlAttribute(name = "RegimenFiscal")
-	private String regimenFiscal;
+  @XmlAttribute(name = "Rfc")
+  private String rfc;
 
-	public String getRfc() {
-		return rfc;
-	}
+  @XmlAttribute(name = "Nombre")
+  private String nombre;
 
-	public void setRfc(String rfc) {
-		this.rfc = rfc;
-	}
+  @XmlAttribute(name = "RegimenFiscal")
+  private String regimenFiscal;
 
-	public String getNombre() {
-		return nombre;
-	}
+  public String getRfc() {
+    return rfc;
+  }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+  public void setRfc(String rfc) {
+    this.rfc = rfc;
+  }
 
-	public String getRegimenFiscal() {
-		return regimenFiscal;
-	}
+  public String getNombre() {
+    return nombre;
+  }
 
-	public void setRegimenFiscal(String regimenFiscal) {
-		this.regimenFiscal = regimenFiscal;
-	}
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
 
-	@Override
-	public String toString() {
-		return "Emisor [rfc=" + rfc + ", nombre=" + nombre + ", regimenFiscal=" + regimenFiscal + "]";
-	}
+  public String getRegimenFiscal() {
+    return regimenFiscal;
+  }
 
+  public void setRegimenFiscal(String regimenFiscal) {
+    this.regimenFiscal = regimenFiscal;
+  }
+
+  @Override
+  public String toString() {
+    return "Emisor [rfc=" + rfc + ", nombre=" + nombre + ", regimenFiscal=" + regimenFiscal + "]";
+  }
 }

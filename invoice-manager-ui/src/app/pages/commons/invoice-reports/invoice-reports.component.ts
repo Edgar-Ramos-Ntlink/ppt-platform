@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GenericPage } from '../../../models/generic-page';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { UsersData } from '../../../@core/data/users-data';
-import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { FilesData } from '../../../@core/data/files-data';
@@ -26,7 +25,6 @@ export class InvoiceReportsComponent implements OnInit {
 
   constructor(private invoiceService: InvoicesData,
     private userService: UsersData,
-    private downloadCsvService: DownloadCsvService,
     private router: Router,
     private downloadService: DonwloadFileService,
     private filesService: FilesData,
@@ -193,35 +191,16 @@ export class InvoiceReportsComponent implements OnInit {
     this.updateDataTable(this.page.number, pageSize);
   }
 
-  public downloadHandler() {
-
-    const params: any = {};
-    /* Parsing logic */
-    for (const key in this.filterParams) {
-      if (this.filterParams[key] !== undefined) {
-        let value: string = this.filterParams[key];
-        if (this.filterParams[key] instanceof Date) {
-          const date: Date = this.filterParams[key] as Date;
-          value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-        }
-        if (value !== null && value.length > 0) {
-          params[key] = value;
-        }
-      }
+  public downloadInvoicesReports() {
+    const params: any = this.utilsService.parseFilterParms(this.filterParams);
+    if(this.module === 'promotor'){
+      params.solicitante = this.userEmail;
     }
     params.page = 0;
     params.size = 10000;
-    this.invoiceService.getInvoices(params).subscribe(result => {
-      this.downloadCsvService.exportCsv(result.content, 'Facturas');
-    });
-  }
+    this.invoiceService.getInvoicesReports(params).subscribe(file => {
+      this.downloadService.downloadFile(file.data, `facturas.xlsx`, 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,');
 
-  public downloadInvoicesReports() {
-    const params: any = this.utilsService.parseFilterParms(this.filterParams);
-    params.page = 0;
-    params.size = 10000;
-    this.invoiceService.getInvoicesReports(params).subscribe(result => {
-      this.downloadCsvService.exportCsv(result.content, 'Facturas');
     });
   }
 
@@ -229,8 +208,8 @@ export class InvoiceReportsComponent implements OnInit {
     const params: any = this.utilsService.parseFilterParms(this.filterParams);
     params.page = 0;
     params.size = 10000;
-    this.invoiceService.getComplementReports(params).subscribe(result => {
-      this.downloadCsvService.exportCsv(result.content, 'Complementos');
+    this.invoiceService.getComplementReports(params).subscribe(file => {
+      this.downloadService.downloadFile(file.data, `complementos.xlsx`, 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,');
     });
   }
 

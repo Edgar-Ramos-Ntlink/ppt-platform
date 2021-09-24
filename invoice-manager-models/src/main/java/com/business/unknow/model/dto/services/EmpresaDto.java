@@ -1,243 +1,94 @@
 package com.business.unknow.model.dto.services;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import com.business.unknow.Constants;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.io.Serializable;
+import java.util.Date;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.jackson.Jacksonized;
 
-/**
- * @author ralfdemoledor
- *
- */
+/** @author ralfdemoledor */
+@Jacksonized
+@Builder
+@Getter
+@Setter
+@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmpresaDto implements Serializable {
 
-	private static final long serialVersionUID = -5354660274346579595L;
-	private int id;
-	private String referencia;
-	private String regimenFiscal;
-	private String web;
-	private String contactoAdmin;
-	private String sucursal;
-	private String lugarExpedicion;
-	private String logotipo;
-	private String llavePrivada;
-	private String certificado;
-	private String noCertificado;
-	private String pwSat;
-	private String pwCorreo;
-	private String correo;
-	private String encabezado;
-	private String piePagina;
-	private Boolean activo;
-	private String dominioCorreo;
-	private String tipo;
+  private static final long serialVersionUID = -5354660274346579595L;
 
-	private Integer giro;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
-	private Date fechaCreacion;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
-	private Date fechaActualizacion;
-	private ContribuyenteDto informacionFiscal;
+  private int id;
 
-	public int getId() {
-		return id;
-	}
+  private Boolean activo;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  private String estatus;
 
-	public String getReferencia() {
-		return referencia;
-	}
+  private Integer giro;
 
-	public void setReferencia(String referencia) {
-		this.referencia = referencia;
-	}
+  private String tipo;
 
-	public String getRegimenFiscal() {
-		return regimenFiscal;
-	}
+  private String regimenFiscal;
 
-	public void setRegimenFiscal(String regimenFiscal) {
-		this.regimenFiscal = regimenFiscal;
-	}
+  private String rfc;
 
-	public String getWeb() {
-		return web;
-	}
+  private String nombre;
 
-	public void setWeb(String web) {
-		this.web = web;
-	}
+  private String razonSocial;
 
-	public String getContactoAdmin() {
-		return contactoAdmin;
-	}
+  private String calle;
 
-	public void setContactoAdmin(String contactoAdmin) {
-		this.contactoAdmin = contactoAdmin;
-	}
+  private String noExterior;
 
-	public String getSucursal() {
-		return sucursal;
-	}
+  private String noInterior;
 
-	public void setSucursal(String sucursal) {
-		this.sucursal = sucursal;
-	}
+  private String municipio;
 
-	public String getLugarExpedicion() {
-		return lugarExpedicion;
-	}
+  private String colonia;
 
-	public void setLugarExpedicion(String lugarExpedicion) {
-		this.lugarExpedicion = lugarExpedicion;
-	}
+  private String estado;
 
-	public String getLogotipo() {
-		return logotipo;
-	}
+  private String pais;
 
-	public void setLogotipo(String logotipo) {
-		this.logotipo = logotipo;
-	}
+  private String cp;
 
-	public String getLlavePrivada() {
-		return llavePrivada;
-	}
+  private String anioAlta;
 
-	public void setLlavePrivada(String llavePrivada) {
-		this.llavePrivada = llavePrivada;
-	}
+  private String registroPatronal;
 
-	public String getCertificado() {
-		return certificado;
-	}
+  private String estatusJuridico;
 
-	public void setCertificado(String certificado) {
-		this.certificado = certificado;
-	}
+  private String estatusJuridico2;
 
-	public String getNoCertificado() {
-		return noCertificado;
-	}
+  private String representanteLegal;
 
-	public void setNoCertificado(String noCertificado) {
-		this.noCertificado = noCertificado;
-	}
+  private String ciec;
 
-	public String getPwSat() {
-		return pwSat;
-	}
+  private String fiel;
 
-	public void setPwSat(String pwSat) {
-		this.pwSat = pwSat;
-	}
+  private String actividadSAT;
 
-	public String getPwCorreo() {
-		return pwCorreo;
-	}
+  private String web;
 
-	public void setPwCorreo(String pwCorreo) {
-		this.pwCorreo = pwCorreo;
-	}
+  private String correo;
 
-	public String getCorreo() {
-		return correo;
-	}
+  private String pwCorreo;
 
-	public void setCorreo(String correo) {
-		this.correo = correo;
-	}
+  private String dominioCorreo;
 
-	public String getEncabezado() {
-		return encabezado;
-	}
+  private String pwSat;
 
-	public void setEncabezado(String encabezado) {
-		this.encabezado = encabezado;
-	}
+  private String noCertificado;
 
-	public String getPiePagina() {
-		return piePagina;
-	}
+  private Date expiracionCertificado;
 
-	public void setPiePagina(String piePagina) {
-		this.piePagina = piePagina;
-	}
+  private String creador;
 
-	public Boolean getActivo() {
-		return activo;
-	}
+  private Date fechaCreacion;
 
-	public void setActivo(Boolean activo) {
-		this.activo = activo;
-	}
-
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
-	public Integer getGiro() {
-		return giro;
-	}
-
-	public void setGiro(Integer giro) {
-		this.giro = giro;
-	}
-
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
-
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
-
-	public ContribuyenteDto getInformacionFiscal() {
-		return informacionFiscal;
-	}
-
-	public void setInformacionFiscal(ContribuyenteDto informacionFiscal) {
-		this.informacionFiscal = informacionFiscal;
-	}
-
-	public String getDominioCorreo() {
-		return dominioCorreo;
-	}
-
-	public void setDominioCorreo(String dominioCorreo) {
-		this.dominioCorreo = dominioCorreo;
-	}
-
-	@Override
-	public String toString() {
-		return "EmpresaDto [id=" + id + ", referencia=" + referencia + ", regimenFiscal=" + regimenFiscal + ", web="
-				+ web + ", contactoAdmin=" + contactoAdmin + ", sucursal=" + sucursal + ", lugarExpedicion="
-				+ lugarExpedicion + ", logotipo=" + logotipo + ", llavePrivada=" + llavePrivada + ", certificado="
-				+ certificado + ", noCertificado=" + noCertificado + ", pwSat=" + pwSat + ", pwCorreo=" + pwCorreo
-				+ ", correo=" + correo + ", encabezado=" + encabezado + ", piePagina=" + piePagina + ", activo="
-				+ activo + ", dominioCorreo=" + dominioCorreo + ", tipo=" + tipo + ", giro=" + giro + ", fechaCreacion="
-				+ fechaCreacion + ", fechaActualizacion=" + fechaActualizacion + ", informacionFiscal="
-				+ informacionFiscal + "]";
-	}
-
+  private Date fechaActualizacion;
 }

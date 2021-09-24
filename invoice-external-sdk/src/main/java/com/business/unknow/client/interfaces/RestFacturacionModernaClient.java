@@ -7,6 +7,9 @@ import com.business.unknow.client.facturacionmoderna.util.FacturaModernaClientEx
 
 public interface RestFacturacionModernaClient {
 
-	public FacturaModernaResponseModel stamp(FacturaModernaRequestModel requestModel) throws FacturaModernaClientException;
-	public FacturaModernaCancelResponseModel cancelar(FacturaModernaRequestModel requestModel) throws FacturaModernaClientException;
+  public FacturaModernaResponseModel stamp(FacturaModernaRequestModel requestModel)
+      throws FacturaModernaClientException;
+
+  public FacturaModernaCancelResponseModel cancelar(FacturaModernaRequestModel requestModel)
+      throws FacturaModernaClientException;
 }

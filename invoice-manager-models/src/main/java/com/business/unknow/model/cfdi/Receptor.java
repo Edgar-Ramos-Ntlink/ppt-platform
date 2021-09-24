@@ -9,43 +9,41 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Receptor {
 
-	@XmlAttribute(name = "Rfc")
-	private String rfc;
-	@XmlAttribute(name = "Nombre")
-	private String nombre;
-	@XmlAttribute(name = "UsoCFDI")
-	private String usoCfdi;
+  @XmlAttribute(name = "Rfc")
+  private String rfc;
 
-	public String getRfc() {
-		return rfc;
-	}
+  @XmlAttribute(name = "Nombre")
+  private String nombre;
 
-	
-	public void setRfc(String rfc) {
-		this.rfc = rfc;
-	}
+  @XmlAttribute(name = "UsoCFDI")
+  private String usoCfdi;
 
-	public String getNombre() {
-		return nombre;
-	}
+  public String getRfc() {
+    return rfc;
+  }
 
-	
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+  public void setRfc(String rfc) {
+    this.rfc = rfc;
+  }
 
-	
-	public String getUsoCfdi() {
-		return usoCfdi;
-	}
+  public String getNombre() {
+    return nombre;
+  }
 
-	public void setUsoCfdi(String usoCfdi) {
-		this.usoCfdi = usoCfdi;
-	}
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
 
-	@Override
-	public String toString() {
-		return "Receptor [rfc=" + rfc + ", nombre=" + nombre + ", usoCfdi=" + usoCfdi + "]";
-	}
+  public String getUsoCfdi() {
+    return usoCfdi;
+  }
 
+  public void setUsoCfdi(String usoCfdi) {
+    this.usoCfdi = usoCfdi;
+  }
+
+  @Override
+  public String toString() {
+    return "Receptor [rfc=" + rfc + ", nombre=" + nombre + ", usoCfdi=" + usoCfdi + "]";
+  }
 }

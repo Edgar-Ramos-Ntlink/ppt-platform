@@ -1,5 +1,5 @@
 
-<div class="card mb-9">
+<div class="card mb-9" [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
   <img class="card-img-top" [src]="comprobanteUrl" style="height: 60vh;width: 80vw;"  alt="Card image cap" *ngIf = "comprobanteUrl!== undefined">
   <h5 class="card-header" *ngIf = "comprobanteUrl! === undefined" >Sin imagen de Pago</h5>
   <div class="card-body" *ngIf="module === 'tesoreria'">
@@ -9,9 +9,7 @@
       <small id="emailHelp" class="form-text text-muted">Indique la razon de rechazo del pago.</small>
     </div>
   </div>
-  <div class="alert alert-warning" *ngIf="errors.length > 0" role="alert">
-    <p *ngFor="let message of errors">{{message}}</p>
-  </div>
+
   <div class="card-footer">
     <button class="btn btn-danger" *ngIf="module === 'tesoreria'" (click)="onRecahzarPago()" >Rechazar Pago</button>
     &nbsp;&nbsp;&nbsp;
@@ -22,33 +20,6 @@
   </div>
 </div>
 
-<!--nb-card>
-  <nb-card-header>Validacion Pago</nb-card-header>
-  <nb-card-body>
-    <div class="row" *ngIf="comprobanteUrl!=undefined">
-      <div class="col-sm-12" >
-          <img [src]="comprobanteUrl" style="height: 60vh;">
-      </div>
-    </div>
-    
-    <form>
-      <div class="form-group" *ngIf="pago.statusPago=='VALIDACION'">
-        <label for="comments">Razon de rechazo</label>
-        <input type="text" class="form-control" id="comments" placeholder="Comentarios" [(ngModel)]="updatedPayment.comentarioPago" fullWidth  [ngModelOptions]="{standalone: true}">
-        <small id="emailHelp" class="form-text text-muted">Indique la razon de rechazo del pago.</small>
-      </div>
-      
-    </form>
-
-
-    
-  </nb-card-body>
-  <nb-card-footer>
-    
-   
-    
-  </nb-card-footer>
-</nb-card-->
 
 
 

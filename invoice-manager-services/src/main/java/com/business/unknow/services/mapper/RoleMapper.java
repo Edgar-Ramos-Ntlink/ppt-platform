@@ -1,21 +1,18 @@
 package com.business.unknow.services.mapper;
 
-import java.util.List;
-
-import org.mapstruct.Mapper;
-
 import com.business.unknow.model.dto.services.RoleDto;
 import com.business.unknow.services.entities.Role;
+import java.util.List;
+import org.mapstruct.Mapper;
 
 @Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface RoleMapper {
 
-	RoleDto getRoleDtoFromentity(Role entity);
+  RoleDto getRoleDtoFromentity(Role entity);
 
-	Role getEntityFromRoleDto(RoleDto dto);
+  Role getEntityFromRoleDto(RoleDto dto);
 
-	List<RoleDto> getRoleDtosFromEntities(List<Role> entities);
+  List<RoleDto> getRoleDtosFromEntities(List<Role> entities);
 
-	List<Role> getEntitiesFromRoleDtos(List<RoleDto> dto);
-
+  List<Role> getEntitiesFromRoleDtos(List<RoleDto> dto);
 }
