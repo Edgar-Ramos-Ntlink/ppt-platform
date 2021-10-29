@@ -2,12 +2,13 @@ import { Factura } from '../../models/factura/factura';
 import { GenericPage } from '../../models/generic-page';
 import { Observable } from 'rxjs';
 import { Pago } from '../../models/factura/pago';
+import { ResourceFile } from '../../models/resource-file';
 
 export abstract class InvoicesData {
     abstract getInvoices(filterParams: any): Observable<GenericPage<Factura>>;
 
-    abstract getInvoicesReports(filterParams: any): Observable<GenericPage<any>>;
-    abstract getComplementReports(filterParams: any): Observable<GenericPage<any>>;
+    abstract getInvoicesReports(filterParams: any): Observable<ResourceFile>;
+    abstract getComplementReports(filterParams: any): Observable<ResourceFile>;
 
     abstract getInvoiceSaldo(prefolio: string): Observable<number>;
 

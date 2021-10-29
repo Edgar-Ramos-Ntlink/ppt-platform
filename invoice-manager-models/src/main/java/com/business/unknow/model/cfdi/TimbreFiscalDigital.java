@@ -5,101 +5,126 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "TimbreFiscalDigital", namespace = "http://www.sat.gob.mx/TimbreFiscalDigital")
+@XmlRootElement(
+    name = "TimbreFiscalDigital",
+    namespace = "http://www.sat.gob.mx/TimbreFiscalDigital")
 @XmlAccessorType(XmlAccessType.NONE)
 public class TimbreFiscalDigital {
-	@XmlAttribute(name = "Version")
-	private String version;
-	@XmlAttribute(name = "UUID")
-	private String uuid;
-	@XmlAttribute(name = "FechaTimbrado")
-	private String fechaTimbrado;
-	@XmlAttribute(name = "RfcProvCertif")
-	private String rfcProvCertif;
-	@XmlAttribute(name = "SelloCFD")
-	private String selloCFD;
-	@XmlAttribute(name = "NoCertificadoSAT")
-	private String noCertificadoSAT;
-	@XmlAttribute(name = "SelloSAT")
-	private String SelloSAT;
+  @XmlAttribute(name = "Version")
+  private String version;
 
-	public TimbreFiscalDigital() {
-		super();
-	}
+  @XmlAttribute(name = "UUID")
+  private String uuid;
 
-	public TimbreFiscalDigital(String version, String uuid, String fechaTimbrado, String rfcProvCertif, String selloCFD,
-			String noCertificadoSAT, String selloSAT) {
-		super();
-		this.version = version;
-		this.uuid = uuid;
-		this.fechaTimbrado = fechaTimbrado;
-		this.rfcProvCertif = rfcProvCertif;
-		this.selloCFD = selloCFD;
-		this.noCertificadoSAT = noCertificadoSAT;
-		SelloSAT = selloSAT;
-	}
+  @XmlAttribute(name = "FechaTimbrado")
+  private String fechaTimbrado;
 
-	public String getVersion() {
-		return version;
-	}
+  @XmlAttribute(name = "RfcProvCertif")
+  private String rfcProvCertif;
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+  @XmlAttribute(name = "SelloCFD")
+  private String selloCFD;
 
-	public String getUuid() {
-		return uuid;
-	}
+  @XmlAttribute(name = "NoCertificadoSAT")
+  private String noCertificadoSAT;
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
+  @XmlAttribute(name = "SelloSAT")
+  private String SelloSAT;
 
-	public String getFechaTimbrado() {
-		return fechaTimbrado;
-	}
+  public TimbreFiscalDigital() {
+    super();
+  }
 
-	public void setFechaTimbrado(String fechaTimbrado) {
-		this.fechaTimbrado = fechaTimbrado;
-	}
+  public TimbreFiscalDigital(
+      String version,
+      String uuid,
+      String fechaTimbrado,
+      String rfcProvCertif,
+      String selloCFD,
+      String noCertificadoSAT,
+      String selloSAT) {
+    super();
+    this.version = version;
+    this.uuid = uuid;
+    this.fechaTimbrado = fechaTimbrado;
+    this.rfcProvCertif = rfcProvCertif;
+    this.selloCFD = selloCFD;
+    this.noCertificadoSAT = noCertificadoSAT;
+    SelloSAT = selloSAT;
+  }
 
-	public String getRfcProvCertif() {
-		return rfcProvCertif;
-	}
+  public String getVersion() {
+    return version;
+  }
 
-	public void setRfcProvCertif(String rfcProvCertif) {
-		this.rfcProvCertif = rfcProvCertif;
-	}
+  public void setVersion(String version) {
+    this.version = version;
+  }
 
-	public String getSelloCFD() {
-		return selloCFD;
-	}
+  public String getUuid() {
+    return uuid;
+  }
 
-	public void setSelloCFD(String selloCFD) {
-		this.selloCFD = selloCFD;
-	}
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
 
-	public String getNoCertificadoSAT() {
-		return noCertificadoSAT;
-	}
+  public String getFechaTimbrado() {
+    return fechaTimbrado;
+  }
 
-	public void setNoCertificadoSAT(String noCertificadoSAT) {
-		this.noCertificadoSAT = noCertificadoSAT;
-	}
+  public void setFechaTimbrado(String fechaTimbrado) {
+    this.fechaTimbrado = fechaTimbrado;
+  }
 
-	public String getSelloSAT() {
-		return SelloSAT;
-	}
+  public String getRfcProvCertif() {
+    return rfcProvCertif;
+  }
 
-	public void setSelloSAT(String selloSAT) {
-		SelloSAT = selloSAT;
-	}
+  public void setRfcProvCertif(String rfcProvCertif) {
+    this.rfcProvCertif = rfcProvCertif;
+  }
 
-	@Override
-	public String toString() {
-		return "TimbreFiscalDigital [version=" + version + ", uuid=" + uuid + ", fechaTimbrado=" + fechaTimbrado
-				+ ", rfcProvCertif=" + rfcProvCertif + ", selloCFD=" + selloCFD + ", noCertificadoSAT="
-				+ noCertificadoSAT + ", SelloSAT=" + SelloSAT + "]";
-	}
+  public String getSelloCFD() {
+    return selloCFD;
+  }
 
+  public void setSelloCFD(String selloCFD) {
+    this.selloCFD = selloCFD;
+  }
+
+  public String getNoCertificadoSAT() {
+    return noCertificadoSAT;
+  }
+
+  public void setNoCertificadoSAT(String noCertificadoSAT) {
+    this.noCertificadoSAT = noCertificadoSAT;
+  }
+
+  public String getSelloSAT() {
+    return SelloSAT;
+  }
+
+  public void setSelloSAT(String selloSAT) {
+    SelloSAT = selloSAT;
+  }
+
+  @Override
+  public String toString() {
+    return "TimbreFiscalDigital [version="
+        + version
+        + ", uuid="
+        + uuid
+        + ", fechaTimbrado="
+        + fechaTimbrado
+        + ", rfcProvCertif="
+        + rfcProvCertif
+        + ", selloCFD="
+        + selloCFD
+        + ", noCertificadoSAT="
+        + noCertificadoSAT
+        + ", SelloSAT="
+        + SelloSAT
+        + "]";
+  }
 }

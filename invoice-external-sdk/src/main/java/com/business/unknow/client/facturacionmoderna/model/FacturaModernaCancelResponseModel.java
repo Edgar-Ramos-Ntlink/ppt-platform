@@ -9,30 +9,30 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class FacturaModernaCancelResponseModel {
 
-	@XmlElement(name = "Code")
-	private String code;
-	@XmlElement(name = "Message")
-	private String message;
+  @XmlElement(name = "Code")
+  private String code;
 
-	public String getCode() {
-		return code;
-	}
+  @XmlElement(name = "Message")
+  private String message;
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+  public String getCode() {
+    return code;
+  }
 
-	public String getMessage() {
-		return message;
-	}
+  public void setCode(String code) {
+    this.code = code;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	@Override
-	public String toString() {
-		return "FacturaModernaCancelResponseModel [code=" + code + ", message=" + message + "]";
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
+  @Override
+  public String toString() {
+    return "FacturaModernaCancelResponseModel [code=" + code + ", message=" + message + "]";
+  }
 }

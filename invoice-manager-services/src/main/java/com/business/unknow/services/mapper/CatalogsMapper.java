@@ -1,11 +1,5 @@
-/**
- * 
- */
+/** */
 package com.business.unknow.services.mapper;
-
-import java.util.List;
-
-import org.mapstruct.Mapper;
 
 import com.business.unknow.model.dto.catalogs.CatalogDto;
 import com.business.unknow.model.dto.catalogs.ClaveProductoServicioDto;
@@ -23,49 +17,49 @@ import com.business.unknow.services.entities.catalogs.StatusDevolucion;
 import com.business.unknow.services.entities.catalogs.StatusEvento;
 import com.business.unknow.services.entities.catalogs.StatusPago;
 import com.business.unknow.services.entities.catalogs.UsoCfdi;
+import java.util.List;
+import org.mapstruct.Mapper;
 
-/**
- * @author ralfdemoledor
- *
- */
+/** @author ralfdemoledor */
 @Mapper
 public interface CatalogsMapper {
 
-	List<CatalogDto> getBancoDtoFromEntities(List<Banco> bancos);
-	CatalogDto getBancoDtoFromEntity(Banco banco);
-	
-	List<CatalogDto> getGirosDtoFromEntities(List<Giro> giro);
-	CatalogDto getGirosDtoFromEntity(Giro giro);
-	
-	List<CodigoPostalDto> getCodigoPostalUiDtoFromEntity(List<CodigoPostal> codigoPostales);
+  List<CatalogDto> getBancoDtoFromEntities(List<Banco> bancos);
 
-	CodigoPostalDto getCodigoPostalDtoFromEntity(CodigoPostal codigoPostal);
+  CatalogDto getBancoDtoFromEntity(Banco banco);
 
-	CodigoPostal getCodigoPostalFromDto(CodigoPostalDto codigoPostalDto);
+  List<CatalogDto> getGirosDtoFromEntities(List<Giro> giro);
 
-	List<CodigoPostalDto> getCodigoPostalDtosFromEntities(List<CodigoPostal> codigoPostalDto);
+  CatalogDto getGirosDtoFromEntity(Giro giro);
 
-	ClaveProductoServicioDto getClaveProdServDtoFromEntity(ClaveProductoServicio prodServicio);
+  List<CodigoPostalDto> getCodigoPostalUiDtoFromEntity(List<CodigoPostal> codigoPostales);
 
-	List<ClaveProductoServicioDto> getClaveProdServDtosFromEntities(List<ClaveProductoServicio> prodServicio);
+  CodigoPostalDto getCodigoPostalDtoFromEntity(CodigoPostal codigoPostal);
 
-	UsoCfdiDto getUsoCfdiDtoFromEntity(UsoCfdi usodCfdi);
+  CodigoPostal getCodigoPostalFromDto(CodigoPostalDto codigoPostalDto);
 
-	List<UsoCfdiDto> getUsoCfdiDtosFromEntities(List<UsoCfdi> usodCfdi);
+  List<CodigoPostalDto> getCodigoPostalDtosFromEntities(List<CodigoPostal> codigoPostalDto);
 
-	RegimenFiscalDto getRegimenFiscalDtoFromEntity(RegimenFiscal regimenFiscal);
+  ClaveProductoServicioDto getClaveProdServDtoFromEntity(ClaveProductoServicio prodServicio);
 
-	List<RegimenFiscalDto> getRegimenFiscalDtosFromEntities(List<RegimenFiscal> regimenFiscal);
+  List<ClaveProductoServicioDto> getClaveProdServDtosFromEntities(
+      List<ClaveProductoServicio> prodServicio);
 
-	ClaveUnidadDto getClaveUnidadDtoFromEntity(ClaveUnidad claveUnidad);
+  UsoCfdiDto getUsoCfdiDtoFromEntity(UsoCfdi usodCfdi);
 
-	List<ClaveUnidadDto> getClaveUnidadDtosFromEntities(List<ClaveUnidad> claveUnidad);
+  List<UsoCfdiDto> getUsoCfdiDtosFromEntities(List<UsoCfdi> usodCfdi);
 
+  RegimenFiscalDto getRegimenFiscalDtoFromEntity(RegimenFiscal regimenFiscal);
 
-	List<CatalogDto> getStatusPagoDtosFromEntities(List<StatusPago> entities);
+  List<RegimenFiscalDto> getRegimenFiscalDtosFromEntities(List<RegimenFiscal> regimenFiscal);
 
-	List<CatalogDto> getStatusEventoDtosFromEntities(List<StatusEvento> entities);
+  ClaveUnidadDto getClaveUnidadDtoFromEntity(ClaveUnidad claveUnidad);
 
-	List<CatalogDto> getStatusDevolucionDtosFromEntities(List<StatusDevolucion> entities);
+  List<ClaveUnidadDto> getClaveUnidadDtosFromEntities(List<ClaveUnidad> claveUnidad);
 
+  List<CatalogDto> getStatusPagoDtosFromEntities(List<StatusPago> entities);
+
+  List<CatalogDto> getStatusEventoDtosFromEntities(List<StatusEvento> entities);
+
+  List<CatalogDto> getStatusDevolucionDtosFromEntities(List<StatusDevolucion> entities);
 }

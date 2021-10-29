@@ -58,7 +58,8 @@ export class PaymentsService {
     }
     return this.httpClient.get('../api/pagos', { params: pageParams });
   }
-  public getAllPaymentsDummy(page: number, size: number, filterParams?: any): Observable<any> {
+
+  public getPaymentsReport(page: number, size: number, filterParams?: any): Observable<any> {
     let pageParams: HttpParams = new HttpParams().append('page', page.toString()).append('size', size.toString());
     for (const key in filterParams) {
       if (filterParams[key] !== undefined && filterParams[key].length > 0) {
@@ -70,8 +71,9 @@ export class PaymentsService {
         }
       }
     }
-    return this.httpClient.get('../api/pagos/dummy', { params: pageParams });
+    return this.httpClient.get('../api/pagos/report', { params: pageParams });
   }
+
 
   public getIncomes(page: number, size: number, filterParams?: any): Observable<Object> {
     let pageParams: HttpParams = new HttpParams().append('page', page.toString()).append('size', size.toString());

@@ -15,6 +15,7 @@
 *.war
 *.nar
 *.ear
+*.idea
 *.zip
 *.tar.gz
 *.rar
@@ -22,7 +23,9 @@
 *.factorypath
 .DS_Store
 /.settings
+*/.idea
 target
-
+.idea
+.idea/
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*

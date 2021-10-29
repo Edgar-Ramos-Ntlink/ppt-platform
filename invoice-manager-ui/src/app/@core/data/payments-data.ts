@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { PagoBase } from '../../models/pago-base';
 import { Catalogo } from '../../models/catalogos/catalogo';
 import { PagoFactura } from '../../models/pago-factura';
+import { ResourceFile } from '../../models/resource-file';
 
 export abstract class PaymentsData {
 
@@ -15,6 +16,8 @@ export abstract class PaymentsData {
     abstract updatePaymentWithValidation(paymentId: number, payment: PagoBase): Observable<PagoBase>;
 
     abstract getAllPayments(page: number, size: number, filterParams?: any): Observable<GenericPage<PagoBase>>;
+
+    abstract getPaymentsReport(page: number, size: number, filterParams?: any): Observable<ResourceFile>;
 
     abstract getFormasPago(roles?: string[]): Observable<Catalogo[]>;
 

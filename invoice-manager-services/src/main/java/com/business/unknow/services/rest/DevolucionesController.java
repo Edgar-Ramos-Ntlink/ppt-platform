@@ -1,8 +1,10 @@
-/**
- * 
- */
+/** */
 package com.business.unknow.services.rest;
 
+import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
+import com.business.unknow.model.dto.services.DevolucionDto;
+import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.services.services.DevolucionService;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -19,78 +21,73 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
-import com.business.unknow.model.dto.services.DevolucionDto;
-import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.services.DevolucionService;
-
-/**
- * @author ralfdemoledor
- *
- */
-
+/** @author ralfdemoledor */
 @RestController
 @RequestMapping("/api")
 public class DevolucionesController {
 
-	@Autowired
-	private DevolucionService service;
+  @Autowired private DevolucionService service;
 
-	@GetMapping("/devoluciones")
-	public ResponseEntity<Page<DevolucionDto>> getAllDevolutions(
-			@RequestParam(name = "tipoReceptor", required = false) Optional<String> tipoReceptor,
-			@RequestParam(name = "idReceptor", required = false) Optional<String> idReceptor,
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getDevolucionesByParams(tipoReceptor, idReceptor, page, size),
-				HttpStatus.OK);
-	}
+  @GetMapping("/devoluciones")
+  public ResponseEntity<Page<DevolucionDto>> getAllDevolutions(
+      @RequestParam(name = "tipoReceptor", required = false) Optional<String> tipoReceptor,
+      @RequestParam(name = "idReceptor", required = false) Optional<String> idReceptor,
+      @RequestParam(name = "page", defaultValue = "0") int page,
+      @RequestParam(name = "size", defaultValue = "10") int size) {
+    return new ResponseEntity<>(
+        service.getDevolucionesByParams(tipoReceptor, idReceptor, page, size), HttpStatus.OK);
+  }
 
-	@GetMapping("/facturas/{folio}/devoluciones")
-	public ResponseEntity<List<DevolucionDto>> getAllDevolutionsByFoliofactura(
-			@PathVariable(name = "folio") String folio) {
-		return new ResponseEntity<>(service.getDevolucionesByFolio(folio), HttpStatus.OK);
-	}
+  @GetMapping("/facturas/{folio}/devoluciones")
+  public ResponseEntity<List<DevolucionDto>> getAllDevolutionsByFoliofactura(
+      @PathVariable(name = "folio") String folio) {
+    return new ResponseEntity<>(service.getDevolucionesByFolio(folio), HttpStatus.OK);
+  }
 
-	@GetMapping("/devoluciones/receptor/{tipoReceptor}/{idReceptor}")
-	public ResponseEntity<List<DevolucionDto>> getDevolucionesPorReceptor(
-			@PathVariable(name = "tipoReceptor") String tipoReceptor,
-			@PathVariable(name = "idReceptor") String idReceptor,
-			@RequestParam(name = "statusDevolucion", defaultValue = "") String statusDevolucion) {
-		return new ResponseEntity<>(service.getDevolucionesPorReceptor(tipoReceptor, idReceptor), HttpStatus.OK);
-	}
+  @GetMapping("/devoluciones/receptor/{tipoReceptor}/{idReceptor}")
+  public ResponseEntity<List<DevolucionDto>> getDevolucionesPorReceptor(
+      @PathVariable(name = "tipoReceptor") String tipoReceptor,
+      @PathVariable(name = "idReceptor") String idReceptor,
+      @RequestParam(name = "statusDevolucion", defaultValue = "") String statusDevolucion) {
+    return new ResponseEntity<>(
+        service.getDevolucionesPorReceptor(tipoReceptor, idReceptor), HttpStatus.OK);
+  }
 
-	@GetMapping("/devoluciones/receptor/{tipoReceptor}/{idReceptor}/saldo")
-	public ResponseEntity<BigDecimal> getSaldoDevoluciones(
-			@PathVariable(name = "tipoReceptor", required = true) String tipoReceptor,
-			@PathVariable(name = "idReceptor", required = true) String idReceptor) {
-		return new ResponseEntity<>(service.getMontoDevoluciones(tipoReceptor, idReceptor), HttpStatus.OK);
-	}
+  @GetMapping("/devoluciones/receptor/{tipoReceptor}/{idReceptor}/saldo")
+  public ResponseEntity<BigDecimal> getSaldoDevoluciones(
+      @PathVariable(name = "tipoReceptor", required = true) String tipoReceptor,
+      @PathVariable(name = "idReceptor", required = true) String idReceptor) {
+    return new ResponseEntity<>(
+        service.getMontoDevoluciones(tipoReceptor, idReceptor), HttpStatus.OK);
+  }
 
-	@PostMapping("/devoluciones")
-	public ResponseEntity<PagoDevolucionDto> solicitudDevolucion(@RequestBody PagoDevolucionDto solicitudes)
-			throws InvoiceManagerException {
-		return new ResponseEntity<>(service.solicitudDevolucion(solicitudes), HttpStatus.CREATED);
-	}
+  @PostMapping("/devoluciones")
+  public ResponseEntity<PagoDevolucionDto> solicitudDevolucion(
+      @RequestBody PagoDevolucionDto solicitudes) throws InvoiceManagerException {
+    return new ResponseEntity<>(service.solicitudDevolucion(solicitudes), HttpStatus.CREATED);
+  }
 
-	@PutMapping("/devoluciones/{id}")
-	public ResponseEntity<PagoDevolucionDto> solicitudDevolucionUpdate(@RequestBody PagoDevolucionDto solicitud,
-			@PathVariable(name = "id") Integer id) throws InvoiceManagerException {
-		return new ResponseEntity<>(service.solicitudDevolucionUpdate(solicitud, id), HttpStatus.CREATED);
-	}
+  @PutMapping("/devoluciones/{id}")
+  public ResponseEntity<PagoDevolucionDto> solicitudDevolucionUpdate(
+      @RequestBody PagoDevolucionDto solicitud, @PathVariable(name = "id") Integer id)
+      throws InvoiceManagerException {
+    return new ResponseEntity<>(
+        service.solicitudDevolucionUpdate(solicitud, id), HttpStatus.CREATED);
+  }
 
-	@GetMapping("/devoluciones/pagos")
-	public ResponseEntity<Page<PagoDevolucionDto>> getDevolucionesByParams(
-			@RequestParam(name = "folio") Optional<String> folio,
-			@RequestParam(name = "status", defaultValue = "") String status,
-			@RequestParam(name = "tipoReceptor", defaultValue = "") String tipoReceptor,
-			@RequestParam(name = "idReceptor", defaultValue = "") String idReceptor,
-			@RequestParam(name = "beneficiario", defaultValue = "") String beneficiario,
-			@RequestParam(name = "formaPago", defaultValue = "") String formaPago,
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "10") int size) {
-		return new ResponseEntity<>(service.getPagoDevolucionesByParams(folio, status, formaPago, beneficiario,
-				tipoReceptor, idReceptor, page, size), HttpStatus.OK);
-	}
-
+  @GetMapping("/devoluciones/pagos")
+  public ResponseEntity<Page<PagoDevolucionDto>> getDevolucionesByParams(
+      @RequestParam(name = "folio") Optional<String> folio,
+      @RequestParam(name = "status", defaultValue = "") String status,
+      @RequestParam(name = "tipoReceptor", defaultValue = "") String tipoReceptor,
+      @RequestParam(name = "idReceptor", defaultValue = "") String idReceptor,
+      @RequestParam(name = "beneficiario", defaultValue = "") String beneficiario,
+      @RequestParam(name = "formaPago", defaultValue = "") String formaPago,
+      @RequestParam(name = "page", defaultValue = "0") int page,
+      @RequestParam(name = "size", defaultValue = "10") int size) {
+    return new ResponseEntity<>(
+        service.getPagoDevolucionesByParams(
+            folio, status, formaPago, beneficiario, tipoReceptor, idReceptor, page, size),
+        HttpStatus.OK);
+  }
 }

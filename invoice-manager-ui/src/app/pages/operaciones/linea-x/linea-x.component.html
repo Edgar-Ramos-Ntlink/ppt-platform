@@ -51,7 +51,7 @@
               [(ngModel)]="formInfo.empresa" style="display:block;" fullWidth>
               <option value="*">Seleccionar</option>
               <option *ngFor="let company of companiesCat" [(value)]="company.id">
-                {{company.informacionFiscal.rfc}}-{{company.informacionFiscal.razonSocial}}
+                {{company.rfc}}-{{company.razonSocial}}
               </option>
             </select>
           </div>

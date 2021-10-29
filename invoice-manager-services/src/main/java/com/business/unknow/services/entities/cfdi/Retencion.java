@@ -2,7 +2,6 @@ package com.business.unknow.services.entities.cfdi;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,92 +16,104 @@ import javax.persistence.Table;
 @Table(name = "CFDI_RETENCIONES")
 public class Retencion implements Serializable {
 
-	private static final long serialVersionUID = -2655293148503394319L;
+  private static final long serialVersionUID = -2655293148503394319L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_RETENCION")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID_RETENCION")
+  private Integer id;
 
-	@Column(name = "BASE")
-	private BigDecimal base;
+  @Column(name = "BASE")
+  private BigDecimal base;
 
-	@Column(name = "IMPUESTO")
-	private String impuesto;
+  @Column(name = "IMPUESTO")
+  private String impuesto;
 
-	@Column(name = "TIPO_FACTOR")
-	private String tipoFactor;
+  @Column(name = "TIPO_FACTOR")
+  private String tipoFactor;
 
-	@Column(name = "TASA_CUOTA")
-	private BigDecimal tasaOCuota;
+  @Column(name = "TASA_CUOTA")
+  private BigDecimal tasaOCuota;
 
-	@Column(name = "IMPORTE")
-	private BigDecimal importe;
+  @Column(name = "IMPORTE")
+  private BigDecimal importe;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "ID_CONCEPTO", referencedColumnName = "ID_CONCEPTO")
-	private Concepto concepto;
-	
-	public Integer getId() {
-		return id;
-	}
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "ID_CONCEPTO", referencedColumnName = "ID_CONCEPTO")
+  private Concepto concepto;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public BigDecimal getBase() {
-		return base;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public void setBase(BigDecimal base) {
-		this.base = base;
-	}
+  public BigDecimal getBase() {
+    return base;
+  }
 
-	public String getImpuesto() {
-		return impuesto;
-	}
+  public void setBase(BigDecimal base) {
+    this.base = base;
+  }
 
-	public void setImpuesto(String impuesto) {
-		this.impuesto = impuesto;
-	}
+  public String getImpuesto() {
+    return impuesto;
+  }
 
-	public String getTipoFactor() {
-		return tipoFactor;
-	}
+  public void setImpuesto(String impuesto) {
+    this.impuesto = impuesto;
+  }
 
-	public void setTipoFactor(String tipoFactor) {
-		this.tipoFactor = tipoFactor;
-	}
+  public String getTipoFactor() {
+    return tipoFactor;
+  }
 
-	public BigDecimal getTasaOCuota() {
-		return tasaOCuota;
-	}
+  public void setTipoFactor(String tipoFactor) {
+    this.tipoFactor = tipoFactor;
+  }
 
-	public void setTasaOCuota(BigDecimal tasaOCuota) {
-		this.tasaOCuota = tasaOCuota;
-	}
+  public BigDecimal getTasaOCuota() {
+    return tasaOCuota;
+  }
 
-	public BigDecimal getImporte() {
-		return importe;
-	}
+  public void setTasaOCuota(BigDecimal tasaOCuota) {
+    this.tasaOCuota = tasaOCuota;
+  }
 
-	public void setImporte(BigDecimal importe) {
-		this.importe = importe;
-	}
+  public BigDecimal getImporte() {
+    return importe;
+  }
 
-	public Concepto getConcepto() {
-		return concepto;
-	}
+  public void setImporte(BigDecimal importe) {
+    this.importe = importe;
+  }
 
-	public void setConcepto(Concepto concepto) {
-		this.concepto = concepto;
-	}
+  public Concepto getConcepto() {
+    return concepto;
+  }
 
-	@Override
-	public String toString() {
-		return "Retencion [id=" + id + ", base=" + base + ", impuesto=" + impuesto + ", tipoFactor=" + tipoFactor
-				+ ", tasaOCuota=" + tasaOCuota + ", importe=" + importe + ", concepto=" + concepto + "]";
-	}
+  public void setConcepto(Concepto concepto) {
+    this.concepto = concepto;
+  }
 
+  @Override
+  public String toString() {
+    return "Retencion [id="
+        + id
+        + ", base="
+        + base
+        + ", impuesto="
+        + impuesto
+        + ", tipoFactor="
+        + tipoFactor
+        + ", tasaOCuota="
+        + tasaOCuota
+        + ", importe="
+        + importe
+        + ", concepto="
+        + concepto
+        + "]";
+  }
 }

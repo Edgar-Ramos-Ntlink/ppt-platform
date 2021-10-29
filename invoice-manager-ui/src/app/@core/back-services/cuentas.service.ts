@@ -44,8 +44,8 @@ export class CuentasService {
     return this.httpClient.post('../api/cuentas', cuenta);
   }
 
-  public deleteCuenta(cuenta: Cuenta): Observable<Object> {
-    return this.httpClient.delete(`../api/cuentas/${cuenta.id}`);
+  public deleteCuenta(id: string): Observable<Object> {
+    return this.httpClient.delete(`../api/cuentas/${id}`);
   }
 
 

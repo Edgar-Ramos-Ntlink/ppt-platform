@@ -1,7 +1,6 @@
 package com.business.unknow.services.entities.catalogs;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,44 +12,51 @@ import javax.persistence.Table;
 @Table(name = "CAT_FORMA_PAGO")
 public class FormaPago implements Serializable {
 
-	private static final long serialVersionUID = 8508424746268290927L;
+  private static final long serialVersionUID = 8508424746268290927L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CLAVE")
-	private String id;
-	@Column(name = "DESCRIPCION")
-	private String descripcion;
-	@Column(name = "SHORT_DESC")
-	private String shortDescripcion;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "CLAVE")
+  private String id;
 
-	public String getId() {
-		return id;
-	}
+  @Column(name = "DESCRIPCION")
+  private String descripcion;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+  @Column(name = "SHORT_DESC")
+  private String shortDescripcion;
 
-	public String getDescripcion() {
-		return descripcion;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
+  public void setId(String id) {
+    this.id = id;
+  }
 
-	public String getShortDescripcion() {
-		return shortDescripcion;
-	}
+  public String getDescripcion() {
+    return descripcion;
+  }
 
-	public void setShortDescripcion(String shortDescripcion) {
-		this.shortDescripcion = shortDescripcion;
-	}
+  public void setDescripcion(String descripcion) {
+    this.descripcion = descripcion;
+  }
 
-	@Override
-	public String toString() {
-		return "FormaPago [id=" + id + ", descripcion=" + descripcion + ", shortDescripcion=" + shortDescripcion + "]";
-	}
+  public String getShortDescripcion() {
+    return shortDescripcion;
+  }
 
+  public void setShortDescripcion(String shortDescripcion) {
+    this.shortDescripcion = shortDescripcion;
+  }
+
+  @Override
+  public String toString() {
+    return "FormaPago [id="
+        + id
+        + ", descripcion="
+        + descripcion
+        + ", shortDescripcion="
+        + shortDescripcion
+        + "]";
+  }
 }

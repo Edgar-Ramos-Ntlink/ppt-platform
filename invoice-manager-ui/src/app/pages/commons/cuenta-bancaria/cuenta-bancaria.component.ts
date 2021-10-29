@@ -9,7 +9,6 @@ import { CompaniesData } from '../../../@core/data/companies-data';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { map } from 'rxjs/operators';
 import { GenericPage } from '../../../models/generic-page';
-import { Contribuyente } from '../../../models/contribuyente';
 
 @Component({
   selector: 'ngx-cuenta-bancaria',
@@ -21,7 +20,7 @@ export class CuentaBancariaComponent implements OnInit {
   public cuenta: Cuenta;
   public page: GenericPage<any> = new GenericPage();
   public girosCat: Catalogo[] = [];
-  public empresas: Contribuyente[] = [];
+  public empresas: Empresa[] = [];
   public banksCat: Catalogo[] = [];
 
   public filterParams: any = { banco: '', empresa: '', cuenta: '', clabe:'', empresarazon:''};
@@ -58,7 +57,7 @@ export class CuentaBancariaComponent implements OnInit {
         if (empresa !== '*') {
             this.companiesService.getCompanyByRFC(empresa)
               .subscribe((company: Empresa) => {
-                this.filterParams.empresarazon = company.informacionFiscal.razonSocial;
+                this.filterParams.empresarazon = company.razonSocial;
               });
               this.catalogsService.getBancos().then(banks => this.banksCat = banks);
             this.updatecuentaInfo(empresa, cuenta);
@@ -97,7 +96,7 @@ export class CuentaBancariaComponent implements OnInit {
   }
 
   public delete() {
-    this.accountsService.deleteCuenta(this.cuenta)
+    this.accountsService.deleteCuenta(this.cuenta.id)
       .subscribe((data: any) => {this.Params.success = 'La cuenta fue borrada exitosamente'
       this.clear = true;
     },
@@ -111,7 +110,6 @@ export class CuentaBancariaComponent implements OnInit {
       this.empresas = [];
     } else {
       this.companiesService.getCompaniesByLineaAndGiro(this.formInfo.linea, Number(giroId))
-        .pipe(map((empresas: Empresa[]) => empresas.map(e => e.informacionFiscal)))
         .subscribe(companies => this.empresas = companies,
           (error: HttpErrorResponse) =>
             this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
@@ -123,9 +121,7 @@ export class CuentaBancariaComponent implements OnInit {
   if (this.formInfo.giro === '*') {
     this.empresas = [];
   } else {
-    
       this.companiesService.getCompaniesByLineaAndGiro(this.formInfo.linea, Number(this.formInfo.giro))
-        .pipe(map((empresas: Empresa[]) => empresas.map(e => e.informacionFiscal)))
         .subscribe(companies => this.empresas = companies,
           (error: HttpErrorResponse) =>
             this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));

@@ -20,7 +20,7 @@ import { PagoFactura } from '../../../models/pago-factura';
 import { NbDialogRef } from '@nebular/theme';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Router } from '@angular/router';
-
+ 
 @Component({
   selector: 'ngx-asignacion-pagos',
   templateUrl: './asignacion-pagos.component.html',
@@ -171,6 +171,7 @@ this.userService.getUserInfo().then(user => {this.user = user;});
   }
 
   sendPayment() {
+    const filename=this.paymentForm.filename;
     this.successMesagge = '';
     this.payErrorMessages = [];
     const payment  = {... this.newPayment};
@@ -190,7 +191,8 @@ this.userService.getUserInfo().then(user => {this.user = user;});
         result => {
           const resourceFile = new ResourceFile();
           resourceFile.tipoArchivo = 'IMAGEN';
-          resourceFile.tipoRecurso = 'PAGO';
+          resourceFile.tipoRecurso = 'PAGOS';
+          resourceFile.extension = filename.substring(filename.indexOf('.'),filename.length);
           resourceFile.referencia  = `${result.id}`;
           resourceFile.data = payment.documento;
           this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));

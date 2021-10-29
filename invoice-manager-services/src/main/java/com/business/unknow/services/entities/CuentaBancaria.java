@@ -2,7 +2,6 @@ package com.business.unknow.services.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -12,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -22,92 +20,140 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "CUENTAS_BANCARIAS")
 public class CuentaBancaria implements Serializable {
 
-	private static final long serialVersionUID = 5514259228800971253L;
+  private static final long serialVersionUID = 5514259228800971253L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CUENTA_BANCARIA")
-	private int id;
-	@Column(name = "EMPRESA")
-	private String empresa;
-	@Column(name = "BANCO")
-	private String banco;
-	@Column(name = "NO_CUENTA")
-	private String cuenta;
-	@Column(name = "CLABE ")
-	private String clabe;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID_CUENTA_BANCARIA")
+  private int id;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
-	@Column(name = "FECHA_CREACION")
-	private Date fechaCreacion;
+  @Column(name = "EMPRESA")
+  private String empresa;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
-	@Column(name = "FECHA_ACTUALIZACION")
-	private Date fechaActualizacion;
+  @Column(name = "BANCO")
+  private String banco;
 
-	public int getId() {
-		return id;
-	}
+  @Column(name = "NO_CUENTA")
+  private String cuenta;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  @Column(name = "CLABE ")
+  private String clabe;
 
-	public String getEmpresa() {
-		return empresa;
-	}
+  @Column(name = "DOMICILIO_BANCO ")
+  private String domicilioBanco;
 
-	public void setEmpresa(String empresa) {
-		this.empresa = empresa;
-	}
+  @Column(name = "SUCURSAL ")
+  private String sucursal;
 
-	public String getBanco() {
-		return banco;
-	}
+  @Temporal(TemporalType.TIMESTAMP)
+  @CreatedDate
+  @Column(name = "FECHA_CREACION")
+  private Date fechaCreacion;
 
-	public void setBanco(String banco) {
-		this.banco = banco;
-	}
+  @Temporal(TemporalType.TIMESTAMP)
+  @LastModifiedDate
+  @Column(name = "FECHA_ACTUALIZACION")
+  private Date fechaActualizacion;
 
-	public String getCuenta() {
-		return cuenta;
-	}
+  public int getId() {
+    return id;
+  }
 
-	public void setCuenta(String cuenta) {
-		this.cuenta = cuenta;
-	}
+  public void setId(int id) {
+    this.id = id;
+  }
 
-	public String getClabe() {
-		return clabe;
-	}
+  public String getEmpresa() {
+    return empresa;
+  }
 
-	public void setClabe(String clabe) {
-		this.clabe = clabe;
-	}
+  public void setEmpresa(String empresa) {
+    this.empresa = empresa;
+  }
 
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
+  public String getBanco() {
+    return banco;
+  }
 
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
+  public void setBanco(String banco) {
+    this.banco = banco;
+  }
 
-	public Date getFechaActualizacion() {
-		return fechaActualizacion;
-	}
+  public String getCuenta() {
+    return cuenta;
+  }
 
-	public void setFechaActualizacion(Date fechaActualizacion) {
-		this.fechaActualizacion = fechaActualizacion;
-	}
+  public void setCuenta(String cuenta) {
+    this.cuenta = cuenta;
+  }
 
-	@Override
-	public String toString() {
-		return "CuentaBancaria [id=" + id + ", empresa=" + empresa + ", banco=" + banco + ", cuenta=" + cuenta
-				+ ", clabe=" + clabe + ", fechaCreacion=" + fechaCreacion + ", fechaActualizacion=" + fechaActualizacion
-				+ "]";
-	}
+  public String getClabe() {
+    return clabe;
+  }
 
+  public void setClabe(String clabe) {
+    this.clabe = clabe;
+  }
+
+  public Date getFechaCreacion() {
+    return fechaCreacion;
+  }
+
+  public void setFechaCreacion(Date fechaCreacion) {
+    this.fechaCreacion = fechaCreacion;
+  }
+
+  public Date getFechaActualizacion() {
+    return fechaActualizacion;
+  }
+
+  public void setFechaActualizacion(Date fechaActualizacion) {
+    this.fechaActualizacion = fechaActualizacion;
+  }
+
+  public String getDomicilioBanco() {
+    return domicilioBanco;
+  }
+
+  public void setDomicilioBanco(String domicilioBanco) {
+    this.domicilioBanco = domicilioBanco;
+  }
+
+  public String getSucursal() {
+    return sucursal;
+  }
+
+  public void setSucursal(String sucursal) {
+    this.sucursal = sucursal;
+  }
+
+  @Override
+  public String toString() {
+    return "CuentaBancaria{"
+        + "id="
+        + id
+        + ", empresa='"
+        + empresa
+        + '\''
+        + ", banco='"
+        + banco
+        + '\''
+        + ", cuenta='"
+        + cuenta
+        + '\''
+        + ", clabe='"
+        + clabe
+        + '\''
+        + ", domicilioBanco='"
+        + domicilioBanco
+        + '\''
+        + ", sucursal='"
+        + sucursal
+        + '\''
+        + ", fechaCreacion="
+        + fechaCreacion
+        + ", fechaActualizacion="
+        + fechaActualizacion
+        + '}';
+  }
 }

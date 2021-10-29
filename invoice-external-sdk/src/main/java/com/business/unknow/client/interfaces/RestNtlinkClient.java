@@ -8,8 +8,7 @@ import com.business.unknow.client.ntlink.model.NtlinkResponseModel;
 
 public interface RestNtlinkClient {
 
-	NtlinkResponseModel stamp(NtlinkRequestModel request) throws NtlinkClientException;
-	NtlinkCancelResponseModel cancelar(NtlinkCancelRequestModel request)
-			throws NtlinkClientException ;
+  NtlinkResponseModel stamp(NtlinkRequestModel request) throws NtlinkClientException;
 
+  NtlinkCancelResponseModel cancelar(NtlinkCancelRequestModel request) throws NtlinkClientException;
 }

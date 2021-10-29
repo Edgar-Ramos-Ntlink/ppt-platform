@@ -6,7 +6,6 @@ import { Catalogo } from '../../../models/catalogos/catalogo';
 import { PagoBase } from '../../../models/pago-base';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { HttpErrorResponse } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-generar-complemento',
@@ -77,35 +76,14 @@ export class GenerarComplementoComponent implements OnInit {
         .subscribe(complement => {
           this.myEvent.emit(this.factura.cfdi.id.toString()); 
           this.loading = false; 
-       //   this.loadConceptos();
         }, ( error: HttpErrorResponse) => {
           this.payErrorMessages.push((error.error != null && error.error !== undefined)
             ? error.error.message : `${error.statusText} : ${error.message}`);
-        //  this.loadConceptos();
-      
-          this.loading = false;
+         this.loading = false;
         });
       }else {
         this.loading = false;
       }
-  }
-
-  
-  private loadConceptos() {
-   /*  this.invoiceService.getInvoiceSaldo(this.factura.folio).subscribe(a => this.payment.monto = a); */
-          this.invoiceService.getComplementosInvoice(this.factura.folio)
-          .pipe(
-            map((facturas: Factura[]) => {
-              return facturas.map(record => {
-                record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
-                this.myEvent.emit(this.factura.cfdi.id.toString());     
-                return record;
-              });
-            })).subscribe(complementos => {
-            this.factura.complementos = complementos;
-            this.calculatePaymentSum(complementos);
-            this.loading = false;
-          });
   }
 
   calculatePaymentSum(complementos: Factura[]) {

@@ -1,7 +1,6 @@
 package com.business.unknow.services.entities.cfdi;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,80 +14,79 @@ import javax.persistence.Table;
 @Table(name = "CFDI_EMISORES")
 public class Emisor implements Serializable {
 
-	private static final long serialVersionUID = 6696596495844299658L;
+  private static final long serialVersionUID = 6696596495844299658L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CFDI_EMISOR")
-	private int id;
-	
-	@Column(name = "RFC")
-	private String rfc;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID_CFDI_EMISOR")
+  private int id;
 
-	@Column(name = "NOMBRE")
-	private String nombre;
+  @Column(name = "RFC")
+  private String rfc;
 
-	@Column(name = "REGIMEN_FISCAL")
-	private String regimenFiscal;
-	
-	@Column(name = "DIRECCION")
-	private String direccion;
+  @Column(name = "NOMBRE")
+  private String nombre;
 
-	@OneToOne
-	@JoinColumn(name = "ID_CFDI")
-	private Cfdi cfdi;
+  @Column(name = "REGIMEN_FISCAL")
+  private String regimenFiscal;
 
-	public String getRfc() {
-		return rfc;
-	}
+  @Column(name = "DIRECCION")
+  private String direccion;
 
-	public void setRfc(String rfc) {
-		this.rfc = rfc;
-	}
+  @OneToOne
+  @JoinColumn(name = "ID_CFDI")
+  private Cfdi cfdi;
 
-	public String getNombre() {
-		return nombre;
-	}
+  public String getRfc() {
+    return rfc;
+  }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+  public void setRfc(String rfc) {
+    this.rfc = rfc;
+  }
 
-	public String getRegimenFiscal() {
-		return regimenFiscal;
-	}
+  public String getNombre() {
+    return nombre;
+  }
 
-	public void setRegimenFiscal(String regimenFiscal) {
-		this.regimenFiscal = regimenFiscal;
-	}
-	
-	public String getDireccion() {
-		return direccion;
-	}
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
 
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
-	}
+  public String getRegimenFiscal() {
+    return regimenFiscal;
+  }
 
-	public Cfdi getCfdi() {
-		return cfdi;
-	}
+  public void setRegimenFiscal(String regimenFiscal) {
+    this.regimenFiscal = regimenFiscal;
+  }
 
-	public void setCfdi(Cfdi cfdi) {
-		this.cfdi = cfdi;
-	}
-	
-	public int getId() {
-		return id;
-	}
+  public String getDireccion() {
+    return direccion;
+  }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  public void setDireccion(String direccion) {
+    this.direccion = direccion;
+  }
 
-	@Override
-	public String toString() {
-		return "Emisor [rfc=" + rfc + ", nombre=" + nombre + ", regimenFiscal=" + regimenFiscal + "]";
-	}
+  public Cfdi getCfdi() {
+    return cfdi;
+  }
 
+  public void setCfdi(Cfdi cfdi) {
+    this.cfdi = cfdi;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  @Override
+  public String toString() {
+    return "Emisor [rfc=" + rfc + ", nombre=" + nombre + ", regimenFiscal=" + regimenFiscal + "]";
+  }
 }

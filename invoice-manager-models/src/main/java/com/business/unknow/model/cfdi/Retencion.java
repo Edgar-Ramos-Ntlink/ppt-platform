@@ -1,7 +1,6 @@
 package com.business.unknow.model.cfdi;
 
 import java.math.BigDecimal;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -9,79 +8,88 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "Retencion", namespace = "http://www.sat.gob.mx/cfd/3")
-@XmlType(propOrder={"base", "impuesto","tipoFactor","tasaOCuota","importe"})
+@XmlType(propOrder = {"base", "impuesto", "tipoFactor", "tasaOCuota", "importe"})
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Retencion {
-	@XmlAttribute(name = "Base")
-	private BigDecimal base;
-	@XmlAttribute(name = "Impuesto")
-	private String impuesto;
-	@XmlAttribute(name = "TipoFactor")
-	private String tipoFactor;
-	@XmlAttribute(name = "TasaOCuota")
-	private String tasaOCuota;
-	@XmlAttribute(name = "Importe")
-	private BigDecimal importe;
+  @XmlAttribute(name = "Base")
+  private BigDecimal base;
 
-	public Retencion() {
-	}
+  @XmlAttribute(name = "Impuesto")
+  private String impuesto;
 
-	public Retencion(String impuesto, String tipoFactor, String tasaOCuota, BigDecimal importe) {
-		this.impuesto = impuesto;
-		this.tipoFactor = tipoFactor;
-		this.tasaOCuota = tasaOCuota;
-		this.importe = importe;
-	}
-	
-	public Retencion(String impuesto,BigDecimal importe) {
-		this.impuesto = impuesto;
-		this.importe = importe;
-	}
+  @XmlAttribute(name = "TipoFactor")
+  private String tipoFactor;
 
-	public String getImpuesto() {
-		return impuesto;
-	}
+  @XmlAttribute(name = "TasaOCuota")
+  private String tasaOCuota;
 
-	public void setImpuesto(String impuesto) {
-		this.impuesto = impuesto;
-	}
+  @XmlAttribute(name = "Importe")
+  private BigDecimal importe;
 
-	public String getTipoFactor() {
-		return tipoFactor;
-	}
+  public Retencion() {}
 
-	public String getTasaOCuota() {
-		return tasaOCuota;
-	}
+  public Retencion(String impuesto, String tipoFactor, String tasaOCuota, BigDecimal importe) {
+    this.impuesto = impuesto;
+    this.tipoFactor = tipoFactor;
+    this.tasaOCuota = tasaOCuota;
+    this.importe = importe;
+  }
 
-	public void setTipoFactor(String tipoFactor) {
-		this.tipoFactor = tipoFactor;
-	}
+  public Retencion(String impuesto, BigDecimal importe) {
+    this.impuesto = impuesto;
+    this.importe = importe;
+  }
 
-	public void setTasaOCuota(String tasaOCuota) {
-		this.tasaOCuota = tasaOCuota;
-	}
+  public String getImpuesto() {
+    return impuesto;
+  }
 
-	public BigDecimal getImporte() {
-		return importe;
-	}
+  public void setImpuesto(String impuesto) {
+    this.impuesto = impuesto;
+  }
 
-	public void setImporte(BigDecimal importe) {
-		this.importe = importe;
-	}
+  public String getTipoFactor() {
+    return tipoFactor;
+  }
 
-	public BigDecimal getBase() {
-		return base;
-	}
+  public String getTasaOCuota() {
+    return tasaOCuota;
+  }
 
-	public void setBase(BigDecimal base) {
-		this.base = base;
-	}
+  public void setTipoFactor(String tipoFactor) {
+    this.tipoFactor = tipoFactor;
+  }
 
-	@Override
-	public String toString() {
-		return "Translado [impuesto=" + impuesto + ", tipoFactor=" + tipoFactor + ", tasaOCuota=" + tasaOCuota
-				+ ", importe=" + importe + "]";
-	}
+  public void setTasaOCuota(String tasaOCuota) {
+    this.tasaOCuota = tasaOCuota;
+  }
 
+  public BigDecimal getImporte() {
+    return importe;
+  }
+
+  public void setImporte(BigDecimal importe) {
+    this.importe = importe;
+  }
+
+  public BigDecimal getBase() {
+    return base;
+  }
+
+  public void setBase(BigDecimal base) {
+    this.base = base;
+  }
+
+  @Override
+  public String toString() {
+    return "Translado [impuesto="
+        + impuesto
+        + ", tipoFactor="
+        + tipoFactor
+        + ", tasaOCuota="
+        + tasaOCuota
+        + ", importe="
+        + importe
+        + "]";
+  }
 }

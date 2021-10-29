@@ -8,7 +8,6 @@ import { PaymentsData } from '../../../@core/data/payments-data';
 import { CuentasData } from '../../../@core/data/cuentas-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { PagosValidatorService } from '../../../@core/util-services/pagos-validator.service';
-import { InvoicesData } from '../../../@core/data/invoices-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ResourceFile } from '../../../models/resource-file';
 import { PagoFactura } from '../../../models/pago-factura';
@@ -38,8 +37,7 @@ export class PagoFacturaComponent implements OnInit {
   constructor(private paymentsService: PaymentsData,
     private accountsService: CuentasData,
     private fileService: FilesData,
-    private paymentValidator: PagosValidatorService,
-    private invoiceService: InvoicesData) {
+    private paymentValidator: PagosValidatorService) {
       this.factura = new Factura();
       this.newPayment.moneda = 'MXN';
       this.newPayment.facturas = [new PagoFactura()];
@@ -109,15 +107,12 @@ export class PagoFacturaComponent implements OnInit {
             this.invoicePayments = payments;
             this.myEvent.emit(this.factura.cfdi.id.toString());
           });
-        this.invoiceService.getComplementosInvoice(this.factura.folio)
-          .subscribe(complementos => {this.factura.complementos = complementos;
-          });
       }, (error: HttpErrorResponse) =>
       this.payErrorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
   }
 
   sendPayment() {
-
+    const filename=this.paymentForm.filename;
     this.newPayment.solicitante = this.user.email;
     const payment  = {... this.newPayment};
     payment.facturas[0].folio = this.factura.folio;
@@ -131,18 +126,15 @@ export class PagoFacturaComponent implements OnInit {
         result => {
           const resourceFile = new ResourceFile();
           resourceFile.tipoArchivo = 'IMAGEN';
-          resourceFile.tipoRecurso = 'PAGO';
+          resourceFile.tipoRecurso = 'PAGOS';
           resourceFile.referencia  = `${result.id}`;
           resourceFile.data = payment.documento;
+          resourceFile.extension=filename.substring(filename.indexOf('.'),filename.length);
           this.fileService.insertResourceFile(resourceFile).subscribe(response => console.log(response));
           this.paymentsService.getPaymentsByFolio(this.factura.folio)
           .subscribe((payments: PagoBase[]) => {
             this.invoicePayments = payments;
             this.loading = false; });
-            if (this.factura.metodoPago === 'PPD') {
-              this.invoiceService.getComplementosInvoice(this.factura.folio)
-                .subscribe(complementos => this.factura.complementos = complementos);
-            }
             this.myEvent.emit(this.factura.cfdi.id.toString());          
         }, (error: HttpErrorResponse) => {
           this.loading = false;
