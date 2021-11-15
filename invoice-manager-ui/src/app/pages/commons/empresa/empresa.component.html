@@ -806,11 +806,11 @@
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let year of years" [value]="year">{{year}}</option>
               </select>
-            </div>
+            </div> 
             <div class="col-8">
               <label for="dataDetail" class="label">Detalle</label>
-              <input id="dataDetail" class="form-control" fullWidth type="text" [(ngModel)]="data.detalle" fullWidth
-                placeholder="Descripcion corta del dato">
+              <input id="dataDetail" class="form-control" fullWidth type="number" [(ngModel)]="data.detalle" fullWidth
+                placeholder="Cantidad de Ingreso anual">
             </div>
           </div>
 

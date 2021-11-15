@@ -3,6 +3,7 @@ package com.business.unknow.model.dto.services;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import lombok.extern.jackson.Jacksonized;
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DatoAnualEmpresaDto implements Serializable {
+public class EmpresaIngresosDto implements Serializable {
 
   private static final long serialVersionUID = -6418483593324786047L;
 
@@ -25,7 +26,7 @@ public class DatoAnualEmpresaDto implements Serializable {
   private String rfc;
   private String tipoDato;
   private Integer anio;
-  private String detalle;
+  private BigDecimal detalle;
   private String link;
   private String creador;
   private Date creacion;

@@ -4,7 +4,7 @@ export class DatoAnualEmpresa{
   public rfc:string;
   public tipoDato:string;
   public anio:string;
-  public detalle:string;
+  public detalle:number;
   public link:string;
   public creador:string;
   public creacion:Date;

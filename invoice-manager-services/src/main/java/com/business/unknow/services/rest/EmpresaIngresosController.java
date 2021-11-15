@@ -1,8 +1,8 @@
 package com.business.unknow.services.rest;
 
-import com.business.unknow.model.dto.services.DatoAnualEmpresaDto;
+import com.business.unknow.model.dto.services.EmpresaIngresosDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.services.DatoAnualEmpresaService;
+import com.business.unknow.services.services.EmpresaIngresosService;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-public class DatoAnualEmpresaController {
+public class EmpresaIngresosController {
 
-  @Autowired private DatoAnualEmpresaService service;
+  @Autowired private EmpresaIngresosService service;
 
   @GetMapping("/empresas/{rfc}/datos")
-  public ResponseEntity<List<DatoAnualEmpresaDto>> findDataBy(@PathVariable String rfc) {
+  public ResponseEntity<List<EmpresaIngresosDto>> findDataBy(@PathVariable String rfc) {
     return new ResponseEntity<>(service.findDatosEmpresaByRfc(rfc), HttpStatus.OK);
   }
 
   @PostMapping("/empresas/{rfc}/datos")
-  public ResponseEntity<DatoAnualEmpresaDto> createData(
-      @PathVariable String rfc, @RequestBody @Valid DatoAnualEmpresaDto dato)
+  public ResponseEntity<EmpresaIngresosDto> createData(
+      @PathVariable String rfc, @RequestBody @Valid EmpresaIngresosDto dato)
       throws InvoiceManagerException {
     return new ResponseEntity<>(service.createDatoAnual(dato), HttpStatus.CREATED);
   }
