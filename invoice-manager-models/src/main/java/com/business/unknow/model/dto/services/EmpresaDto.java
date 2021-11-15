@@ -88,6 +88,12 @@ public class EmpresaDto implements Serializable {
 
   private Date expiracionFiel;
 
+  private String impuestoEstatal;
+
+  private String entidadRegistroPatronal;
+
+  private String entidadImpuestoPatronal;
+
   private String creador;
 
   private Date fechaCreacion;

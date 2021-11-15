@@ -132,6 +132,15 @@ public class Empresa implements Serializable {
   @Column(name = "EXPIRACION_FIEL")
   private Date expiracionFiel;
 
+  @Column(name = "IMPUESTO_ESTATAL")
+  private String impuestoEstatal;
+
+  @Column(name = "ENT_REG_PATRONAL")
+  private String entidadRegistroPatronal;
+
+  @Column(name = "ENT_IMPUESTO_PATRONAL")
+  private String entidadImpuestoPatronal;
+
   @Column(name = "CREADOR")
   private String creador;
 

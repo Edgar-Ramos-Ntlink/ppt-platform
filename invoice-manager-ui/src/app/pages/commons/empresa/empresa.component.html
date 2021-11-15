@@ -389,73 +389,6 @@
             </div>
           </nb-tab>
           <nb-tab tabTitle="Contabilidad" *ngIf="companyInfo.id && (isAdministrator || module === 'contabilidad')">
-            <div class="row">
-
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="ciec-hide2" class="label">CIEC(Clave de Identificación Electrónica Confidencial)</label>
-                  <div class="input-group">
-                    <input name="ciec-hide" type="password" class="input form-control" id="ciec-hide2"
-                      [(ngModel)]="companyInfo.ciec" [disabled]="companyInfo.activo"
-                      placeholder="Clave de Identificación Electrónica Confidencial" aria-label="password"
-                      aria-describedby="basic-addon1" *ngIf="!formInfo.showCiec" />
-                    <div class="input-group-append">
-                      <button class="input-group-text" (click)="toogleCiec()" *ngIf="!formInfo.showCiec">
-                        <i class="fa fa-eye" id="hide_eye"></i>
-                      </button>
-                    </div>
-
-                    <input name="ciec-show" type="text" class="input form-control" id="ciec-show2"
-                      [(ngModel)]="companyInfo.ciec" [disabled]="companyInfo.activo"
-                      placeholder="Clave de Identificación Electrónica Confidencial" aria-label="password"
-                      aria-describedby="basic-addon1" *ngIf="formInfo.showCiec" />
-                    <div class="input-group-append">
-                      <button class="input-group-text" (click)="toogleCiec()" *ngIf="formInfo.showCiec">
-                        <i class="fa fa-eye-slash" id="hide_eye"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="fiel-hide2" class="label">FIEL(Firma Electrónica Avanzada)</label>
-
-                  <div class="input-group">
-                    <input name="fiel-hide" type="password" class="input form-control" id="fiel-hide2"
-                      [(ngModel)]="companyInfo.fiel" [disabled]="companyInfo.activo"
-                      placeholder="Firma Electrónica Avanzada" aria-label="password" aria-describedby="basic-addon1"
-                      *ngIf="!formInfo.showFiel" />
-                    <div class="input-group-append">
-                      <button class="input-group-text" (click)="toogleFiel()" *ngIf="!formInfo.showFiel">
-                        <i class="fa fa-eye" id="hide_eye"></i>
-                      </button>
-                    </div>
-
-                    <input name="fiel-show" type="text" class="input form-control" id="fiel-show2"
-                      [(ngModel)]="companyInfo.fiel" [disabled]="companyInfo.activo"
-                      placeholder="Firma Electrónica Avanzada" aria-label="password" aria-describedby="basic-addon1"
-                      *ngIf="formInfo.showFiel" />
-                    <div class="input-group-append">
-                      <button class="input-group-text" (click)="toogleFiel()" *ngIf="formInfo.showFiel">
-                        <i class="fa fa-eye-slash" id="hide_eye"></i>
-                      </button>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="Actividad" class="label">Actividad SAT</label>
-                  <input type="text" [(ngModel)]="companyInfo.actividadSAT" class="form-control" fullWidth
-                    [disabled]="companyInfo.activo" id="Actividad" placeholder="Actividad Sat">
-                </div>
-              </div>
-
-            </div>
 
             <p class="font-weight-bold puff_center">Datos Fiscales</p>
             <div class="row slide_1">
@@ -464,33 +397,6 @@
                   <label for="registroPatronal" class="label">Registro Patronal</label>
                   <input type="text" [(ngModel)]="companyInfo.registroPatronal" class="form-control" fullWidth
                     [disabled]="companyInfo.activo" id="inputShortName" placeholder="Registro Patronal">
-                </div>
-              </div>
-
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="ciec" class="label">CIEC(Clave de Identificación Electrónica Confidencial)</label>
-                  <div class="input-group">
-                    <input name="ciec-hide" type="password" class="input form-control" id="ciec-hide"
-                      [(ngModel)]="companyInfo.ciec" [disabled]="companyInfo.activo"
-                      placeholder="Clave de Identificación Electrónica Confidencial" aria-label="password"
-                      aria-describedby="basic-addon1" *ngIf="!formInfo.showCiec" />
-                    <div class="input-group-append">
-                      <button class="input-group-text" (click)="toogleCiec()" *ngIf="!formInfo.showCiec">
-                        <i class="fa fa-eye" id="hide_eye"></i>
-                      </button>
-                    </div>
-
-                    <input name="ciec-show" type="text" class="input form-control" id="ciec-show"
-                      [(ngModel)]="companyInfo.ciec" [disabled]="companyInfo.activo"
-                      placeholder="Clave de Identificación Electrónica Confidencial" aria-label="password"
-                      aria-describedby="basic-addon1" *ngIf="formInfo.showCiec" />
-                    <div class="input-group-append">
-                      <button class="input-group-text" (click)="toogleCiec()" *ngIf="formInfo.showCiec">
-                        <i class="fa fa-eye-slash" id="hide_eye"></i>
-                      </button>
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -523,7 +429,32 @@
                 </div>
               </div>
 
-              <div class="col-sm-2">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="Actividad" class="label">Actividad SAT</label>
+                  <input type="text" [(ngModel)]="companyInfo.actividadSAT" class="form-control" fullWidth
+                    [disabled]="companyInfo.activo" id="Actividad" placeholder="Actividad Sat">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-4">
+                <label for="expiracionCertificado" class="label">Expiración Sellos</label>
+                <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpicker" fullWidth style="display:block;"
+                  id="expiracionCertificado" [disabled]="companyInfo.activo"
+                  [(ngModel)]="companyInfo.expiracionCertificado">
+                <nb-datepicker #expirationpicker></nb-datepicker>
+              </div>
+              <div class="col-4">
+                <label for="expiracionFiel" class="label">Expiración Fiel</label>
+                <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpickerFiel" fullWidth style="display:block;"
+                  id="expiracionFiel" [disabled]="companyInfo.activo"
+                  [(ngModel)]="companyInfo.expiracionFiel">
+                <nb-datepicker #expirationpickerFiel></nb-datepicker>
+              </div>
+              <div class="col-4">
                 <label for="inputAlta" class="label">Año Alta</label>
                 <select selected="*" id="inputAlta" style="display:block" fullWidth class="form-control"
                   [disabled]="companyInfo.activo" [(ngModel)]="companyInfo.anioAlta">
@@ -532,25 +463,25 @@
                 </select>
               </div>
             </div>
-
+            <br />
             <div class="row">
-              <div class="col-3">
-                <label for="expiracionCertificado" class="label">Expiración Sellos</label>
-                <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpicker" fullWidth style="display:block;"
-                  id="expiracionCertificado" [disabled]="companyInfo.activo"
-                  [(ngModel)]="companyInfo.expiracionCertificado">
-                <nb-datepicker #expirationpicker></nb-datepicker>
+              <div class="col-4">
+                <label for="impuestoEstatal" class="label">Impuesto Estatal</label>
+                <input type="text" [(ngModel)]="companyInfo.impuestoEstatal" class="form-control" fullWidth
+                    [disabled]="companyInfo.activo" id="impuestoEstatal" placeholder="Impuesto Estatal">
               </div>
-              <div class="col-3">
-                <label for="expiracionFiel" class="label">Expiración Fiel</label>
-                <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpickerFiel" fullWidth style="display:block;"
-                  id="expiracionFiel" [disabled]="companyInfo.activo"
-                  [(ngModel)]="companyInfo.expiracionFiel">
-                <nb-datepicker #expirationpickerFiel></nb-datepicker>
+              <div class="col-4">
+                <label for="entidadRegistroPatronal" class="label">Entidad registro patronal</label>
+                <input type="text" [(ngModel)]="companyInfo.entidadRegistroPatronal" class="form-control" fullWidth
+                    [disabled]="companyInfo.activo" id="entidadRegistroPatronal" placeholder="Entidad registro patronal">
+              </div>
+              <div class="col-4">
+                <label for="entidadImpuestoPatronal" class="label">Entidad/Impuesto Estatal</label>
+                <input type="text" [(ngModel)]="companyInfo.entidadImpuestoPatronal" class="form-control" fullWidth
+                    [disabled]="companyInfo.activo" id="entidadImpuestoPatronal" placeholder="Entidad/Impuesto Estatal">
               </div>
             </div>
-
-
+            <br />
             <div class="row">
               <div class="col-md-12">
                 <div class="clearfix">
