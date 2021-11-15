@@ -368,6 +368,7 @@
                         <th scope="col">BANCO</th>
                         <th scope="col">CUENTA</th>
                         <th scope="col">CLABE</th>
+                        <th scope="col">TIPO CONTRATO</th>
                         <th scope="col">SUCURSAL</th>
                         <th scope="col">DOMICILIO</th>
                         <th scope="col">FECHA</th>
@@ -383,6 +384,7 @@
                         <td scope="row">{{fila.banco}}</td>
                         <td scope="row">{{fila.cuenta}}</td>
                         <td scope="row">{{fila.clabe}}</td>
+                        <td scope="row">{{fila.tipoContrato}}</td>
                         <td scope="row">{{fila.sucursal}}</td>
                         <td scope="row">{{fila.domicilioBanco}}</td>
                         <td scope="row">{{fila.fechaCreacion}}</td>
@@ -763,6 +765,14 @@
                 placeholder="Direccion de sucursal - opcional">
             </div>
           </div>
+
+          <div class="row">
+            <div class="col-5">
+              <label for="contract" class="label">Tipo de Contrato</label>
+            <input id="contract" class="form-control" fullWidth type="text" [(ngModel)]="data.tipoContrato" fullWidth>
+            </div>
+          </div>   
+          
         </div>
       </nb-card-body>
       <nb-card-footer>
