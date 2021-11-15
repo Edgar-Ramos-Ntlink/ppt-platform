@@ -44,6 +44,8 @@ export class EmpresaComponent implements OnInit {
   public documents: ResourceFile[] = [];
   public observaciones: DetalleEmpresa[] = [];
   public pendientes: DetalleEmpresa[] = [];
+  public accionistas: DetalleEmpresa[] = [];
+  public apoderados: DetalleEmpresa[] = [];
   public cuentas: Cuenta[] = [];
   public ingresos: DatoAnualEmpresa[] = [];
 
@@ -130,6 +132,17 @@ export class EmpresaComponent implements OnInit {
         this.showToast('danger', 'Error', msg, true);
       });
 
+      this.empresaService.getCompaniesDetails(rfc, 'ACCIONISTA').subscribe(accionistas => this.accionistas = accionistas, (error) => {
+        let msg = error.error.message || `${error.statusText} : ${error.message}`;
+        this.showToast('danger', 'Error', msg, true);
+      });
+
+      this.empresaService.getCompaniesDetails(rfc, 'APODERADO').subscribe(apoderados => this.apoderados = apoderados, (error) => {
+        let msg = error.error.message || `${error.statusText} : ${error.message}`;
+        this.showToast('danger', 'Error', msg, true);
+      });
+
+      /*
       this.empresaService.getCompanyAnualData(rfc).subscribe(anualData => this.ingresos = anualData, (error) => {
         let msg = error.error.message || `${error.statusText} : ${error.message}`;
         this.showToast('danger', 'Error', msg, true);
@@ -138,7 +151,7 @@ export class EmpresaComponent implements OnInit {
       this.accountsService.getCuentasByCompany(rfc).subscribe(cuentas => this.cuentas = cuentas, (error) => {
         let msg = error.error.message || `${error.statusText} : ${error.message}`;
         this.showToast('danger', 'Error', msg, true);
-      });
+      });*/
 
       this.documents = await this.resourcesService.getResourcesByTypeAndReference('EMPRESAS', rfc).toPromise();
 
@@ -243,21 +256,31 @@ export class EmpresaComponent implements OnInit {
     }
   }
 
-  public async fileDocumentUpload(): Promise<void> {
-    try {
-      this.loading = true;
-      this.dataFile.tipoRecurso = 'EMPRESAS';
-      this.dataFile.referencia = this.companyInfo.rfc;
-      this.dataFile.tipoArchivo = this.formInfo.doctType;
+  private async upsertDatafile(tipoRecurso: string, tipoArchivo:string, referencia : string){
+    try{
+      this.dataFile.tipoRecurso = tipoRecurso;
+      this.dataFile.referencia = referencia;
+      this.dataFile.tipoArchivo = tipoArchivo;
       await this.resourcesService.insertResourceFile(this.dataFile).toPromise();
-      this.showToast('info', 'Exito!', 'El archivo se cargo correctamente');
-      this.loadCompanyInfo(this.companyInfo.rfc);
       this.formInfo.fileDataName = '';
       this.formInfo.doctType = '*';
-    } catch (error) {
+      this.dataFile = new ResourceFile();
+      this.showToast('info', 'Exito!', 'El archivo se cargo correctamente');
+    } catch(error){
       console.error(error);
       this.formInfo.fileDataName = '';
       this.formInfo.doctType = '*';
+      let msg = error.error.message || `${error.statusText} : ${error.message}`;
+      this.showToast('danger', 'Error', msg, true);
+    }
+  }
+
+  public async fileDocumentUpload(): Promise<void> {
+    try {
+      this.loading = true;
+      this.upsertDatafile('EMPRESAS',this.formInfo.doctType,this.companyInfo.rfc);
+      this.loadCompanyInfo(this.companyInfo.rfc);
+    } catch (error) {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.showToast('danger', 'Error', msg, true);
     }
@@ -364,6 +387,7 @@ export class EmpresaComponent implements OnInit {
     this.loading = false;
   }
 
+  
 
   public async openAnualDataDialog(dialog: TemplateRef<any>) {
     this.dataFile = new ResourceFile();
@@ -378,10 +402,7 @@ export class EmpresaComponent implements OnInit {
       if (result) {
         this.loading = true;
         if (this.dataFile.data != undefined) {
-          this.dataFile.tipoRecurso = 'EMPRESAS';
-          this.dataFile.referencia = `${this.companyInfo.rfc}-${result.tipoDato}-${result.anio}`;
-          this.dataFile.tipoArchivo = `${result.tipoDato}`;
-          await this.resourcesService.insertResourceFile(this.dataFile).toPromise();
+          this.upsertDatafile('EMPRESAS', `${result.tipoDato}`,`${this.companyInfo.rfc}-${result.tipoDato}-${result.anio}`);
           result.link = `/recursos/EMPRESAS/referencias/${this.companyInfo.rfc}-${result.tipoDato}-${result.anio}/files/${result.tipoDato}`;
         }
         await this.empresaService.insertCompanyAnualData(result).toPromise();
@@ -445,8 +466,13 @@ export class EmpresaComponent implements OnInit {
     this.loading = false;
   }
 
+  
+
 
   public async openDetallesDialog(dialog: TemplateRef<any>, detail: DetalleEmpresa, type?: string) {
+
+    this.dataFile = new ResourceFile();
+    this.formInfo.fileDataName = '';
 
     const detalle = detail || new DetalleEmpresa(this.companyInfo.rfc, this.module, this.user.email, type);
 
@@ -457,12 +483,18 @@ export class EmpresaComponent implements OnInit {
       if (result) {
         this.loading = true;
         if (result.id) { // update detail
-          await this.empresaService.updateCompanyDetail(detalle).toPromise();
-          this.showToast('info', 'Detalle actualizado', `${type} correctamente actualizado`);
+          const detail = await this.empresaService.updateCompanyDetail(detalle).toPromise();
+          if(this.dataFile.data != undefined){
+            this.upsertDatafile('EMPRESAS',detail.tipo,`${this.companyInfo.rfc}-${detail.tipo}-${detail.id}`);
+          }
+          this.showToast('info', 'Detalle actualizado', `${detail.tipo} correctamente actualizado`);
           this.loadCompanyInfo(this.companyInfo.rfc);
         } else {
-          await this.empresaService.insertCompanyDetail(detalle).toPromise();
-          this.showToast('info', 'Detalle creado', `${type} correctamente creado`);
+          const detail = await this.empresaService.insertCompanyDetail(detalle).toPromise();
+          if(this.dataFile.data != undefined){
+            this.upsertDatafile('EMPRESAS',detail.tipo,`${this.companyInfo.rfc}-${detail.tipo}-${detail.id}`);
+          }
+          this.showToast('info', 'Detalle creado', `${detail.tipo} correctamente creado`);
           this.loadCompanyInfo(this.companyInfo.rfc);
         }
       }
@@ -488,6 +520,9 @@ export class EmpresaComponent implements OnInit {
 
   public downloadDocumentData(dato : DatoAnualEmpresa){
     this.downloadService.dowloadResourceFile(dato.link,`${dato.rfc}_${dato.tipoDato}_${dato.anio}`)
+  }
+  public downloadDocumentDetail(detail : DetalleEmpresa){
+    this.downloadService.dowloadResourceFile(`/recursos/EMPRESAS/referencias/${this.companyInfo.rfc}-${detail.tipo}-${detail.id}/files/${detail.tipo}`,`${this.companyInfo.rfc}_${detail.tipo}`)
   }
 
   public downloadFile(file: ResourceFile){
