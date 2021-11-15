@@ -1,10 +1,10 @@
 package com.business.unknow.services.services;
 
-import com.business.unknow.model.dto.services.DatoAnualEmpresaDto;
+import com.business.unknow.model.dto.services.EmpresaIngresosDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.entities.DatoAnualEmpresa;
-import com.business.unknow.services.mapper.DatoAnualEmpresaMapper;
-import com.business.unknow.services.repositories.DatoAnualEmpresaRepository;
+import com.business.unknow.services.entities.EmpresaIngresos;
+import com.business.unknow.services.mapper.EmpresaIngresosMapper;
+import com.business.unknow.services.repositories.EmpresaIngresosRepository;
 import com.business.unknow.services.util.validators.EmpresaValidator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,29 +14,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
-public class DatoAnualEmpresaService {
+public class EmpresaIngresosService {
 
-  @Autowired private DatoAnualEmpresaRepository repository;
+  @Autowired private EmpresaIngresosRepository repository;
 
-  @Autowired private DatoAnualEmpresaMapper mapper;
+  @Autowired private EmpresaIngresosMapper mapper;
 
   @Autowired
   @Qualifier("EmpresaValidator")
   private EmpresaValidator empresaValidator;
 
-  public List<DatoAnualEmpresaDto> findDatosEmpresaByRfc(String rfc) {
+  public List<EmpresaIngresosDto> findDatosEmpresaByRfc(String rfc) {
     return mapper.getDatosAnualesDtoFromEntities(repository.findByRfc(rfc));
   }
 
-  public DatoAnualEmpresaDto createDatoAnual(DatoAnualEmpresaDto dato)
+  public EmpresaIngresosDto createDatoAnual(EmpresaIngresosDto dato)
       throws InvoiceManagerException {
     empresaValidator.validateDatoAnual(dato);
-    DatoAnualEmpresa dataToSave = repository.save(mapper.getDatoAnualEntityFromDto(dato));
+    EmpresaIngresos dataToSave = repository.save(mapper.getDatoAnualEntityFromDto(dato));
     return mapper.getDatoAnualDtoFromEntity(dataToSave);
   }
 
   public void deleteDatoAnual(Integer id) {
-    DatoAnualEmpresa toBeDeleted =
+    EmpresaIngresos toBeDeleted =
         repository
             .findById(id)
             .orElseThrow(

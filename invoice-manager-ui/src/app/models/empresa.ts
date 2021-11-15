@@ -63,6 +63,7 @@ export class Empresa {
     public actividadSAT: string;
     public noCertificado: string;
     public expiracionCertificado: Date;
+    public expiracionFiel: Date;
 
     public creador: string;
     public fechaCreacion: Date;

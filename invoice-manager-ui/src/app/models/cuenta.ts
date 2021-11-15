@@ -5,6 +5,7 @@ export class Cuenta {
     public banco: string;
     public cuenta: string;
     public clabe: string;
+    public tipoContrato: string;
     public domicilioBanco: string;
     public sucursal: string;
 

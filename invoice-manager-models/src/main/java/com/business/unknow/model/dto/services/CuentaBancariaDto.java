@@ -21,7 +21,6 @@ public class CuentaBancariaDto implements Serializable {
 
   private static final long serialVersionUID = 8643631228668299142L;
 
-  // TODO review fields database, new fields were added
   private int id;
   private int total;
   private String empresa;
@@ -33,6 +32,7 @@ public class CuentaBancariaDto implements Serializable {
   private String clabe;
 
   private String domicilioBanco;
+  private String tipoContrato;
   private String sucursal;
 
   private Date fechaCreacion;

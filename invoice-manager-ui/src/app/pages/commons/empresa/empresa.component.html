@@ -405,13 +405,6 @@
                 </div>
               </div>
 
-              <div class="col-3">
-                <label for="expiracionCertificado" class="label">Expiración certificado</label>
-                <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpicker" fullWidth style="display:block;"
-                  id="expiracionCertificado" [disabled]="companyInfo.activo"
-                  [(ngModel)]="companyInfo.expiracionCertificado">
-                <nb-datepicker #expirationpicker></nb-datepicker>
-              </div>
             </div>
 
             <p class="font-weight-bold puff_center">Datos adicionales</p>
@@ -486,6 +479,7 @@
                         <th scope="col">BANCO</th>
                         <th scope="col">CUENTA</th>
                         <th scope="col">CLABE</th>
+                        <th scope="col">TIPO CONTRATO</th>
                         <th scope="col">SUCURSAL</th>
                         <th scope="col">DOMICILIO</th>
                         <th scope="col">FECHA</th>
@@ -501,6 +495,7 @@
                         <td scope="row">{{fila.banco}}</td>
                         <td scope="row">{{fila.cuenta}}</td>
                         <td scope="row">{{fila.clabe}}</td>
+                        <td scope="row">{{fila.tipoContrato}}</td>
                         <td scope="row">{{fila.sucursal}}</td>
                         <td scope="row">{{fila.domicilioBanco}}</td>
                         <td scope="row">{{fila.fechaCreacion}}</td>
@@ -653,6 +648,23 @@
                   <option value="*">Seleccionar</option>
                   <option *ngFor="let year of years" [value]="year">{{year}}</option>
                 </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-3">
+                <label for="expiracionCertificado" class="label">Expiración Sellos</label>
+                <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpicker" fullWidth style="display:block;"
+                  id="expiracionCertificado" [disabled]="companyInfo.activo"
+                  [(ngModel)]="companyInfo.expiracionCertificado">
+                <nb-datepicker #expirationpicker></nb-datepicker>
+              </div>
+              <div class="col-3">
+                <label for="expiracionFiel" class="label">Expiración Fiel</label>
+                <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpickerFiel" fullWidth style="display:block;"
+                  id="expiracionFiel" [disabled]="companyInfo.activo"
+                  [(ngModel)]="companyInfo.expiracionFiel">
+                <nb-datepicker #expirationpickerFiel></nb-datepicker>
               </div>
             </div>
 
@@ -950,6 +962,14 @@
                 placeholder="Direccion de sucursal - opcional">
             </div>
           </div>
+
+          <div class="row">
+            <div class="col-5">
+              <label for="contract" class="label">Tipo de Contrato</label>
+            <input id="contract" class="form-control" fullWidth type="text" [(ngModel)]="data.tipoContrato" fullWidth>
+            </div>
+          </div>   
+          
         </div>
       </nb-card-body>
       <nb-card-footer>
@@ -983,11 +1003,11 @@
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let year of years" [value]="year">{{year}}</option>
               </select>
-            </div>
+            </div> 
             <div class="col-8">
               <label for="dataDetail" class="label">Detalle</label>
-              <input id="dataDetail" class="form-control" fullWidth type="text" [(ngModel)]="data.detalle" fullWidth
-                placeholder="Descripcion corta del dato">
+              <input id="dataDetail" class="form-control" fullWidth type="number" [(ngModel)]="data.detalle" fullWidth
+                placeholder="Cantidad de Ingreso anual">
             </div>
           </div>
 

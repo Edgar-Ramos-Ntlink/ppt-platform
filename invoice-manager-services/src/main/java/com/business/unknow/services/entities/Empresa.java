@@ -129,6 +129,9 @@ public class Empresa implements Serializable {
   @Column(name = "EXPIRACION_CERTIFICADO")
   private Date expiracionCertificado;
 
+  @Column(name = "EXPIRACION_FIEL")
+  private Date expiracionFiel;
+
   @Column(name = "CREADOR")
   private String creador;
 

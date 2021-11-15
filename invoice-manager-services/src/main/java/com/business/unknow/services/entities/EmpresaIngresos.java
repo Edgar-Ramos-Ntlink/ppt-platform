@@ -1,6 +1,7 @@
 package com.business.unknow.services.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.*;
 import lombok.*;
@@ -16,8 +17,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "DATOS_ANUALES_EMPRESAS")
-public class DatoAnualEmpresa implements Serializable {
+@Table(name = "EMPRESAS_INGRESOS")
+public class EmpresaIngresos implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +35,7 @@ public class DatoAnualEmpresa implements Serializable {
   private Integer anio;
 
   @Column(name = "DETALLE")
-  private String detalle;
+  private BigDecimal detalle;
 
   @Column(name = "LINK")
   private String link;

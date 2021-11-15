@@ -42,6 +42,9 @@ public class CuentaBancaria implements Serializable {
   @Column(name = "DOMICILIO_BANCO ")
   private String domicilioBanco;
 
+  @Column(name = "TIPO_CONTRATO ")
+  private String tipoContrato;
+
   @Column(name = "SUCURSAL ")
   private String sucursal;
 
@@ -127,6 +130,14 @@ public class CuentaBancaria implements Serializable {
     this.sucursal = sucursal;
   }
 
+  public String getTipoContrato() {
+    return tipoContrato;
+  }
+
+  public void setTipoContrato(String tipoContrato) {
+    this.tipoContrato = tipoContrato;
+  }
+
   @Override
   public String toString() {
     return "CuentaBancaria{"
@@ -146,6 +157,9 @@ public class CuentaBancaria implements Serializable {
         + '\''
         + ", domicilioBanco='"
         + domicilioBanco
+        + '\''
+        + ", tipoContrato='"
+        + tipoContrato
         + '\''
         + ", sucursal='"
         + sucursal
