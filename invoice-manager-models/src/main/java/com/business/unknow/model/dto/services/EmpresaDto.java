@@ -86,6 +86,8 @@ public class EmpresaDto implements Serializable {
 
   private Date expiracionCertificado;
 
+  private Date expiracionFiel;
+
   private String creador;
 
   private Date fechaCreacion;
