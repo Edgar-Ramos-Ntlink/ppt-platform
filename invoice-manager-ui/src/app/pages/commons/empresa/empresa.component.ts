@@ -142,7 +142,7 @@ export class EmpresaComponent implements OnInit {
         this.showToast('danger', 'Error', msg, true);
       });
 
-      /*
+      
       this.empresaService.getCompanyAnualData(rfc).subscribe(anualData => this.ingresos = anualData, (error) => {
         let msg = error.error.message || `${error.statusText} : ${error.message}`;
         this.showToast('danger', 'Error', msg, true);
@@ -151,7 +151,7 @@ export class EmpresaComponent implements OnInit {
       this.accountsService.getCuentasByCompany(rfc).subscribe(cuentas => this.cuentas = cuentas, (error) => {
         let msg = error.error.message || `${error.statusText} : ${error.message}`;
         this.showToast('danger', 'Error', msg, true);
-      });*/
+      });
 
       this.documents = await this.resourcesService.getResourcesByTypeAndReference('EMPRESAS', rfc).toPromise();
 
