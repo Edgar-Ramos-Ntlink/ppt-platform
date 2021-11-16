@@ -65,7 +65,7 @@ export class Empresa {
     public expiracionCertificado: Date;
     public expiracionFiel: Date;
 
-    private  impuestoEstatal:String;
+    public  impuestoEstatal:String;
     public  entidadRegistroPatronal:String;
     public  entidadImpuestoPatronal:String;
 
