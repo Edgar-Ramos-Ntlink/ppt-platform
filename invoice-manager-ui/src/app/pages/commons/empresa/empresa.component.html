@@ -340,11 +340,11 @@
               <div class="col-sm-6">
                 <br />
                 <br />
-                <div class="puff_center" *ngIf="documents.length === 0" class="alert alert-primary" role="alert">
+                <div class="puff_center" *ngIf="legalDocuments.length === 0" class="alert alert-primary" role="alert">
                   No hay documentos relacionados a la empresa
                 </div>
 
-                <div class="table-responsive slide_1" *ngIf="documents.length > 0">
+                <div class="table-responsive slide_1" *ngIf="legalDocuments.length > 0">
                   <table class="table table-sm">
                     <thead class="thead-dark">
                       <tr>
@@ -354,7 +354,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let fila of documents">
+                      <tr *ngFor="let fila of legalDocuments">
 
                         <td scope="row" class="text-center">
                           <button class="btn d-inline btn-outline-primary" (click)="downloadFile(fila)">
@@ -522,7 +522,7 @@
                 <div class="form-group">
                   <label for="registroPatronal" class="label">Registro Patronal</label>
                   <input type="text" [(ngModel)]="companyInfo.registroPatronal" class="form-control" fullWidth
-                    [disabled]="companyInfo.activo" id="inputShortName" placeholder="Registro Patronal">
+                    [disabled]="companyInfo.activo" id="registroPatronal" placeholder="Registro Patronal">
                 </div>
               </div>
 
@@ -658,6 +658,82 @@
                   </table>
                 </div>
               </div>
+            </div>
+            <p class="font-weight-bold puff_center">Documentos contabilidad</p>
+
+            <div class="row">
+
+              <div class="col-sm-6">
+
+                <div class="row">
+                  <div class="col-sm-3">
+                    <label for="inputDocType" class="label">Tipo Documento</label>
+                    <select selected="*" id="inputDocType" style="display:block" fullWidth class="form-control"
+                      [disabled]="companyInfo.activo" [(ngModel)]="formInfo.doctType">
+                      <option value="*">Seleccionar</option>
+                      <option value="CSD-CERT">Certificado CSD(.cer)</option>
+                      <option value="CSD-KEY">Llave CSD(.key)</option>
+                      <option value="FIEL-CERT">Certificado FIEL(.cer)</option>
+                      <option value="FIEL-KEY">Llave FIEL(.key)</option>
+                      <option value="REGISTRO_PATRONAL">Registro Patronal</option>
+                      <option value="REPSE">Repse</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-sm-9">
+                    <label for="certFile" class="label">Documento Relacionado</label>
+
+                    <div class="input-group">
+                      <div class="custom-file" id="documentContaFile">
+                        <input type="file" class="custom-file-input" id="documentContaFile" [disabled]="companyInfo.activo || formInfo.doctType == '*'"
+                          accept=".pdf,.cer,.key" (change)="fileDataUploadListener($event)"
+                          style="display:block;" aria-describedby="documentContaFile">
+                        <label class="custom-file-label" for="documentContaFile">{{formInfo.fileDataName}}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br />
+
+                <div class="clearfix">
+                  <div class="row float-right" style="margin-right: 1px;">
+                    <button type="button" (click)="fileDocumentUpload()" style=" margin-left:25px;"
+                      [disabled]="companyInfo.activo || dataFile == undefined"
+                      class="btn btn-primary float-right">Cargar documento</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <br />
+                <br />
+                <div class="puff_center" *ngIf="contableDocuments.length === 0" class="alert alert-primary" role="alert">
+                  No hay documentos relacionados a la empresa
+                </div>
+
+                <div class="table-responsive slide_1" *ngIf="contableDocuments.length > 0">
+                  <table class="table table-sm">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th class="text-center">DESCARGA</th>
+                        <th scope="col">TIPO ARCHIVO</th>
+                        <th scope="col">FECHA</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let fila of contableDocuments">
+
+                        <td scope="row" class="text-center">
+                          <button class="btn d-inline btn-outline-primary" (click)="downloadFile(fila)">
+                            <i class="fa fa-download"></i></button>
+                        </td>
+                        <td scope="row">{{fila.tipoArchivo}}</td>
+                        <td scope="row">{{fila.fechaCreacion}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
             </div>
           </nb-tab>
 

@@ -41,7 +41,8 @@ export class EmpresaComponent implements OnInit {
   public girosCat: Catalogo[] = [];
   public banksCat: Catalogo[] = [];
 
-  public documents: ResourceFile[] = [];
+  public legalDocuments: ResourceFile[] = [];
+  public contableDocuments: ResourceFile[] = [];
   
   public observaciones: DetalleEmpresa[] = [];
   public pendientes: DetalleEmpresa[] = [];
@@ -52,7 +53,9 @@ export class EmpresaComponent implements OnInit {
 
   public logo: ResourceFile;
 
-  private dataFile: ResourceFile;
+  public dataFile: ResourceFile;
+
+  public CONTABLE_FILES = ['CSD-CERT','CSD-KEY','FIEL-CERT','FIEL-KEY','REGISTRO_PATRONAL','REPSE'];
 
   constructor(
     private dialogService: NbDialogService,
@@ -154,9 +157,16 @@ export class EmpresaComponent implements OnInit {
         this.showToast('danger', 'Error', msg, true);
       });
 
-      this.documents = await this.resourcesService.getResourcesByTypeAndReference('EMPRESAS', rfc).toPromise();
 
-      if (this.documents.find(d => d.tipoArchivo === 'LOGO')) { // only logo needs to be loaded from backend
+      const documents =  await this.resourcesService.getResourcesByTypeAndReference('EMPRESAS', rfc).toPromise();
+
+      console.log(documents);
+      console.log(this.CONTABLE_FILES.find(c=>c == 'LOGO'))
+
+      this.legalDocuments = documents.filter(d => this.CONTABLE_FILES.find(c=>c == d.tipoArchivo) == undefined);
+      this.contableDocuments =  documents.filter(d => this.CONTABLE_FILES.find(c=>c == d.tipoArchivo) != undefined);
+
+      if (this.legalDocuments.find(d => d.tipoArchivo === 'LOGO')) { // only logo needs to be loaded from backend
         this.resourcesService.getResourceFile(rfc, 'EMPRESAS', 'LOGO').subscribe((logo) => this.logo = logo, (error) => {
           let msg = error.error.message || `${error.statusText} : ${error.message}`;
           this.showToast('danger', 'Error', msg, true);
@@ -354,9 +364,9 @@ export class EmpresaComponent implements OnInit {
 
     try {
       this.loading = true;
-      const cert = this.documents.find(d => d.tipoArchivo === 'CERT');
-      const key = this.documents.find(d => d.tipoArchivo === 'KEY');
-      const logo = this.documents.find(d => d.tipoArchivo === 'LOGO');
+      const cert = this.contableDocuments.find(d => d.tipoArchivo === 'CSD-CERT');
+      const key = this.contableDocuments.find(d => d.tipoArchivo === 'CSD-KEY');
+      const logo = this.legalDocuments.find(d => d.tipoArchivo === 'LOGO');
 
 
       if (cert == undefined) {
