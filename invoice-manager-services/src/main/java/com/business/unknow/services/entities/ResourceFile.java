@@ -29,6 +29,10 @@ public class ResourceFile implements Serializable {
   private String referencia;
 
   @NotEmpty
+  @Column(name = "NOMBRE")
+  private String nombre;
+
+  @NotEmpty
   @Column(name = "TIPO_ARCHIVO")
   private String tipoArchivo;
 

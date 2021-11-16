@@ -19,8 +19,7 @@ public class S3FileService {
 
   @Autowired private S3Properties s3Properties;
 
-  public void upsertS3File(
-      S3BucketsEnum bucket, String fileFormat, String name, ByteArrayOutputStream file)
+  public void upsertS3File(S3BucketsEnum bucket, String name, ByteArrayOutputStream file)
       throws InvoiceManagerException {
     try {
       InputStream inputStream = new ByteArrayInputStream(file.toByteArray());
@@ -29,7 +28,7 @@ public class S3FileService {
       AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(s3Properties.getRegion()).build();
       s3.putObject(
           s3Properties.getBucketName().concat("/").concat(bucket.name()),
-          name.concat(fileFormat),
+          name,
           inputStream,
           metadata);
     } catch (AmazonServiceException | IOException e) {
@@ -38,13 +37,10 @@ public class S3FileService {
     }
   }
 
-  public String getS3File(S3BucketsEnum bucket, String fileFormat, String name)
-      throws InvoiceManagerException {
+  public String getS3File(S3BucketsEnum bucket, String name) throws InvoiceManagerException {
     AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(s3Properties.getRegion()).build();
     S3Object s3object =
-        s3.getObject(
-            s3Properties.getBucketName().concat("/").concat(bucket.name()),
-            name.concat(fileFormat));
+        s3.getObject(s3Properties.getBucketName().concat("/").concat(bucket.name()), name);
     InputStream inputStream = s3object.getObjectContent();
     try {
       return new String(Base64.getEncoder().encode(inputStream.readAllBytes()));
@@ -55,12 +51,10 @@ public class S3FileService {
     }
   }
 
-  public void deleteS3File(S3BucketsEnum bucket, String fileFormat, String name)
-      throws InvoiceManagerException {
+  public void deleteS3File(S3BucketsEnum bucket, String name) throws InvoiceManagerException {
     AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(s3Properties.getRegion()).build();
     try {
-      s3.deleteObject(
-          s3Properties.getBucketName().concat("/").concat(bucket.name()), name.concat(fileFormat));
+      s3.deleteObject(s3Properties.getBucketName().concat("/").concat(bucket.name()), name);
 
     } catch (Exception e) {
       throw new InvoiceManagerException(

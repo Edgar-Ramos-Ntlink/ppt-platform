@@ -23,6 +23,7 @@ public class ResourceFileDto implements Serializable {
   private Integer id;
   private String tipoArchivo;
   private String referencia;
+  private String nombre;
   private String tipoRecurso;
   private String formato;
   private String extension;
@@ -107,28 +108,25 @@ public class ResourceFileDto implements Serializable {
     this.extension = extension;
   }
 
+  public String getNombre() {
+    return nombre;
+  }
+
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
+
   @Override
   public String toString() {
-    return "ResourceFileDto{"
-        + "id="
-        + id
-        + ", tipoArchivo='"
-        + tipoArchivo
-        + '\''
-        + ", referencia='"
-        + referencia
-        + '\''
-        + ", tipoRecurso='"
-        + tipoRecurso
-        + '\''
-        + ", formato='"
-        + formato
-        + '\''
-        + ", data='"
-        + data
-        + '\''
-        + ", fechaCreacion="
-        + fechaCreacion
-        + '}';
+    return "ResourceFileDto{" +
+            "id=" + id +
+            ", tipoArchivo='" + tipoArchivo + '\'' +
+            ", referencia='" + referencia + '\'' +
+            ", nombre='" + nombre + '\'' +
+            ", tipoRecurso='" + tipoRecurso + '\'' +
+            ", formato='" + formato + '\'' +
+            ", extension='" + extension + '\'' +
+            ", fechaCreacion=" + fechaCreacion +
+            '}';
   }
 }
