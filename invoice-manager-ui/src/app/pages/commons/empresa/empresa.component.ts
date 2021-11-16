@@ -42,6 +42,7 @@ export class EmpresaComponent implements OnInit {
   public banksCat: Catalogo[] = [];
 
   public documents: ResourceFile[] = [];
+  
   public observaciones: DetalleEmpresa[] = [];
   public pendientes: DetalleEmpresa[] = [];
   public accionistas: DetalleEmpresa[] = [];
@@ -146,12 +147,12 @@ export class EmpresaComponent implements OnInit {
       this.empresaService.getCompanyAnualData(rfc).subscribe(anualData => this.ingresos = anualData, (error) => {
         let msg = error.error.message || `${error.statusText} : ${error.message}`;
         this.showToast('danger', 'Error', msg, true);
-      });
+      }); */
 
       this.accountsService.getCuentasByCompany(rfc).subscribe(cuentas => this.cuentas = cuentas, (error) => {
         let msg = error.error.message || `${error.statusText} : ${error.message}`;
         this.showToast('danger', 'Error', msg, true);
-      });*/
+      });
 
       this.documents = await this.resourcesService.getResourcesByTypeAndReference('EMPRESAS', rfc).toPromise();
 
@@ -429,28 +430,8 @@ export class EmpresaComponent implements OnInit {
     this.loading = false;
   }
 
-  public async openAccountDialog(dialog: TemplateRef<any>) {
-
-    const cuenta = new Cuenta();
-    cuenta.empresa = this.companyInfo.rfc;
-    try {
-
-      if (this.banksCat.length === 0) {
-        this.banksCat = await this.catalogsService.getBancos();
-      }
-      let result = await this.dialogService.open(dialog, { context: cuenta }).onClose.toPromise();
-
-      if (result) {
-        this.loading = true;
-        await this.accountsService.insertCuenta(result).toPromise();
-        this.showToast('info', 'Cuenta creada!', `La cuenta se creada exitosamente`);
-        this.loadCompanyInfo(this.companyInfo.rfc);
-      }
-    } catch (error) {
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-      this.showToast('danger', 'Error', msg, true);
-    }
-    this.loading = false;
+  public async openAccountDialog(rfc:string,cuenta :number) {
+    this.router.navigate([`./pages/tesoreria/cuenta-bancaria/${rfc}/${cuenta}`]);
   }
 
   public async deleteAccount(id: number) {
