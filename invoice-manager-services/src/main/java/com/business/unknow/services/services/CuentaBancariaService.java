@@ -115,10 +115,10 @@ public class CuentaBancariaService {
   }
 
   public CuentaBancariaDto updateCuentaBancaria(
-      Integer cuentaId, CuentaBancariaDto cuentaBancariaDto) {
+      Integer accountId, CuentaBancariaDto cuentaBancariaDto) {
     CuentaBancaria entity =
         repository
-            .findById(cuentaBancariaDto.getId())
+            .findById(accountId)
             .orElseThrow(
                 () ->
                     new ResponseStatusException(
@@ -126,12 +126,10 @@ public class CuentaBancariaService {
                         String.format(
                             "Esta Empresa con esta cuenta ya existe %s",
                             cuentaBancariaDto.getCuenta())));
-    entity.setBanco(cuentaBancariaDto.getBanco());
-    entity.setEmpresa(cuentaBancariaDto.getEmpresa());
-    entity.setCuenta(cuentaBancariaDto.getCuenta());
-    entity.setClabe(cuentaBancariaDto.getClabe());
 
-    return mapper.getCuentaBancariaToFromEntity(repository.save(entity));
+    CuentaBancaria account = mapper.getEntityFromCuentaBancariaDto(cuentaBancariaDto);
+    account.setId(entity.getId());
+    return mapper.getCuentaBancariaToFromEntity(repository.save(account));
   }
 
   public void deleteCuentaBancaria(Integer id) {

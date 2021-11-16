@@ -461,7 +461,7 @@
                     <p class="font-weight-bold puff_center">Cuentas bancarias</p>
                   </div>
                   <div class="row float-right" style="margin-right: 1px;">
-                    <button type="button" (click)="openAccountDialog(acccountDialog)" style=" margin-left:25px;"
+                    <button type="button" (click)="openAccountDialog(companyInfo.rfc,'*')" style=" margin-left:25px;"
                       class="btn btn-primary float-right">Nueva Cuenta</button>
                   </div>
                 </div>
@@ -489,8 +489,16 @@
                       <tr *ngFor="let fila of cuentas">
 
                         <td scope="row" class="text-center">
-                          <button class="btn d-inline p-2 btn-outline-danger" (click)="deleteAccount(fila.id)"><i
+                          <button class="btn d-inline mr-2 ml-2"
+                              [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
+                              [disabled]="fila.area!= module && !isAdministrator"
+                              (click)="deleteAccount(fila.id)"><i
                               class="fa fa-trash"></i></button>
+                          <button class="btn d-inline mr-2 ml-2"
+                              [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
+                              [disabled]="fila.area!= module && !isAdministrator"
+                              (click)="openAccountDialog(companyInfo.rfc,fila.cuenta)">
+                              <i class="fa fa-search"></i></button>
                         </td>
                         <td scope="row">{{fila.banco}}</td>
                         <td scope="row">{{fila.cuenta}}</td>
@@ -848,71 +856,7 @@
     </nb-card>
   </ng-template>
 
-  <!-- Company accounts dialog -->
 
-  <ng-template #acccountDialog let-data let-ref="dialogRef">
-    <nb-card>
-      <nb-card-header>
-        <div class="clearfix">
-          <p class="h8 float-left font-weight-bold">Datos de la cuenta bancaria</p>
-        </div>
-
-      </nb-card-header>
-      <br>
-      <nb-card-body>
-        <div style="width: 40vw; ">
-          <div class="row">
-            <div class="col-2">
-              <label for="inputBanco" class="label">Banco</label>
-              <select id="inputBanco" style="display:block;" class="form-control" [(ngModel)]="data.banco" name="banco">
-                <option value="*">Seleccionar</option>
-                <option *ngFor="let bank of banksCat" [value]="bank.nombre">{{bank.nombre}}</option>
-              </select>
-            </div>
-            <div class="col-4">
-              <label for="cuenta" class="label">N° Cuenta</label>
-              <input id="cuenta" class="form-control" fullWidth type="text" [(ngModel)]="data.cuenta" fullWidth
-                placeholder="Numero de cuenta">
-            </div>
-            <div class="col-6">
-              <label for="clave" class="label">Clave</label>
-              <input id="clave" class="form-control" fullWidth type="text" [(ngModel)]="data.clabe" fullWidth
-                placeholder="Clave Bancaria">
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-5">
-              <label for="location" class="label">Sucursal</label>
-              <input id="location" class="form-control" fullWidth type="text" [(ngModel)]="data.sucursal" fullWidth
-                placeholder="Descripcion corta sucursal">
-            </div>
-            <div class="col-7">
-              <label for="address" class="label">Domicilio Sucursal</label>
-              <input id="address" class="form-control" fullWidth type="text" [(ngModel)]="data.domicilioBanco" fullWidth
-                placeholder="Direccion de sucursal - opcional">
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-5">
-              <label for="contract" class="label">Tipo de Contrato</label>
-            <input id="contract" class="form-control" fullWidth type="text" [(ngModel)]="data.tipoContrato" fullWidth>
-            </div>
-          </div>   
-          
-        </div>
-      </nb-card-body>
-      <nb-card-footer>
-        <div class="clearfix">
-          <button class="btn btn-warning float-right mr-2 ml-2" (click)="ref.close(undefined)">Salir</button>
-          <button class="btn btn-success float-right mr-2 ml-2" (click)="ref.close(data)"
-            *ngIf="!data.id">Guardar</button>
-        </div>
-
-      </nb-card-footer>
-    </nb-card>
-  </ng-template>
 
   <!-- Company anual Data dialog -->
 

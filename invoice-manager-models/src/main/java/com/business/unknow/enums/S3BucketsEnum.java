@@ -7,6 +7,7 @@ public enum S3BucketsEnum {
   EMPRESAS,
   PAGOS,
   CLIENTES,
+  CUENTAS_BANCARIAS,
   NOT_VALID;
 
   public static S3BucketsEnum findByValor(String valor) throws InvoiceManagerException {
