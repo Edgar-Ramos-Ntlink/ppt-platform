@@ -138,13 +138,11 @@ public class SwSapinsExecutorService extends AbstractPackExecutor {
         String llavePrivada =
             s3service.getS3File(
                 S3BucketsEnum.EMPRESAS,
-                TipoArchivoEnum.KEY.name(),
-                context.getEmpresaDto().getRfc());
+                context.getEmpresaDto().getRfc().concat(TipoArchivoEnum.KEY.getFormat()));
         String certificado =
             s3service.getS3File(
                 S3BucketsEnum.EMPRESAS,
-                TipoArchivoEnum.CERT.name(),
-                context.getEmpresaDto().getRfc());
+                context.getEmpresaDto().getRfc().concat(TipoArchivoEnum.CERT.name()));
 
         swSapiensClient
             .getSwSapiensClient(

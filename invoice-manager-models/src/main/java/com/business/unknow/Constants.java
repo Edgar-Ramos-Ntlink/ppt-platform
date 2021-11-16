@@ -9,6 +9,9 @@ public class Constants {
   public static final String DATE_FOLIO_GENERIC_FORMAT = "yyyySSSMMhhssddmm";
   public static final String DATE_PRE_FOLIO_GENERIC_FORMAT = "MMyy";
 
+  public static final String CSD_KEY = "CSD-KEY";
+  public static final String CSD_CERT = "CSD-CERT";
+
   public static final Integer INTERNAL_ERROR = 500;
   public static final Integer MILISECONDS = 1000;
   public static final Integer BAD_REQUEST = 400;
