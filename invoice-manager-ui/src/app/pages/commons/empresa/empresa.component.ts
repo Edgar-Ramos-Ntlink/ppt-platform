@@ -160,9 +160,6 @@ export class EmpresaComponent implements OnInit {
 
       const documents =  await this.resourcesService.getResourcesByTypeAndReference('EMPRESAS', rfc).toPromise();
 
-      console.log(documents);
-      console.log(this.CONTABLE_FILES.find(c=>c == 'LOGO'))
-
       this.legalDocuments = documents.filter(d => this.CONTABLE_FILES.find(c=>c == d.tipoArchivo) == undefined);
       this.contableDocuments =  documents.filter(d => this.CONTABLE_FILES.find(c=>c == d.tipoArchivo) != undefined);
 
