@@ -67,7 +67,12 @@ public class FilesService {
       }
       String data =
           s3FileService.getS3File(
-              resource, String.format("%s-%s%s",resourceFileDto.getReferencia(),resourceFileDto.getTipoArchivo(),resourceFileDto.getExtension()));
+              resource,
+              String.format(
+                  "%s-%s%s",
+                  resourceFileDto.getReferencia(),
+                  resourceFileDto.getTipoArchivo(),
+                  resourceFileDto.getExtension()));
       resourceFileDto.setData(data);
       return resourceFileDto;
     } catch (Exception e) {
@@ -133,7 +138,7 @@ public class FilesService {
       ResourceFile file = resourceFile.get();
       s3FileService.deleteS3File(
           S3BucketsEnum.findByValor(file.getTipoRecurso()),
-          file.getReferencia().concat(file.getExtension()));
+          file.getNombre());
       resourceFileRepository.delete(file);
     }
   }
@@ -144,7 +149,7 @@ public class FilesService {
       ResourceFile file = resourceFile.get();
       s3FileService.deleteS3File(
           S3BucketsEnum.findByValor(file.getTipoRecurso()),
-          file.getReferencia().concat(TipoArchivoEnum.valueOf(file.getTipoArchivo()).getFormat()));
+              file.getNombre());
       resourceFileRepository.delete(file);
     }
   }
