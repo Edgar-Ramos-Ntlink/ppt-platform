@@ -135,8 +135,9 @@
                 <div class="clearfix">
                   <div class="row float-right" style="margin-right: 1px;">
                     <button type="button" (click)="fileDocumentUpload()" style=" margin-left:25px;"
-                      [disabled]="cuenta.id == undefined || dataFile == undefined"
-                      class="btn btn-primary float-right">Cargar documento</button>
+                      [disabled]="cuenta.id == undefined || dataFile.data == undefined"
+                      [ngClass]="{'btn-secondary': cuenta.id == undefined || dataFile.data == undefined , 'btn-primary': cuenta.id != undefined && dataFile.data != undefined }"
+                      class="btn float-right">Cargar documento</button>
                   </div>
                 </div>
               </div>

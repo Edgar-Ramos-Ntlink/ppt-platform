@@ -137,8 +137,7 @@ public class FilesService {
     if (resourceFile.isPresent()) {
       ResourceFile file = resourceFile.get();
       s3FileService.deleteS3File(
-          S3BucketsEnum.findByValor(file.getTipoRecurso()),
-          file.getNombre());
+          S3BucketsEnum.findByValor(file.getTipoRecurso()), file.getNombre());
       resourceFileRepository.delete(file);
     }
   }
@@ -148,8 +147,7 @@ public class FilesService {
     if (resourceFile.isPresent()) {
       ResourceFile file = resourceFile.get();
       s3FileService.deleteS3File(
-          S3BucketsEnum.findByValor(file.getTipoRecurso()),
-              file.getNombre());
+          S3BucketsEnum.findByValor(file.getTipoRecurso()), file.getNombre());
       resourceFileRepository.delete(file);
     }
   }

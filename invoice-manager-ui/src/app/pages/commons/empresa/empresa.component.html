@@ -138,237 +138,243 @@
               </div>
             </div>
             <br>
-            <p class="font-weight-bold puff_center">Datos legales</p>
-            <br>
-            <div class="row slide_1">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="inputRepresentante" class="label">Nombre Representante Legal</label>
-                  <input type="text" [(ngModel)]="companyInfo.representanteLegal" class="form-control" fullWidth
-                    [disabled]="companyInfo.activo" id="inputRepresentante" placeholder="Nombre representante legal"
-                    [disabled]="companyInfo.id===undefined || companyInfo.activo">
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="estatusJuridico" class="label">Estatus Juridico</label>
-                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico" class="form-control" fullWidth
-                    [disabled]="companyInfo.activo" id="estatusJuridico" placeholder="Estatus Juridico">
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="estatusJuridico2" class="label">Estatus Juridico 2</label>
-                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico2" class="form-control" fullWidth
-                    [disabled]="companyInfo.activo" id="estatusJuridico2" placeholder="Estatus Juridico 2">
-                </div>
-              </div>
-            </div>
-
-
-            <!-- STOCK-HOLDERS -->
-            <p class="font-weight-bold puff_center">Accionistas</p>
-            <div class="row">
-              <div class="col-md-12">
-
-
-                <div class="clearfix">
-                  
-                  <div class="row float-right" style="margin-right: 1px;">
-                    <button type="button" (click)="openDetallesDialog(stockHolderDialog, undefined, 'ACCIONISTA')"
-                      style=" margin-left:25px;" class="btn btn-primary float-right">Nuevo Accionista</button>
+            <div *ngIf="companyInfo.id">
+              <p class="font-weight-bold puff_center">Datos legales</p>
+              <br>
+              <div class="row slide_1">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="inputRepresentante" class="label">Nombre Representante Legal</label>
+                    <input type="text" [(ngModel)]="companyInfo.representanteLegal" class="form-control" fullWidth
+                      [disabled]="companyInfo.activo" id="inputRepresentante" placeholder="Nombre representante legal"
+                      [disabled]="companyInfo.id===undefined || companyInfo.activo">
                   </div>
                 </div>
-                <br />
 
-                <div class="puff_center" *ngIf="accionistas.length === 0" class="alert alert-primary" role="alert">
-                  No hay accionistas para la empresa
-                </div>
-
-                <div class="table-responsive slide_1" *ngIf="accionistas.length > 0">
-                  <table class="table table-sm">
-                    <thead class="thead-dark">
-                      <tr>
-
-                        <th class="text-center">ACCIONES</th>
-                        <th scope="col">RFC</th>
-                        <th scope="col">NOMBRE</th>
-                        <th scope="col">NOTIFICANTE</th>
-                        <th scope="col">FECHA</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let fila of accionistas">
-
-                        <td scope="row" class="text-center">
-                          <button class="btn d-inline mr-2 ml-2"
-                            [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-danger': fila.area === module || isAdministrator}"
-                            (click)="deleteDetail(fila.id)" [disabled]="fila.area!= module && !isAdministrator">
-                            <i class="fa fa-trash"></i></button>
-                          <button class="btn d-inline mr-2 ml-2"
-                            [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
-                            [disabled]="fila.area!= module && !isAdministrator"
-                            (click)="openDetallesDialog(stockHolderDialog,fila)">
-                            <i class="fa fa-search"></i></button>
-                          <button class="btn d-inline mr-2 ml-2"
-                            [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
-                            [disabled]="fila.area!= module && !isAdministrator"
-                            (click)="downloadDocumentDetail(fila)"><i class="fa fa-download"></i></button>
-                        </td>
-                        <td scope="row">{{fila.resumen}}</td>
-                        <td scope="row">{{fila.detalle}}</td>
-                        <td scope="row">{{fila.notificante}}</td>
-                        <td scope="row">{{fila.fechaCreacion}}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <!-- REPRESENTANT-->
-            <p class="font-weight-bold puff_center">Apoderados</p>
-            <div class="row">
-              <div class="col-md-12">
-
-
-                <div class="clearfix">
-                  
-                  <div class="row float-right" style="margin-right: 1px;">
-                    <button type="button" (click)="openDetallesDialog(stockHolderDialog, undefined, 'APODERADO')"
-                      style=" margin-left:25px;" class="btn btn-primary float-right">Nuevo Apoderado</button>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="estatusJuridico" class="label">Estatus Juridico</label>
+                    <input type="text" [(ngModel)]="companyInfo.estatusJuridico" class="form-control" fullWidth
+                      [disabled]="companyInfo.activo" id="estatusJuridico" placeholder="Estatus Juridico">
                   </div>
                 </div>
-                <br />
-
-                <div class="puff_center" *ngIf="apoderados.length === 0" class="alert alert-primary" role="alert">
-                  No hay apoderados para la empresa
-                </div>
-
-                <div class="table-responsive slide_1" *ngIf="apoderados.length > 0">
-                  <table class="table table-sm">
-                    <thead class="thead-dark">
-                      <tr>
-
-                        <th class="text-center">ACCIONES</th>
-                        <th scope="col">RFC</th>
-                        <th scope="col">NOMBRE</th>
-                        <th scope="col">NOTIFICANTE</th>
-                        <th scope="col">FECHA</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let fila of apoderados">
-
-                        <td scope="row" class="text-center">
-                          <button class="btn d-inline mr-2 ml-2"
-                            [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-danger': fila.area === module || isAdministrator}"
-                            (click)="deleteDetail(fila.id)" [disabled]="fila.area!= module && !isAdministrator">
-                            <i class="fa fa-trash"></i></button>
-                          <button class="btn d-inline mr-2 ml-2"
-                            [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
-                            [disabled]="fila.area!= module && !isAdministrator"
-                            (click)="openDetallesDialog(stockHolderDialog,fila)">
-                            <i class="fa fa-search"></i></button>
-                          <button class="btn d-inline mr-2 ml-2"
-                            [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
-                            [disabled]="fila.area!= module && !isAdministrator"
-                            (click)="downloadDocumentDetail(fila)"><i class="fa fa-download"></i></button>
-                        </td>
-                        <td scope="row">{{fila.resumen}}</td>
-                        <td scope="row">{{fila.detalle}}</td>
-                        <td scope="row">{{fila.notificante}}</td>
-                        <td scope="row">{{fila.fechaCreacion}}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="estatusJuridico2" class="label">Estatus Juridico 2</label>
+                    <input type="text" [(ngModel)]="companyInfo.estatusJuridico2" class="form-control" fullWidth
+                      [disabled]="companyInfo.activo" id="estatusJuridico2" placeholder="Estatus Juridico 2">
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <p class="font-weight-bold puff_center">Documentos empresa</p>
 
-            <div class="row">
+              <!-- STOCK-HOLDERS -->
+              <p class="font-weight-bold puff_center">Accionistas</p>
+              <div class="row">
+                <div class="col-md-12">
 
-              <div class="col-sm-6">
 
-                <div class="row">
-                  <div class="col-sm-3">
-                    <label for="inputDocType" class="label">Tipo Documento</label>
-                    <select selected="*" id="inputDocType" style="display:block" fullWidth class="form-control"
-                      [disabled]="companyInfo.activo" [(ngModel)]="formInfo.doctType">
-                      <option value="*">Seleccionar</option>
-                      <!--option value="CERT">Certificado(.cer)</option>
+                  <div class="clearfix">
+
+                    <div class="row float-right" style="margin-right: 1px;">
+                      <button type="button" (click)="openDetallesDialog(stockHolderDialog, undefined, 'ACCIONISTA')"
+                        style=" margin-left:25px;" class="btn btn-primary float-right">Nuevo Accionista</button>
+                    </div>
+                  </div>
+                  <br />
+
+                  <div class="puff_center" *ngIf="accionistas.length === 0" class="alert alert-primary" role="alert">
+                    No hay accionistas para la empresa
+                  </div>
+
+                  <div class="table-responsive slide_1" *ngIf="accionistas.length > 0">
+                    <table class="table table-sm">
+                      <thead class="thead-dark">
+                        <tr>
+
+                          <th class="text-center">ACCIONES</th>
+                          <th scope="col">RFC</th>
+                          <th scope="col">NOMBRE</th>
+                          <th scope="col">NOTIFICANTE</th>
+                          <th scope="col">FECHA</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let fila of accionistas">
+
+                          <td scope="row" class="text-center">
+                            <button class="btn d-inline mr-2 ml-2"
+                              [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-danger': fila.area === module || isAdministrator}"
+                              (click)="deleteDetail(fila.id)" [disabled]="fila.area!= module && !isAdministrator">
+                              <i class="fa fa-trash"></i></button>
+                            <button class="btn d-inline mr-2 ml-2"
+                              [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
+                              [disabled]="fila.area!= module && !isAdministrator"
+                              (click)="openDetallesDialog(stockHolderDialog,fila)">
+                              <i class="fa fa-search"></i></button>
+                            <button class="btn d-inline mr-2 ml-2"
+                              [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
+                              [disabled]="fila.area!= module && !isAdministrator"
+                              (click)="downloadDocumentDetail(fila)"><i class="fa fa-download"></i></button>
+                          </td>
+                          <td scope="row">{{fila.resumen}}</td>
+                          <td scope="row">{{fila.detalle}}</td>
+                          <td scope="row">{{fila.notificante}}</td>
+                          <td scope="row">{{fila.fechaCreacion}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- REPRESENTANT-->
+              <p class="font-weight-bold puff_center">Apoderados</p>
+              <div class="row">
+                <div class="col-md-12">
+
+
+                  <div class="clearfix">
+
+                    <div class="row float-right" style="margin-right: 1px;">
+                      <button type="button" (click)="openDetallesDialog(stockHolderDialog, undefined, 'APODERADO')"
+                        style=" margin-left:25px;" class="btn btn-primary float-right">Nuevo Apoderado</button>
+                    </div>
+                  </div>
+                  <br />
+
+                  <div class="puff_center" *ngIf="apoderados.length === 0" class="alert alert-primary" role="alert">
+                    No hay apoderados para la empresa
+                  </div>
+
+                  <div class="table-responsive slide_1" *ngIf="apoderados.length > 0">
+                    <table class="table table-sm">
+                      <thead class="thead-dark">
+                        <tr>
+
+                          <th class="text-center">ACCIONES</th>
+                          <th scope="col">RFC</th>
+                          <th scope="col">NOMBRE</th>
+                          <th scope="col">NOTIFICANTE</th>
+                          <th scope="col">FECHA</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let fila of apoderados">
+
+                          <td scope="row" class="text-center">
+                            <button class="btn d-inline mr-2 ml-2"
+                              [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-danger': fila.area === module || isAdministrator}"
+                              (click)="deleteDetail(fila.id)" [disabled]="fila.area!= module && !isAdministrator">
+                              <i class="fa fa-trash"></i></button>
+                            <button class="btn d-inline mr-2 ml-2"
+                              [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
+                              [disabled]="fila.area!= module && !isAdministrator"
+                              (click)="openDetallesDialog(stockHolderDialog,fila)">
+                              <i class="fa fa-search"></i></button>
+                            <button class="btn d-inline mr-2 ml-2"
+                              [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
+                              [disabled]="fila.area!= module && !isAdministrator"
+                              (click)="downloadDocumentDetail(fila)"><i class="fa fa-download"></i></button>
+                          </td>
+                          <td scope="row">{{fila.resumen}}</td>
+                          <td scope="row">{{fila.detalle}}</td>
+                          <td scope="row">{{fila.notificante}}</td>
+                          <td scope="row">{{fila.fechaCreacion}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <p class="font-weight-bold puff_center">Documentos empresa</p>
+
+              <div class="row">
+
+                <div class="col-sm-6">
+
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label for="inputDocType" class="label">Tipo Documento</label>
+                      <select selected="*" id="inputDocType" style="display:block" fullWidth class="form-control"
+                        [disabled]="companyInfo.activo" [(ngModel)]="formInfo.doctType">
+                        <option value="*">Seleccionar</option>
+                        <!--option value="CERT">Certificado(.cer)</option>
                       <option value="KEY">Llave(.key)</option-->
-                      <option value="LOGO">Logotipo</option>
-                      <option value="INE">INE Representante</option>
-                      <option value="PODER_1">Poder 1</option>
-                      <option value="PODER_2">Poder 2</option>
-                      <option value="PODER_3">poder 3</option>
-                      <option value="ACTA">Acta Constitutiva</option>
-                      <option value="CONSTANCIA">Constancia Fiscal</option>
-                      <option value="INSCRIPCION">Solicitud inscripción</option>
-                      <option value="ACUSE">Acuse unico</option>
-                      <option value="CAMBIO_DOMICILIO">Cambio de domicilio</option>
-                    </select>
-                  </div>
-                  <div class="form-group col-sm-9">
-                    <label for="certFile" class="label">Documento Relacionado</label>
+                        <option value="LOGO">Logotipo</option>
+                        <option value="INE">INE Representante</option>
+                        <option value="PODER_1">Poder 1</option>
+                        <option value="PODER_2">Poder 2</option>
+                        <option value="PODER_3">poder 3</option>
+                        <option value="ACTA">Acta Constitutiva</option>
+                        <option value="CONSTANCIA">Constancia Fiscal</option>
+                        <option value="INSCRIPCION">Solicitud inscripción</option>
+                        <option value="ACUSE">Acuse unico</option>
+                        <option value="CAMBIO_DOMICILIO">Cambio de domicilio</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-sm-9">
+                      <label for="certFile" class="label">Documento Relacionado</label>
 
-                    <div class="input-group">
-                      <div class="custom-file" id="documentFile">
-                        <input type="file" class="custom-file-input" id="documentFile" [disabled]="companyInfo.activo || formInfo.doctType == '*'"
-                          accept=".pdf,.xls,.xlsx,.doc, .docx,image/*" (change)="fileDataUploadListener($event)"
-                          style="display:block;" aria-describedby="inputDocFile">
-                        <label class="custom-file-label" for="inputDocFile">{{formInfo.fileDataName}}</label>
+                      <div class="input-group">
+                        <div class="custom-file" id="documentFile">
+                          <input type="file" class="custom-file-input" id="documentFile"
+                            [disabled]="companyInfo.activo || formInfo.doctType == '*'"
+                            accept=".pdf,.xls,.xlsx,.doc, .docx,image/*" (change)="fileDataUploadListener($event)"
+                            style="display:block;" aria-describedby="inputDocFile">
+                          <label class="custom-file-label" for="inputDocFile">{{formInfo.fileDataName}}</label>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <br />
+                  <br />
 
-                <div class="clearfix">
-                  <div class="row float-right" style="margin-right: 1px;">
-                    <button type="button" (click)="fileDocumentUpload()" style=" margin-left:25px;"
-                      [disabled]="companyInfo.activo || dataFile == undefined"
-                      class="btn btn-primary float-right">Cargar documento</button>
+                  <div class="clearfix">
+                    <div class="row float-right" style="margin-right: 1px;">
+                      <button type="button" (click)="fileDocumentUpload()" style=" margin-left:25px;"
+                        [disabled]="companyInfo.activo || dataFile.data == undefined"
+                        [ngClass]="{'btn-secondary': companyInfo.id == undefined || dataFile.data == undefined , 'btn-primary': companyInfo.id != undefined && dataFile.data != undefined }"
+                        class="btn float-right">Cargar documento</button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div class="col-sm-6">
-                <br />
-                <br />
-                <div class="puff_center" *ngIf="legalDocuments.length === 0" class="alert alert-primary" role="alert">
-                  No hay documentos relacionados a la empresa
+                <div class="col-sm-6">
+                  <br />
+                  <br />
+                  <div class="puff_center" *ngIf="legalDocuments.length === 0" class="alert alert-primary" role="alert">
+                    No hay documentos relacionados a la empresa
+                  </div>
+
+                  <div class="table-responsive slide_1" *ngIf="legalDocuments.length > 0">
+                    <table class="table table-sm">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th class="text-center">DESCARGA</th>
+                          <th scope="col">TIPO ARCHIVO</th>
+                          <th scope="col">FECHA</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let fila of legalDocuments">
+
+                          <td scope="row" class="text-center">
+                            <button class="btn d-inline btn-outline-primary" (click)="downloadFile(fila)">
+                              <i class="fa fa-download"></i></button>
+                          </td>
+                          <td scope="row">{{fila.tipoArchivo}}</td>
+                          <td scope="row">{{fila.fechaCreacion}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
 
-                <div class="table-responsive slide_1" *ngIf="legalDocuments.length > 0">
-                  <table class="table table-sm">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th class="text-center">DESCARGA</th>
-                        <th scope="col">TIPO ARCHIVO</th>
-                        <th scope="col">FECHA</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let fila of legalDocuments">
-
-                        <td scope="row" class="text-center">
-                          <button class="btn d-inline btn-outline-primary" (click)="downloadFile(fila)">
-                            <i class="fa fa-download"></i></button>
-                        </td>
-                        <td scope="row">{{fila.tipoArchivo}}</td>
-                        <td scope="row">{{fila.fechaCreacion}}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
               </div>
-
             </div>
+
+
 
           </nb-tab>
           <nb-tab tabTitle="Datos digitales" *ngIf="companyInfo.id && isAdministrator">
@@ -490,15 +496,14 @@
 
                         <td scope="row" class="text-center">
                           <button class="btn d-inline mr-2 ml-2"
-                              [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
-                              [disabled]="fila.area!= module && !isAdministrator"
-                              (click)="deleteAccount(fila.id)"><i
+                            [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
+                            [disabled]="fila.area!= module && !isAdministrator" (click)="deleteAccount(fila.id)"><i
                               class="fa fa-trash"></i></button>
                           <button class="btn d-inline mr-2 ml-2"
-                              [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
-                              [disabled]="fila.area!= module && !isAdministrator"
-                              (click)="openAccountDialog(companyInfo.rfc,fila.cuenta)">
-                              <i class="fa fa-search"></i></button>
+                            [ngClass]="{'btn-outline-secondary': fila.area !== module && !isAdministrator, 'btn-outline-primary': fila.area === module || isAdministrator}"
+                            [disabled]="fila.area!= module && !isAdministrator"
+                            (click)="openAccountDialog(companyInfo.rfc,fila.cuenta)">
+                            <i class="fa fa-search"></i></button>
                         </td>
                         <td scope="row">{{fila.banco}}</td>
                         <td scope="row">{{fila.cuenta}}</td>
@@ -575,8 +580,8 @@
               </div>
               <div class="col-4">
                 <label for="expiracionFiel" class="label">Expiración Fiel</label>
-                <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpickerFiel" fullWidth style="display:block;"
-                  id="expiracionFiel" [disabled]="companyInfo.activo"
+                <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpickerFiel" fullWidth
+                  style="display:block;" id="expiracionFiel" [disabled]="companyInfo.activo"
                   [(ngModel)]="companyInfo.expiracionFiel">
                 <nb-datepicker #expirationpickerFiel></nb-datepicker>
               </div>
@@ -594,17 +599,17 @@
               <div class="col-4">
                 <label for="impuestoEstatal" class="label">Impuesto Estatal</label>
                 <input type="text" [(ngModel)]="companyInfo.impuestoEstatal" class="form-control" fullWidth
-                    [disabled]="companyInfo.activo" id="impuestoEstatal" placeholder="Impuesto Estatal">
+                  [disabled]="companyInfo.activo" id="impuestoEstatal" placeholder="Impuesto Estatal">
               </div>
               <div class="col-4">
                 <label for="entidadRegistroPatronal" class="label">Entidad registro patronal</label>
                 <input type="text" [(ngModel)]="companyInfo.entidadRegistroPatronal" class="form-control" fullWidth
-                    [disabled]="companyInfo.activo" id="entidadRegistroPatronal" placeholder="Entidad registro patronal">
+                  [disabled]="companyInfo.activo" id="entidadRegistroPatronal" placeholder="Entidad registro patronal">
               </div>
               <div class="col-4">
                 <label for="entidadImpuestoPatronal" class="label">Entidad/Impuesto Estatal</label>
                 <input type="text" [(ngModel)]="companyInfo.entidadImpuestoPatronal" class="form-control" fullWidth
-                    [disabled]="companyInfo.activo" id="entidadImpuestoPatronal" placeholder="Entidad/Impuesto Estatal">
+                  [disabled]="companyInfo.activo" id="entidadImpuestoPatronal" placeholder="Entidad/Impuesto Estatal">
               </div>
             </div>
             <br />
@@ -684,9 +689,10 @@
 
                     <div class="input-group">
                       <div class="custom-file" id="documentContaFile">
-                        <input type="file" class="custom-file-input" id="documentContaFile" [disabled]="companyInfo.activo || formInfo.doctType == '*'"
-                          accept=".pdf,.cer,.key" (change)="fileDataUploadListener($event)"
-                          style="display:block;" aria-describedby="documentContaFile">
+                        <input type="file" class="custom-file-input" id="documentContaFile"
+                          [disabled]="companyInfo.activo || formInfo.doctType == '*'" accept=".pdf,.cer,.key"
+                          (change)="fileDataUploadListener($event)" style="display:block;"
+                          aria-describedby="documentContaFile">
                         <label class="custom-file-label" for="documentContaFile">{{formInfo.fileDataName}}</label>
                       </div>
                     </div>
@@ -697,7 +703,8 @@
                 <div class="clearfix">
                   <div class="row float-right" style="margin-right: 1px;">
                     <button type="button" (click)="fileDocumentUpload()" style=" margin-left:25px;"
-                      [disabled]="companyInfo.activo || dataFile == undefined"
+                      [disabled]="companyInfo.activo || dataFile.data == undefined"
+                      [ngClass]="{'btn-secondary': companyInfo.id == undefined || dataFile.data == undefined , 'btn-primary': companyInfo.id != undefined && dataFile.data != undefined }"
                       class="btn btn-primary float-right">Cargar documento</button>
                   </div>
                 </div>
@@ -706,7 +713,8 @@
               <div class="col-sm-6">
                 <br />
                 <br />
-                <div class="puff_center" *ngIf="contableDocuments.length === 0" class="alert alert-primary" role="alert">
+                <div class="puff_center" *ngIf="contableDocuments.length === 0" class="alert alert-primary"
+                  role="alert">
                   No hay documentos relacionados a la empresa
                 </div>
 
@@ -907,9 +915,9 @@
             <div class="col-md-9">
               <div class="input-group">
                 <div class="custom-file" id="stockHolderDocument">
-                  <input type="file" class="custom-file-input" id="anualDataFile"
-                    accept=".pdf,.doc,.docx,image/*" (change)="fileDataUploadListener($event)"
-                    style="display:block;" aria-describedby="stockHolderDocument">
+                  <input type="file" class="custom-file-input" id="anualDataFile" accept=".pdf,.doc,.docx,image/*"
+                    (change)="fileDataUploadListener($event)" style="display:block;"
+                    aria-describedby="stockHolderDocument">
                   <label class="custom-file-label" for="stockHolderDocument">{{formInfo.fileDataName}}</label>
                 </div>
               </div>
@@ -954,7 +962,7 @@
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let year of years" [value]="year">{{year}}</option>
               </select>
-            </div> 
+            </div>
             <div class="col-8">
               <label for="dataDetail" class="label">Detalle</label>
               <input id="dataDetail" class="form-control" fullWidth type="number" [(ngModel)]="data.detalle" fullWidth
