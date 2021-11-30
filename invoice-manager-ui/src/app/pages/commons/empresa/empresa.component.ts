@@ -53,7 +53,7 @@ export class EmpresaComponent implements OnInit {
 
   public logo: ResourceFile;
 
-  public dataFile: ResourceFile;
+  public dataFile: ResourceFile= new ResourceFile();
 
   public CONTABLE_FILES = ['CSD-CERT','CSD-KEY','FIEL-CERT','FIEL-KEY','REGISTRO_PATRONAL','REPSE'];
 

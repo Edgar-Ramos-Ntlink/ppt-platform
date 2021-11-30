@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/empresas")
-public class EmpresaDetallesController {
+public
+@RequestMapping("/api/empresas") class EmpresaDetallesController {
 
   @Autowired private EmpresaDetallesService service;
 

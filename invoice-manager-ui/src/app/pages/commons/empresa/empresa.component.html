@@ -300,8 +300,6 @@
                       <select selected="*" id="inputDocType" style="display:block" fullWidth class="form-control"
                         [disabled]="companyInfo.activo" [(ngModel)]="formInfo.doctType">
                         <option value="*">Seleccionar</option>
-                        <!--option value="CERT">Certificado(.cer)</option>
-                      <option value="KEY">Llave(.key)</option-->
                         <option value="LOGO">Logotipo</option>
                         <option value="INE">INE Representante</option>
                         <option value="PODER_1">Poder 1</option>
@@ -533,7 +531,7 @@
 
               <div class="col-md-3">
                 <div class="form-group">
-                  <label for="fiel" class="label">FIEL(Firma Electrónica Avanzada)</label>
+                  <label for="fiel" class="label">Contraseña Sello Timbrado</label>
 
                   <div class="input-group">
                     <input name="fiel-hide" type="password" class="input form-control" id="fiel-hide"
@@ -586,7 +584,7 @@
                 <nb-datepicker #expirationpickerFiel></nb-datepicker>
               </div>
               <div class="col-4">
-                <label for="inputAlta" class="label">Año Alta</label>
+                <label for="inputAlta" class="label">Inicio Operaciones</label>
                 <select selected="*" id="inputAlta" style="display:block" fullWidth class="form-control"
                   [disabled]="companyInfo.activo" [(ngModel)]="companyInfo.anioAlta">
                   <option value="*">Seleccionar</option>
@@ -892,7 +890,7 @@
             <div class="col-md-9">
               <div class="form-group">
                 <input type="text" [(ngModel)]="data.resumen" class="form-control" fullWidth id="stockholderrfc"
-                  placeholder="RFC accionista">
+                  placeholder="RFC">
               </div>
             </div>
           </div>
@@ -904,7 +902,7 @@
             <div class="col-md-9">
               <div class="form-group">
                 <input class="form-control" fullWidth id="stockholdername" [(ngModel)]="data.detalle"
-                  placeholder="Nombre completro accionista">
+                  placeholder="Nombre completo">
               </div>
             </div>
           </div>
@@ -915,7 +913,7 @@
             <div class="col-md-9">
               <div class="input-group">
                 <div class="custom-file" id="stockHolderDocument">
-                  <input type="file" class="custom-file-input" id="anualDataFile" accept=".pdf,.doc,.docx,image/*"
+                  <input type="file" class="custom-file-input" id="stockHolderDocument" accept=".pdf,.doc,.docx,image/*"
                     (change)="fileDataUploadListener($event)" style="display:block;"
                     aria-describedby="stockHolderDocument">
                   <label class="custom-file-label" for="stockHolderDocument">{{formInfo.fileDataName}}</label>
