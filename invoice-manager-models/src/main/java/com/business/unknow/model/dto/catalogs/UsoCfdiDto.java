@@ -28,6 +28,6 @@ public class UsoCfdiDto implements Serializable {
   private boolean pMoral;
   private boolean pFisica;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date inicioVigencia;
 }

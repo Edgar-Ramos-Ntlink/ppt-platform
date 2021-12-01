@@ -83,8 +83,8 @@ public class Empresa implements Serializable {
   @Column(name = "CODIGO_POSTAL")
   private String cp;
 
-  @Column(name = "ANIO_ALTA")
-  private String anioAlta;
+  @Column(name = "INICIO_ACTIVIDADES")
+  private Date inicioActividades;
 
   @Column(name = "REGISTRO_PATRONAL")
   private String registroPatronal;

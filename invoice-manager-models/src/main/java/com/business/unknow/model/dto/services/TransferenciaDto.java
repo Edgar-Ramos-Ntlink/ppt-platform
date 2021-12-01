@@ -1,5 +1,7 @@
 package com.business.unknow.model.dto.services;
 
+import com.business.unknow.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
@@ -31,5 +33,6 @@ public class TransferenciaDto implements Serializable {
   private String lineaDeposito;
   private String folio;
   private Double importe;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
 }

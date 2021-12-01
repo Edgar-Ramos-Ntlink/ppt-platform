@@ -1,5 +1,7 @@
 package com.business.unknow.model.dto.services;
 
+import com.business.unknow.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
@@ -56,7 +58,8 @@ public class EmpresaDto implements Serializable {
 
   private String cp;
 
-  private String anioAlta;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+  private Date inicioActividades;
 
   private String registroPatronal;
 
@@ -96,7 +99,9 @@ public class EmpresaDto implements Serializable {
 
   private String creador;
 
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
 
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaActualizacion;
 }

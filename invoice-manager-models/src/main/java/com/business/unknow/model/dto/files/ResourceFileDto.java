@@ -30,7 +30,7 @@ public class ResourceFileDto implements Serializable {
   @Deprecated // dont use data, this field will be removed once S3 refactor will be completed
   private String data;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
 
   public ResourceFileDto() {}
