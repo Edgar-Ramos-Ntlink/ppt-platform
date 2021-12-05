@@ -4,6 +4,7 @@ import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.EmpresaService;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class EmpresaController {
   @Autowired private EmpresaService service;
 
   @GetMapping("/empresas")
-  public ResponseEntity<Page<EmpresaDto>> getEmpresasByParameter(
+  public ResponseEntity<Page<Map<String, String>>> getEmpresasByParameter(
       @RequestParam(name = "razonSocial", required = false) Optional<String> razonSocial,
       @RequestParam(name = "rfc", required = false) Optional<String> rfc,
       @RequestParam(name = "linea", defaultValue = "") String linea,

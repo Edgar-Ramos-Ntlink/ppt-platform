@@ -16,7 +16,7 @@ public class CuentaBancariaDtoRowMapper implements RowMapper<CuentaBancariaDto> 
         .linea(rs.getString("LINEA"))
         .giro(rs.getString("GIRO"))
         .razonSocial(rs.getString("RAZON_SOCIAL"))
-        .empresa(rs.getString("RFC"))
+        .rfc(rs.getString("RFC"))
         .cuenta(rs.getString("NO_CUENTA"))
         .clabe(rs.getString("CLABE"))
         .fechaCreacion(rs.getTimestamp("FECHA_CREACION"))

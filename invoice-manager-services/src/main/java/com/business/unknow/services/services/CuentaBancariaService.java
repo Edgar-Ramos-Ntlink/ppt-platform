@@ -101,7 +101,7 @@ public class CuentaBancariaService {
 
   public CuentaBancariaDto createCuentaBancaria(CuentaBancariaDto cuentaDto) {
     Optional<CuentaBancaria> entity =
-        repository.findByEmpresaAndCuenta(cuentaDto.getEmpresa(), cuentaDto.getCuenta());
+        repository.findByEmpresaAndCuenta(cuentaDto.getRfc(), cuentaDto.getCuenta());
     if (entity.isPresent()) {
       throw new ResponseStatusException(
           HttpStatus.BAD_REQUEST,

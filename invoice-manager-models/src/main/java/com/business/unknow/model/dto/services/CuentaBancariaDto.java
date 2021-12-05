@@ -25,7 +25,7 @@ public class CuentaBancariaDto implements Serializable {
 
   private int id;
   private int total;
-  private String empresa;
+  private String rfc;
   private String linea;
   private String giro;
   private String razonSocial;
@@ -36,9 +36,11 @@ public class CuentaBancariaDto implements Serializable {
   private String domicilioBanco;
   private String tipoContrato;
   private String sucursal;
+  private String expedienteActualizado;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
+
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaActualizacion;
 }

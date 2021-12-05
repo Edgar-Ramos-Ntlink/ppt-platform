@@ -2,15 +2,8 @@ package com.business.unknow.services.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import java.util.List;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -153,4 +146,10 @@ public class Empresa implements Serializable {
   @LastModifiedDate
   @Column(name = "FECHA_ACTUALIZACION")
   private Date fechaActualizacion;
+
+  @OneToMany(mappedBy = "empresa")
+  private List<CuentaBancaria> cuentas;
+
+  @OneToMany(mappedBy = "empresa")
+  private List<EmpresaDetalles> detalles;
 }

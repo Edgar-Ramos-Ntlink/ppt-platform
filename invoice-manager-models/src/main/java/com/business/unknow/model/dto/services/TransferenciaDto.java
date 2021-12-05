@@ -33,6 +33,7 @@ public class TransferenciaDto implements Serializable {
   private String lineaDeposito;
   private String folio;
   private Double importe;
+
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
 }

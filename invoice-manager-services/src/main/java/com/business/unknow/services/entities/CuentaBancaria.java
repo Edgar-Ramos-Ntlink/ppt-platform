@@ -2,20 +2,19 @@ package com.business.unknow.services.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@ToString
 @Entity
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "CUENTAS_BANCARIAS")
 public class CuentaBancaria implements Serializable {
@@ -28,7 +27,7 @@ public class CuentaBancaria implements Serializable {
   private int id;
 
   @Column(name = "EMPRESA")
-  private String empresa;
+  private String rfc;
 
   @Column(name = "BANCO")
   private String banco;
@@ -36,16 +35,19 @@ public class CuentaBancaria implements Serializable {
   @Column(name = "NO_CUENTA")
   private String cuenta;
 
-  @Column(name = "CLABE ")
+  @Column(name = "CLABE")
   private String clabe;
 
-  @Column(name = "DOMICILIO_BANCO ")
+  @Column(name = "DOMICILIO_BANCO")
   private String domicilioBanco;
 
-  @Column(name = "TIPO_CONTRATO ")
+  @Column(name = "EXP_ACTUALIZADO")
+  private String expedienteActualizado;
+
+  @Column(name = "TIPO_CONTRATO")
   private String tipoContrato;
 
-  @Column(name = "SUCURSAL ")
+  @Column(name = "SUCURSAL")
   private String sucursal;
 
   @Temporal(TemporalType.TIMESTAMP)
@@ -58,116 +60,7 @@ public class CuentaBancaria implements Serializable {
   @Column(name = "FECHA_ACTUALIZACION")
   private Date fechaActualizacion;
 
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  public String getEmpresa() {
-    return empresa;
-  }
-
-  public void setEmpresa(String empresa) {
-    this.empresa = empresa;
-  }
-
-  public String getBanco() {
-    return banco;
-  }
-
-  public void setBanco(String banco) {
-    this.banco = banco;
-  }
-
-  public String getCuenta() {
-    return cuenta;
-  }
-
-  public void setCuenta(String cuenta) {
-    this.cuenta = cuenta;
-  }
-
-  public String getClabe() {
-    return clabe;
-  }
-
-  public void setClabe(String clabe) {
-    this.clabe = clabe;
-  }
-
-  public Date getFechaCreacion() {
-    return fechaCreacion;
-  }
-
-  public void setFechaCreacion(Date fechaCreacion) {
-    this.fechaCreacion = fechaCreacion;
-  }
-
-  public Date getFechaActualizacion() {
-    return fechaActualizacion;
-  }
-
-  public void setFechaActualizacion(Date fechaActualizacion) {
-    this.fechaActualizacion = fechaActualizacion;
-  }
-
-  public String getDomicilioBanco() {
-    return domicilioBanco;
-  }
-
-  public void setDomicilioBanco(String domicilioBanco) {
-    this.domicilioBanco = domicilioBanco;
-  }
-
-  public String getSucursal() {
-    return sucursal;
-  }
-
-  public void setSucursal(String sucursal) {
-    this.sucursal = sucursal;
-  }
-
-  public String getTipoContrato() {
-    return tipoContrato;
-  }
-
-  public void setTipoContrato(String tipoContrato) {
-    this.tipoContrato = tipoContrato;
-  }
-
-  @Override
-  public String toString() {
-    return "CuentaBancaria{"
-        + "id="
-        + id
-        + ", empresa='"
-        + empresa
-        + '\''
-        + ", banco='"
-        + banco
-        + '\''
-        + ", cuenta='"
-        + cuenta
-        + '\''
-        + ", clabe='"
-        + clabe
-        + '\''
-        + ", domicilioBanco='"
-        + domicilioBanco
-        + '\''
-        + ", tipoContrato='"
-        + tipoContrato
-        + '\''
-        + ", sucursal='"
-        + sucursal
-        + '\''
-        + ", fechaCreacion="
-        + fechaCreacion
-        + ", fechaActualizacion="
-        + fechaActualizacion
-        + '}';
-  }
+  @ManyToOne
+  @JoinColumn(name = "EMPRESA", referencedColumnName = "RFC", insertable = false, updatable = false)
+  private Empresa empresa;
 }

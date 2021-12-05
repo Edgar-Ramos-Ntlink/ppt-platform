@@ -118,15 +118,29 @@ public class ResourceFileDto implements Serializable {
 
   @Override
   public String toString() {
-    return "ResourceFileDto{" +
-            "id=" + id +
-            ", tipoArchivo='" + tipoArchivo + '\'' +
-            ", referencia='" + referencia + '\'' +
-            ", nombre='" + nombre + '\'' +
-            ", tipoRecurso='" + tipoRecurso + '\'' +
-            ", formato='" + formato + '\'' +
-            ", extension='" + extension + '\'' +
-            ", fechaCreacion=" + fechaCreacion +
-            '}';
+    return "ResourceFileDto{"
+        + "id="
+        + id
+        + ", tipoArchivo='"
+        + tipoArchivo
+        + '\''
+        + ", referencia='"
+        + referencia
+        + '\''
+        + ", nombre='"
+        + nombre
+        + '\''
+        + ", tipoRecurso='"
+        + tipoRecurso
+        + '\''
+        + ", formato='"
+        + formato
+        + '\''
+        + ", extension='"
+        + extension
+        + '\''
+        + ", fechaCreacion="
+        + fechaCreacion
+        + '}';
   }
 }

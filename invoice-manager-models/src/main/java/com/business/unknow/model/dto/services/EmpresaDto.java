@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -104,4 +105,8 @@ public class EmpresaDto implements Serializable {
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaActualizacion;
+
+  private List<CuentaBancariaDto> cuentas;
+
+  private List<EmpresaDetallesDto> detalles;
 }
