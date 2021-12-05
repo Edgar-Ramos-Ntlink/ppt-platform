@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.CuentaBancaria;
@@ -7,8 +8,8 @@ import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.entities.EmpresaDetalles;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
-import com.business.unknow.services.services.executor.EmpresaExecutorService;
 import com.business.unknow.services.util.validators.EmpresaValidator;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,9 +31,11 @@ public class EmpresaService {
 
   @Autowired private EmpresaMapper mapper;
 
-  @Autowired private EmpresaExecutorService empresaEvaluatorService;
+  @Autowired private CatalogCacheService cacheService;
 
   @Autowired private NotificationHandlerService notificationHandlerService;
+
+  @Autowired private DownloaderService downloaderService;
 
   @Autowired
   @Qualifier("EmpresaValidator")
@@ -65,44 +68,6 @@ public class EmpresaService {
 
   public List<Map<String, String>> getFlatCompanyDetails(List<Empresa> empresas) {
     List<Map<String, String>> result = new ArrayList<>();
-    List<String> detailHeaders =
-        empresas.stream()
-            .flatMap(e -> e.getDetalles().stream())
-            .map(d -> d.getTipo())
-            .distinct()
-            .collect(Collectors.toList());
-    /*
-    List<String> headers =
-        Arrays.asList(
-            "NOMBRE CORTO",
-            "EMPRESA",
-            "RFC",
-            "DOMICILIO",
-            "LINEA",
-            "ACTIVA",
-            "GIRO",
-            "REGIMEN FISCAL",
-            "PAGINA WEB",
-            "CORREO ELECTRONICO",
-            "ESTATUS JURIDICO",
-            "ESTATUS JURIDICO FASE 2",
-            "REPRESENTANTE LEGAL",
-            "BANCO",
-            "NO CUENTA",
-            "DOMICILIO BANCOS",
-            "SUCURSAL",
-            "EXPEDIENTE ACTUALIZADO",
-            "EXPIRACION CERTIFICADOS",
-            "ACTIVIDAD SAT",
-            "REGISTRO PATRONAL",
-            "ENTIDAD REGISTRO PATRONAL",
-            "IMPUESTO ESTATAL",
-            "ENTIDAD IMPUESTO PATRONAL");
-
-    headers.add("CREADOR");
-    headers.add("CREACION");
-    headers.add("ACTUALIZACION");*/
-
     return empresas.stream()
         .map(
             e -> {
@@ -115,7 +80,7 @@ public class EmpresaService {
               row.put(
                   "DOMICILIO",
                   String.format(
-                      "%s EXT: %s INT : %s, %s, %s, %s, %s C.P. %s",
+                      "%s EXT:%s INT:%s,%s,%s,%s,%s C.P. %s",
                       e.getCalle(),
                       e.getNoExterior(),
                       e.getNoInterior(),
@@ -126,18 +91,23 @@ public class EmpresaService {
                       e.getCp()));
               row.put("LINEA", e.getTipo());
               row.put("ACTIVA", e.getActivo() ? "SI" : "NO");
-              row.put("GIRO", e.getGiro().toString());
+              row.put("GIRO", cacheService.getGiroEmpresa(e.getGiro()).orElse("SIN GIRO"));
               row.put("REGIMEN_FISCAL", e.getRegimenFiscal());
               row.put("PAGINA_WEB", e.getWeb());
               row.put("CORREO_ELECTRONICO", e.getCorreo());
               row.put("ESTATUS_JURIDICO", e.getEstatusJuridico());
               row.put("ESTATUS_JURIDICO_FASE_2", e.getEstatusJuridico2());
               row.put("REPRESENTANTE_LEGAL", e.getRepresentanteLegal());
-              row.put("BANCO", e.getRfc());
+              row.put(
+                  "BANCOS",
+                  e.getCuentas().stream()
+                      .map(CuentaBancaria::getBanco)
+                      .collect(Collectors.toList())
+                      .toString());
               row.put(
                   "NO_CUENTA",
                   e.getCuentas().stream()
-                      .map(CuentaBancaria::getBanco)
+                      .map(CuentaBancaria::getCuenta)
                       .collect(Collectors.toList())
                       .toString());
               row.put(
@@ -167,6 +137,49 @@ public class EmpresaService {
               row.put("ENTIDAD_REGISTRO_PATRONAL", e.getEntidadRegistroPatronal());
               row.put("IMPUESTO_ESTATAL", e.getImpuestoEstatal());
               row.put("ENTIDAD_IMPUESTO_PATRONAL", e.getEntidadImpuestoPatronal());
+
+              List<EmpresaDetalles> accionistas =
+                  e.getDetalles().stream()
+                      .filter(d -> "ACCIONISTA".equals(d.getTipo()))
+                      .collect(Collectors.toList());
+              List<EmpresaDetalles> apoderados =
+                  e.getDetalles().stream()
+                      .filter(d -> "APODERADO".equals(d.getTipo()))
+                      .collect(Collectors.toList());
+              List<EmpresaDetalles> pendientes =
+                  e.getDetalles().stream()
+                      .filter(d -> "PENDIENTE".equals(d.getTipo()))
+                      .collect(Collectors.toList());
+              List<EmpresaDetalles> observaciones =
+                  e.getDetalles().stream()
+                      .filter(d -> "OBSERVACION".equals(d.getTipo()))
+                      .collect(Collectors.toList());
+
+              row.put(
+                  "ACCIONISTAS",
+                  accionistas.stream()
+                      .map(EmpresaDetalles::getDetalle)
+                      .collect(Collectors.toList())
+                      .toString());
+              row.put(
+                  "APODERADOS",
+                  apoderados.stream()
+                      .map(EmpresaDetalles::getDetalle)
+                      .collect(Collectors.toList())
+                      .toString());
+              row.put(
+                  "PENDIENTES",
+                  pendientes.stream()
+                      .map(EmpresaDetalles::getResumen)
+                      .collect(Collectors.toList())
+                      .toString());
+              row.put(
+                  "OBSERVACIONES",
+                  observaciones.stream()
+                      .map(EmpresaDetalles::getResumen)
+                      .collect(Collectors.toList())
+                      .toString());
+
               row.put("CREADOR", e.getCreador());
               row.put(
                   "CREACION", String.format("%tF %tR", e.getFechaCreacion(), e.getFechaCreacion()));
@@ -174,19 +187,63 @@ public class EmpresaService {
                   "ACTUALIZACION",
                   String.format("%tF %tR", e.getFechaActualizacion(), e.getFechaActualizacion()));
 
-              for (String header : detailHeaders) {
-                row.put(
-                    header,
-                    e.getDetalles().stream()
-                        .filter(d -> header.equals(d.getTipo()))
-                        .map(EmpresaDetalles::getResumen)
-                        .findAny()
-                        .orElse(""));
-              }
-
               return row;
             })
         .collect(Collectors.toList());
+  }
+
+  public ResourceFileDto getCompaniesReport(
+      Optional<String> rfc, Optional<String> razonSocial, String linea, int page, int size)
+      throws IOException {
+
+    Page<Map<String, String>> result = getEmpresasByParametros(rfc, razonSocial, linea, page, size);
+
+    List<String> headers =
+        Arrays.asList(
+            "NOMBRE_CORTO",
+            "EMPRESA",
+            "RFC",
+            "DOMICILIO",
+            "LINEA",
+            "ACTIVA",
+            "GIRO",
+            "REGIMEN_FISCAL",
+            "PAGINA_WEB",
+            "CORREO_ELECTRONICO",
+            "ESTATUS_JURIDICO",
+            "ESTATUS_JURIDICO_FASE_2",
+            "REPRESENTANTE_LEGAL",
+            "BANCOS",
+            "NO_CUENTA",
+            "DOMICILIO_BANCOS",
+            "SUCURSAL",
+            "EXPEDIENTE_ACTUALIZADO",
+            "EXPIRACION_CERTIFICADOS",
+            "ACTIVIDAD_SAT",
+            "REGISTRO_PATRONAL",
+            "ENTIDAD_REGISTRO_PATRONAL",
+            "IMPUESTO_ESTATAL",
+            "ACCIONISTAS",
+            "APODERADOS",
+            "PENDIENTES",
+            "OBSERVACIONES",
+            "CREADOR",
+            "CREACION",
+            "ACTUALIZACION");
+
+    List<Map<String, Object>> data =
+        result.getContent().stream()
+            .map(
+                empresa -> {
+                  Map<String, Object> row = new HashMap<>();
+                  for (String header : headers) {
+                    row.put(header, empresa.get(header));
+                  }
+                  return row;
+                })
+            .collect(Collectors.toList());
+
+    return downloaderService.generateBase64Report("Reporte Empresas", data, headers);
   }
 
   public EmpresaDto getEmpresaByRfc(String rfc) {
@@ -219,7 +276,8 @@ public class EmpresaService {
     }
     notificationHandlerService.sendNotification(
         "NUEVA_EMPRESA", String.format("Se creo la empresa %s", empresaDto.getRazonSocial()));
-    return empresaEvaluatorService.createEmpresa(empresaDto);
+    Empresa empresa = mapper.getEntityFromEmpresaDto(empresaDto);
+    return mapper.getEmpresaDtoFromEntity(repository.save(empresa));
   }
 
   public EmpresaDto updateEmpresaInfo(EmpresaDto empresaDto, String rfc)

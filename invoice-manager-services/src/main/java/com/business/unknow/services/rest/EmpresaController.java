@@ -1,8 +1,10 @@
 package com.business.unknow.services.rest;
 
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.EmpresaService;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +37,18 @@ public class EmpresaController {
       @RequestParam(name = "size", defaultValue = "10") int size) {
     return new ResponseEntity<>(
         service.getEmpresasByParametros(rfc, razonSocial, linea, page, size), HttpStatus.OK);
+  }
+
+  @GetMapping("/empresas/report")
+  public ResponseEntity<ResourceFileDto> getEmpresasByParametersReport(
+      @RequestParam(name = "razonSocial", required = false) Optional<String> razonSocial,
+      @RequestParam(name = "rfc", required = false) Optional<String> rfc,
+      @RequestParam(name = "linea", defaultValue = "") String linea,
+      @RequestParam(name = "page", defaultValue = "0") int page,
+      @RequestParam(name = "size", defaultValue = "10") int size)
+      throws IOException {
+    return new ResponseEntity<>(
+        service.getCompaniesReport(rfc, razonSocial, linea, page, size), HttpStatus.OK);
   }
 
   @GetMapping("/empresas/{rfc}")

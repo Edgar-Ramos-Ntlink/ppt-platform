@@ -6,7 +6,7 @@ import { GenericPage } from '../../models/generic-page';
 
 export abstract class CompaniesData {
 
-    abstract getCompanies(filterParams?: any): Observable<GenericPage<Empresa>>;
+    abstract getCompanies(filterParams?: any): Observable<GenericPage<any>>;
 
     abstract getCompaniesByLineaAndGiro(linea: string, giro: number): Observable<Empresa[]>;
 

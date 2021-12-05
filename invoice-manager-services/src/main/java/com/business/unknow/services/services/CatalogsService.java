@@ -44,19 +44,11 @@ public class CatalogsService {
 
   @Autowired private UsoCfdiRepository usoCfdiRepo;
 
-  // @Autowired
-  // @Deprecated
-  // private StatusFacturaRepository statusFacturaRepo;
-
   @Autowired private StatusEventoRepository statusEventoRepo;
 
   @Autowired private StatusPagoRepository statusPagoRepo;
 
   @Autowired private StatusDevolucionRepository statusDevoluicionRepo;
-
-  // @Autowired
-  //	@Deprecated
-  //	private StatusRevisionRepository statusRevisionRepo;
 
   @Autowired private GiroRepository giroRepo;
 

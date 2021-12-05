@@ -50,28 +50,7 @@ export class EmpresasComponent implements OnInit {
 
   }
 
-  public getCompanyInfo(filterParams): Observable<GenericPage<any>> {
-    return this.companyService.getCompanies(filterParams).pipe(
-      map((page: GenericPage<Empresa>) => {
-        const records: Empresa[] = page.content.map(r => {
-          const record: any = {};
-          record.rfc = r.rfc;
-          record.razonSocial = r.razonSocial;
-          record.direccion = `${r.calle} ${r.noExterior}, ${r.municipio} ${r.municipio} ${r.estado}, C.P. ${r.cp}`;
-          record.giro = this.girosCat.find(g => g.id === r.giro).nombre;
-          record.tipo = r.tipo;
-          record.correo = r.correo;
-          record.activo = (r.activo) ? 'SI' : 'NO';
-          record.fechaCreacion = r.fechaCreacion;
-          record.fechaActualizacion = r.fechaActualizacion;
-          return record;
-        });
-        page.content = records;
-        return page;
-      }));
-  }
-
-
+  
   public updateDataTable(currentPage?: number, pageSize?: number) {
 
     const params: any = this.utilsService.parseFilterParms(this.filterParams);
@@ -101,7 +80,7 @@ export class EmpresasComponent implements OnInit {
           { queryParams: params });
     }
 
-    this.getCompanyInfo(params).subscribe((result: GenericPage<any>) => this.page = result);
+    this.companyService.getCompanies(params).subscribe((result: GenericPage<any>) => this.page = result);
   }
 
 
@@ -134,7 +113,7 @@ export class EmpresasComponent implements OnInit {
     }
     params.page = 0;
     params.size = 10000;
-    this.getCompanyInfo(params).subscribe(result => {
+    this.companyService.getCompanies(params).subscribe(result => {
       this.donwloadService.exportCsv(result.content, 'Empresas')
     });
   }
