@@ -51,15 +51,9 @@ export class ValidacionDevolucionComponent implements OnInit {
     }
   }
   private getAccountInfo(rfc?: string) {
-    this.accountsService.getAllCuentas(0, 25, { empresa: rfc || '' })
+    this.accountsService.getCuentasByCompany(rfc)
       .subscribe(accounts => {
-        this.cuentas = accounts.content;
-        if (!accounts.empty) {
-          this.formInfo.cuenta = this.cuentas[0].id;
-        } else {
-          this.cuentas = [];
-          this.formInfo.cuenta = '*';
-        }
+        this.cuentas = accounts;
       });
   }
 

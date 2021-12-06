@@ -10,6 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { map } from 'rxjs/operators';
 import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 @Component({
   selector: 'ngx-cuentas-bancarias',
   templateUrl: './cuentas-bancarias.component.html',
@@ -41,7 +42,7 @@ export class CuentasBancariasComponent implements OnInit {
     private accountsService: CuentasData,
     private companiesService: CompaniesData,
     private catalogsService: CatalogsData,
-    private donwloadService: DownloadCsvService,
+    private downloadService: DonwloadFileService,
     ) {
     
    }
@@ -73,7 +74,7 @@ export class CuentasBancariasComponent implements OnInit {
     this.router.navigate([`./pages/tesoreria/cuentas-bancarias`],
     { queryParams: params });
 
-  this.accountsService.getAllCuentas(params.page,params.size,params).subscribe((result: GenericPage<any>) => this.page = result);
+  this.accountsService.getCuentasByParams(params.page,params.size,params).subscribe((result: GenericPage<any>) => this.page = result);
   }
 
   public redirectToEmpresa(empresa: string,cuenta:string) {
@@ -96,8 +97,8 @@ export class CuentasBancariasComponent implements OnInit {
     }
     params.page = 0;
     params.size = 10000;
-    this.accountsService.getAllCuentas(params.page,params.size,params).subscribe(result => {
-      this.donwloadService.exportCsv(result.content, 'Cuentas-Bancarias')
+    this.accountsService.getCuentasReport(params.page,params.size,params).subscribe(result => {
+      this.downloadService.downloadFile(result.data,'ReporteCuentasBancarias.xlsx','data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,');
     });
   }
   public onChangePageSize(pageSize: number) {

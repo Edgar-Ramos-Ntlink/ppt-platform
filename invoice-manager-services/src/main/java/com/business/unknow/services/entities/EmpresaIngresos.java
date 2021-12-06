@@ -52,4 +52,8 @@ public class EmpresaIngresos implements Serializable {
   @LastModifiedDate
   @Column(name = "FECHA_ACTUALIZACION")
   private Date actualizacion;
+
+  @ManyToOne
+  @JoinColumn(name = "RFC", referencedColumnName = "RFC", insertable = false, updatable = false)
+  private Empresa empresa;
 }

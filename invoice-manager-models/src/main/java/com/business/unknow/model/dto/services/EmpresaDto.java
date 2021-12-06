@@ -88,8 +88,10 @@ public class EmpresaDto implements Serializable {
 
   private String noCertificado;
 
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
   private Date expiracionCertificado;
 
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
   private Date expiracionFiel;
 
   private String impuestoEstatal;
@@ -109,4 +111,6 @@ public class EmpresaDto implements Serializable {
   private List<CuentaBancariaDto> cuentas;
 
   private List<EmpresaDetallesDto> detalles;
+
+  private List<EmpresaIngresosDto> ingresos;
 }

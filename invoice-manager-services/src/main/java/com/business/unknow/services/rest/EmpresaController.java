@@ -7,7 +7,6 @@ import com.business.unknow.services.services.EmpresaService;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,25 +29,14 @@ public class EmpresaController {
 
   @GetMapping("/empresas")
   public ResponseEntity<Page<Map<String, String>>> getEmpresasByParameter(
-      @RequestParam(name = "razonSocial", required = false) Optional<String> razonSocial,
-      @RequestParam(name = "rfc", required = false) Optional<String> rfc,
-      @RequestParam(name = "linea", defaultValue = "") String linea,
-      @RequestParam(name = "page", defaultValue = "0") int page,
-      @RequestParam(name = "size", defaultValue = "10") int size) {
-    return new ResponseEntity<>(
-        service.getEmpresasByParametros(rfc, razonSocial, linea, page, size), HttpStatus.OK);
+      @RequestParam Map<String, String> parameters) {
+    return new ResponseEntity<>(service.getEmpresasByParametros(parameters), HttpStatus.OK);
   }
 
   @GetMapping("/empresas/report")
   public ResponseEntity<ResourceFileDto> getEmpresasByParametersReport(
-      @RequestParam(name = "razonSocial", required = false) Optional<String> razonSocial,
-      @RequestParam(name = "rfc", required = false) Optional<String> rfc,
-      @RequestParam(name = "linea", defaultValue = "") String linea,
-      @RequestParam(name = "page", defaultValue = "0") int page,
-      @RequestParam(name = "size", defaultValue = "10") int size)
-      throws IOException {
-    return new ResponseEntity<>(
-        service.getCompaniesReport(rfc, razonSocial, linea, page, size), HttpStatus.OK);
+      @RequestParam Map<String, String> parameters) throws IOException {
+    return new ResponseEntity<>(service.getCompaniesReport(parameters), HttpStatus.OK);
   }
 
   @GetMapping("/empresas/{rfc}")

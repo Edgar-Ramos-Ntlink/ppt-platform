@@ -13,17 +13,25 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+@Slf4j
 @Service
 public class EmpresaService {
 
@@ -41,25 +49,103 @@ public class EmpresaService {
   @Qualifier("EmpresaValidator")
   private EmpresaValidator empresaValidator;
 
-  public Page<Map<String, String>> getEmpresasByParametros(
-      Optional<String> rfc, Optional<String> razonSocial, String linea, int page, int size) {
+  private Specification<Empresa> buildSearchFilters(Map<String, String> parameters) {
+
+    log.info("Finding facturas by {}", parameters);
+
+    return new Specification<Empresa>() {
+
+      private static final long serialVersionUID = -7435096122716669730L;
+
+      @Override
+      public Predicate toPredicate(
+          Root<Empresa> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        List<Predicate> predicates = new ArrayList<>();
+        if (parameters.get("activo") != null) {
+          predicates.add(
+              criteriaBuilder.and(
+                  criteriaBuilder.equal(
+                      root.get("activo"), Boolean.valueOf(parameters.get("activo")))));
+        }
+        if (parameters.get("giro") != null) {
+          predicates.add(
+              criteriaBuilder.and(
+                  criteriaBuilder.equal(
+                      root.get("giro"), Integer.valueOf(parameters.get("giro")))));
+        }
+        if (parameters.get("linea") != null) {
+          predicates.add(
+              criteriaBuilder.and(
+                  criteriaBuilder.equal(root.get("tipo"), parameters.get("linea"))));
+        }
+
+        if (parameters.get("rfc") != null) {
+          predicates.add(
+              criteriaBuilder.and(
+                  criteriaBuilder.like(root.get("rfc"), "%" + parameters.get("rfc") + "%")));
+        }
+
+        if (parameters.get("razonSocial") != null) {
+          predicates.add(
+              criteriaBuilder.and(
+                  criteriaBuilder.like(
+                      root.get("razonSocial"), "%" + parameters.get("razonSocial") + "%")));
+        }
+
+        if (parameters.get("actividadSAT") != null) {
+          predicates.add(
+              criteriaBuilder.and(
+                  criteriaBuilder.like(
+                      root.get("actividadSAT"), "%" + parameters.get("actividadSAT") + "%")));
+        }
+
+        if (parameters.get("registroPatronal") != null) {
+            if(Boolean.valueOf(parameters.get("registroPatronal"))){
+                predicates.add(
+                        criteriaBuilder.and(criteriaBuilder.isNotNull(root.get("registroPatronal"))));
+            }else{
+                predicates.add(
+                        criteriaBuilder.and(criteriaBuilder.isNull(root.get("registroPatronal"))));
+            }
+
+        }
+
+        if (parameters.get("representanteLegal") != null) {
+            if(Boolean.valueOf(parameters.get("representanteLegal"))){
+                predicates.add(
+                        criteriaBuilder.and(criteriaBuilder.isNotNull(root.get("representanteLegal"))));
+            }else{
+                predicates.add(
+                        criteriaBuilder.and(criteriaBuilder.isNull(root.get("representanteLegal"))));
+            }
+        }
+
+        if (parameters.get("impuestoEstatal") != null) {
+            if(Boolean.valueOf(parameters.get("impuestoEstatal"))){
+                predicates.add(
+                        criteriaBuilder.and(criteriaBuilder.isNotNull(root.get("impuestoEstatal"))));
+            }else{
+                predicates.add(
+                        criteriaBuilder.and(criteriaBuilder.isNull(root.get("impuestoEstatal"))));
+            }
+        }
+
+        return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+      }
+    };
+  }
+
+  public Page<Map<String, String>> getEmpresasByParametros(Map<String, String> parameters) {
     Page<Empresa> result;
-    if (!razonSocial.isPresent() && !rfc.isPresent()) {
-      result =
-          repository.findAllWithLinea(String.format("%%%s%%", linea), PageRequest.of(page, size));
-    } else if (rfc.isPresent()) {
-      result =
-          repository.findByRfcIgnoreCaseContaining(
-              String.format("%%%s%%", rfc.get()),
-              String.format("%%%s%%", linea),
-              PageRequest.of(page, size));
-    } else {
-      result =
-          repository.findByRazonSocialIgnoreCaseContaining(
-              String.format("%%%s%%", razonSocial.get()),
-              String.format("%%%s%%", linea),
-              PageRequest.of(page, size));
-    }
+    int page =
+        (parameters.get("page") == null) || parameters.get("page").equals("")
+            ? 0
+            : Integer.valueOf(parameters.get("page"));
+    int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+    result =
+        repository.findAll(
+            buildSearchFilters(parameters),
+            PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
     return new PageImpl<Map<String, String>>(
         getFlatCompanyDetails(result.getContent()),
         result.getPageable(),
@@ -129,9 +215,7 @@ public class EmpresaService {
                       .collect(Collectors.toList())
                       .toString());
               row.put(
-                  "EXPIRACION_CERTIFICADOS",
-                  String.format(
-                      "%tF %tR", e.getExpiracionCertificado(), e.getExpiracionCertificado()));
+                  "EXPIRACION_CERTIFICADOS", String.format("%tF", e.getExpiracionCertificado()));
               row.put("ACTIVIDAD_SAT", e.getActividadSAT());
               row.put("REGISTRO_PATRONAL", e.getRegistroPatronal());
               row.put("ENTIDAD_REGISTRO_PATRONAL", e.getEntidadRegistroPatronal());
@@ -192,11 +276,9 @@ public class EmpresaService {
         .collect(Collectors.toList());
   }
 
-  public ResourceFileDto getCompaniesReport(
-      Optional<String> rfc, Optional<String> razonSocial, String linea, int page, int size)
-      throws IOException {
+  public ResourceFileDto getCompaniesReport(Map<String, String> parameters) throws IOException {
 
-    Page<Map<String, String>> result = getEmpresasByParametros(rfc, razonSocial, linea, page, size);
+    Page<Map<String, String>> result = getEmpresasByParametros(parameters);
 
     List<String> headers =
         Arrays.asList(

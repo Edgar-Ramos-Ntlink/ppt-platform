@@ -30,6 +30,10 @@ export class CompaniesService {
     return this.httpClient.get('../api/empresas', { params: this.getHttpParams(filterParams)});
   }
 
+  public getCompaniesReport(filterParams?: any): Observable<Object>{
+    return this.httpClient.get('../api/empresas/report', { params: this.getHttpParams(filterParams)});
+  }
+
   public getCompaniesByLineaAndGiro(linea: string, giro: number) {
     return this.httpClient.get(`../api/lineas/${linea}/giros/${giro}/empresas`);
   }

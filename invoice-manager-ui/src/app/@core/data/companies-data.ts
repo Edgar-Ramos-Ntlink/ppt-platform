@@ -3,10 +3,13 @@ import { DatoAnualEmpresa } from '../../models/dato-anual-empresa';
 import { DetalleEmpresa } from '../../models/detalle-empresa';
 import { Empresa } from '../../models/empresa';
 import { GenericPage } from '../../models/generic-page';
+import { ResourceFile } from '../../models/resource-file';
 
 export abstract class CompaniesData {
 
     abstract getCompanies(filterParams?: any): Observable<GenericPage<any>>;
+
+    abstract getCompaniesReport(filterParams?: any): Observable<ResourceFile>;
 
     abstract getCompaniesByLineaAndGiro(linea: string, giro: number): Observable<Empresa[]>;
 

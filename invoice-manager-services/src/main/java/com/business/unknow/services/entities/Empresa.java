@@ -152,4 +152,7 @@ public class Empresa implements Serializable {
 
   @OneToMany(mappedBy = "empresa")
   private List<EmpresaDetalles> detalles;
+
+  @OneToMany(mappedBy = "empresa")
+  private List<EmpresaIngresos> ingresos;
 }

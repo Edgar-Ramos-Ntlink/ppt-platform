@@ -1,19 +1,18 @@
 package com.business.unknow.services.services;
 
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.services.CuentaBancariaDto;
 import com.business.unknow.services.entities.CuentaBancaria;
 import com.business.unknow.services.mapper.CuentaBancariaMapper;
 import com.business.unknow.services.repositories.CuentaBancariaRepository;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+@Slf4j
 @Service
 public class CuentaBancariaService {
 
@@ -31,7 +31,7 @@ public class CuentaBancariaService {
 
   @Autowired private CuentaBancariaMapper mapper;
 
-  private static final Logger log = LoggerFactory.getLogger(CuentaBancariaService.class);
+  @Autowired private DownloaderService downloaderService;
 
   private Specification<CuentaBancaria> buildSearchFilters(Map<String, String> parameters) {
 
@@ -90,18 +90,63 @@ public class CuentaBancariaService {
         result.getTotalElements());
   }
 
-  public List<CuentaBancariaDto> getCuentasPorRfc(String empresa) {
-    return mapper.getCuentaBancariaDtosFromEntities(repository.findByEmpresa(empresa));
+  public ResourceFileDto getCuentasBancariasReport(Map<String, String> parameters)
+      throws IOException {
+
+    Page<CuentaBancariaDto> result = getCuentasBancariasByfilters(parameters);
+
+    List<String> headers =
+        Arrays.asList(
+            "BANCO",
+            "RFC EMPRESA",
+            "NUMERO DE CUENTA",
+            "CLABE",
+            "TIPO CONTRATO",
+            "SUCURSAL",
+            "DOMICILIO",
+            "EXPEDIENTE ACTUALIZADO",
+            "CREACION",
+            "ACTUALIZACION");
+
+    List<Map<String, Object>> data =
+        result.getContent().stream()
+            .map(
+                cuenta -> {
+                  Map<String, Object> row = new HashMap<>();
+                  row.put("BANCO", cuenta.getBanco());
+                  row.put("RFC EMPRESA", cuenta.getRfc());
+                  row.put("NUMERO DE CUENTA", cuenta.getCuenta());
+                  row.put("CLABE", cuenta.getClabe());
+                  row.put("TIPO CONTRATO", cuenta.getTipoContrato());
+                  row.put("SUCURSAL", cuenta.getSucursal());
+                  row.put("DOMICILIO", cuenta.getDomicilioBanco());
+                  row.put("EXPEDIENTE ACTUALIZADO", cuenta.getExpedienteActualizado());
+                  row.put(
+                      "CREACION",
+                      String.format(
+                          "%tF %tR", cuenta.getFechaCreacion(), cuenta.getFechaCreacion()));
+                  row.put(
+                      "ACTUALIZACION",
+                      String.format(
+                          "%tF %tR", cuenta.getFechaActualizacion(), cuenta.getFechaCreacion()));
+                  return row;
+                })
+            .collect(Collectors.toList());
+
+    return downloaderService.generateBase64Report("Reporte Cuentas Bancarias", data, headers);
   }
 
-  public CuentaBancariaDto infoCuentaBancaria(String empresa, String cuenta) {
-    return mapper.getCuentaBancariaToFromEntity(
-        repository.findByEmpresaAndCuenta(empresa, cuenta).get());
+  public List<CuentaBancariaDto> getCuentasPorRfc(String rfc) {
+    return mapper.getCuentaBancariaDtosFromEntities(repository.findByRfc(rfc));
+  }
+
+  public CuentaBancariaDto infoCuentaBancaria(String rfc, String cuenta) {
+    return mapper.getCuentaBancariaToFromEntity(repository.findByRfcAndCuenta(rfc, cuenta).get());
   }
 
   public CuentaBancariaDto createCuentaBancaria(CuentaBancariaDto cuentaDto) {
     Optional<CuentaBancaria> entity =
-        repository.findByEmpresaAndCuenta(cuentaDto.getRfc(), cuentaDto.getCuenta());
+        repository.findByRfcAndCuenta(cuentaDto.getRfc(), cuentaDto.getCuenta());
     if (entity.isPresent()) {
       throw new ResponseStatusException(
           HttpStatus.BAD_REQUEST,

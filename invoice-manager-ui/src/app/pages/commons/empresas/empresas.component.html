@@ -3,36 +3,95 @@
     <nb-card class="inline-form-card">
       <nb-card-header class="puff_center">Empresas</nb-card-header>
       <nb-card-body>
-        <div class="row slide_1">
-          <div class="col-3">
-            <label for="inputName" class="label">Razón Social Empresa</label>
-            <input id="inputName" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.razonSocial"
-              [disabled]="filterParams.rfc.length > 0" fullWidth placeholder="Razón Social">
-          </div>
-          <div class="col-2">
-            <label for="inputRfc" class="label">RFC</label>
-            <input id="inputRfc" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.rfc"
-              [disabled]="filterParams.razonSocial.length > 0" fullWidth placeholder="RFC Empresa">
-          </div>
-          <div class="col-2">
-            <label for="inputCompanyType" class="label">Tipo Empresa</label>
-            <div class="row form-inline">
-              <select selected="*" id="inputCompanyType" [(ngModel)]="filterParams.linea"
-                style="display:block;width: 100%;" class="form-control"
-                (change)="onCompanySelected($event.target.value)">
-                <option value="">Seleccionar</option>
-                <option value="A">Tipo A</option>
-                <option value="B">Tipo B</option>
-                <option value="C">Tipo C</option>
-              </select>
+        <div class="row">
 
-            </div>
+          <div class="col-2">
+            <label for="inputCompanyType" class="label">Línea Empresa</label>
+            <select selected="*" id="inputCompanyType" style="display:block;" class="form-control"
+              [(ngModel)]="filterParams.linea">
+              <option value="*">Todas</option>
+              <option value="A">Tipo A</option>
+              <option value="B">Tipo B</option>
+              <option value="C">Tipo C</option>
+            </select>
           </div>
+
+          <div class="col-2">
+            <label for="inputActiveCompany" class="label">Empresa Activa</label>
+            <select selected="*" id="inputActiveCompany" [(ngModel)]="filterParams.activo" style="display:block;"
+              class="form-control">
+              <option value="*">Todas</option>
+              <option value="true">ACTIVA</option>
+              <option value="false">INACTIVA</option>
+            </select>
+          </div>
+          <div class="col-2">
+            <label for="inputGiros" class="label">Giro Empresa</label>
+            <select selected="*" id="inputGiros" [(ngModel)]="filterParams.giro" style="display:block;"
+              class="form-control">
+              <option value="*">Todos</option>
+              <option *ngFor="let giro of girosCat" [value]="giro.id">{{giro.nombre}}</option>
+            </select>
+          </div>
+
+          <div class="col-3">
+            <label for="inputRFC" class="label">RFC Empresa</label>
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.rfc"
+              [disabled]="filterParams.razonSocial.length > 0" id="inputRFC" fullWidth placeholder="RFC empresa">
+          </div>
+
+          <div class="col-3">
+            <label for="inputRazonSocial" class="label">Razón Social Empresa</label>
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.razonSocial"
+              [disabled]="filterParams.rfc.length > 0" id="inputRazonSocial" fullWidth
+              placeholder="Razon Social Empresa">
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label for="registroPatronal" class="label">Registro Patronal</label>
+            <select selected="*" id="registroPatronal" [(ngModel)]="filterParams.registroPatronal" style="display:block;"
+              class="form-control">
+              <option value="*">Todas</option>
+              <option value="true">Con registro</option>
+              <option value="false">Sin registro</option>
+            </select>
+          </div>
+
+          <div class="col-2">
+            <label for="representanteLegal" class="label">Representante Legal</label>
+            <select selected="*" id="representanteLegal" [(ngModel)]="filterParams.representanteLegal" style="display:block;"
+              class="form-control">
+              <option value="*">Todas</option>
+              <option value="true">Con representante</option>
+              <option value="false">Sin representante</option>
+            </select>
+          </div>
+
+          <div class="col-2">
+            <label for="impuestoEstatal" class="label">Impuesto Estatal</label>
+            <select selected="*" id="impuestoEstatal" [(ngModel)]="filterParams.impuestoEstatal" style="display:block;"
+              class="form-control">
+              <option value="*">Todas</option>
+              <option value="true">Impuesto registrado</option>
+              <option value="false">Sin Impuesto registrado</option>
+            </select>
+          </div>
+
+          <div class="col-2">
+            <label for="actividadSAT" class="label">Actividad SAT</label>
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.actividadSAT"
+              id="actividadSAT" fullWidth
+              placeholder="Actividad SAT">
+          </div>
+
           <div class="col-2">
             <button class="btn btn-primary" style="width: 100%; margin-top: 28px;"
               (click)="updateDataTable(0,10)">BUSCAR</button>
           </div>
-          <div class="col-3">
+          <div class="col-2" *ngIf="module=='legal' || module == 'administracion'">
             <button class="btn btn-primary" style="width: 100%; margin-top: 28px;" (click)="newCompany()">NUEVA
               EMPRESA</button>
           </div>

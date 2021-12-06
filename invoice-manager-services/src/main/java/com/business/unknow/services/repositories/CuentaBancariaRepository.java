@@ -18,17 +18,11 @@ public interface CuentaBancariaRepository
 
   public List<CuentaBancaria> findAll();
 
-  public List<CuentaBancaria> findByEmpresa(String empresa);
-
-  public List<CuentaBancaria> findByBanco(String banco);
-
-  public List<CuentaBancaria> findByEmpresaAndBanco(String empresa, String banco);
-
-  public Optional<CuentaBancaria> findByCuenta(String cuenta);
+  public List<CuentaBancaria> findByRfc(String rfc);
 
   public Optional<CuentaBancaria> findByClabe(String clabe);
 
-  public Optional<CuentaBancaria> findByEmpresaAndCuenta(String empresa, String cuenta);
+  public Optional<CuentaBancaria> findByRfcAndCuenta(String rfc, String cuenta);
 
   public List<CuentaBancaria> findById(String id);
 

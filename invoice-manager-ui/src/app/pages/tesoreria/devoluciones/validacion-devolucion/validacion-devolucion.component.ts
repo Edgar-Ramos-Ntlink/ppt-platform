@@ -34,7 +34,6 @@ export class ValidacionDevolucionComponent implements OnInit {
 
   ngOnInit() {
     this.errorMesage = '';
-    this.getAccountInfo();
     this.userService.getUserInfo().then(user => this.user = user);
     if (this.payment.fechaPago === undefined || this.payment.fechaPago === null ) {
       this.payment.fechaPago = new Date();
@@ -50,20 +49,11 @@ export class ValidacionDevolucionComponent implements OnInit {
     if (rfc !== undefined && rfc.length >= 3) {
       this.getAccountInfo(rfc);
     }
-    if (rfc !== undefined && rfc.length === 0) {
-      this.getAccountInfo();
-    }
   }
-  private getAccountInfo(rfc?: string) {
-    this.accountsService.getAllCuentas(0, 25, { empresa: rfc || '' })
+  private getAccountInfo(rfc: string) {
+    this.accountsService.getCuentasByCompany(rfc)
       .subscribe(accounts => {
-        this.cuentas = accounts.content;
-        if (!accounts.empty) {
-          this.formInfo.cuenta = this.cuentas[0].id;
-        } else {
-          this.cuentas = [];
-          this.formInfo.cuenta = '*';
-        }
+        this.cuentas = accounts;
       });
   }
 

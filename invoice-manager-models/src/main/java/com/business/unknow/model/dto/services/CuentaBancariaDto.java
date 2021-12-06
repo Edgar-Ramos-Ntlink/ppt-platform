@@ -24,15 +24,10 @@ public class CuentaBancariaDto implements Serializable {
   private static final long serialVersionUID = 8643631228668299142L;
 
   private int id;
-  private int total;
   private String rfc;
-  private String linea;
-  private String giro;
-  private String razonSocial;
   private String banco;
   private String cuenta;
   private String clabe;
-
   private String domicilioBanco;
   private String tipoContrato;
   private String sucursal;
