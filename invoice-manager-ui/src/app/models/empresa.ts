@@ -1,15 +1,12 @@
 import { Contribuyente } from './contribuyente';
 import { Cuenta } from './cuenta';
+import { DetalleEmpresa } from './detalle-empresa';
+import { IngresoEmpresa } from './ingreso-empresa';
 import { ResourceFile } from './resource-file';
 
 export class Empresa {
     public id: number;
-
-
-    // PASO 1 carga de datos genericos
-    // datos genenerales
     public activo: boolean;
-
     public estatus:string; // Se calculara automaticamnete basado entre representanteLegal & correo & cert & key & cuentas
     public giro: string;
     public tipo: string; // linea empresa
@@ -28,7 +25,7 @@ export class Empresa {
 
     // OPCIONAL, puede ser realizado despues de paso 1
     // legal
-    public anioAlta: string;
+    public inicioActividades: Date;
     public registroPatronal: string;
     public estatusJuridico: string;
     public estatusJuridico2: string;
@@ -73,22 +70,20 @@ export class Empresa {
     public fechaCreacion: Date;
     public fechaActualizacion: Date;
 
+
+    public cuentas : Cuenta[];
+    public detalles : DetalleEmpresa[];
+    public ingresos : IngresoEmpresa[];
+
     constructor() {
         this.activo = false;
         this.estatus = 'INACTIVO';
         this.tipo= '*';
         this.giro='*';
         this.colonia = '*';
-        this.anioAlta = '*';
         this.regimenFiscal = '*';
-    }
-}
-//TODO extraer clase o a ver 
-export class Ingresos{
-    ano: string;
-    cantidad: number;
-    constructor(ano: string, cantidad: number){
-        this.ano = ano;
-        this.cantidad = cantidad;
+        this.cuentas = [];
+        this.detalles = [];
+        this.ingresos = [];
     }
 }

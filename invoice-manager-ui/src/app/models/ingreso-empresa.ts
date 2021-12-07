@@ -1,4 +1,4 @@
-export class DatoAnualEmpresa{
+export class IngresoEmpresa{
 
   public id:number;
   public rfc:string;

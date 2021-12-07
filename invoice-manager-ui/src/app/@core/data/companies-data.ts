@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { DatoAnualEmpresa } from '../../models/dato-anual-empresa';
+import { IngresoEmpresa } from '../../models/ingreso-empresa';
 import { DetalleEmpresa } from '../../models/detalle-empresa';
 import { Empresa } from '../../models/empresa';
 import { GenericPage } from '../../models/generic-page';
@@ -27,9 +27,9 @@ export abstract class CompaniesData {
 
     abstract deleteCompanyDetail(detailId: number): Observable<void>;
 
-    abstract getCompanyAnualData(rfc: string): Observable<DatoAnualEmpresa[]>;
+    abstract getCompanyIncomes(rfc: string): Observable<IngresoEmpresa[]>;
 
-    abstract insertCompanyAnualData(detail: DetalleEmpresa): Observable<DatoAnualEmpresa>;
+    abstract insertCompanyIncome(detail: IngresoEmpresa): Observable<IngresoEmpresa>;
 
-    abstract deleteCompanyAnualData(rfc:string, id: number): Observable<void>;
+    abstract deleteCompanyIncome(rfc:string, id: number): Observable<void>;
 }

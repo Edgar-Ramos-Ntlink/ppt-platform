@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
-      <nb-card-header class="puff_center">Datos empresa
+      <nb-card-header class="">Datos empresa
         <button type="button" class="btn btn-outline-danger float-right" *ngIf="companyInfo.activo"
           (click)="inactivateCompany()">Desactivar</button>
         <button type="button" class="btn btn-outline-success float-right" *ngIf="!companyInfo.activo && companyInfo.id"
@@ -10,8 +10,8 @@
       <nb-card-body>
         <nb-tabset fullWidth>
           <nb-tab tabTitle="Datos generales">
-            <p class="font-weight-bold puff_center">Informacion Fiscal</p>
-            <div class="row slide_1">
+            <p class="font-weight-bold ">Informacion Fiscal</p>
+            <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="inputRFC" class="label">RFC</label>
@@ -36,7 +36,7 @@
               </div>
 
             </div>
-            <div class="row slide_2">
+            <div class="row">
               <div class="col-sm-3">
                 <label for="inputPais" class="label">País</label>
                 <select id="inputPais" selected="0" fullWidth class="form-control" style="display:block;"
@@ -64,7 +64,7 @@
               </div>
 
             </div>
-            <div class="row slide_3">
+            <div class="row">
               <div class="col-sm-4">
                 <label for="inputState" class="label">Estado</label>
                 <input type="text" [(ngModel)]="companyInfo.estado" class="form-control" fullWidth id="inputState"
@@ -78,7 +78,7 @@
                 </div>
               </div>
             </div>
-            <div class="row slide_4">
+            <div class="row ">
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="inputCalle" class="label">Calle</label>
@@ -101,8 +101,8 @@
                 </div>
               </div>
             </div>
-            <p class="font-weight-bold puff_center">Datos addicionales</p>
-            <div class="row slide_4">
+            <p class="font-weight-bold ">Datos addicionales</p>
+            <div class="row ">
               <div class="col-sm-6">
                 <label for="inputGiro" class="label">Giro Empresa</label>
                 <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)"
@@ -138,38 +138,38 @@
               </div>
             </div>
             <br>
-            <div *ngIf="companyInfo.id">
-              <p class="font-weight-bold puff_center">Datos legales</p>
-              <br>
-              <div class="row slide_1">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label for="inputRepresentante" class="label">Nombre Representante Legal</label>
-                    <input type="text" [(ngModel)]="companyInfo.representanteLegal" class="form-control" fullWidth
-                      [disabled]="companyInfo.activo" id="inputRepresentante" placeholder="Nombre representante legal"
-                      [disabled]="companyInfo.id===undefined || companyInfo.activo">
-                  </div>
-                </div>
 
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label for="estatusJuridico" class="label">Estatus Juridico</label>
-                    <input type="text" [(ngModel)]="companyInfo.estatusJuridico" class="form-control" fullWidth
-                      [disabled]="companyInfo.activo" id="estatusJuridico" placeholder="Estatus Juridico">
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label for="estatusJuridico2" class="label">Estatus Juridico 2</label>
-                    <input type="text" [(ngModel)]="companyInfo.estatusJuridico2" class="form-control" fullWidth
-                      [disabled]="companyInfo.activo" id="estatusJuridico2" placeholder="Estatus Juridico 2">
-                  </div>
+            <p class="font-weight-bold ">Datos legales</p>
+            <br>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="inputRepresentante" class="label">Nombre Representante Legal</label>
+                  <input type="text" [(ngModel)]="companyInfo.representanteLegal" class="form-control" fullWidth
+                    [disabled]="companyInfo.activo" id="inputRepresentante" placeholder="Nombre representante legal"
+                    [disabled]="companyInfo.id===undefined || companyInfo.activo">
                 </div>
               </div>
 
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="estatusJuridico" class="label">Estatus Juridico Actual</label>
+                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico" class="form-control" fullWidth
+                    [disabled]="companyInfo.activo" id="estatusJuridico" placeholder="Estatus Juridico">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="estatusJuridico2" class="label">Estatus Juridico Fase 2</label>
+                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico2" class="form-control" fullWidth
+                    [disabled]="companyInfo.activo" id="estatusJuridico2" placeholder="Estatus Juridico 2">
+                </div>
+              </div>
+            </div>
 
+            <div *ngIf="companyInfo.id">
               <!-- STOCK-HOLDERS -->
-              <p class="font-weight-bold puff_center">Accionistas</p>
+              <p class="font-weight-bold ">Accionistas</p>
               <div class="row">
                 <div class="col-md-12">
 
@@ -183,11 +183,11 @@
                   </div>
                   <br />
 
-                  <div class="puff_center" *ngIf="accionistas.length === 0" class="alert alert-primary" role="alert">
+                  <div class="" *ngIf="accionistas.length === 0" class="alert alert-primary" role="alert">
                     No hay accionistas para la empresa
                   </div>
 
-                  <div class="table-responsive slide_1" *ngIf="accionistas.length > 0">
+                  <div class="table-responsive" *ngIf="accionistas.length > 0">
                     <table class="table table-sm">
                       <thead class="thead-dark">
                         <tr>
@@ -229,7 +229,7 @@
               </div>
 
               <!-- REPRESENTANT-->
-              <p class="font-weight-bold puff_center">Apoderados</p>
+              <p class="font-weight-bold ">Apoderados</p>
               <div class="row">
                 <div class="col-md-12">
 
@@ -243,11 +243,11 @@
                   </div>
                   <br />
 
-                  <div class="puff_center" *ngIf="apoderados.length === 0" class="alert alert-primary" role="alert">
+                  <div class="" *ngIf="apoderados.length === 0" class="alert alert-primary" role="alert">
                     No hay apoderados para la empresa
                   </div>
 
-                  <div class="table-responsive slide_1" *ngIf="apoderados.length > 0">
+                  <div class="table-responsive" *ngIf="apoderados.length > 0">
                     <table class="table table-sm">
                       <thead class="thead-dark">
                         <tr>
@@ -288,7 +288,7 @@
                 </div>
               </div>
 
-              <p class="font-weight-bold puff_center">Documentos empresa</p>
+              <p class="font-weight-bold ">Documentos empresa</p>
 
               <div class="row">
 
@@ -341,11 +341,11 @@
                 <div class="col-sm-6">
                   <br />
                   <br />
-                  <div class="puff_center" *ngIf="legalDocuments.length === 0" class="alert alert-primary" role="alert">
+                  <div class="" *ngIf="legalDocuments.length === 0" class="alert alert-primary" role="alert">
                     No hay documentos relacionados a la empresa
                   </div>
 
-                  <div class="table-responsive slide_1" *ngIf="legalDocuments.length > 0">
+                  <div class="table-responsive" *ngIf="legalDocuments.length > 0">
                     <table class="table table-sm">
                       <thead class="thead-dark">
                         <tr>
@@ -376,8 +376,8 @@
 
           </nb-tab>
           <nb-tab tabTitle="Datos digitales" *ngIf="companyInfo.id && isAdministrator">
-            <p class="font-weight-bold puff_center">Datos correo empresa</p>
-            <div class="row slide_4">
+            <p class="font-weight-bold ">Datos correo empresa</p>
+            <div class="row">
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="inputEmail" class="label">Correo Empresa</label>
@@ -411,13 +411,13 @@
 
             </div>
 
-            <p class="font-weight-bold puff_center">Datos adicionales</p>
+            <p class="font-weight-bold ">Datos adicionales</p>
 
             <div class="row">
               <div class="col-sm-6">
 
 
-                <div class="row slide_4">
+                <div class="row">
                   <div class="col-md-12">
                     <label for="inputWeb" class="label">Sitio web</label>
                     <input type="text" [(ngModel)]="companyInfo.web" class="form-control" fullWidth id="inputWeb"
@@ -427,7 +427,7 @@
                 </div>
                 <label for="logoFile" class="label">Logotipo Empresa</label>
 
-                <div class="row slide_4">
+                <div class="row">
                   <div class="form-group col-md-12">
 
                     <div class="input-group">
@@ -462,7 +462,7 @@
               <div class="col-md-12">
                 <div class="clearfix">
                   <div class="row float-left" style="margin-right: 1px;">
-                    <p class="font-weight-bold puff_center">Cuentas bancarias</p>
+                    <p class="font-weight-bold ">Cuentas bancarias</p>
                   </div>
                   <div class="row float-right" style="margin-right: 1px;">
                     <button type="button" (click)="openAccountDialog(companyInfo.rfc,'*')" style=" margin-left:25px;"
@@ -471,11 +471,11 @@
                 </div>
                 <br />
 
-                <div class="puff_center" *ngIf="cuentas.length === 0" class="alert alert-primary" role="alert">
+                <div class="" *ngIf="cuentas.length === 0" class="alert alert-primary" role="alert">
                   No hay cuentas bancarias registradas para la empresa
                 </div>
 
-                <div class="table-responsive slide_1" *ngIf="cuentas.length > 0">
+                <div class="table-responsive" *ngIf="cuentas.length > 0">
                   <table class="table table-sm">
                     <thead class="thead-dark">
                       <tr>
@@ -519,8 +519,8 @@
           </nb-tab>
           <nb-tab tabTitle="Contabilidad" *ngIf="companyInfo.id && (isAdministrator || module === 'contabilidad')">
 
-            <p class="font-weight-bold puff_center">Datos Fiscales</p>
-            <div class="row slide_1">
+            <p class="font-weight-bold ">Datos Fiscales</p>
+            <div class="row">
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="registroPatronal" class="label">Registro Patronal</label>
@@ -584,12 +584,11 @@
                 <nb-datepicker #expirationpickerFiel></nb-datepicker>
               </div>
               <div class="col-4">
-                <label for="inputAlta" class="label">Inicio Operaciones</label>
-                <select selected="*" id="inputAlta" style="display:block" fullWidth class="form-control"
-                  [disabled]="companyInfo.activo" [(ngModel)]="companyInfo.anioAlta">
-                  <option value="*">Seleccionar</option>
-                  <option *ngFor="let year of years" [value]="year">{{year}}</option>
-                </select>
+                <label for="inputOperaciones" class="label">Inicio Operaciones</label>
+                <input nbInput placeholder="Inicio actividades" [nbDatepicker]="startOperationsPicker" fullWidth
+                  style="display:block;" id="inputOperaciones" [disabled]="companyInfo.activo"
+                  [(ngModel)]="companyInfo.inicioActividades">
+                <nb-datepicker #startOperationsPicker></nb-datepicker>
               </div>
             </div>
             <br />
@@ -615,7 +614,7 @@
               <div class="col-md-12">
                 <div class="clearfix">
                   <div class="row float-left" style="margin-right: 1px;">
-                    <p class="font-weight-bold puff_center">Ingresos anuales</p>
+                    <p class="font-weight-bold ">Ingresos anuales</p>
                   </div>
                   <div class="row float-right" style="margin-right: 1px;">
                     <button type="button" (click)="openAnualDataDialog(dataDialog)" style=" margin-left:25px;"
@@ -624,11 +623,11 @@
                 </div>
                 <br />
 
-                <div class="puff_center" *ngIf="ingresos.length === 0" class="alert alert-primary" role="alert">
+                <div class="" *ngIf="ingresos.length === 0" class="alert alert-primary" role="alert">
                   No hay ingresos registrados para la empresa
                 </div>
 
-                <div class="table-responsive slide_1" *ngIf="ingresos.length > 0">
+                <div class="table-responsive" *ngIf="ingresos.length > 0">
                   <table class="table table-sm">
                     <thead class="thead-dark">
                       <tr>
@@ -662,7 +661,7 @@
                 </div>
               </div>
             </div>
-            <p class="font-weight-bold puff_center">Documentos contabilidad</p>
+            <p class="font-weight-bold ">Documentos contabilidad</p>
 
             <div class="row">
 
@@ -711,12 +710,12 @@
               <div class="col-sm-6">
                 <br />
                 <br />
-                <div class="puff_center" *ngIf="contableDocuments.length === 0" class="alert alert-primary"
+                <div class="" *ngIf="contableDocuments.length === 0" class="alert alert-primary"
                   role="alert">
                   No hay documentos relacionados a la empresa
                 </div>
 
-                <div class="table-responsive slide_1" *ngIf="contableDocuments.length > 0">
+                <div class="table-responsive" *ngIf="contableDocuments.length > 0">
                   <table class="table table-sm">
                     <thead class="thead-dark">
                       <tr>
@@ -751,7 +750,7 @@
 
                 <div class="clearfix">
                   <div class="row float-left" style="margin-right: 1px;">
-                    <p class="font-weight-bold puff_center">Observaciones</p>
+                    <p class="font-weight-bold ">Observaciones</p>
                   </div>
                   <div class="row float-right" style="margin-right: 1px;">
                     <button type="button" (click)="openDetallesDialog(detailDialog, undefined, 'OBSERVACION')"
@@ -760,11 +759,11 @@
                 </div>
                 <br />
 
-                <div class="puff_center" *ngIf="observaciones.length === 0" class="alert alert-primary" role="alert">
+                <div class="" *ngIf="observaciones.length === 0" class="alert alert-primary" role="alert">
                   No hay observaciones para la empresa
                 </div>
 
-                <div class="table-responsive slide_1" *ngIf="observaciones.length > 0">
+                <div class="table-responsive" *ngIf="observaciones.length > 0">
                   <table class="table table-sm">
                     <thead class="thead-dark">
                       <tr>
@@ -806,7 +805,7 @@
               <div class="col-md-12">
                 <div class="clearfix">
                   <div class="row float-left" style="margin-right: 1px;">
-                    <p class="font-weight-bold puff_center">Pendientes</p>
+                    <p class="font-weight-bold ">Pendientes</p>
                   </div>
                   <div class="row float-right" style="margin-right: 1px;">
                     <button type="button" (click)="openDetallesDialog(detailDialog, undefined, 'PENDIENTE')"
@@ -814,11 +813,11 @@
                   </div>
                 </div>
                 <br />
-                <div class="puff_center" *ngIf="pendientes.length === 0" class="alert alert-primary" role="alert">
+                <div class="" *ngIf="pendientes.length === 0" class="alert alert-primary" role="alert">
                   No hay pendientes para la empresa
                 </div>
 
-                <div class="table-responsive slide_1" *ngIf="pendientes.length > 0">
+                <div class="table-responsive" *ngIf="pendientes.length > 0">
                   <table class="table table-sm">
                     <thead class="thead-dark">
                       <tr>

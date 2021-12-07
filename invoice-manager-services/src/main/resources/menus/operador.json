@@ -8,7 +8,8 @@
 		},
 		{
 			"title": "Empresas",
-			"link": "/pages/operaciones/empresas"
+			"link": "/pages/operaciones/empresas",
+			"queryParams":{"linea":"A"}
 		},
 		{
 			"title": "Validacion facturas",
