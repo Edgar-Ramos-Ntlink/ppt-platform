@@ -457,14 +457,14 @@
 
           </nb-tab>
 
-          <nb-tab tabTitle="Cuentas bancarias" *ngIf="companyInfo.id && (isAdministrator || module === 'tesoreria')">
+          <nb-tab tabTitle="Cuentas bancarias" *ngIf="companyInfo.id && (isAdministrator || module === 'tesoreria' || module == 'bancos')">
             <div class="row">
               <div class="col-md-12">
                 <div class="clearfix">
                   <div class="row float-left" style="margin-right: 1px;">
                     <p class="font-weight-bold ">Cuentas bancarias</p>
                   </div>
-                  <div class="row float-right" style="margin-right: 1px;">
+                  <div class="row float-right" style="margin-right: 1px;" *ngIf="companyInfo.id && (isAdministrator || module == 'bancos')">
                     <button type="button" (click)="openAccountDialog(companyInfo.rfc,'*')" style=" margin-left:25px;"
                       class="btn btn-primary float-right">Nueva Cuenta</button>
                   </div>

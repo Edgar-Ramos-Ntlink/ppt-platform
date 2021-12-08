@@ -90,15 +90,23 @@
         </div>  
 
         <div class="row">
-          <div class="col-5">
+          <div class="col-4">
             <label for="location" class="label">Sucursal</label>
             <input id="location" class="form-control" fullWidth type="text" [(ngModel)]="cuenta.sucursal" fullWidth
               placeholder="Descripcion corta sucursal">
           </div>
-          <div class="col-7">
+          <div class="col-6">
             <label for="address" class="label">Domicilio Sucursal</label>
             <input id="address" class="form-control" fullWidth type="text" [(ngModel)]="cuenta.domicilioBanco" fullWidth
               placeholder="Direccion de sucursal - opcional">
+          </div>
+          <div class="col-2">
+            <label for="expedienteActualizado" class="label">Expediente actualizado</label>
+            <select selected="NO" id="registroPatronal" [(ngModel)]="cuenta.expedienteActualizado" style="display:block;"
+              class="form-control">
+              <option value="NO">No actualizado</option>
+              <option value="SI">Actualizado</option>
+            </select>
           </div>
         </div>
         

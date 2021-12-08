@@ -8,6 +8,7 @@ export class Cuenta {
     public tipoContrato: string;
     public domicilioBanco: string;
     public sucursal: string;
+    public expedienteActualizado: string;
 
     // NO mapeado pero debe de existir una referencia de documetos como expediente, contrato, etc
 
@@ -17,5 +18,6 @@ export class Cuenta {
         this.id = id;
         this.banco = banco || '*';
         this.cuenta = cuenta;
+        this.expedienteActualizado = 'NO';  
     }
 }
