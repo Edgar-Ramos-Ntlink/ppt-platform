@@ -1,0 +1,13 @@
+{
+  "title": "Bancos",
+  "icon": "award-outline",
+  "children": [
+    {
+      "title": "Empresas",
+      "link": "/pages/bancos/empresas"
+    },
+    {
+      "title": "Cuentas Bancarias",
+      "link": "/pages/bancos/cuentas-bancarias"
+    }]
+}

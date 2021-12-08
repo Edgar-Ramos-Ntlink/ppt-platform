@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Cuenta } from '../../../models/cuenta';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CuentasData } from '../../../@core/data/cuentas-data';
 import { Empresa } from '../../../models/empresa';
 import { Catalogo } from '../../../models/catalogos/catalogo';
@@ -33,7 +33,7 @@ export class CuentaBancariaComponent implements OnInit {
   private dataFile: ResourceFile= new ResourceFile();
 
 
-  public module: string = 'tesoreria';
+  public module: string = 'bancos';
 
   public errorMessages: string[] = [];
   public loading = true;
@@ -46,6 +46,7 @@ export class CuentaBancariaComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private downloadService: DonwloadFileService,
     private accountsService: CuentasData,
     private companiesService: CompaniesData,
@@ -58,6 +59,7 @@ export class CuentaBancariaComponent implements OnInit {
     this.cuenta = new Cuenta();
     this.loading = true;
     this.errorMessages = [];
+    this.module = this.router.url.split('/')[2];
       this.route.paramMap.subscribe(route => {
         const empresa = route.get('empresa');
         const cuenta = route.get('cuenta');
@@ -95,7 +97,7 @@ export class CuentaBancariaComponent implements OnInit {
         this.cuenta = await this.accountsService.getCuentaInfo(rfc, cuenta).toPromise();
         this.accountDocs =  await this.resourcesService.getResourcesByTypeAndReference('CUENTAS_BANCARIAS', this.cuenta.id.toString()).toPromise();
       }else{
-        this.cuenta.empresa = rfc;
+        this.cuenta.rfc = rfc;
       }
     } catch( error){
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
@@ -155,7 +157,7 @@ export class CuentaBancariaComponent implements OnInit {
   }
 
   public onEmpresaSelected(rfc: string) {
-    this.cuenta.empresa = rfc;
+    this.cuenta.rfc = rfc;
   }
 
 
@@ -174,6 +176,14 @@ export class CuentaBancariaComponent implements OnInit {
     }
   }
 
+  private sleep(duration) {
+    return new Promise<void>(resolve => {
+      setTimeout(() => {
+        resolve()
+      }, duration * 1000)
+    })
+  }
+
 
   public async fileDocumentUpload():  Promise<void>{
     try{
@@ -184,7 +194,8 @@ export class CuentaBancariaComponent implements OnInit {
       await this.resourcesService.insertResourceFile(this.dataFile).toPromise();
       this.formInfo.fileDataName = '';
       this.formInfo.doctType = '*';
-      this.getAccountInfo(this.cuenta.empresa, this.cuenta.cuenta)
+      await this.sleep(1);
+      this.accountDocs =  await this.resourcesService.getResourcesByTypeAndReference('CUENTAS_BANCARIAS', this.cuenta.id.toString()).toPromise();
       this.showToast('info', 'Exito!', 'El archivo se cargo correctamente');
     } catch(error){
       console.error(error);
@@ -194,6 +205,10 @@ export class CuentaBancariaComponent implements OnInit {
       this.showToast('danger', 'Error', msg, true);
     }
     this.loading = false;
+  }
+
+  public goToCompany(){
+    this.router.navigate([`./pages/${this.module}/empresa/${this.cuenta.rfc}`]);
   }
 
   public downloadFile(file: ResourceFile){

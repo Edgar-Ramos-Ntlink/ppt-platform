@@ -1,6 +1,6 @@
 {
 	"title": "Operaciones",
-	"icon": "layout-outline",
+	"icon": "maximize-outline",
 	"children": [
 		{
 			"title": "Clientes",
@@ -29,20 +29,12 @@
 			"queryParams":{"lineaEmisor":"A","status":"*"}
 		},
 		{
-			"title": "Devoluciones",
-			"link": "/pages/operaciones/devoluciones"
-		},
-		{
 	        "title": "Complementos Multipago",
 	        "link": "/pages/operaciones/pago-facturas"
      	},
      	{
 			"title": "Pagos",
 			"link": "/pages/operaciones/pagos"
-		},
-		{
-			"title": "Cuentas Bancarias",
-			"link": "/pages/operaciones/cuentas-bancarias"
 		}
 	]
 }

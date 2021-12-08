@@ -69,7 +69,7 @@ export class ValidacionDevolucionComponent implements OnInit {
       } else {
         solicitud.status = 'PAGADO';
         solicitud.cuentaPago = account.cuenta;
-        solicitud.rfcEmpresa = account.empresa;
+        solicitud.rfcEmpresa = account.rfc;
         this.devolutionsService.updateDevolution(this.payment.id, solicitud)
           .subscribe(success => this.ref.close(),
             (error: HttpErrorResponse) => this.errorMesage = error.error.message

@@ -1,6 +1,6 @@
  {
     "title": "Administracion",
-    "icon": "layout-outline",
+    "icon": "bulb-outline",
     "children": [
     	{
 			"title": "Usuarios",
@@ -13,6 +13,10 @@
 		{
 			"title": "Clientes",
 			"link": "/pages/administracion/clientes"
+		},
+		{
+			"title": "Cuentas Bancarias",
+			"link": "/pages/administracion/cuentas-bancarias"
 		},
 		{
 			"title": "Reportes",

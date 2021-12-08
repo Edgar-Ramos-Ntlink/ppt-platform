@@ -37,10 +37,6 @@ const routes: Routes = [{
       component: DevolutionsDetailsComponent,
     },
     {
-      path: 'cuentas-bancarias',
-      component: CuentasBancariasComponent,
-    },
-    {
       path: 'cuenta-bancaria/:empresa/:cuenta',
       component: CuentaBancariaComponent,
     }, {

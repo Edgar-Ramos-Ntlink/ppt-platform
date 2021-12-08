@@ -104,14 +104,12 @@ export class EmpresasComponent implements OnInit {
     params.page = 0;
     params.size = 2000;
     this.loading = true;
-    console.log("Start LOADER");
     try {
       const result = await this.companyService.getCompaniesReport(params).toPromise();
       this.downloadService.downloadFile(result.data, 'ReporteEmpresas.xlsx', 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,');
     } catch (error) {
       console.error(error);
     } 
-    console.log("Stop LOADER");
     this.loading = false;
 
   }

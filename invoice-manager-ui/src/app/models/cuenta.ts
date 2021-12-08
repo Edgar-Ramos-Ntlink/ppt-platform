@@ -1,7 +1,7 @@
 export class Cuenta {
 
     public id: string;
-    public empresa: string;
+    public rfc: string;
     public banco: string;
     public cuenta: string;
     public clabe: string;

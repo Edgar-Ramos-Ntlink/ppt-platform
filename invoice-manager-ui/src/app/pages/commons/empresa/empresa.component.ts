@@ -431,7 +431,7 @@ export class EmpresaComponent implements OnInit {
   }
 
   public async openAccountDialog(rfc:string,cuenta :number) {
-    this.router.navigate([`./pages/tesoreria/cuenta-bancaria/${rfc}/${cuenta}`]);
+    this.router.navigate([`./pages/${this.module}/cuenta-bancaria/${rfc}/${cuenta}`]);
   }
 
   public async deleteAccount(id: number) {

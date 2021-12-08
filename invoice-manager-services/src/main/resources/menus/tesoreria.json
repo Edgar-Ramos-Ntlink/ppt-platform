@@ -1,6 +1,6 @@
  {
 	"title": "Tesoreria",
-	"icon": "layout-outline",
+	"icon": "home-outline",
 	"children": [
 		{
 			"title": "Validacion pagos",
@@ -9,10 +9,6 @@
 		{
 			"title": "Historico pagos",
 			"link": "/pages/tesoreria/historial-pagos"
-		},
-		{
-			"title": "Cuentas Bancarias",
-			"link": "/pages/tesoreria/cuentas-bancarias"
 		},
 		{
 			"title": "Empresas",

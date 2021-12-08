@@ -1,6 +1,6 @@
 {
 	"title": "Consultas",
-	"icon": "layout-outline",
+	"icon": "eye-outline",
 	"children": [
 		{
 			"title": "Facturas",

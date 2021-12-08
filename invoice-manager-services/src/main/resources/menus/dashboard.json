@@ -1,6 +1,6 @@
 {
 	"title": "Dashboard",
-	"icon": "shopping-cart-outline",
+	"icon": "bar-chart-outline",
 	"link": "/pages/dashboard",
 	"home": true
 }
