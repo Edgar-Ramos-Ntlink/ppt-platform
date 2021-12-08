@@ -100,34 +100,33 @@ public class EmpresaService {
         }
 
         if (parameters.get("registroPatronal") != null) {
-            if(Boolean.valueOf(parameters.get("registroPatronal"))){
-                predicates.add(
-                        criteriaBuilder.and(criteriaBuilder.isNotNull(root.get("registroPatronal"))));
-            }else{
-                predicates.add(
-                        criteriaBuilder.and(criteriaBuilder.isNull(root.get("registroPatronal"))));
-            }
-
+          if (Boolean.valueOf(parameters.get("registroPatronal"))) {
+            predicates.add(
+                criteriaBuilder.and(criteriaBuilder.isNotNull(root.get("registroPatronal"))));
+          } else {
+            predicates.add(
+                criteriaBuilder.and(criteriaBuilder.isNull(root.get("registroPatronal"))));
+          }
         }
 
         if (parameters.get("representanteLegal") != null) {
-            if(Boolean.valueOf(parameters.get("representanteLegal"))){
-                predicates.add(
-                        criteriaBuilder.and(criteriaBuilder.isNotNull(root.get("representanteLegal"))));
-            }else{
-                predicates.add(
-                        criteriaBuilder.and(criteriaBuilder.isNull(root.get("representanteLegal"))));
-            }
+          if (Boolean.valueOf(parameters.get("representanteLegal"))) {
+            predicates.add(
+                criteriaBuilder.and(criteriaBuilder.isNotNull(root.get("representanteLegal"))));
+          } else {
+            predicates.add(
+                criteriaBuilder.and(criteriaBuilder.isNull(root.get("representanteLegal"))));
+          }
         }
 
         if (parameters.get("impuestoEstatal") != null) {
-            if(Boolean.valueOf(parameters.get("impuestoEstatal"))){
-                predicates.add(
-                        criteriaBuilder.and(criteriaBuilder.isNotNull(root.get("impuestoEstatal"))));
-            }else{
-                predicates.add(
-                        criteriaBuilder.and(criteriaBuilder.isNull(root.get("impuestoEstatal"))));
-            }
+          if (Boolean.valueOf(parameters.get("impuestoEstatal"))) {
+            predicates.add(
+                criteriaBuilder.and(criteriaBuilder.isNotNull(root.get("impuestoEstatal"))));
+          } else {
+            predicates.add(
+                criteriaBuilder.and(criteriaBuilder.isNull(root.get("impuestoEstatal"))));
+          }
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
