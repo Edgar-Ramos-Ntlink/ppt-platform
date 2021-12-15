@@ -1,7 +1,7 @@
 package com.business.unknow.services.util.validators;
 
-import com.business.unknow.model.dto.services.DatoAnualEmpresaDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
+import com.business.unknow.model.dto.services.EmpresaIngresosDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import org.springframework.stereotype.Component;
 
@@ -53,7 +53,7 @@ public class EmpresaValidator extends AbstractValidator {
     checkNotEquals(dto.getTipo(), "*");
   }
 
-  public void validateDatoAnual(DatoAnualEmpresaDto dto) throws InvoiceManagerException {
+  public void validateDatoAnual(EmpresaIngresosDto dto) throws InvoiceManagerException {
     checkNotNull(dto.getRfc(), "RFC");
     checkNotNull(dto.getAnio(), "Año");
     checkNotNull(dto.getCreador(), "Usuario creador");

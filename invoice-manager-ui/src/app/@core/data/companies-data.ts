@@ -1,12 +1,15 @@
 import { Observable } from 'rxjs';
-import { DatoAnualEmpresa } from '../../models/dato-anual-empresa';
+import { IngresoEmpresa } from '../../models/ingreso-empresa';
 import { DetalleEmpresa } from '../../models/detalle-empresa';
 import { Empresa } from '../../models/empresa';
 import { GenericPage } from '../../models/generic-page';
+import { ResourceFile } from '../../models/resource-file';
 
 export abstract class CompaniesData {
 
-    abstract getCompanies(filterParams?: any): Observable<GenericPage<Empresa>>;
+    abstract getCompanies(filterParams?: any): Observable<GenericPage<any>>;
+
+    abstract getCompaniesReport(filterParams?: any): Observable<ResourceFile>;
 
     abstract getCompaniesByLineaAndGiro(linea: string, giro: number): Observable<Empresa[]>;
 
@@ -24,9 +27,9 @@ export abstract class CompaniesData {
 
     abstract deleteCompanyDetail(detailId: number): Observable<void>;
 
-    abstract getCompanyAnualData(rfc: string): Observable<DatoAnualEmpresa[]>;
+    abstract getCompanyIncomes(rfc: string): Observable<IngresoEmpresa[]>;
 
-    abstract insertCompanyAnualData(detail: DetalleEmpresa): Observable<DatoAnualEmpresa>;
+    abstract insertCompanyIncome(detail: IngresoEmpresa): Observable<IngresoEmpresa>;
 
-    abstract deleteCompanyAnualData(rfc:string, id: number): Observable<void>;
+    abstract deleteCompanyIncome(rfc:string, id: number): Observable<void>;
 }

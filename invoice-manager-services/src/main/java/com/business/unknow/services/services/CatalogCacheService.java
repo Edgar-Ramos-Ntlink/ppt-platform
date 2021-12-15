@@ -1,16 +1,11 @@
 package com.business.unknow.services.services;
 
-import com.business.unknow.services.entities.catalogs.ClaveUnidad;
-import com.business.unknow.services.entities.catalogs.FormaPago;
-import com.business.unknow.services.entities.catalogs.RegimenFiscal;
-import com.business.unknow.services.entities.catalogs.UsoCfdi;
-import com.business.unknow.services.repositories.catalogs.ClaveUnidadRepository;
-import com.business.unknow.services.repositories.catalogs.FormaPagoRepository;
-import com.business.unknow.services.repositories.catalogs.RegimanFiscalRepository;
-import com.business.unknow.services.repositories.catalogs.UsoCfdiRepository;
+import com.business.unknow.services.entities.catalogs.*;
+import com.business.unknow.services.repositories.catalogs.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +23,8 @@ public class CatalogCacheService {
 
   private Map<String, RegimenFiscal> regimenFiscalPagoMappings;
 
+  private Map<Integer, Giro> giroEmpresasMappings;
+
   @Autowired private UsoCfdiRepository usoCfdiRepository;
 
   @Autowired private FormaPagoRepository formaPagoRepository;
@@ -35,6 +32,8 @@ public class CatalogCacheService {
   @Autowired private RegimanFiscalRepository regimanFiscalRepository;
 
   @Autowired private ClaveUnidadRepository claveUnidadReppository;
+
+  @Autowired private GiroRepository giroRepo;
 
   private static final Logger log = LoggerFactory.getLogger(CatalogCacheService.class);
 
@@ -49,6 +48,8 @@ public class CatalogCacheService {
     log.info("Mappings regimenFiscalPagoMappings loaded {}", regimenFiscalPagoMappings.size());
     loadClaveUnidadMappings();
     log.info("Mappings claveUnidad loaded {}", claveUnidadMappings.size());
+    loadGiroEmpresasMappings();
+    log.info("Mappings giros Empresas loaded {}", giroEmpresasMappings.size());
   }
 
   private void loadClaveUnidadMappings() {
@@ -77,6 +78,11 @@ public class CatalogCacheService {
     for (RegimenFiscal uso : regimanFiscalRepository.findAll()) {
       regimenFiscalPagoMappings.put(uso.getClave().toString(), uso);
     }
+  }
+
+  public void loadGiroEmpresasMappings() {
+    giroEmpresasMappings =
+        giroRepo.findAll().stream().collect(Collectors.toMap(g -> g.getId(), g -> g));
   }
 
   public Map<String, UsoCfdi> getUsoCfdiMappings() {
@@ -118,6 +124,12 @@ public class CatalogCacheService {
   public Optional<String> getRegimenFiscal(String clave) {
     return regimenFiscalPagoMappings.containsKey(clave)
         ? Optional.of(regimenFiscalPagoMappings.get(clave).getDescripcion())
+        : Optional.empty();
+  }
+
+  public Optional<String> getGiroEmpresa(Integer giroId) {
+    return giroEmpresasMappings.containsKey(giroId)
+        ? Optional.of(giroEmpresasMappings.get(giroId).getNombre())
         : Optional.empty();
   }
 }

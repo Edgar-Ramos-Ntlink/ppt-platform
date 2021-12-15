@@ -1,9 +1,12 @@
 package com.business.unknow.model.dto.services;
 
+import com.business.unknow.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -56,7 +59,8 @@ public class EmpresaDto implements Serializable {
 
   private String cp;
 
-  private String anioAlta;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+  private Date inicioActividades;
 
   private String registroPatronal;
 
@@ -84,11 +88,29 @@ public class EmpresaDto implements Serializable {
 
   private String noCertificado;
 
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
   private Date expiracionCertificado;
+
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+  private Date expiracionFiel;
+
+  private String impuestoEstatal;
+
+  private String entidadRegistroPatronal;
+
+  private String entidadImpuestoPatronal;
 
   private String creador;
 
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
 
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaActualizacion;
+
+  private List<CuentaBancariaDto> cuentas;
+
+  private List<EmpresaDetallesDto> detalles;
+
+  private List<EmpresaIngresosDto> ingresos;
 }

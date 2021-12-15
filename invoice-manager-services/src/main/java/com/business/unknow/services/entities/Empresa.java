@@ -2,15 +2,8 @@ package com.business.unknow.services.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import java.util.List;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -83,8 +76,8 @@ public class Empresa implements Serializable {
   @Column(name = "CODIGO_POSTAL")
   private String cp;
 
-  @Column(name = "ANIO_ALTA")
-  private String anioAlta;
+  @Column(name = "INICIO_ACTIVIDADES")
+  private Date inicioActividades;
 
   @Column(name = "REGISTRO_PATRONAL")
   private String registroPatronal;
@@ -129,6 +122,18 @@ public class Empresa implements Serializable {
   @Column(name = "EXPIRACION_CERTIFICADO")
   private Date expiracionCertificado;
 
+  @Column(name = "EXPIRACION_FIEL")
+  private Date expiracionFiel;
+
+  @Column(name = "IMPUESTO_ESTATAL")
+  private String impuestoEstatal;
+
+  @Column(name = "ENT_REG_PATRONAL")
+  private String entidadRegistroPatronal;
+
+  @Column(name = "ENT_IMPUESTO_PATRONAL")
+  private String entidadImpuestoPatronal;
+
   @Column(name = "CREADOR")
   private String creador;
 
@@ -141,4 +146,13 @@ public class Empresa implements Serializable {
   @LastModifiedDate
   @Column(name = "FECHA_ACTUALIZACION")
   private Date fechaActualizacion;
+
+  @OneToMany(mappedBy = "empresa")
+  private List<CuentaBancaria> cuentas;
+
+  @OneToMany(mappedBy = "empresa")
+  private List<EmpresaDetalles> detalles;
+
+  @OneToMany(mappedBy = "empresa")
+  private List<EmpresaIngresos> ingresos;
 }

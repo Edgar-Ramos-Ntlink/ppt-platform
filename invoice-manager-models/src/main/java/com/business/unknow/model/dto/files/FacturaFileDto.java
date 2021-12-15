@@ -23,7 +23,7 @@ public class FacturaFileDto implements Serializable {
   private String data;
   private ByteArrayOutputStream outputStream;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
 
   public Integer getId() {

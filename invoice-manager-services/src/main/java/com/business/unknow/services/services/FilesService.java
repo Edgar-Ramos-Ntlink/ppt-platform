@@ -31,7 +31,7 @@ public class FilesService {
     try {
       String data =
           s3FileService.getS3File(
-              S3BucketsEnum.CFDIS, TipoArchivoEnum.valueOf(type).getFormat(), folio);
+              S3BucketsEnum.CFDIS, folio.concat(TipoArchivoEnum.valueOf(type).getFormat()));
       FacturaFileDto fileDto = new FacturaFileDto();
       fileDto.setFolio(folio);
       fileDto.setData(data);
@@ -67,7 +67,12 @@ public class FilesService {
       }
       String data =
           s3FileService.getS3File(
-              resource, resourceFileDto.getExtension(), resourceFileDto.getReferencia());
+              resource,
+              String.format(
+                  "%s-%s%s",
+                  resourceFileDto.getReferencia(),
+                  resourceFileDto.getTipoArchivo(),
+                  resourceFileDto.getExtension()));
       resourceFileDto.setData(data);
       return resourceFileDto;
     } catch (Exception e) {
@@ -82,7 +87,7 @@ public class FilesService {
   public void upsertFacturaFile(
       S3BucketsEnum bucket, String fileFormat, String name, ByteArrayOutputStream file)
       throws InvoiceManagerException {
-    s3FileService.upsertS3File(bucket, fileFormat, name, file);
+    s3FileService.upsertS3File(bucket, name.concat(fileFormat), file);
   }
 
   public void upsertResourceFile(ResourceFileDto resourceFile) throws InvoiceManagerException {
@@ -95,17 +100,23 @@ public class FilesService {
     if (file.isPresent()) {
       resourceFileRepository.delete(file.get());
     }
+
     if (resourceFile.getData().indexOf(",") < resourceFile.getData().length()) {
+      String fileName =
+          String.format(
+              "%s-%s%s",
+              resourceFile.getReferencia(),
+              resourceFile.getTipoArchivo(),
+              resourceFile.getExtension());
+      resourceFile.setNombre(fileName);
       String[] fileInfo = resourceFile.getData().split(",");
       resourceFile.setFormato(fileInfo[0].replaceFirst("data:", "").replaceFirst("base64", ""));
       byte[] decodedBytes = Base64.decode(fileInfo[1]);
       ByteArrayOutputStream baos = new ByteArrayOutputStream(decodedBytes.length);
       baos.write(decodedBytes, 0, decodedBytes.length);
       s3FileService.upsertS3File(
-          S3BucketsEnum.findByValor(resourceFile.getTipoRecurso()),
-          resourceFile.getExtension(),
-          resourceFile.getReferencia(),
-          baos);
+          S3BucketsEnum.findByValor(resourceFile.getTipoRecurso()), fileName, baos);
+
       resourceFileRepository.save(resourceFileMapper.getEntityFromDto(resourceFile));
     } else {
       throw new ResponseStatusException(
@@ -115,7 +126,7 @@ public class FilesService {
 
   public void deleteFacturaFile(String folio, String type) throws InvoiceManagerException {
     s3FileService.deleteS3File(
-        S3BucketsEnum.CFDIS, TipoArchivoEnum.valueOf(type).getFormat(), folio);
+        S3BucketsEnum.CFDIS, folio.concat(TipoArchivoEnum.valueOf(type).getFormat()));
   }
 
   public void deleteResourceFileByResourceReferenceAndType(
@@ -126,9 +137,7 @@ public class FilesService {
     if (resourceFile.isPresent()) {
       ResourceFile file = resourceFile.get();
       s3FileService.deleteS3File(
-          S3BucketsEnum.findByValor(file.getTipoRecurso()),
-          file.getExtension(),
-          file.getReferencia());
+          S3BucketsEnum.findByValor(file.getTipoRecurso()), file.getNombre());
       resourceFileRepository.delete(file);
     }
   }
@@ -138,9 +147,7 @@ public class FilesService {
     if (resourceFile.isPresent()) {
       ResourceFile file = resourceFile.get();
       s3FileService.deleteS3File(
-          S3BucketsEnum.findByValor(file.getTipoRecurso()),
-          TipoArchivoEnum.valueOf(file.getTipoArchivo()).getFormat(),
-          file.getReferencia());
+          S3BucketsEnum.findByValor(file.getTipoRecurso()), file.getNombre());
       resourceFileRepository.delete(file);
     }
   }

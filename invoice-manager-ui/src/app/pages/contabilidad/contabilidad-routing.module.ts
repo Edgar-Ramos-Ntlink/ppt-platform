@@ -8,6 +8,7 @@ import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { EmpresasComponent } from '../commons/empresas/empresas.component';
 import { EmpresaComponent } from '../commons/empresa/empresa.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
+import { CuentaBancariaComponent } from '../commons/cuenta-bancaria/cuenta-bancaria.component';
 
 const routes: Routes = [{
   path: '',
@@ -28,6 +29,9 @@ const routes: Routes = [{
     {
       path: 'empresa/:rfc',
       component: EmpresaComponent,
+    }, {
+      path: 'cuenta-bancaria/:empresa/:cuenta',
+      component: CuentaBancariaComponent,
     }, {
       path: 'reportes',
       component : InvoiceReportsComponent,

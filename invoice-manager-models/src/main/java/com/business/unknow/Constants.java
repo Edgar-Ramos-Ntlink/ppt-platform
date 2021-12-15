@@ -4,10 +4,14 @@ public class Constants {
 
   private Constants() {}
 
-  public static final String JSON_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+  public static final String JSON_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+  public static final String JSON_DATE_FORMAT = "yyyy-MM-dd";
   public static final String DATE_STANDAR_FORMAT = "yyyy-MM-dd-hh:mm:ss";
   public static final String DATE_FOLIO_GENERIC_FORMAT = "yyyySSSMMhhssddmm";
   public static final String DATE_PRE_FOLIO_GENERIC_FORMAT = "MMyy";
+
+  public static final String CSD_KEY = "CSD-KEY";
+  public static final String CSD_CERT = "CSD-CERT";
 
   public static final Integer INTERNAL_ERROR = 500;
   public static final Integer MILISECONDS = 1000;

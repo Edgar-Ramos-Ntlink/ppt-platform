@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.business.unknow</groupId>
 		<artifactId>invoice-manager-platform</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>3.2.0</version>
 	</parent>
 
 	<artifactId>invoice-manager-services</artifactId>
@@ -18,6 +18,8 @@
 		<org.mapstruct.version>1.4.2.FINAL</org.mapstruct.version>
 		<aws.java.sdk.version>2.13.7</aws.java.sdk.version>
 		<aws.java.version>1.11.103</aws.java.version>
+		<aws.java.version>1.11.103</aws.java.version>
+		<invoice.manager.version>3.2.0</invoice.manager.version>
 	</properties>
 
 	<dependencies>
@@ -35,20 +37,16 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.business.unknow</groupId>
-			<artifactId>invoice-manager-commons</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+
 		<dependency>
 			<groupId>com.business.unknow</groupId>
 			<artifactId>invoice-manager-rule</artifactId>
-			<version>${project.version}</version>
+			<version>${invoice.manager.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.business.unknow</groupId>
 			<artifactId>invoice-external-sdk</artifactId>
-			<version>${project.version}</version>
+			<version>${invoice.manager.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -94,10 +92,13 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-oauth2-jose</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.glassfish.jersey.inject</groupId>
 			<artifactId>jersey-hk2</artifactId>
+			<version>3.0.3</version>
 		</dependency>
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -132,6 +133,23 @@
 			<artifactId>fastexcel</artifactId>
 			<version>0.12.8</version>
 		</dependency>
+
+		<!--dependency>
+			<groupId>com.narupley</groupId>
+			<artifactId>not-going-to-be-commons-ssl</artifactId>
+			<version>0.3.18</version>
+		</dependency-->
+		<dependency>
+			<groupId>mx.com.sw.services</groupId>
+			<artifactId>SW-JAVA</artifactId>
+			<version>0.0.3.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<dependencyManagement>

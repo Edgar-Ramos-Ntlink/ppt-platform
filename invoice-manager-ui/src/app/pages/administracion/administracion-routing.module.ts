@@ -9,6 +9,8 @@ import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-repo
 import { UserComponent } from './user/user.component';
 import { EmpresasComponent } from '../commons/empresas/empresas.component';
 import { EmpresaComponent } from '../commons/empresa/empresa.component';
+import { CuentaBancariaComponent } from '../commons/cuenta-bancaria/cuenta-bancaria.component';
+import { CuentasBancariasComponent } from '../commons/cuentas-bancarias/cuentas-bancarias.component';
 
 const routes: Routes = [{
   path: '',
@@ -35,7 +37,13 @@ const routes: Routes = [{
     }, {
       path: 'empresa/:rfc',
       component: EmpresaComponent,
-    }, {
+    },{
+      path: 'cuentas-bancarias',
+      component: CuentasBancariasComponent,
+    },{
+      path: 'cuenta-bancaria/:empresa/:cuenta',
+      component: CuentaBancariaComponent,
+    },{
       path: 'reportes',
       component: InvoiceReportsComponent,
     }, {

@@ -132,14 +132,7 @@
           <td class="text-center"><p class="font-weight-bold">Impuestos Trasladados:</p></td>
           <td class="text-center">{{getTotalImpuestos(cfdi.conceptos) | currency :cfdi.moneda:'symbol':'.2'}}</td>
         </tr>
-        <tr>
-          <td *ngIf="!allowEdit" colspan="6">
-          </td>
-          <td *ngIf="allowEdit" colspan="7">
-          </td>
-          <td class="text-center" ><p class="font-weight-bold">Impuestos Retenidos:</p></td>
-          <td class="text-center">{{getTotalRetenciones(cfdi.conceptos) | currency :cfdi.moneda:'symbol':'.2'}}</td>
-        </tr>
+        
         <tr>
           <td *ngIf="!allowEdit" colspan="6">
           </td>

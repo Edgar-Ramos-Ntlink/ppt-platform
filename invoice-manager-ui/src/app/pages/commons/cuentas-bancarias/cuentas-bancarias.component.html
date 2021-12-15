@@ -97,20 +97,27 @@
                 <th scope="col">RFC EMPRESA</th>
                 <th scope="col">NUMERO DE CUENTA</th>
                 <th scope="col">CLABE</th>
+                <th scope="col">TIPO CONTRATO</th>
+                <th scope="col">SUCURSAL</th>
+                <th scope="col">DOMICILIO BANCO</th>
+                <th scope="col">EXPEDIENTE ACTUALIZADO</th>
                 <th scope="col">FECHA DE CREACION</th>
                 <th scope="col">FECHA DE ACTUALIZACION</th>
-
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let fila of page.content">
                 <td scope="row" class="text-center"> <button class="btn btn-outline-primary"
-                    (click)="redirectToEmpresa(fila.empresa,fila.cuenta)"><i class="fa fa-edit"></i></button>
+                    (click)="redirectToEmpresa(fila.rfc,fila.cuenta)"><i class="fa fa-edit"></i></button>
                 </td>
                 <td scope="row">{{fila.banco}}</td>
-                <td scope="row">{{fila.empresa}}</td>
+                <td scope="row">{{fila.rfc}}</td>
                 <td scope="row">{{fila.cuenta}}</td>
                 <td scope="row">{{fila.clabe}}</td>
+                <td scope="row">{{fila.tipoContrato}}</td>
+                <td scope="row">{{fila.sucursal}}</td>
+                <td scope="row">{{fila.domicilioBanco}}</td>
+                <td scope="row">{{fila.expedienteActualizado}}</td>
                 <td scope="row">{{fila.fechaCreacion}}</td>
                 <td scope="row">{{fila.fechaActualizacion}}</td>
               </tr>

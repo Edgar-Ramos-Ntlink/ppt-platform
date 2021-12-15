@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { EmpresasComponent } from '../commons/empresas/empresas.component';
 import { EmpresaComponent } from '../commons/empresa/empresa.component';
 import { LegalComponent } from './legal.component';
+import { CuentaBancariaComponent } from '../commons/cuenta-bancaria/cuenta-bancaria.component';
 
 const routes: Routes = [{
   path: '',
@@ -14,7 +15,11 @@ const routes: Routes = [{
     }, {
       path: 'empresa/:rfc',
       component: EmpresaComponent,
-    }
+    },
+    {
+      path: 'cuenta-bancaria/:empresa/:cuenta',
+      component: CuentaBancariaComponent,
+    },
   ]}];
 
 @NgModule({

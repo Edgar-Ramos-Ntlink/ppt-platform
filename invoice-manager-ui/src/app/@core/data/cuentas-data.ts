@@ -1,9 +1,11 @@
 import { Cuenta } from '../../models/cuenta';
 import { GenericPage } from '../../models/generic-page';
 import { Observable } from 'rxjs';
+import { ResourceFile } from '../../models/resource-file';
 
 export abstract class CuentasData {
-    abstract getAllCuentas(page: number, size: number, filterParams?: any): Observable<GenericPage<Cuenta>>;
+    abstract getCuentasByParams(page: number, size: number, filterParams?: any): Observable<GenericPage<Cuenta>>;
+    abstract getCuentasReport(page: number, size: number, filterParams?: any): Observable<ResourceFile>;
     abstract getCuentasByCompany(companyRfc: string): Observable<Cuenta[]>;
 
     abstract getCuentaInfo(empresa:string,cuenta:string): Observable<Cuenta>;

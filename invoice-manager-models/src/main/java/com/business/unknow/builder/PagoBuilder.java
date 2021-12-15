@@ -7,7 +7,7 @@ import java.util.Date;
 public class PagoBuilder extends AbstractBuilder<PagoDto> {
 
   public PagoBuilder() {
-    super(new PagoDto());
+    super(PagoDto.builder().build());
   }
 
   public PagoBuilder(PagoDto previoudPago) {

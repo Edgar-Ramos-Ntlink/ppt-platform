@@ -55,8 +55,7 @@ public class TimbradoExecutorService {
       if (facturaFileDto != null) {
         s3FileService.upsertS3File(
             S3BucketsEnum.CFDIS,
-            facturaFileDto.getFileFormat().getFormat(),
-            context.getFacturaDto().getFolio(),
+            context.getFacturaDto().getFolio().concat(facturaFileDto.getFileFormat().getFormat()),
             facturaFileDto.getOutputStream());
       }
     }

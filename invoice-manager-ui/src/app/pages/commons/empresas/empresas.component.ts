@@ -10,6 +10,7 @@ import { Empresa } from '../../../models/empresa';
 import { map } from 'rxjs/operators';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { UtilsService } from '../../../@core/util-services/utils.service';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 
 @Component({
   selector: 'ngx-empresas',
@@ -19,61 +20,35 @@ import { UtilsService } from '../../../@core/util-services/utils.service';
 export class EmpresasComponent implements OnInit {
 
   public girosCat: Catalogo[];
+  public loading = false;
 
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
-  public filterParams: any = { razonSocial: '', rfc: '', linea: '', page: '', size: '10' };
+  public filterParams: any = { activo: '*', linea: '*', giro: '*', razonSocial: '', rfc: '', actividadSAT: '', registroPatronal: '*', representanteLegal: '*', impuestoEstatal: '*', page: '0', size: '10' };
   public module: string = 'operaciones';
   constructor(private router: Router,
     private companyService: CompaniesData,
     private route: ActivatedRoute,
     private catalogsService: CatalogsData,
     private utilsService: UtilsService,
-    private donwloadService: DownloadCsvService) { }
+    private downloadService: DonwloadFileService) { }
 
   ngOnInit() {
     this.module = this.router.url.split('/')[2];
     this.route.queryParams
       .subscribe(params => {
-
         if (!this.utilsService.compareParams(params, this.filterParams)) {
           this.filterParams = { ...this.filterParams, ...params };
-
           this.catalogsService.getAllGiros()
             .then(cat => this.girosCat = cat)
             .then(() => this.updateDataTable());
         }
       });
-
-
-
-
-  }
-
-  public getCompanyInfo(filterParams): Observable<GenericPage<any>> {
-    return this.companyService.getCompanies(filterParams).pipe(
-      map((page: GenericPage<Empresa>) => {
-        const records: Empresa[] = page.content.map(r => {
-          const record: any = {};
-          record.rfc = r.rfc;
-          record.razonSocial = r.razonSocial;
-          record.direccion = `${r.calle} ${r.noExterior}, ${r.municipio} ${r.municipio} ${r.estado}, C.P. ${r.cp}`;
-          record.giro = this.girosCat.find(g => g.id === r.giro).nombre;
-          record.tipo = r.tipo;
-          record.correo = r.correo;
-          record.activo = (r.activo) ? 'SI' : 'NO';
-          record.fechaCreacion = r.fechaCreacion;
-          record.fechaActualizacion = r.fechaActualizacion;
-          return record;
-        });
-        page.content = records;
-        return page;
-      }));
   }
 
 
   public updateDataTable(currentPage?: number, pageSize?: number) {
-
+    this.loading = true;
     const params: any = this.utilsService.parseFilterParms(this.filterParams);
 
     params.page = currentPage !== undefined ? currentPage : this.filterParams.page;
@@ -89,19 +64,30 @@ export class EmpresasComponent implements OnInit {
           { queryParams: params });
         break;
       case 'tesoreria':
-          this.router.navigate([`./pages/tesoreria/empresas`],
-            { queryParams: params });
-          break;
+        this.router.navigate([`./pages/tesoreria/empresas`],
+          { queryParams: params });
+        break;
       case 'contabilidad':
         this.router.navigate([`./pages/contabilidad/empresas`],
           { queryParams: params });
         break;
+      case 'administracion':
+        this.router.navigate([`./pages/administracion/empresas`],
+          { queryParams: params });
+        break;
+      case 'bancos':
+        this.router.navigate([`./pages/bancos/empresas`],
+          { queryParams: params });
+          break;
       default:
         this.router.navigate([`./pages/operaciones/empresas`],
           { queryParams: params });
     }
 
-    this.getCompanyInfo(params).subscribe((result: GenericPage<any>) => this.page = result);
+    this.companyService.getCompanies(params).subscribe((result: GenericPage<any>) => {
+      this.page = result
+      this.loading = false
+    }, error => { console.error(error); this.loading = false });
   }
 
 
@@ -109,34 +95,27 @@ export class EmpresasComponent implements OnInit {
     this.updateDataTable(this.page.number, pageSize);
   }
 
-  public onCompanySelected(tipo: string) {
-    if (tipo === '*') {
-      this.filterParams.linea = '';
-    } else {
-      this.filterParams.linea = tipo;
-    }
+  public onCompanySelected(linea: string) {
+    this.filterParams.linea = '*';
   }
 
   public newCompany() {
     this.router.navigate([`./pages/operaciones/empresa/*`])
   }
 
-  public downloadHandler() {
-    const params: any = {};
-    /* Parsing logic */
-    for (const key in this.filterParams) {
-      if (this.filterParams[key] !== undefined) {
-        const value: string = this.filterParams[key];
-        if (value !== null && value.length > 0) {
-          params[key] = value;
-        }
-      }
-    }
+  public async downloadHandler() {
+    const params: any = { ... this.filterParams };
     params.page = 0;
-    params.size = 10000;
-    this.getCompanyInfo(params).subscribe(result => {
-      this.donwloadService.exportCsv(result.content, 'Empresas')
-    });
+    params.size = 2000;
+    this.loading = true;
+    try {
+      const result = await this.companyService.getCompaniesReport(params).toPromise();
+      this.downloadService.downloadFile(result.data, 'ReporteEmpresas.xlsx', 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,');
+    } catch (error) {
+      console.error(error);
+    } 
+    this.loading = false;
+
   }
 
   public redirectToEmpresa(rfc: string) {

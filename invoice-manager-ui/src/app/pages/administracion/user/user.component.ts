@@ -22,7 +22,7 @@ export class UserComponent implements OnInit {
   public loading = true;
   public user: User = new User();
   public rolesArrayUpdate: IHash = { 'PROMOTOR': false, "TESORERIA": false, "OPERADOR": false, "CONTABILIDAD": false,
-    "ADMINISTRADOR": false, "BOVEDA": false, "CONSULTOR": false, "OPERADOR-B": false, "LEGAL": false };
+    "ADMINISTRADOR": false, "BANCOS": false, "CONSULTOR": false, "OPERADOR-B": false, "LEGAL": false };
 
   public errorMessages: string[] = [];
  

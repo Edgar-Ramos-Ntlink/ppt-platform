@@ -1,7 +1,9 @@
 package com.business.unknow.services.rest;
 
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.services.CuentaBancariaDto;
 import com.business.unknow.services.services.CuentaBancariaService;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
@@ -29,6 +31,12 @@ public class CuentaBancariaController {
   public ResponseEntity<Page<CuentaBancariaDto>> getCuentasBancariasByfilters(
       @RequestParam Map<String, String> parameters) {
     return new ResponseEntity<>(service.getCuentasBancariasByfilters(parameters), HttpStatus.OK);
+  }
+
+  @GetMapping("/cuentas/report")
+  public ResponseEntity<ResourceFileDto> getCuentasBancariasByfiltersReport(
+      @RequestParam Map<String, String> parameters) throws IOException {
+    return new ResponseEntity<>(service.getCuentasBancariasReport(parameters), HttpStatus.OK);
   }
 
   @GetMapping("/empresas/{rfc}/cuentas")

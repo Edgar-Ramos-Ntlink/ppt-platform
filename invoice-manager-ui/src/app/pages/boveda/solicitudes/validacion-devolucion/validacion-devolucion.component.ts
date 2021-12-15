@@ -51,15 +51,9 @@ export class ValidacionDevolucionComponent implements OnInit {
     }
   }
   private getAccountInfo(rfc?: string) {
-    this.accountsService.getAllCuentas(0, 25, { empresa: rfc || '' })
+    this.accountsService.getCuentasByCompany(rfc)
       .subscribe(accounts => {
-        this.cuentas = accounts.content;
-        if (!accounts.empty) {
-          this.formInfo.cuenta = this.cuentas[0].id;
-        } else {
-          this.cuentas = [];
-          this.formInfo.cuenta = '*';
-        }
+        this.cuentas = accounts;
       });
   }
 
@@ -75,7 +69,7 @@ export class ValidacionDevolucionComponent implements OnInit {
       } else {
         solicitud.status = 'PAGADO';
         solicitud.cuentaPago = account.cuenta;
-        solicitud.rfcEmpresa = account.empresa;
+        solicitud.rfcEmpresa = account.rfc;
         this.devolutionsService.updateDevolution(this.payment.id, solicitud)
           .subscribe(success => this.ref.close(),
             (error: HttpErrorResponse) => this.errorMesage = error.error.message

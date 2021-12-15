@@ -15,7 +15,7 @@ public class ReportDto implements Serializable {
   private String folio;
   private String folioFiscal;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaEmision;
 
   private String rfcEmisor;
@@ -34,7 +34,7 @@ public class ReportDto implements Serializable {
   private String moneda;
   private String statusFactura;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaCancelacion;
 
   public String getFolio() {

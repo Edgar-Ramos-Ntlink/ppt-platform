@@ -1,5 +1,6 @@
 package com.business.unknow.services.services.translators;
 
+import com.business.unknow.Constants;
 import com.business.unknow.Constants.FacturaComplemento;
 import com.business.unknow.Constants.FacturaConstants;
 import com.business.unknow.enums.S3BucketsEnum;
@@ -65,7 +66,12 @@ public class FacturaTranslator {
 
       cfdi.setCertificado(
           s3service.getS3File(
-              S3BucketsEnum.EMPRESAS, TipoArchivoEnum.CERT.getFormat(), cfdi.getEmisor().getRfc()));
+              S3BucketsEnum.EMPRESAS,
+              String.format(
+                  "%s-%s%s",
+                  cfdi.getEmisor().getRfc(),
+                  Constants.CSD_CERT,
+                  TipoArchivoEnum.CERT.getFormat())));
       BigDecimal totalImpuestos = new BigDecimal(0);
       BigDecimal totalRetenciones = new BigDecimal(0);
       List<Translado> impuestos = new ArrayList<>();
@@ -125,7 +131,12 @@ public class FacturaTranslator {
               context.getFacturaDto().getCfdi(), context.getEmpresaDto());
       cfdi.setCertificado(
           s3service.getS3File(
-              S3BucketsEnum.EMPRESAS, TipoArchivoEnum.CERT.getFormat(), cfdi.getEmisor().getRfc()));
+              S3BucketsEnum.EMPRESAS,
+              String.format(
+                  "%s-%s%s",
+                  cfdi.getEmisor().getRfc(),
+                  Constants.CSD_CERT,
+                  TipoArchivoEnum.CERT.getFormat())));
       for (ConceptoDto concepto : context.getFacturaDto().getCfdi().getConceptos()) {
         cfdi.getConceptos().add(facturaCfdiTranslatorMapper.complementoConcepto(concepto));
       }
@@ -199,8 +210,11 @@ public class FacturaTranslator {
     String llavePrivada =
         s3service.getS3File(
             S3BucketsEnum.EMPRESAS,
-            TipoArchivoEnum.KEY.getFormat(),
-            context.getEmpresaDto().getRfc());
+            String.format(
+                "%s-%s%s",
+                context.getEmpresaDto().getRfc(),
+                Constants.CSD_KEY,
+                TipoArchivoEnum.KEY.getFormat()));
 
     String sello =
         signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getFiel(), llavePrivada);
@@ -223,8 +237,11 @@ public class FacturaTranslator {
     String llavePrivada =
         s3service.getS3File(
             S3BucketsEnum.EMPRESAS,
-            TipoArchivoEnum.KEY.getFormat(),
-            context.getEmpresaDto().getRfc());
+            String.format(
+                "%s-%s%s",
+                context.getEmpresaDto().getRfc(),
+                Constants.CSD_KEY,
+                TipoArchivoEnum.KEY.getFormat()));
     String sello =
         signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getFiel(), llavePrivada);
     context.setXml(cdfiHelper.putsSign(xml, sello).replace("standalone=\"no\"", ""));

@@ -1,5 +1,5 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { Empresa, Ingresos } from '../../../models/empresa';
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Empresa } from '../../../models/empresa';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
 import { ZipCodeInfo } from '../../../models/zip-code-info';
@@ -16,7 +16,7 @@ import { UsersData } from '../../../@core/data/users-data';
 import { ResourceFile } from '../../../models/resource-file';
 import { DetalleEmpresa } from '../../../models/detalle-empresa';
 import { User } from '../../../models/user';
-import { DatoAnualEmpresa } from '../../../models/dato-anual-empresa';
+import { IngresoEmpresa } from '../../../models/ingreso-empresa';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 
 @Component({
@@ -41,15 +41,21 @@ export class EmpresaComponent implements OnInit {
   public girosCat: Catalogo[] = [];
   public banksCat: Catalogo[] = [];
 
-  public documents: ResourceFile[] = [];
+  public legalDocuments: ResourceFile[] = [];
+  public contableDocuments: ResourceFile[] = [];
+  
   public observaciones: DetalleEmpresa[] = [];
   public pendientes: DetalleEmpresa[] = [];
+  public accionistas: DetalleEmpresa[] = [];
+  public apoderados: DetalleEmpresa[] = [];
   public cuentas: Cuenta[] = [];
-  public ingresos: DatoAnualEmpresa[] = [];
+  public ingresos: IngresoEmpresa[] = [];
 
   public logo: ResourceFile;
 
-  private dataFile: ResourceFile;
+  public dataFile: ResourceFile= new ResourceFile();
+
+  public CONTABLE_FILES = ['CSD-CERT','CSD-KEY','FIEL-CERT','FIEL-KEY','REGISTRO_PATRONAL','REPSE'];
 
   constructor(
     private dialogService: NbDialogService,
@@ -120,39 +126,35 @@ export class EmpresaComponent implements OnInit {
         index++;
       });
 
-      this.empresaService.getCompaniesDetails(rfc, 'OBSERVACION').subscribe(observaciones => this.observaciones = observaciones, (error) => {
-        let msg = error.error.message || `${error.statusText} : ${error.message}`;
-        this.showToast('danger', 'Error', msg, true);
-      });
-
-      this.empresaService.getCompaniesDetails(rfc, 'PENDIENTE').subscribe(pendientes => this.pendientes = pendientes, (error) => {
-        let msg = error.error.message || `${error.statusText} : ${error.message}`;
-        this.showToast('danger', 'Error', msg, true);
-      });
-
-      this.empresaService.getCompanyAnualData(rfc).subscribe(anualData => this.ingresos = anualData, (error) => {
-        let msg = error.error.message || `${error.statusText} : ${error.message}`;
-        this.showToast('danger', 'Error', msg, true);
-      });
-
-      this.accountsService.getCuentasByCompany(rfc).subscribe(cuentas => this.cuentas = cuentas, (error) => {
-        let msg = error.error.message || `${error.statusText} : ${error.message}`;
-        this.showToast('danger', 'Error', msg, true);
-      });
-
-      this.documents = await this.resourcesService.getResourcesByTypeAndReference('EMPRESAS', rfc).toPromise();
-
-      if (this.documents.find(d => d.tipoArchivo === 'LOGO')) { // only logo needs to be loaded from backend
-        this.resourcesService.getResourceFile(rfc, 'EMPRESAS', 'LOGO').subscribe((logo) => this.logo = logo, (error) => {
-          let msg = error.error.message || `${error.statusText} : ${error.message}`;
-          this.showToast('danger', 'Error', msg, true);
-        });
-      }
+      this.observaciones = this.companyInfo.detalles.filter(d=>d.tipo==='OBSERVACION') || [];
+      this.pendientes = this.companyInfo.detalles.filter(d=>d.tipo==='PENDIENTE') || [];
+      this.accionistas = this.companyInfo.detalles.filter(d=>d.tipo==='ACCIONISTA') || [];
+      this.apoderados = this.companyInfo.detalles.filter(d=>d.tipo==='APODERADO') || [];
+      this.ingresos = this.companyInfo.ingresos;
+      this.cuentas = this.companyInfo.cuentas;
+      
+      
+      this.loadDocuments(rfc)
     } catch (error) {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.showToast('danger', 'Error', msg, true);
     }
     this.loading = false;
+  }
+
+  private async loadDocuments(rfc: string){
+    console.log('Loading documents')
+    const documents =  await this.resourcesService.getResourcesByTypeAndReference('EMPRESAS', rfc).toPromise();
+
+      this.legalDocuments = documents.filter(d => this.CONTABLE_FILES.find(c=>c == d.tipoArchivo) == undefined);
+      this.contableDocuments =  documents.filter(d => this.CONTABLE_FILES.find(c=>c == d.tipoArchivo) != undefined);
+
+      if (this.legalDocuments.find(d => d.tipoArchivo === 'LOGO')) { // only logo needs to be loaded from backend
+        this.resourcesService.getResourceFile(rfc, 'EMPRESAS', 'LOGO').subscribe((logo) => this.logo = logo, (error) => {
+          let msg = error.error.message || `${error.statusText} : ${error.message}`;
+          this.showToast('danger', 'Error', msg, true);
+        });
+      }
   }
 
 
@@ -243,21 +245,43 @@ export class EmpresaComponent implements OnInit {
     }
   }
 
-  public async fileDocumentUpload(): Promise<void> {
-    try {
-      this.loading = true;
-      this.dataFile.tipoRecurso = 'EMPRESAS';
-      this.dataFile.referencia = this.companyInfo.rfc;
-      this.dataFile.tipoArchivo = this.formInfo.doctType;
+  private async upsertDatafile(tipoRecurso: string, tipoArchivo:string, referencia : string){
+    try{
+      this.dataFile.tipoRecurso = tipoRecurso;
+      this.dataFile.referencia = referencia;
+      this.dataFile.tipoArchivo = tipoArchivo;
       await this.resourcesService.insertResourceFile(this.dataFile).toPromise();
-      this.showToast('info', 'Exito!', 'El archivo se cargo correctamente');
-      this.loadCompanyInfo(this.companyInfo.rfc);
       this.formInfo.fileDataName = '';
       this.formInfo.doctType = '*';
-    } catch (error) {
+      this.dataFile = new ResourceFile();
+      this.showToast('info', 'Exito!', 'El archivo se cargo correctamente');
+    } catch(error){
       console.error(error);
       this.formInfo.fileDataName = '';
       this.formInfo.doctType = '*';
+      let msg = error.error.message || `${error.statusText} : ${error.message}`;
+      this.showToast('danger', 'Error', msg, true);
+    }
+  }
+
+  private sleep(duration) {
+    return new Promise<void>(resolve => {
+      setTimeout(() => {
+        resolve()
+      }, duration * 1000)
+    })
+  }
+
+  public async fileDocumentUpload(): Promise<void> {
+    try {
+      const rfc = this.companyInfo.rfc;
+      this.loading = true;
+      this.upsertDatafile('EMPRESAS',this.formInfo.doctType,rfc);
+
+      this.sleep(1).then(()=>this.loadDocuments(rfc));
+      
+    } catch (error) {
+      console.error(error)
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.showToast('danger', 'Error', msg, true);
     }
@@ -330,9 +354,9 @@ export class EmpresaComponent implements OnInit {
 
     try {
       this.loading = true;
-      const cert = this.documents.find(d => d.tipoArchivo === 'CERT');
-      const key = this.documents.find(d => d.tipoArchivo === 'KEY');
-      const logo = this.documents.find(d => d.tipoArchivo === 'LOGO');
+      const cert = this.contableDocuments.find(d => d.tipoArchivo === 'CSD-CERT');
+      const key = this.contableDocuments.find(d => d.tipoArchivo === 'CSD-KEY');
+      const logo = this.legalDocuments.find(d => d.tipoArchivo === 'LOGO');
 
 
       if (cert == undefined) {
@@ -364,11 +388,12 @@ export class EmpresaComponent implements OnInit {
     this.loading = false;
   }
 
+  
 
   public async openAnualDataDialog(dialog: TemplateRef<any>) {
     this.dataFile = new ResourceFile();
     this.formInfo.fileDataName = '';
-    const anualData = new DatoAnualEmpresa();
+    const anualData = new IngresoEmpresa();
     anualData.rfc = this.companyInfo.rfc;
     anualData.tipoDato = 'INGRESO';
     anualData.anio = new Date().getFullYear().toString();
@@ -378,13 +403,10 @@ export class EmpresaComponent implements OnInit {
       if (result) {
         this.loading = true;
         if (this.dataFile.data != undefined) {
-          this.dataFile.tipoRecurso = 'EMPRESAS';
-          this.dataFile.referencia = `${this.companyInfo.rfc}-${result.tipoDato}-${result.anio}`;
-          this.dataFile.tipoArchivo = `${result.tipoDato}`;
-          await this.resourcesService.insertResourceFile(this.dataFile).toPromise();
+          this.upsertDatafile('EMPRESAS', `${result.tipoDato}`,`${this.companyInfo.rfc}-${result.tipoDato}-${result.anio}`);
           result.link = `/recursos/EMPRESAS/referencias/${this.companyInfo.rfc}-${result.tipoDato}-${result.anio}/files/${result.tipoDato}`;
         }
-        await this.empresaService.insertCompanyAnualData(result).toPromise();
+        await this.empresaService.insertCompanyIncome(result).toPromise();
         this.showToast('info', 'Dato anual creado!', `El dato se cargo exitosamente`);
         this.loadCompanyInfo(this.companyInfo.rfc);
       }
@@ -398,7 +420,7 @@ export class EmpresaComponent implements OnInit {
   public async deleteAnualData(id: number) {
     this.loading = true;
     try {
-      await this.empresaService.deleteCompanyAnualData(this.companyInfo.rfc, id).toPromise();
+      await this.empresaService.deleteCompanyIncome(this.companyInfo.rfc, id).toPromise();
       this.showToast('info', 'Dato borrado!', `El dato se ha borrado exitosamente`);
       this.loadCompanyInfo(this.companyInfo.rfc);
     } catch (error) {
@@ -408,28 +430,8 @@ export class EmpresaComponent implements OnInit {
     this.loading = false;
   }
 
-  public async openAccountDialog(dialog: TemplateRef<any>) {
-
-    const cuenta = new Cuenta();
-    cuenta.empresa = this.companyInfo.rfc;
-    try {
-
-      if (this.banksCat.length === 0) {
-        this.banksCat = await this.catalogsService.getBancos();
-      }
-      let result = await this.dialogService.open(dialog, { context: cuenta }).onClose.toPromise();
-
-      if (result) {
-        this.loading = true;
-        await this.accountsService.insertCuenta(result).toPromise();
-        this.showToast('info', 'Cuenta creada!', `La cuenta se creada exitosamente`);
-        this.loadCompanyInfo(this.companyInfo.rfc);
-      }
-    } catch (error) {
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-      this.showToast('danger', 'Error', msg, true);
-    }
-    this.loading = false;
+  public async openAccountDialog(rfc:string,cuenta :number) {
+    this.router.navigate([`./pages/${this.module}/cuenta-bancaria/${rfc}/${cuenta}`]);
   }
 
   public async deleteAccount(id: number) {
@@ -445,8 +447,13 @@ export class EmpresaComponent implements OnInit {
     this.loading = false;
   }
 
+  
+
 
   public async openDetallesDialog(dialog: TemplateRef<any>, detail: DetalleEmpresa, type?: string) {
+
+    this.dataFile = new ResourceFile();
+    this.formInfo.fileDataName = '';
 
     const detalle = detail || new DetalleEmpresa(this.companyInfo.rfc, this.module, this.user.email, type);
 
@@ -457,12 +464,18 @@ export class EmpresaComponent implements OnInit {
       if (result) {
         this.loading = true;
         if (result.id) { // update detail
-          await this.empresaService.updateCompanyDetail(detalle).toPromise();
-          this.showToast('info', 'Detalle actualizado', `${type} correctamente actualizado`);
+          const detail = await this.empresaService.updateCompanyDetail(detalle).toPromise();
+          if(this.dataFile.data != undefined){
+            this.upsertDatafile('EMPRESAS',detail.tipo,`${this.companyInfo.rfc}-${detail.tipo}-${detail.id}`);
+          }
+          this.showToast('info', 'Detalle actualizado', `${detail.tipo} correctamente actualizado`);
           this.loadCompanyInfo(this.companyInfo.rfc);
         } else {
-          await this.empresaService.insertCompanyDetail(detalle).toPromise();
-          this.showToast('info', 'Detalle creado', `${type} correctamente creado`);
+          const detail = await this.empresaService.insertCompanyDetail(detalle).toPromise();
+          if(this.dataFile.data != undefined){
+            this.upsertDatafile('EMPRESAS',detail.tipo,`${this.companyInfo.rfc}-${detail.tipo}-${detail.id}`);
+          }
+          this.showToast('info', 'Detalle creado', `${detail.tipo} correctamente creado`);
           this.loadCompanyInfo(this.companyInfo.rfc);
         }
       }
@@ -486,8 +499,11 @@ export class EmpresaComponent implements OnInit {
     this.loading = false;
   }
 
-  public downloadDocumentData(dato : DatoAnualEmpresa){
+  public downloadDocumentData(dato : IngresoEmpresa){
     this.downloadService.dowloadResourceFile(dato.link,`${dato.rfc}_${dato.tipoDato}_${dato.anio}`)
+  }
+  public downloadDocumentDetail(detail : DetalleEmpresa){
+    this.downloadService.dowloadResourceFile(`/recursos/EMPRESAS/referencias/${this.companyInfo.rfc}-${detail.tipo}-${detail.id}/files/${detail.tipo}`,`${this.companyInfo.rfc}_${detail.tipo}`)
   }
 
   public downloadFile(file: ResourceFile){
