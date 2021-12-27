@@ -10,14 +10,14 @@ import com.business.unknow.client.ntlink.model.NtlinkErrorMessage;
 import com.business.unknow.client.ntlink.model.NtlinkRequestModel;
 import com.business.unknow.client.ntlink.model.NtlinkResponseModel;
 import com.business.unknow.client.ntlink.util.NtlinkMessageParser;
+import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RestNtlinkClientImpl extends AbstractClient implements RestNtlinkClient {
 
@@ -32,7 +32,7 @@ public class RestNtlinkClientImpl extends AbstractClient implements RestNtlinkCl
     log.info("Status {}", status);
     String content = response.readEntity(String.class);
     NtlinkMessageParser soapRequest = new NtlinkMessageParser();
-    if (response.getStatusInfo().getFamily() == Status.Family.SUCCESSFUL) {
+    if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
       return soapRequest.getResponse(content, clazz);
     } else {
       NtlinkResponseModel errorModel = soapRequest.getErrorResponse(content);
@@ -54,7 +54,7 @@ public class RestNtlinkClientImpl extends AbstractClient implements RestNtlinkCl
       throw new NtlinkClientException(
           new NtlinkErrorMessage("Error al timbrar en Ntlink", "Error"), HttpStatus.SC_CONFLICT);
     }
-    if (response.getStatusInfo().getFamily() == Status.Family.SUCCESSFUL) {
+    if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
       return soapRequest.getResponseCancel(content, clazz);
     } else {
       NtlinkResponseModel errorModel = soapRequest.getErrorResponse(content);
@@ -94,6 +94,7 @@ public class RestNtlinkClientImpl extends AbstractClient implements RestNtlinkCl
     NtlinkMessageParser soapRequest = new NtlinkMessageParser();
     log.info("Stamping the invoice.");
     String endpoint = NtlinkEndpoints.getTimbradoEndpoint();
+
     MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
     headers.add(
         "SOAPAction", "https://ntlink.com.mx/IServicioTimbrado/IServicioTimbrado/TimbraCfdiQr");

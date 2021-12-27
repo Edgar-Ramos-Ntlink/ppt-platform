@@ -10,11 +10,11 @@ import com.business.unknow.client.facturacionmoderna.model.FacturaModernaRespons
 import com.business.unknow.client.facturacionmoderna.util.FacturaModernaClientException;
 import com.business.unknow.client.facturacionmoderna.util.FacturaModernaMessageParser;
 import com.business.unknow.client.interfaces.RestFacturacionModernaClient;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 public class FacturacionModernaClientImpl extends AbstractClient
     implements RestFacturacionModernaClient {
@@ -31,7 +31,7 @@ public class FacturacionModernaClientImpl extends AbstractClient
     log.info("Status {}", status);
     String content = response.readEntity(String.class);
     FacturaModernaMessageParser soapRequest = new FacturaModernaMessageParser();
-    if (response.getStatusInfo().getFamily() == Status.Family.SUCCESSFUL) {
+    if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
       return soapRequest.getResponse(content, clazz);
     } else {
       FacturaModernaErrorModel errorModel = soapRequest.getErrorResponse(content);

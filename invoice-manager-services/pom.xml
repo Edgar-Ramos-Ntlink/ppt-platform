@@ -38,7 +38,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
+	<dependency>
 			<groupId>com.business.unknow</groupId>
 			<artifactId>invoice-manager-rule</artifactId>
 			<version>${invoice.manager.version}</version>
@@ -47,16 +47,6 @@
 			<groupId>com.business.unknow</groupId>
 			<artifactId>invoice-external-sdk</artifactId>
 			<version>${invoice.manager.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-simple</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.glassfish.hk2.external</groupId>
-					<artifactId>javax.inject</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
@@ -92,16 +82,20 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-oauth2-jose</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>org.glassfish.jersey.inject</groupId>
-			<artifactId>jersey-hk2</artifactId>
-			<version>3.0.3</version>
+			<artifactId>geronimo-annotation_1.3_spec</artifactId>
+			<version>1.0</version>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>1.3.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.amazonaws</groupId>
@@ -189,7 +183,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.2</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>

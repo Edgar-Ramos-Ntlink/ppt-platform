@@ -15,13 +15,14 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Date;
 import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSapiensClient {
 
@@ -46,7 +47,7 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
     try {
       String content = response.readEntity(String.class);
       ObjectMapper mapper = new ObjectMapper();
-      if (response.getStatusInfo().getFamily() == Status.Family.SUCCESSFUL) {
+      if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
         if (!content.isEmpty()) {
           try (StringReader reader = new StringReader(content)) {
             result = mapper.readValue(reader, entityType);
@@ -92,7 +93,7 @@ public class RestSwSapiensClientImpl extends AbstractClient implements RestSwSap
     log.info("Status {}", status);
     try {
       String content = response.readEntity(String.class);
-      if (response.getStatusInfo().getFamily() == Status.Family.SUCCESSFUL) {
+      if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
         if (!content.contains("\"201\"")) {
           try (StringReader reader = new StringReader(content)) {
             SwSapiensErrorMessage error =

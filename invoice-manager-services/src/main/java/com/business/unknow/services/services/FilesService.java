@@ -65,14 +65,7 @@ public class FilesService {
                 type, resource, reference),
             HttpStatus.NOT_FOUND.value());
       }
-      String data =
-          s3FileService.getS3File(
-              resource,
-              String.format(
-                  "%s-%s%s",
-                  resourceFileDto.getReferencia(),
-                  resourceFileDto.getTipoArchivo(),
-                  resourceFileDto.getExtension()));
+      String data = s3FileService.getS3File(resource, resourceFileDto.getNombre());
       resourceFileDto.setData(data);
       return resourceFileDto;
     } catch (Exception e) {
