@@ -5,6 +5,8 @@ public class NtlinkCancelRequestModel {
   private String user;
   private String userPass;
   private String uuid;
+  private String motivo;
+  private String folioSustituto;
   private String rfcEmisor;
   private String expresion;
   private String rfcReceptor;
@@ -13,6 +15,8 @@ public class NtlinkCancelRequestModel {
       String user,
       String userPass,
       String uuid,
+      String folioSustituto,
+      String motivo,
       String rfcEmisor,
       String rfcReceptor,
       String expresion) {
@@ -20,6 +24,8 @@ public class NtlinkCancelRequestModel {
     this.user = user;
     this.userPass = userPass;
     this.uuid = uuid;
+    this.motivo = motivo;
+    this.folioSustituto=folioSustituto;
     this.rfcEmisor = rfcEmisor;
     this.rfcReceptor = rfcReceptor;
     this.expresion = expresion;
@@ -77,20 +83,33 @@ public class NtlinkCancelRequestModel {
     this.expresion = expresion;
   }
 
+  public String getMotivo() {
+    return motivo;
+  }
+
+  public void setMotivo(String motivo) {
+    this.motivo = motivo;
+  }
+
+  public String getFolioSustituto() {
+    return folioSustituto;
+  }
+
+  public void setFolioSustituto(String folioSustituto) {
+    this.folioSustituto = folioSustituto;
+  }
+
   @Override
   public String toString() {
-    return "NtlinkCancelRequestModel [user="
-        + user
-        + ", userPass="
-        + userPass
-        + ", uuid="
-        + uuid
-        + ", rfcEmisor="
-        + rfcEmisor
-        + ", expresion="
-        + expresion
-        + ", rfcReceptor="
-        + rfcReceptor
-        + "]";
+    return "NtlinkCancelRequestModel{" +
+            "user='" + user + '\'' +
+            ", userPass='" + userPass + '\'' +
+            ", uuid='" + uuid + '\'' +
+            ", motivo='" + motivo + '\'' +
+            ", folioSustituto='" + folioSustituto + '\'' +
+            ", rfcEmisor='" + rfcEmisor + '\'' +
+            ", expresion='" + expresion + '\'' +
+            ", rfcReceptor='" + rfcReceptor + '\'' +
+            '}';
   }
 }
