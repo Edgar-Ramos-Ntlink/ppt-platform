@@ -32,6 +32,9 @@ export class Factura {
 	public validacionTeso:boolean;
 	public validacionOper:boolean;
 	public complementos: Factura[];
+
+	public motivo: string;
+	public folioSustituto: string;
 	
 	constructor() {
 		this.tipoDocumento = 'Factura';
