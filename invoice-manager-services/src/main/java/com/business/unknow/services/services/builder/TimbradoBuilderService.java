@@ -30,6 +30,8 @@ public class TimbradoBuilderService {
   public FacturaContext buildFacturaContextCancelado(FacturaDto facturaDto, String folio)
       throws InvoiceManagerException {
     FacturaDto factura = facturaService.getFacturaByFolio(folio);
+    factura.setMotivo(facturaDto.getMotivo());
+    factura.setFolioSustituto(facturaDto.getFolioSustituto());
     EmpresaDto empresaDto =
         empresaMapper.getEmpresaDtoFromEntity(
             empresaRepository

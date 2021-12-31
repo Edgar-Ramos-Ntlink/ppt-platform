@@ -70,6 +70,12 @@ public class Factura implements Serializable {
   @Column(name = "UUID")
   private String uuid;
 
+  @Column(name = "MOVITO_CANCELACION")
+  private String motivo;
+
+  @Column(name = "FOLIO_SUSTITUTO")
+  private String folioSustituto;
+
   @Column(name = "TOTAL")
   private BigDecimal total;
 
@@ -348,56 +354,96 @@ public class Factura implements Serializable {
     this.idCfdiRelacionadoPadre = idCfdiRelacionadoPadre;
   }
 
+  public String getMotivo() {
+    return motivo;
+  }
+
+  public void setMotivo(String motivo) {
+    this.motivo = motivo;
+  }
+
+  public String getFolioSustituto() {
+    return folioSustituto;
+  }
+
+  public void setFolioSustituto(String folioSustituto) {
+    this.folioSustituto = folioSustituto;
+  }
+
   @Override
   public String toString() {
-    return "Factura [id="
+    return "Factura{"
+        + "id="
         + id
-        + ", rfcEmisor="
+        + ", rfcEmisor='"
         + rfcEmisor
-        + ", rfcRemitente="
+        + '\''
+        + ", rfcRemitente='"
         + rfcRemitente
-        + ", razonSocialEmisor="
+        + '\''
+        + ", razonSocialEmisor='"
         + razonSocialEmisor
-        + ", lineaEmisor="
+        + '\''
+        + ", lineaEmisor='"
         + lineaEmisor
-        + ", razonSocialRemitente="
+        + '\''
+        + ", razonSocialRemitente='"
         + razonSocialRemitente
-        + ", lineaRemitente="
+        + '\''
+        + ", lineaRemitente='"
         + lineaRemitente
-        + ", tipoDocumento="
+        + '\''
+        + ", tipoDocumento='"
         + tipoDocumento
-        + ", solicitante="
+        + '\''
+        + ", solicitante='"
         + solicitante
-        + ", folio="
+        + '\''
+        + ", folio='"
         + folio
-        + ", preFolio="
+        + '\''
+        + ", preFolio='"
         + preFolio
-        + ", metodoPago="
+        + '\''
+        + ", metodoPago='"
         + metodoPago
+        + '\''
         + ", statusFactura="
         + statusFactura
-        + ", statusDetail="
+        + ", statusDetail='"
         + statusDetail
-        + ", uuid="
+        + '\''
+        + ", uuid='"
         + uuid
+        + '\''
+        + ", motivo='"
+        + motivo
+        + '\''
+        + ", folioSustituto='"
+        + folioSustituto
+        + '\''
         + ", total="
         + total
         + ", saldoPendiente="
         + saldoPendiente
-        + ", packFacturacion="
+        + ", packFacturacion='"
         + packFacturacion
-        + ", notas="
+        + '\''
+        + ", notas='"
         + notas
+        + '\''
         + ", fechaActualizacion="
         + fechaActualizacion
         + ", fechaCancelacion="
         + fechaCancelacion
         + ", fechaCreacion="
         + fechaCreacion
-        + ", cadenaOriginalTimbrado="
+        + ", cadenaOriginalTimbrado='"
         + cadenaOriginalTimbrado
-        + ", selloCfd="
+        + '\''
+        + ", selloCfd='"
         + selloCfd
+        + '\''
         + ", idCfdi="
         + idCfdi
         + ", idCfdiRelacionado="
@@ -408,6 +454,6 @@ public class Factura implements Serializable {
         + validacionTeso
         + ", validacionOper="
         + validacionOper
-        + "]";
+        + '}';
   }
 }
