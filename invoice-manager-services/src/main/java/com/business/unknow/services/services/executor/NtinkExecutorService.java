@@ -66,14 +66,16 @@ public class NtinkExecutorService extends AbstractPackExecutor {
               ntlinkProperties.getUser(),
               ntlinkProperties.getPassword(),
               context.getFacturaDto().getUuid(),
+              "03",
+              null,
               context.getFacturaDto().getRfcEmisor(),
               context.getFacturaDto().getRfcRemitente(),
               expresion);
-      if (glocalConfigs.getEnvironment().equals("prod")) {
-        client
-            .getNtlinkClient(ntlinkProperties.getHost(), ntlinkProperties.getContext())
-            .cancelar(requestModel);
-      }
+      // if (glocalConfigs.getEnvironment().equals("prod")) {
+      client
+          .getNtlinkClient(ntlinkProperties.getHost(), ntlinkProperties.getContext())
+          .cancelar(requestModel);
+      // }
       context.getFacturaDto().setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
       context.getFacturaDto().setFechaCancelacion(new Date());
       return context;

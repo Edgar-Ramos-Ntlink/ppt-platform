@@ -60,6 +60,8 @@ public class Constants {
     public static final String EXPRESION = "expresion";
     public static final String RFC_RECEPTOR = "rfcReceptor";
     public static final String UUID = "uuid";
+    public static final String MOTIVO = "motivo";
+    public static final String FOLIO_SUSTITUTO = "folioSustituto";
 
     public static final String SOAP_ENV = "soapenv";
     public static final String SOAP_ENV_URL = "http://schemas.xmlsoap.org/soap/envelope/";
