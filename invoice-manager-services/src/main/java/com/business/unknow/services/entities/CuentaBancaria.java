@@ -50,6 +50,12 @@ public class CuentaBancaria implements Serializable {
   @Column(name = "SUCURSAL")
   private String sucursal;
 
+  @Column(name = "LINEA")
+  private String linea;
+
+  @Column(name = "RAZON_SOCIAL")
+  private String razonSocial;
+
   @Temporal(TemporalType.TIMESTAMP)
   @CreatedDate
   @Column(name = "FECHA_CREACION")

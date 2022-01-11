@@ -144,7 +144,7 @@ public class EmpresaService {
     result =
         repository.findAll(
             buildSearchFilters(parameters),
-            PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+            PageRequest.of(page, size, Sort.by("razonSocial").ascending()));
     return new PageImpl<Map<String, String>>(
         getFlatCompanyDetails(result.getContent()),
         result.getPageable(),
