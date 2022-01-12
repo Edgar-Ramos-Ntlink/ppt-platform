@@ -41,6 +41,12 @@ public class NtlinkMessageParser {
           .addChildElement(NtlinkModernaRequest.UUID, NtlinkModernaRequest.ISER)
           .addTextNode(requestModel.getUuid());
       element
+              .addChildElement(NtlinkModernaRequest.MOTIVO, NtlinkModernaRequest.ISER)
+              .addTextNode(requestModel.getMotivo());
+      element
+              .addChildElement(NtlinkModernaRequest.FOLIO_SUSTITUTO, NtlinkModernaRequest.ISER)
+              .addTextNode(requestModel.getFolioSustituto()==null?"":requestModel.getFolioSustituto());
+      element
           .addChildElement(NtlinkModernaRequest.RFC_EMISOR, NtlinkModernaRequest.ISER)
           .addTextNode(requestModel.getRfcEmisor());
       element

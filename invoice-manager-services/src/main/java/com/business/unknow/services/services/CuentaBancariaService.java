@@ -6,6 +6,7 @@ import com.business.unknow.services.entities.CuentaBancaria;
 import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.mapper.CuentaBancariaMapper;
 import com.business.unknow.services.repositories.CuentaBancariaRepository;
+import com.business.unknow.services.repositories.EmpresaRepository;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,8 +14,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
-import com.business.unknow.services.repositories.EmpresaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -157,9 +156,14 @@ public class CuentaBancariaService {
           HttpStatus.BAD_REQUEST,
           String.format("Esta Empresa con esta cuenta ya existe %s", cuentaDto.getCuenta()));
     } else {
-      Empresa empresa=empresaRepository.findByRfc(cuentaDto.getRfc()).orElseThrow(()->  new ResponseStatusException(
-              HttpStatus.BAD_REQUEST,
-              String.format("Esta Empresa no existe", cuentaDto.getRfc()))) ;
+      Empresa empresa =
+          empresaRepository
+              .findByRfc(cuentaDto.getRfc())
+              .orElseThrow(
+                  () ->
+                      new ResponseStatusException(
+                          HttpStatus.BAD_REQUEST,
+                          String.format("Esta Empresa no existe", cuentaDto.getRfc())));
       cuentaDto.setLinea(empresa.getTipo());
       cuentaDto.setRazonSocial(empresa.getRazonSocial());
       CuentaBancaria cuentaBancaria =

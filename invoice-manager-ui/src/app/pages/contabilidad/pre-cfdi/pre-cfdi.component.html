@@ -161,8 +161,8 @@
               Timbrar
             </button>
             &nbsp;&nbsp;
-            <button nbButton status="danger" size="medium" (click)="cancelarFactura(factura)" [nbSpinner]="loading"
-              [disabled]="loading"
+            <button class="mr" nbButton status="danger" size="medium" (click)="cancelarFactura(factura,cancelDialog)"
+              [nbSpinner]="loading" [disabled]="loading"
               *ngIf="factura.statusFactura == 'Timbrada' && factura.tipoDocumento !== 'Complemento'"
               nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage="">
               Cancelar
@@ -192,6 +192,36 @@
     </nb-card>
   </div>
 </div>
+
+<ng-template #cancelDialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Seleccione motivo de cancelacion</nb-card-header>
+    <nb-card-body>
+      <div class="row" style="width: 300 px;">
+        <div class="col-sm-12">
+          <label for="inputMotivo" class="label">Motivo cancelación</label>
+          <select id="inputMotivo" fullWidth class="form-control" style="display:block;"
+            [(ngModel)]="data.motivo">
+            <option value="01">Comprobante emitido con errores con relación</option>
+            <option value="02">Comprobante emitido con errores sin relación</option>
+            <option value="03">No se llevó a cabo la operación</option>
+            <option value="04">Operación nominativa relacionada en la factura global</option>
+          </select>
+        </div>
+        <div class="col-sm-12" *ngIf="data.motivo == '01'">
+          <label for="inputCfdiRelacionado" class="label">UUID relacionado</label>
+          <input id="inputCfdiRelacionado" type="text" [(ngModel)]="data.folioSustituto" fullWidth class="form-control"
+              placeholder="Folio folioSustituto">
+        </div>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
+      &nbsp;&nbsp;
+      <button class="btn btn-success" (click)="ref.close(data)">Cancelar</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
 
 <ng-template #dialog let-data let-ref="dialogRef">
   <nb-card>

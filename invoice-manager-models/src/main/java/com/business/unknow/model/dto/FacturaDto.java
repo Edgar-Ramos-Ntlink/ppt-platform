@@ -31,6 +31,8 @@ public class FacturaDto implements Serializable {
   private String packFacturacion;
   private String metodoPago;
   private String notas;
+  private String motivo;
+  private String folioSustituto;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
@@ -318,74 +320,60 @@ public class FacturaDto implements Serializable {
     this.idCfdiRelacionadoPadre = idCfdiRelacionadoPadre;
   }
 
+  public String getMotivo() {
+    return motivo;
+  }
+
+  public void setMotivo(String motivo) {
+    this.motivo = motivo;
+  }
+
+  public String getFolioSustituto() {
+    return folioSustituto;
+  }
+
+  public void setFolioSustituto(String folioSustituto) {
+    this.folioSustituto = folioSustituto;
+  }
+
   @Override
   public String toString() {
-    return "FacturaDto [id="
-        + id
-        + ", rfcEmisor="
-        + rfcEmisor
-        + ", rfcRemitente="
-        + rfcRemitente
-        + ", razonSocialEmisor="
-        + razonSocialEmisor
-        + ", lineaEmisor="
-        + lineaEmisor
-        + ", razonSocialRemitente="
-        + razonSocialRemitente
-        + ", lineaRemitente="
-        + lineaRemitente
-        + ", tipoDocumento="
-        + tipoDocumento
-        + ", solicitante="
-        + solicitante
-        + ", folio="
-        + folio
-        + ", preFolio="
-        + preFolio
-        + ", uuid="
-        + uuid
-        + ", statusFactura="
-        + statusFactura
-        + ", statusDetail="
-        + statusDetail
-        + ", packFacturacion="
-        + packFacturacion
-        + ", metodoPago="
-        + metodoPago
-        + ", notas="
-        + notas
-        + ", fechaCreacion="
-        + fechaCreacion
-        + ", statusCancelacion="
-        + statusCancelacion
-        + ", fechaCancelacion="
-        + fechaCancelacion
-        + ", fechaActualizacion="
-        + fechaActualizacion
-        + ", fechaTimbrado="
-        + fechaTimbrado
-        + ", statusCancelado="
-        + statusCancelado
-        + ", cadenaOriginalTimbrado="
-        + cadenaOriginalTimbrado
-        + ", selloCfd="
-        + selloCfd
-        + ", idCfdi="
-        + idCfdi
-        + ", idCfdiRelacionado="
-        + idCfdiRelacionado
-        + ", idCfdiRelacionadoPadre="
-        + idCfdiRelacionadoPadre
-        + ", total="
-        + total
-        + ", saldoPendiente="
-        + saldoPendiente
-        + ", cfdi="
-        + cfdi
-        + ", validacionTeso="
-        + validacionTeso
-        + ", validacionOper="
-        + validacionOper
-        + "]";
+    return "FacturaDto{" +
+            "id=" + id +
+            ", rfcEmisor='" + rfcEmisor + '\'' +
+            ", rfcRemitente='" + rfcRemitente + '\'' +
+            ", razonSocialEmisor='" + razonSocialEmisor + '\'' +
+            ", lineaEmisor='" + lineaEmisor + '\'' +
+            ", razonSocialRemitente='" + razonSocialRemitente + '\'' +
+            ", lineaRemitente='" + lineaRemitente + '\'' +
+            ", tipoDocumento='" + tipoDocumento + '\'' +
+            ", solicitante='" + solicitante + '\'' +
+            ", folio='" + folio + '\'' +
+            ", preFolio='" + preFolio + '\'' +
+            ", uuid='" + uuid + '\'' +
+            ", statusFactura=" + statusFactura +
+            ", statusDetail='" + statusDetail + '\'' +
+            ", packFacturacion='" + packFacturacion + '\'' +
+            ", metodoPago='" + metodoPago + '\'' +
+            ", notas='" + notas + '\'' +
+            ", motivo='" + motivo + '\'' +
+            ", folioSustituto='" + folioSustituto + '\'' +
+            ", fechaCreacion=" + fechaCreacion +
+            ", statusCancelacion='" + statusCancelacion + '\'' +
+            ", fechaCancelacion=" + fechaCancelacion +
+            ", fechaActualizacion=" + fechaActualizacion +
+            ", fechaTimbrado=" + fechaTimbrado +
+            ", statusCancelado=" + statusCancelado +
+            ", cadenaOriginalTimbrado='" + cadenaOriginalTimbrado + '\'' +
+            ", selloCfd='" + selloCfd + '\'' +
+            ", idCfdi=" + idCfdi +
+            ", idCfdiRelacionado=" + idCfdiRelacionado +
+            ", idCfdiRelacionadoPadre=" + idCfdiRelacionadoPadre +
+            ", total=" + total +
+            ", saldoPendiente=" + saldoPendiente +
+            ", cfdi=" + cfdi +
+            ", validacionTeso=" + validacionTeso +
+            ", validacionOper=" + validacionOper +
+            '}';
   }
 }

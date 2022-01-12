@@ -66,6 +66,8 @@ public class NtinkExecutorService extends AbstractPackExecutor {
               ntlinkProperties.getUser(),
               ntlinkProperties.getPassword(),
               context.getFacturaDto().getUuid(),
+              context.getFacturaDto().getFolioSustituto(),
+              context.getFacturaDto().getMotivo(),
               context.getFacturaDto().getRfcEmisor(),
               context.getFacturaDto().getRfcRemitente(),
               expresion);
