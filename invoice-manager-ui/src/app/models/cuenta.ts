@@ -9,7 +9,8 @@ export class Cuenta {
     public domicilioBanco: string;
     public sucursal: string;
     public expedienteActualizado: string;
-
+    public linea: string;
+    public razonSocial: string;
     // NO mapeado pero debe de existir una referencia de documetos como expediente, contrato, etc
 
     public fechaCreacion: Date;

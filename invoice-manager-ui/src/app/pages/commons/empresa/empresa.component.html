@@ -129,11 +129,6 @@
                   (change)="onRegimenFiscalSelected($event.target.value)">
                   <option value="*">Seleccionar</option>
                   <option value="601">General de Ley Personas Morales</option>
-                  <option value="603">Personas Morales con Fines no Lucrativos</option>
-                  <option value="609">Consolidación</option>
-                  <option value="612">Personas Físicas con Actividades Empresariales y Profesionales</option>
-                  <option value="620">Sociedades Cooperativas de Producción que optan por diferir sus ingresos</option>
-                  <option value="621">Incorporación Fiscal</option>
                 </select>
               </div>
             </div>
@@ -169,11 +164,9 @@
 
             <div *ngIf="companyInfo.id">
               <!-- STOCK-HOLDERS -->
-              <p class="font-weight-bold ">Accionistas</p>
-              <div class="row">
+              <div class="row" *ngIf="companyInfo.id && (isAdministrator || module === 'legal')">
+                <p class="font-weight-bold ">Accionistas</p>
                 <div class="col-md-12">
-
-
                   <div class="clearfix">
 
                     <div class="row float-right" style="margin-right: 1px;">
@@ -229,11 +222,9 @@
               </div>
 
               <!-- REPRESENTANT-->
-              <p class="font-weight-bold ">Apoderados</p>
-              <div class="row">
+              <div class="row" *ngIf="companyInfo.id && (isAdministrator || module === 'legal')">
+                <p class="font-weight-bold ">Apoderados</p>
                 <div class="col-md-12">
-
-
                   <div class="clearfix">
 
                     <div class="row float-right" style="margin-right: 1px;">
@@ -300,7 +291,7 @@
                       <select selected="*" id="inputDocType" style="display:block" fullWidth class="form-control"
                         [disabled]="companyInfo.activo" [(ngModel)]="formInfo.doctType">
                         <option value="*">Seleccionar</option>
-                        <option value="LOGO">Logotipo</option>
+                        <option value="LOGO" *ngIf="companyInfo.id && (isAdministrator || module === 'legal')">Logotipo</option>
                         <option value="INE">INE Representante</option>
                         <option value="PODER_1">Poder 1</option>
                         <option value="PODER_2">Poder 2</option>
@@ -481,6 +472,8 @@
                       <tr>
                         <th class="text-center">ACCIONES</th>
                         <th scope="col">BANCO</th>
+                        <th scope="col">RAZON SOCIAL</th>
+                        <th scope="col">LINEA</th>
                         <th scope="col">CUENTA</th>
                         <th scope="col">CLABE</th>
                         <th scope="col">TIPO CONTRATO</th>
@@ -504,6 +497,8 @@
                             <i class="fa fa-search"></i></button>
                         </td>
                         <td scope="row">{{fila.banco}}</td>
+                        <td scope="row">{{fila.razonSocial}}</td>
+                        <td scope="row">{{fila.linea}}</td>
                         <td scope="row">{{fila.cuenta}}</td>
                         <td scope="row">{{fila.clabe}}</td>
                         <td scope="row">{{fila.tipoContrato}}</td>
