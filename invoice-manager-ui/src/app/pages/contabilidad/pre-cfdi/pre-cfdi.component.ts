@@ -389,24 +389,40 @@ export class PreCfdiComponent implements OnInit {
         }
       });
   }
-
-  public cancelarFactura(factura: Factura) {
-    this.loading = true;
+  public async cancelarFactura(factura: Factura, dialog: TemplateRef<any>) {
     this.successMessage = undefined;
     this.errorMessages = [];
-    let fact = { ...factura };
-    fact.cfdi = null;
-    fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
-    
-    this.invoiceService.cancelarFactura(fact.folio, fact)
-      .subscribe(success => {
-      this.successMessage = 'Factura correctamente cancelada';
-      this.getInvoiceByIdCdfi(this.preFolio);
-        this.loading = false;
-      },(error: HttpErrorResponse) => {
-          this.errorMessages.push((error.error != null && error.error != undefined) ? error.error.message : `${error.statusText} : ${error.message}`);
-          this.loading = false;
+    console.log('Cancelando factura:', factura.preFolio);
+    try {
+      const fact = { ...factura };
+      fact.motivo = '02';
+      fact.cfdi = null;
+      fact.statusFactura = this.validationCat.find(v => v.nombre === fact.statusFactura).id;
+
+
+      this.dialogService.open(dialog, { context: fact })
+        .onClose.subscribe(invoice => {
+          this.loading = true;
+          if (invoice !== undefined) {
+            this.invoiceService.cancelarFactura(fact.folio, fact)
+              .subscribe(success => {
+                this.successMessage = 'Factura correctamente cancelada';
+                this.getInvoiceByIdCdfi(this.preFolio);
+              }, (error: HttpErrorResponse) => {
+                this.errorMessages.push((error.error != null && error.error != undefined) ?
+                  error.error.message : `${error.statusText} : ${error.message}`);
+                this.loading = false;
+                console.error(this.errorMessages);
+              });
+          } else {
+            this.loading = false;
+          }
         });
+
+    } catch (error) {
+      this.errorMessages.push((error.error != null && error.error != undefined) ?
+        error.error.message : `${error.statusText} : ${error.message}`);
+    }
   }
 
   generateComplement() {

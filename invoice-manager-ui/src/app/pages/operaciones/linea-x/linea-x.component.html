@@ -20,10 +20,11 @@
           <i class="fa fa-link"></i>
         </button>
         &nbsp;&nbsp;&nbsp;&nbsp;
-          <button type="button" *ngIf="factura.idCfdiRelacionadoPadre"
-            class="btn btn-sm btn-outline-success float-right ml-1 mr-1" (click)="returnToSourceFact(factura.idCfdiRelacionadoPadre)">
-            <i class="fa fa-arrow-left"></i>
-          </button>
+        <button type="button" *ngIf="factura.idCfdiRelacionadoPadre"
+          class="btn btn-sm btn-outline-success float-right ml-1 mr-1"
+          (click)="returnToSourceFact(factura.idCfdiRelacionadoPadre)">
+          <i class="fa fa-arrow-left"></i>
+        </button>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <span class="badge badge-secondary ml-1 mr-1 float-right" *ngIf="factura.cfdi.id">
           <strong *ngIf="factura.cfdi.relacionado">CFDI RELACIONADO : {{factura.cfdi.relacionado.relacion}}</strong>
@@ -94,7 +95,7 @@
               SOLICITAR CFDI
             </button>
           </div>
-          
+
           <div class="d-flex float-right" *ngIf="factura.idCfdi !== undefined">
             <button nbButton status="success" size="small" (click)="timbrarFactura(factura,dialog)"
               [nbSpinner]="loading" [disabled]="loading" *ngIf="factura.statusFactura == 'Por Timbrar'"
@@ -102,8 +103,8 @@
               Timbrar
             </button>
             &nbsp;&nbsp;
-            <button nbButton status="danger" size="small" (click)="cancelarFactura(factura)" [nbSpinner]="loading"
-              [disabled]="loading"
+            <button class="mr" nbButton status="danger" size="medium" (click)="cancelarFactura(factura,cancelDialog)"
+              [nbSpinner]="loading" [disabled]="loading"
               *ngIf="factura.statusFactura == 'Timbrada' && factura.tipoDocumento !== 'Complemento'"
               nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage="">
               Cancelar
@@ -129,6 +130,35 @@
     </nb-card>
   </div>
 </div>
+
+<ng-template #cancelDialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Seleccione motivo de cancelacion</nb-card-header>
+    <nb-card-body>
+      <div class="row" style="width: 300 px;">
+        <div class="col-sm-12">
+          <label for="inputMotivo" class="label">Motivo cancelación</label>
+          <select id="inputMotivo" fullWidth class="form-control" style="display:block;" [(ngModel)]="data.motivo">
+            <option value="01">Comprobante emitido con errores con relación</option>
+            <option value="02">Comprobante emitido con errores sin relación</option>
+            <option value="03">No se llevó a cabo la operación</option>
+            <option value="04">Operación nominativa relacionada en la factura global</option>
+          </select>
+        </div>
+        <div class="col-sm-12" *ngIf="data.motivo == '01'">
+          <label for="inputCfdiRelacionado" class="label">UUID relacionado</label>
+          <input id="inputCfdiRelacionado" type="text" [(ngModel)]="data.folioSustituto" fullWidth class="form-control"
+            placeholder="Folio folioSustituto">
+        </div>
+      </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button class="btn btn-warning" (click)="ref.close(undefined)">Salir</button>
+      &nbsp;&nbsp;
+      <button class="btn btn-success" (click)="ref.close(data)">Cancelar</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>
 
 <ng-template #dialog let-data let-ref="dialogRef">
   <nb-card>
