@@ -120,6 +120,7 @@
                   <option value="A">Tipo A</option>
                   <option value="B">Tipo B</option>
                   <option value="C">Tipo C</option>
+                  <option value="D">Tipo D</option>
                 </select>
               </div>
               <div class="col-sm-3">
@@ -129,6 +130,7 @@
                   (change)="onRegimenFiscalSelected($event.target.value)">
                   <option value="*">Seleccionar</option>
                   <option value="601">General de Ley Personas Morales</option>
+                  <option value="626">Régimen Simplificado de Confianza</option>
                 </select>
               </div>
             </div>
@@ -604,6 +606,16 @@
                   [disabled]="companyInfo.activo" id="entidadImpuestoPatronal" placeholder="Entidad/Impuesto Estatal">
               </div>
             </div>
+            <br />
+            <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="noCert" class="label">No de certificado</label>
+                <input type="text" [(ngModel)]="companyInfo.noCertificado" class="form-control" fullWidth id="noCert"
+                  [disabled]="companyInfo.activo" placeholder="0000000000">
+              </div>
+            </div>
+          </div>
             <br />
             <div class="row">
               <div class="col-md-12">
