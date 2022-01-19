@@ -33,5 +33,6 @@ public interface EmpresaRepository
   @Query("select e from Empresa e where e.rfc = :rfc")
   public Optional<Empresa> findByRfc(@Param("rfc") String rfc);
 
-  public List<Empresa> findByTipoAndGiro(String tipo, Integer giroId);
+  @Query("select e from Empresa e where e.tipo = :tipo and e.giro = :giro and e.operativa =true")
+  public List<Empresa> findByTipoAndGiro(@Param("tipo") String tipo, @Param("giro") Integer giro);
 }

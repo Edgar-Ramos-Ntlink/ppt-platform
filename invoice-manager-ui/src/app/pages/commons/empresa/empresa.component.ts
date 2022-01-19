@@ -203,6 +203,10 @@ export class EmpresaComponent implements OnInit {
     this.companyInfo.tipo = linea;
   }
 
+  public onOperativaSelected(operativa: boolean) {
+    this.companyInfo.operativa = operativa;
+  }
+
 
 
   public logoUploadListener(event: any): void {
