@@ -8,6 +8,7 @@ export class Empresa {
     public id: number;
     public activo: boolean;
     public estatus:string; // Se calculara automaticamnete basado entre representanteLegal & correo & cert & key & cuentas
+    public operativa:boolean;
     public giro: string;
     public tipo: string; // linea empresa
     public regimenFiscal: string;
@@ -77,6 +78,7 @@ export class Empresa {
 
     constructor() {
         this.activo = false;
+        this.operativa = false;
         this.estatus = 'INACTIVO';
         this.tipo= '*';
         this.giro='*';
