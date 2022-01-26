@@ -1,7 +1,15 @@
 package com.business.unknow.services.services;
 
-import com.business.unknow.services.entities.catalogs.*;
-import com.business.unknow.services.repositories.catalogs.*;
+import com.business.unknow.services.entities.catalogs.ClaveUnidad;
+import com.business.unknow.services.entities.catalogs.FormaPago;
+import com.business.unknow.services.entities.catalogs.Giro;
+import com.business.unknow.services.entities.catalogs.RegimenFiscal;
+import com.business.unknow.services.entities.catalogs.UsoCfdi;
+import com.business.unknow.services.repositories.catalogs.ClaveUnidadRepository;
+import com.business.unknow.services.repositories.catalogs.FormaPagoRepository;
+import com.business.unknow.services.repositories.catalogs.GiroRepository;
+import com.business.unknow.services.repositories.catalogs.RegimanFiscalRepository;
+import com.business.unknow.services.repositories.catalogs.UsoCfdiRepository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
