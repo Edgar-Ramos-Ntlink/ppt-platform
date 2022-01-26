@@ -196,7 +196,7 @@ public class FacturaService {
       result =
           repository.findAll(
               buildSearchFilters(parameters),
-              PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+              PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
     }
     return new PageImpl<>(
         mapper.getFacturaDtosFromEntities(result.getContent()),
