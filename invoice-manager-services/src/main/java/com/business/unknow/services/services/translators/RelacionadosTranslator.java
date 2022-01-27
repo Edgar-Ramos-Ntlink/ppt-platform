@@ -22,11 +22,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class RelacionadosTranslator {
 
   public FacturaDto sustitucionComplemento(FacturaDto facturaDto) {
-    if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
+    if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
       throw new ResponseStatusException(
           HttpStatus.NOT_FOUND,
           String.format(
-              "La factura con el pre-folio %s no esta cancelada y no se puede sustituir",
+              "La factura con el pre-folio %s no esta TIMBRADA y no se puede sustituir",
               facturaDto.getPreFolio()));
     }
     updateBaseInfoSustitucion(facturaDto);
@@ -35,11 +35,11 @@ public class RelacionadosTranslator {
   }
 
   public FacturaDto sustitucionFactura(FacturaDto facturaDto) {
-    if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
+    if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
           String.format(
-              "La factura con el pre-folio %s no esta cancelada y no se puede sustituir",
+              "La factura con el pre-folio %s no esta TIMBRADA y no se puede sustituir",
               facturaDto.getPreFolio()));
     }
     updateBaseInfoSustitucion(facturaDto);
