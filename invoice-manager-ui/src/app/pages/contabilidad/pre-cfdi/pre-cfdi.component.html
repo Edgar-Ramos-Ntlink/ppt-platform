@@ -178,7 +178,7 @@
             <button class="mr" nbButton status="warning" size="medium" (click)="linkInvoice(factura)"
               [nbSpinner]="loading" [disabled]="loading || factura.idCfdiRelacionado" nbSpinnerStatus="danger"
               nbSpinnerSize="small" nbSpinnerMessage=""
-              *ngIf="factura.statusFactura === 'Timbrada' && factura.tipoDocumento === 'Factura' && (factura.metodoPago === 'PUE' || factura.saldoPendiente >= factura.total )">
+              *ngIf="factura.statusFactura === 'Timbrada' && factura.tipoDocumento === 'Factura'">
               Sustituir Factura
             </button>
           </div>
