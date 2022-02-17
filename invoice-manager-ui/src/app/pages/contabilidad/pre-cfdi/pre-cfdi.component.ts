@@ -54,6 +54,7 @@ export class PreCfdiComponent implements OnInit {
   public factura: Factura;
   public folioParam: string;
   public user: User;
+  public soporte: boolean = false; 
   public preFolio: string;
 
   public complementos: Factura[] = [];
@@ -102,6 +103,7 @@ export class PreCfdiComponent implements OnInit {
   ngOnInit() {
 
     this.userService.getUserInfo().then(user => this.user = user as User);
+    this.userService.getUserInfo().then(user => this.user = user as User).then(() => this.soporte = this.user.roles.map(a => a.role).includes('SOPORTE'));
     this.initVariables();
     this.paymentsService.getFormasPago().subscribe(payTypes => this.complementPayTypeCat = payTypes);
     /* preloaded cats*/

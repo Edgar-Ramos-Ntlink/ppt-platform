@@ -42,7 +42,7 @@ export class RevisionComponent implements OnInit {
   public clientsCat: Client[] = [];
   public factura: Factura = new Factura();
   public user: User;
-  public soporte: boolean = false;
+  public soporte: boolean = false; 
   public successMessage: string;
   public errorMessages: string[] = [];
   public formInfo = { clientName: '', clientRfc: '*', companyRfc: '', giro: '*', empresa: '*' };

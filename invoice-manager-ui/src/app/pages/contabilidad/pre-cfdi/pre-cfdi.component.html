@@ -165,7 +165,7 @@
             &nbsp;&nbsp;
             <button class="mr" nbButton status="danger" size="medium" (click)="cancelarFactura(factura,cancelDialog)"
               [nbSpinner]="loading" [disabled]="loading"
-              *ngIf="factura.statusFactura == 'Timbrada' && factura.tipoDocumento !== 'Complemento'"
+              *ngIf="factura.statusFactura == 'Timbrada' && (factura.tipoDocumento !== 'Complemento'||soporte)"
               nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage="">
               Cancelar
             </button>
