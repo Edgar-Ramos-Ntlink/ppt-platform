@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AdministracionComponent } from './administracion.component';
 import { UsersComponent } from './users/users.component';
-import { DevolutionsDetailsComponent } from '../commons/devolutions-details/devolutions-details.component';
 import { ClientesComponent } from '../commons/clientes/clientes.component';
 import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
@@ -46,9 +45,6 @@ const routes: Routes = [{
     },{
       path: 'reportes',
       component: InvoiceReportsComponent,
-    }, {
-      path: 'devoluciones/:folio/ajustes',
-      component: DevolutionsDetailsComponent,
     }]}];
 
 @NgModule({

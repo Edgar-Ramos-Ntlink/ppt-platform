@@ -3,7 +3,6 @@ import { NbDialogModule } from '@nebular/theme';
 
 import { CommonsModule } from '../commons/commons.module';
 import { DonwloadFileService } from '../../@core/util-services/download-file-service';
-import { DownloadCsvService } from '../../@core/util-services/download-csv.service';
 import { LegalComponent } from './legal.component';
 import { LegalRoutingModule } from './legal-routing.module';
 
@@ -14,6 +13,6 @@ import { LegalRoutingModule } from './legal-routing.module';
     CommonsModule,
     NbDialogModule.forChild(),
   ],
-  providers: [ DownloadCsvService , DonwloadFileService ],
+  providers: [ DonwloadFileService ],
 })
 export class LegalModule { }

@@ -6,7 +6,6 @@ import { ContabilidadComponent } from './contabilidad.component';
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { CommonsModule } from '../commons/commons.module';
 import { DonwloadFileService } from '../../@core/util-services/download-file-service';
-import { DownloadCsvService } from '../../@core/util-services/download-csv.service';
 import { CargaMasivaComponent } from './carga-masiva/carga-masiva.component';
 
 @NgModule({
@@ -18,6 +17,6 @@ import { CargaMasivaComponent } from './carga-masiva/carga-masiva.component';
     CommonsModule,
     NbDialogModule.forChild(),
   ],
-  providers: [ DownloadCsvService , DonwloadFileService ],
+  providers: [ DonwloadFileService ],
 })
 export class ContabilidadModule { }

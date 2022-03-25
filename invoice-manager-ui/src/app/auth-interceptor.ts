@@ -18,13 +18,18 @@ export class AuthInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
       return next.handle(request).pipe(
         catchError((err: HttpErrorResponse) => {
-          console.error(err);
+          console.error('AuthInterceptor',err);
           if (err.status === 302 || err.status === 0 || err.statusText.indexOf('Unknown') >= 0 ) {
             console.error('Sesion perdida');
             this.router.navigateByUrl('/sesion-lost')
           }
           if (err.status === 401 || err.url.indexOf('/oauth2/authorization/google') > 1) {
               console.error('Unauthorized request');
+            this.router.navigateByUrl('/unauthorized');
+          }
+
+          if(err.status == 200 && err.url.indexOf('login?logout') > 0){
+            console.warn('Logout');
             this.router.navigateByUrl('/unauthorized');
           }
           return throwError( err );

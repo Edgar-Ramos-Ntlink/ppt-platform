@@ -9,7 +9,6 @@ import { CompaniesData } from '../../../@core/data/companies-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { map } from 'rxjs/operators';
-import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 @Component({
   selector: 'ngx-cuentas-bancarias',

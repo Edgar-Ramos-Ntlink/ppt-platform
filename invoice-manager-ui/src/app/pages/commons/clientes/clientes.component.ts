@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { GenericPage } from '../../../models/generic-page';
 import { Client } from '../../../models/client';
-import { DownloadCsvService } from '../../../@core/util-services/download-csv.service'
 import { Router, ActivatedRoute } from '@angular/router';
 import { UsersData } from '../../../@core/data/users-data';
 import { User } from '../../../models/user';
@@ -24,7 +23,6 @@ export class ClientesComponent implements OnInit {
   constructor(
     private userService: UsersData,
     private clientService: ClientsData,
-    private donwloadService: DownloadCsvService,
     private route: ActivatedRoute,
     private utilsService: UtilsService,
     private router: Router) { }
@@ -97,9 +95,10 @@ export class ClientesComponent implements OnInit {
     const params: any = this.utilsService.parseFilterParms(this.filterParams);
     params.page = 0;
     params.size = 10000;
-    this.clientService.getClients(params).subscribe((result: GenericPage<Client>) => {
+    alert('Descarga no implementada')
+    /*this.clientService.getClients(params).subscribe((result: GenericPage<Client>) => {
       this.donwloadService.exportCsv(result.content.map(r => r.informacionFiscal), 'Clientes');
-    });
+    });*/
   }
 
   public redirectToCliente(rfc: string,promotor:string) {

@@ -42,11 +42,6 @@ const routes: Routes = [{
         .then(m => m.TesoreriaModule ),
     },
     {
-      path: 'boveda',
-      loadChildren : () => import('./boveda/boveda.module')
-        .then(m => m.BovedaModule ),
-    },
-    {
       path: 'bancos',
       loadChildren : () => import('./bancos/bancos.module')
         .then(m => m.BancosModule ),

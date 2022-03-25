@@ -10,7 +10,6 @@ import { PagoFactura } from '../../../models/pago-factura';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FilesData } from '../../../@core/data/files-data';
-import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 import { AsignacionPagosComponent } from '../asignacion-pagos/asignacion-pagos.component';
 import { Router } from '@angular/router';
 
@@ -76,7 +75,6 @@ export class PagosFacturaComponent implements OnInit {
     private router: Router,
     private usersService: UsersData,
     private downloadService: DonwloadFileService,
-    private downloadCsvService: DownloadCsvService,
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<PagoFacturaModel>) {}
 
   ngOnInit() {
@@ -168,9 +166,10 @@ export class PagosFacturaComponent implements OnInit {
 
   public downloadHandler() {
     this.errorMessages = [];
-    this.paymentsService.getAllPayments(0, 10000, this.filterParams).subscribe(result => {
+    alert('Descarga no implementada')
+    /*this.paymentsService.getAllPayments(0, 10000, this.filterParams).subscribe(result => {
       this.downloadCsvService.exportCsv(result.content, `Pagos_${this.user.email}`);
-    });
+    });*/
   }
 
 }

@@ -2,12 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { CompaniesData } from '../../../@core/data/companies-data';
 import { GenericPage } from '../../../models/generic-page';
-import { DownloadCsvService } from '../../../@core/util-services/download-csv.service'
 import { Router, ActivatedRoute } from '@angular/router';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
-import { Observable } from 'rxjs';
-import { Empresa } from '../../../models/empresa';
-import { map } from 'rxjs/operators';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { UtilsService } from '../../../@core/util-services/utils.service';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';

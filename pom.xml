@@ -8,9 +8,9 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>invoice-manager-models</module>
+		<module>invoice-external-sdk</module>
 		<module>invoice-manager-rules</module>
 		<module>invoice-manager-services</module>
-		<module>invoice-external-sdk</module>
 	</modules>
 	<properties>
 		<maven.javadoc.skip>true</maven.javadoc.skip>

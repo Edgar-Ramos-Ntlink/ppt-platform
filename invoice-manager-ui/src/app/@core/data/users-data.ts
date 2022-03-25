@@ -7,7 +7,7 @@ export abstract class UsersData {
 
   abstract getUsers(page: number, size: number, filterParams?: any): Observable<GenericPage<User>>;
   abstract getUserInfo(): Promise<User>;
-  abstract logout(): Observable<any>;
+  abstract logout(): Observable<void>;
 
   abstract insertNewUser(user: User): Observable<User>;
   abstract insertRoles(rol: Role, id: number): Observable<User>;

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GenericPage } from '../../../models/generic-page';
 import { PaymentsData } from '../../../@core/data/payments-data';
-import { DownloadCsvService } from '../../../@core/util-services/download-csv.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,7 +17,6 @@ export class IngresosComponent implements OnInit {
   public total:number =0.0;
 
   constructor(private paymentService : PaymentsData,
-    private donwloadService: DownloadCsvService,
     private router: Router,
   ) { }
 
@@ -40,9 +38,10 @@ export class IngresosComponent implements OnInit {
   }
 
   public downloadHandler() {
-    this.paymentService.getIncomes(0, 10000, this.filterParams).subscribe(result => {
+    alert('Descarga no implementada')
+    /*this.paymentService.getIncomes(0, 10000, this.filterParams).subscribe(result => {
       this.donwloadService.exportCsv(result.content, 'Ingresos')
-    });
+    });*/
   }
 
  

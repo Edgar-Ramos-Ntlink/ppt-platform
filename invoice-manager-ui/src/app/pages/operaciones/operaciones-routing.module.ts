@@ -7,9 +7,7 @@ import { ClientesComponent } from '../commons/clientes/clientes.component';
 import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { EmpresasComponent } from '../commons/empresas/empresas.component';
 import { EmpresaComponent } from '../commons/empresa/empresa.component';
-import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
-import { DevolutionsDetailsComponent } from '../commons/devolutions-details/devolutions-details.component';
 import { LineaXComponent } from './linea-x/linea-x.component';
 import { MulticomplementosComponent } from '../commons/multicomplementos/multicomplementos.component';
 import { PagosFacturaComponent } from '../commons/pagos-factura/pagos-factura.component';
@@ -20,10 +18,7 @@ import { CuentaBancariaComponent } from '../commons/cuenta-bancaria/cuenta-banca
 const routes: Routes = [{
   path: '',
   component: OperacionesComponent,
-  children: [{
-      path: 'devoluciones',
-      component : DevolucionesComponent,
-    },
+  children: [
     {
       path: 'clientes',
       component: ClientesComponent,
@@ -51,10 +46,6 @@ const routes: Routes = [{
     }, {
       path: 'multicomplementos',
       component : MulticomplementosComponent,
-    },
-    {
-      path: 'facturas/:folio/devoluciones',
-      component: DevolutionsDetailsComponent,
     }, {
       path: 'pago-facturas',
       component: PagosFacturaComponent,

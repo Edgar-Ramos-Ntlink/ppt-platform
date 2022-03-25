@@ -6,7 +6,7 @@ import { CatalogsData } from '../data/catalogs-data';
 import { UsoCfdi } from '../../models/catalogos/uso-cfdi';
 import { ClaveUnidad } from '../../models/catalogos/clave-unidad';
 import { Contribuyente } from '../../models/contribuyente';
-import { add, subtract, bignumber, multiply, number } from 'mathjs';
+import { add, subtract, bignumber, multiply, format } from 'mathjs';
 import { CfdiService } from '../back-services/cfdi.service';
 import { Empresa } from '../../models/empresa';
 
@@ -29,17 +29,18 @@ export class CfdiValidatorService {
   }
 
   public buildConcepto(concepto: Concepto): Concepto {
-    concepto.importe = number(multiply(bignumber(concepto.cantidad), bignumber(concepto.valorUnitario)));
-    const base = subtract(bignumber(concepto.importe), bignumber(concepto.descuento));
+    
+    concepto.importe = +format(multiply(bignumber(concepto.cantidad), bignumber(concepto.valorUnitario)));
+    const base: number = +format(subtract(bignumber(concepto.importe), bignumber(concepto.descuento)));
     if (concepto.iva) {
-      const impuesto = number(multiply(base, bignumber(0.16))); // TODO calcular impuestos dinamicamente no solo IVA
-      concepto.impuestos = [new Impuesto('002', '0.160000', number(base), impuesto)];
+      const impuesto = +format(multiply(base, bignumber(0.16))); // TODO calcular impuestos dinamicamente no solo IVA
+      concepto.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];
     } else {
       concepto.impuestos = [];
     }
     if (concepto.retencionFlag) {
-      const retencion = number(multiply(base, bignumber(0.06))); // TODO calcular retencion dinamicamente
-      concepto.retenciones = [new Impuesto('002', '0.060000', number(base), retencion)];
+      const retencion: number = +format(multiply(base, bignumber(0.06))); // TODO calcular retencion dinamicamente
+      concepto.retenciones = [new Impuesto('002', '0.060000', base, retencion)];
     } else {
       concepto.retenciones = [];
     }

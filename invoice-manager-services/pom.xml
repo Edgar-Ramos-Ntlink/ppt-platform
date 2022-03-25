@@ -19,7 +19,7 @@
 		<aws.java.sdk.version>2.13.7</aws.java.sdk.version>
 		<aws.java.version>1.11.103</aws.java.version>
 		<aws.java.version>1.11.103</aws.java.version>
-		<invoice.manager.version>3.5.0</invoice.manager.version>
+		<invoice.manager.version>3.5.5</invoice.manager.version>
 	</properties>
 
 	<dependencies>
@@ -211,6 +211,28 @@
 						</compilerArg>
 					</compilerArgs>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>copy-compiled-ui</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/classes/static</outputDirectory>
+							<encoding>UTF-8</encoding>
+							<resources>
+								<resource>
+									<directory>${basedir}/../invoice-manager-ui/dist</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>com.coveo</groupId>

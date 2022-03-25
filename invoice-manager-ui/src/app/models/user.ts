@@ -14,5 +14,6 @@ export class  User {
 
     constructor() {
         this.activo = false;
+        this.menu = [];
     }
 }

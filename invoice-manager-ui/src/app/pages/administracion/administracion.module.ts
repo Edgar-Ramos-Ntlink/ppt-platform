@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { DownloadCsvService } from '../../@core/util-services/download-csv.service'
 import { AdministracionRoutingModule } from './administracion-routing.module';
 import { AdministracionComponent } from './administracion.component';
 import { UsersComponent } from './users/users.component';
@@ -18,6 +17,6 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonsModule,
     ReactiveFormsModule
   ],
-  providers: [ DownloadCsvService ],
+  providers: [ ],
 })
 export class AdministracionModule { }
