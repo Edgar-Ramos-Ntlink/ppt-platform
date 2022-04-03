@@ -1,13 +1,13 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
-import { Cfdi } from '../../../models/factura/cfdi';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
 import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
-import { Concepto } from '../../../models/factura/concepto';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { NbDialogService } from '@nebular/theme';
+import { Cfdi } from '../../../@core/models/cfdi/cfdi';
+import { Concepto } from '../../../@core/models/cfdi/concepto';
 
 @Component({
   selector: 'ngx-conceptos',
@@ -56,7 +56,8 @@ export class ConceptosComponent implements OnInit {
           this.prodServCat = claves;
           this.formInfo.prodServ = claves[0].clave.toString();
           this.concepto.claveProdServ = claves[0].clave.toString();
-          this.concepto.descripcionCUPS = claves[0].descripcion;
+          // TODO validar si descripcionCUPS es necesaria
+          //this.concepto.descripcionCUPS = claves[0].descripcion;
         }, (error: HttpErrorResponse) =>
           this.claveProdServMsg = error.error.message || `${error.statusText} : ${error.message}`);
       }else {
@@ -68,7 +69,8 @@ export class ConceptosComponent implements OnInit {
           this.prodServCat = claves;
           this.formInfo.prodServ = claves[0].clave.toString();
           this.concepto.claveProdServ = claves[0].clave.toString();
-          this.concepto.descripcionCUPS = claves[0].descripcion;
+          // TODO validar si descripcionCUPS es necesaria
+          //this.concepto.descripcionCUPS = claves[0].descripcion;
         }, (error: HttpErrorResponse) =>
         this.claveProdServMsg = error.error.message || `${error.statusText} : ${error.message}`);
       } else {
@@ -94,7 +96,8 @@ export class ConceptosComponent implements OnInit {
 
   public onClaveProdServSelected(clave: string) {
     this.concepto.claveProdServ = clave;
-    this.concepto.descripcionCUPS = this.prodServCat.find(c => c.clave == clave).descripcion;
+    // TODO validar si descripcionCUPS es necesaria
+    //this.concepto.descripcionCUPS = this.prodServCat.find(c => c.clave == clave).descripcion;
   }
 
   public removeConcepto(dialog: TemplateRef<any>, index: number) {
@@ -114,12 +117,13 @@ export class ConceptosComponent implements OnInit {
 
   updateConcepto(concepto: Concepto) {
     this.concepto = {... concepto};
-    if (concepto.impuestos.length > 0 ) {
+    // validar si esta logica es necesaria pues ya no se manejan retenciones
+    /*if (concepto.impuestos.length > 0 ) {
       this.concepto.iva = true;
     }
     if (concepto.retenciones.length > 0 ) {
       this.concepto.retencionFlag = true;
-    }
+    }*/
     this.formInfo.unidad = concepto.claveUnidad;
     this.formInfo.claveProdServ = concepto.claveProdServ;
     this.buscarClaveProductoServicio(concepto.claveProdServ);
@@ -182,16 +186,20 @@ export class ConceptosComponent implements OnInit {
    return impuestos;
   }
 
+  //TODO validar si esta logica es necesaria
   public getTotalRetenciones(conceptos: Concepto[]): number {
-    let retenciones = 0;
+    alert('Logica no implmentada')
+    return 0;
+    /*let retenciones = 0;
     for (const concepto of conceptos) {
       retenciones += this.calcularImportes(concepto.retenciones);
     }
-    return retenciones;
+    return retenciones;*/
    }
 
   public handleIvaInputChange() {
-    if (!this.concepto.iva) this.concepto.retencionFlag = false;
+    alert('Logica no implementada')
+    //if (!this.concepto.iva) this.concepto.retencionFlag = false;
   }
 
 }

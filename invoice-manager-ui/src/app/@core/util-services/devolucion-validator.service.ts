@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { PagoDevolucion } from '../../models/pago-devolucion';
 import { Client } from '../../models/client';
-import { Concepto } from '../../models/factura/concepto';
 import { Factura } from '../../models/factura/factura';
 import { PagoBase } from '../../models/pago-base';
+import { Concepto } from '../models/cfdi/concepto';
 
 @Injectable({
   providedIn: 'root',
@@ -72,11 +72,12 @@ export class DevolucionValidatorService {
   }
 
   public getTotalRetenciones(conceptos: Concepto[]): number {
-    let retenciones = 0;
+    alert('Logica no implmentada')
+    /*let retenciones = 0;
     for (const concepto of conceptos) {
       retenciones += this.calcularImportes(concepto.retenciones);
-    }
-    return retenciones;
+    }*/
+    return 0;
   }
 
   public validateDevolution(maxAmmount: Number, solicitud: PagoDevolucion): string[] {

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Concepto } from '../../models/factura/concepto';
-import { Cfdi } from '../../models/factura/cfdi';
+import { Cfdi } from '../models/cfdi/cfdi';
+import { Concepto } from '../models/cfdi/concepto';
 
 @Injectable({
   providedIn: 'root',

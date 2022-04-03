@@ -17,9 +17,9 @@ import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { GenericPage } from '../../../models/generic-page';
 import { User } from '../../../models/user';
-import { Pago } from '../../../models/factura/pago';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
+import { Pago } from '../../../@core/models/cfdi/pago';
 
 
 

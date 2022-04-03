@@ -2,7 +2,6 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Factura } from '../../../models/factura/factura';
 import { Catalogo } from '../../../models/catalogos/catalogo';
-import { Concepto } from '../../../models/factura/concepto';
 import { UsersData } from '../../../@core/data/users-data';
 import { Empresa } from '../../../models/empresa';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
@@ -18,15 +17,16 @@ import { ClientsData } from '../../../@core/data/clients-data';
 import { Contribuyente } from '../../../models/contribuyente';
 import { map } from 'rxjs/operators';
 import { GenericPage } from '../../../models/generic-page';
-import { Cfdi } from '../../../models/factura/cfdi';
 import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
 import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
 import { PagoBase } from '../../../models/pago-base';
 import { NbDialogService } from '@nebular/theme';
 import { PaymentsData } from '../../../@core/data/payments-data';
-import { Pago } from '../../../models/factura/pago';
 import { User } from '../../../models/user';
 import { CfdiData } from '../../../@core/data/cfdi-data';
+import { Concepto } from '../../../@core/models/cfdi/concepto';
+import { Pago } from '../../../@core/models/cfdi/pago';
+import { Cfdi } from '../../../@core/models/cfdi/cfdi';
 
 @Component({
   selector: 'ngx-linea-x',

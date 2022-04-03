@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
-import { Concepto } from '../../models/factura/concepto';
-import { Cfdi } from '../../models/factura/cfdi';
-import { Pago } from '../../models/factura/pago';
 import { Factura } from '../../models/factura/factura';
+import { Cfdi } from '../models/cfdi/cfdi';
+import { Concepto } from '../models/cfdi/concepto';
+import { Pago } from '../models/cfdi/pago';
 
 export abstract class CfdiData {
 

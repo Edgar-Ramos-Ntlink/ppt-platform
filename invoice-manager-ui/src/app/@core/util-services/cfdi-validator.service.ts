@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Concepto } from '../../models/factura/concepto';
-import { Cfdi } from '../../models/factura/cfdi';
-import { Impuesto } from '../../models/factura/impuesto';
 import { CatalogsData } from '../data/catalogs-data';
 import { UsoCfdi } from '../../models/catalogos/uso-cfdi';
 import { ClaveUnidad } from '../../models/catalogos/clave-unidad';
 import { Contribuyente } from '../../models/contribuyente';
-import { add, subtract, bignumber, multiply, format } from 'mathjs';
+import { subtract, bignumber, multiply, format } from 'mathjs';
 import { CfdiService } from '../back-services/cfdi.service';
 import { Empresa } from '../../models/empresa';
+import { Concepto } from '../models/cfdi/concepto';
+import { Cfdi } from '../models/cfdi/cfdi';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +31,8 @@ export class CfdiValidatorService {
     
     concepto.importe = +format(multiply(bignumber(concepto.cantidad), bignumber(concepto.valorUnitario)));
     const base: number = +format(subtract(bignumber(concepto.importe), bignumber(concepto.descuento)));
+    alert('Rebuild build concepto logic')
+    /*
     if (concepto.iva) {
       const impuesto = +format(multiply(base, bignumber(0.16))); // TODO calcular impuestos dinamicamente no solo IVA
       concepto.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];
@@ -43,7 +44,8 @@ export class CfdiValidatorService {
       concepto.retenciones = [new Impuesto('002', '0.060000', base, retencion)];
     } else {
       concepto.retenciones = [];
-    }
+    }*/
+
     return concepto;
   }
 

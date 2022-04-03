@@ -5,9 +5,7 @@ import { CompaniesData } from '../../../@core/data/companies-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Empresa } from '../../../models/empresa';
 import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
-import { Concepto } from '../../../models/factura/concepto';
 import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
-import { Cfdi } from '../../../models/factura/cfdi';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
@@ -19,14 +17,15 @@ import { DonwloadFileService } from '../../../@core/util-services/download-file-
 import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
-import { Pago } from '../../../models/factura/pago';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { GenericPage } from '../../../models/generic-page';
 import { Client } from '../../../models/client';
-import { Contribuyente } from '../../../models/contribuyente';
 import { User } from '../../../models/user';
 import { CfdiData } from '../../../@core/data/cfdi-data';
+import { Concepto } from '../../../@core/models/cfdi/concepto';
+import { Pago } from '../../../@core/models/cfdi/pago';
+import { Cfdi } from '../../../@core/models/cfdi/cfdi';
 
 
 @Component({

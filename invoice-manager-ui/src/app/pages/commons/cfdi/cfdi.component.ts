@@ -1,10 +1,7 @@
 import { Component, OnInit, Input, TemplateRef, Output, EventEmitter } from '@angular/core';
-import { Cfdi } from '../../../models/factura/cfdi';
-import { Pago } from '../../../models/factura/pago';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { Catalogo } from '../../../models/catalogos/catalogo';
-import { Concepto } from '../../../models/factura/concepto';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NbDialogService } from '@nebular/theme';
@@ -12,6 +9,9 @@ import { DonwloadFileService } from '../../../@core/util-services/download-file-
 import { FilesData } from '../../../@core/data/files-data';
 import { Router } from '@angular/router';
 import { InvoicesData } from '../../../@core/data/invoices-data';
+import { Cfdi } from '../../../@core/models/cfdi/cfdi';
+import { Pago } from '../../../@core/models/cfdi/pago';
+import { Concepto } from '../../../@core/models/cfdi/concepto';
 
 @Component({
   selector: 'ngx-cfdi',

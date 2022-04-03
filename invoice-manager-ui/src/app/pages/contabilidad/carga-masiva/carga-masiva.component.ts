@@ -3,13 +3,13 @@ import * as XLSX from 'xlsx';
 import { CompaniesData } from '../../../@core/data/companies-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { Factura } from '../../../models/factura/factura';
-import { Cfdi } from '../../../models/factura/cfdi';
-import { Concepto } from '../../../models/factura/concepto';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Empresa } from '../../../models/empresa';
 import { UsersData } from '../../../@core/data/users-data';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { User } from '../../../models/user';
+import { Cfdi } from '../../../@core/models/cfdi/cfdi';
+import { Concepto } from '../../../@core/models/cfdi/concepto';
 
 @Component({
   selector: 'ngx-carga-masiva',
@@ -143,7 +143,8 @@ export class CargaMasivaComponent implements OnInit {
         try {
           const claves = await this.catalogsData.getProductoServiciosByClave(claveProdServ.toString());
           factura.cfdi.conceptos[0].claveProdServ = claveProdServ.toString();
-          factura.cfdi.conceptos[0].descripcionCUPS = claves[0].descripcion;
+          // TODO evaluate if descripcionCUPS is required
+          //factura.cfdi.conceptos[0].descripcionCUPS = claves[0].descripcion;
           await this.invoiceService.insertNewInvoice(factura).toPromise();
           invoice.observaciones = 'CARGADA';
         } catch (error) {
@@ -208,7 +209,8 @@ export class CargaMasivaComponent implements OnInit {
     concepto.unidad = transfer.UNIDAD;
     concepto.valorUnitario = transfer.PRECIO_UNITARIO;
     concepto.importe = transfer.IMPORTE;
-    concepto.iva = true;
+    //TODO Valida si IVA es requerido
+    //concepto.iva = true;
     this.cfdiValidator.validarConcepto(concepto);
     cfdi.conceptos.push(this.cfdiValidator.buildConcepto(concepto));
     factura.cfdi = await this.cfdiValidator.calcularImportes(cfdi);

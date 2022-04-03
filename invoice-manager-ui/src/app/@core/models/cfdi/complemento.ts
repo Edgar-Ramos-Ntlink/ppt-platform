@@ -1,5 +1,5 @@
-import { TimbreFiscal } from './timbre-fiscal';
-import { Pago } from './pago';
+import { Pago } from "./pago";
+import { TimbreFiscal } from "./timbre-fiscal";
 
 export class Complemento {
 

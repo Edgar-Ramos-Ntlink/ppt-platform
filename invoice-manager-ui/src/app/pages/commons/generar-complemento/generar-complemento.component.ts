@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Factura } from '../../../models/factura/factura';
-import { Pago } from '../../../models/factura/pago';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { PagoBase } from '../../../models/pago-base';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Pago } from '../../../@core/models/cfdi/pago';
 
 @Component({
   selector: 'ngx-generar-complemento',

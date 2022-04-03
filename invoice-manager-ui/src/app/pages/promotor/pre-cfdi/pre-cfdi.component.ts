@@ -2,10 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Contribuyente } from '../../../models/contribuyente';
 import { Empresa } from '../../../models/empresa';
-import { Cfdi } from '../../../models/factura/cfdi';
 import { Client } from '../../../models/client';
 import { Factura } from '../../../models/factura/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
@@ -18,9 +16,10 @@ import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { GenericPage } from '../../../models/generic-page';
 import { User } from '../../../models/user';
-import { Pago } from '../../../models/factura/pago';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { NbComponentStatus, NbGlobalPhysicalPosition, NbToastrService } from '@nebular/theme';
+import { Pago } from '../../../@core/models/cfdi/pago';
+import { Cfdi } from '../../../@core/models/cfdi/cfdi';
 
 
 @Component({

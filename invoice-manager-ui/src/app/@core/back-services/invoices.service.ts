@@ -6,7 +6,7 @@ import { Catalogo } from '../../models/catalogos/catalogo';
 import { CatalogsData } from '../data/catalogs-data';
 import { map } from 'rxjs/operators';
 import { GenericPage } from '../../models/generic-page';
-import { Pago } from '../../models/factura/pago';
+import { Pago } from '../models/cfdi/pago';
 
 @Injectable({
   providedIn: 'root',
