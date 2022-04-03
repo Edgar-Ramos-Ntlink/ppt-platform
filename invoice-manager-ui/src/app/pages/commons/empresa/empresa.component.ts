@@ -15,7 +15,7 @@ import { NbComponentStatus, NbDialogService, NbGlobalPhysicalPosition, NbToastrS
 import { UsersData } from '../../../@core/data/users-data';
 import { ResourceFile } from '../../../models/resource-file';
 import { DetalleEmpresa } from '../../../models/detalle-empresa';
-import { User } from '../../../models/user';
+import { User } from '../../../@core/models/user';
 import { IngresoEmpresa } from '../../../models/ingreso-empresa';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 

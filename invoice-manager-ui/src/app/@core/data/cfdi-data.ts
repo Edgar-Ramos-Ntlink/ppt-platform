@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Factura } from '../../models/factura/factura';
+import { Factura } from '../../models/factura';
 import { Cfdi } from '../models/cfdi/cfdi';
 import { Concepto } from '../models/cfdi/concepto';
 import { Pago } from '../models/cfdi/pago';

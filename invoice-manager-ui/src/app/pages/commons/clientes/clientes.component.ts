@@ -4,7 +4,7 @@ import { GenericPage } from '../../../models/generic-page';
 import { Client } from '../../../models/client';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UsersData } from '../../../@core/data/users-data';
-import { User } from '../../../models/user';
+import { User } from '../../../@core/models/user';
 import { UtilsService } from '../../../@core/util-services/utils.service';
 
 @Component({

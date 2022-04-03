@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PagoBase } from '../../models/pago-base';
-import { Factura } from '../../models/factura/factura';
+import { Factura } from '../../models/factura';
 import { add, subtract, bignumber, unequal, number } from 'mathjs';
 
 @Injectable({

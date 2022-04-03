@@ -5,7 +5,7 @@ import { UsersData } from '../../../@core/data/users-data';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { FilesData } from '../../../@core/data/files-data';
-import { Factura } from '../../../models/factura/factura';
+import { Factura } from '../../../models/factura';
 import { UtilsService } from '../../../@core/util-services/utils.service';
 
 @Component({

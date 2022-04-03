@@ -2,12 +2,12 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { CompaniesData } from '../../../@core/data/companies-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
-import { Factura } from '../../../models/factura/factura';
+import { Factura } from '../../../models/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Empresa } from '../../../models/empresa';
 import { UsersData } from '../../../@core/data/users-data';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
-import { User } from '../../../models/user';
+import { User } from '../../../@core/models/user';
 import { Cfdi } from '../../../@core/models/cfdi/cfdi';
 import { Concepto } from '../../../@core/models/cfdi/concepto';
 

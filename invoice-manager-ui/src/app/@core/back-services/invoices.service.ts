@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Factura } from '../../models/factura/factura';
+import { Factura } from '../../models/factura';
 import { Catalogo } from '../../models/catalogos/catalogo';
 import { CatalogsData } from '../data/catalogs-data';
 import { map } from 'rxjs/operators';

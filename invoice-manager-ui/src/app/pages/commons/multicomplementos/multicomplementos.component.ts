@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GenericPage } from '../../../models/generic-page';
-import { User } from '../../../models/user';
+import { User } from '../../../@core/models/user';
 import { PagoBase } from '../../../models/pago-base';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Cuenta } from '../../../models/cuenta';
@@ -18,7 +18,7 @@ import { PagoFactura } from '../../../models/pago-factura';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Client } from '../../../models/client';
 import { map } from 'rxjs/operators';
-import { Factura } from '../../../models/factura/factura';
+import { Factura } from '../../../models/factura';
 
 @Component({
   selector: 'ngx-multicomplementos',

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { GenericPage } from '../../models/generic-page';
-import { User } from '../../models/user';
-import { Role } from '../../models/role';
+import { User } from '../models/user';
+import { Role } from '../models/role';
 
 export abstract class UsersData {
 

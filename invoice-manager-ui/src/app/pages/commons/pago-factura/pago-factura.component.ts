@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { Factura } from '../../../models/factura/factura';
-import { User } from '../../../models/user';
+import { Factura } from '../../../models/factura';
+import { User } from '../../../@core/models/user';
 import { PagoBase } from '../../../models/pago-base';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Cuenta } from '../../../models/cuenta';

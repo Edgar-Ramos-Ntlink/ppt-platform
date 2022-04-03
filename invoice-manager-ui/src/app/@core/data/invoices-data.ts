@@ -1,4 +1,4 @@
-import { Factura } from '../../models/factura/factura';
+import { Factura } from '../../models/factura';
 import { GenericPage } from '../../models/generic-page';
 import { Observable } from 'rxjs';
 import { ResourceFile } from '../../models/resource-file';

@@ -11,7 +11,7 @@ import { NbComponentStatus, NbGlobalPhysicalPosition, NbToastrService } from '@n
 import { ResourceFile } from '../../../models/resource-file';
 import { FilesData } from '../../../@core/data/files-data';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { User } from '../../../models/user';
+import { User } from '../../../@core/models/user';
 
 @Component({
   selector: 'ngx-cliente',

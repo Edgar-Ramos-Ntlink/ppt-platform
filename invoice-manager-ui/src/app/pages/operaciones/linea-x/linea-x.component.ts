@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Factura } from '../../../models/factura/factura';
+import { Factura } from '../../../models/factura';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { UsersData } from '../../../@core/data/users-data';
 import { Empresa } from '../../../models/empresa';
@@ -22,7 +22,7 @@ import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
 import { PagoBase } from '../../../models/pago-base';
 import { NbDialogService } from '@nebular/theme';
 import { PaymentsData } from '../../../@core/data/payments-data';
-import { User } from '../../../models/user';
+import { User } from '../../../@core/models/user';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { Concepto } from '../../../@core/models/cfdi/concepto';
 import { Pago } from '../../../@core/models/cfdi/pago';

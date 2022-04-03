@@ -1,13 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { PagoBase } from '../../../models/pago-base';
 import { GenericPage } from '../../../models/generic-page';
-import { Factura } from '../../../models/factura/factura';
+import { Factura } from '../../../models/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { map } from 'rxjs/operators';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { Client } from '../../../models/client';
 import { UsersData } from '../../../@core/data/users-data';
-import { User } from '../../../models/user';
+import { User } from '../../../@core/models/user';
 import { Contribuyente } from '../../../models/contribuyente';
 import { Cuenta } from '../../../models/cuenta';
 import { CuentasData } from '../../../@core/data/cuentas-data';

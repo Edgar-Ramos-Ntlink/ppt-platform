@@ -6,7 +6,7 @@ import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { UsersData } from '../../../@core/data/users-data';
-import { User } from '../../../models/user';
+import { User } from '../../../@core/models/user';
 
 @Component({
   selector: 'ngx-one-column-layout',

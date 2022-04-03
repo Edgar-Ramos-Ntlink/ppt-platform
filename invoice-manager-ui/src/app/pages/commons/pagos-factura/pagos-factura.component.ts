@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ElementRef, ViewChild, TemplateRef } from '@angular/core';
 import { PaymentsData } from '../../../@core/data/payments-data';
-import { User } from '../../../models/user';
+import { User } from '../../../@core/models/user';
 import { UsersData } from '../../../@core/data/users-data';
 import { GenericPage } from '../../../models/generic-page';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder, NbDialogService } from '@nebular/theme';

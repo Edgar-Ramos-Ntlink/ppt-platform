@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersData } from '../@core/data/users-data';
-import { User } from '../models/user';
+import { User } from '../@core/models/user';
 
 @Component({
   selector: 'ngx-pages',

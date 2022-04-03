@@ -1,26 +1,19 @@
-export class User{
+import { NbMenuItem } from '@nebular/theme';
+import { Role } from './role';
 
-    public id: number;
-
-    public activo:boolean;
-
+export class  User {
     public email: string;
+    public activo: boolean;
+    public name: string;
+    public urlPicture: string;
+    public roles: Role[];
+    public menu: NbMenuItem[];
+    public id: number;
+    public alias: string;
 
-    public username: string;
 
-    public password: string;
-
-    public tipoUsuario: string;
-
-    public multiempresas: boolean;
-
-    public creador: number;
-
-    public creacion: string;
-
-    public actualizacion: string;
-
-    constructor(username?:string){
-        this.username = username;
+    constructor() {
+        this.activo = false;
+        this.menu = [];
     }
 }

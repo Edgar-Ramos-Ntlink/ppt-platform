@@ -1,4 +1,4 @@
-import { Cfdi } from "../../@core/models/cfdi/cfdi";
+import { Cfdi } from "../@core/models/cfdi/cfdi";
 
 export class Factura {
 	public id: number;

@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Contribuyente } from '../../../models/contribuyente';
 import { Empresa } from '../../../models/empresa';
 import { Client } from '../../../models/client';
-import { Factura } from '../../../models/factura/factura';
+import { Factura } from '../../../models/factura';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
@@ -16,7 +16,7 @@ import { DonwloadFileService } from '../../../@core/util-services/download-file-
 import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { GenericPage } from '../../../models/generic-page';
-import { User } from '../../../models/user';
+import { User } from '../../../@core/models/user';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { Pago } from '../../../@core/models/cfdi/pago';

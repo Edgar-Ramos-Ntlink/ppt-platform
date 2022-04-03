@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 import { CatalogsData } from './@core/data/catalogs-data';
 import { UsersData } from './@core/data/users-data';
 import { Router } from '@angular/router';
-import { User } from './models/user';
+import { User } from './@core/models/user';
 
 @Component({
   selector: 'ngx-app',

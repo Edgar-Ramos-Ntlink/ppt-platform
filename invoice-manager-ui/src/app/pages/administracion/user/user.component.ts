@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { UsersData } from '../../../@core/data/users-data';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { User } from '../../../models/user';
-import { Role } from '../../../models/role';
+import { User } from '../../../@core/models/user';
+import { Role } from '../../../@core/models/role';
 interface IHash {
   [key: string]: boolean;
 }

@@ -8,7 +8,7 @@ import { ValidacionPagoComponent } from './validacion-pago/validacion-pago.compo
 import { PagoBase } from '../../../models/pago-base';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { User } from '../../../models/user';
+import { User } from '../../../@core/models/user';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 
 @Component({
