@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.business.unknow</groupId>
 		<artifactId>invoice-manager-platform</artifactId>
-		<version>3.5.5</version>
+		<version>4.0.0</version>
 	</parent>
 
 	<artifactId>invoice-manager-services</artifactId>
@@ -19,7 +19,6 @@
 		<aws.java.sdk.version>2.13.7</aws.java.sdk.version>
 		<aws.java.version>1.11.103</aws.java.version>
 		<aws.java.version>1.11.103</aws.java.version>
-		<invoice.manager.version>3.5.5</invoice.manager.version>
 	</properties>
 
 	<dependencies>
@@ -41,12 +40,12 @@
 	<dependency>
 			<groupId>com.business.unknow</groupId>
 			<artifactId>invoice-manager-rule</artifactId>
-			<version>${invoice.manager.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.business.unknow</groupId>
 			<artifactId>invoice-external-sdk</artifactId>
-			<version>${invoice.manager.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>

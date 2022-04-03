@@ -19,7 +19,7 @@ import { User } from '../../../@core/models/user';
             <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
               <nb-icon icon="menu-2-outline"></nb-icon>
             </a>
-            <a class="logo" href="#" (click)="navigateHome()"><span>NT LINK ADMINISTRACIÓN</span></a>
+            <a class="logo" href="#" (click)="navigateHome()"><span>ADMINISTRADOR DE FACTURAS</span></a>
           </div>
         </div>
     
@@ -49,7 +49,7 @@ import { User } from '../../../@core/models/user';
 
       <nb-layout-footer fixed>
         <span class="created-by">
-          Desarrolado por <b><a href="http://www.ntlink.com.mx" target="_blank">NT LINK</a></b>  &copy; 2022. Todos los derechos reservados. V 3.6.0
+          Desarrolado por <b><a href="http://www.ntlink.com.mx" target="_blank">NT LINK</a></b>  &copy; 2022. Todos los derechos reservados. V 4.0.0
         </span>
       </nb-layout-footer>
     </nb-layout>
