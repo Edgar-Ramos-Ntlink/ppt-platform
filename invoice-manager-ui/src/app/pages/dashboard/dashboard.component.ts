@@ -1,11 +1,15 @@
-import {Component, OnDestroy} from '@angular/core';
-import { NbThemeService } from '@nebular/theme';
-import { takeWhile } from 'rxjs/operators' ;
+import {Component, OnInit} from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { map } from 'rxjs/operators';
+import { CompaniesData } from '../../@core/data/companies-data';
+import { FilesData } from '../../@core/data/files-data';
+import { GenericPage } from '../../models/generic-page';
 
 interface CardSettings {
   title: string;
-  iconClass: string;
-  type: string;
+  imageSrc: string;
+  description: string;
+  linkUrl:string;
 }
 
 @Component({
@@ -13,82 +17,35 @@ interface CardSettings {
   styleUrls: ['./dashboard.component.scss'],
   templateUrl: './dashboard.component.html',
 })
-export class DashboardComponent implements OnDestroy {
+export class DashboardComponent  implements OnInit{
 
-  private alive = true;
+ constructor(private companiesService:CompaniesData,
+  private sanitizer: DomSanitizer,
+  private resourcesService: FilesData){
 
-  solarValue: number;
-  lightCard: CardSettings = {
-    title: '10 nuevos clientes',
-    iconClass: 'nb-person',
-    type: 'primary',
-  };
-  rollerShadesCard: CardSettings = {
-    title: '15 facturas revisión',
-    iconClass: 'nb-edit',
-    type: 'success',
-  };
-  wirelessAudioCard: CardSettings = {
-    title: '3 nuevas empresas',
-    iconClass: 'nb-home',
-    type: 'info',
-  };
-  coffeeMakerCard: CardSettings = {
-    title: '15 pagos pendientes',
-    iconClass: 'nb-lightbulb',
-    type: 'warning',
-  };
+ }
 
-  statusCards: string;
+ public cards:CardSettings[]= []
 
-  commonStatusCardsSet: CardSettings[] = [
-    this.lightCard,
-    this.rollerShadesCard,
-    this.wirelessAudioCard,
-    this.coffeeMakerCard,
-  ];
-
-  statusCardsByThemes: {
-    default: CardSettings[];
-    cosmic: CardSettings[];
-    corporate: CardSettings[];
-    dark: CardSettings[];
-  } = {
-    default: this.commonStatusCardsSet,
-    cosmic: this.commonStatusCardsSet,
-    corporate: [
-      {
-        ...this.lightCard,
-        type: 'warning',
-      },
-      {
-        ...this.rollerShadesCard,
-        type: 'primary',
-      },
-      {
-        ...this.wirelessAudioCard,
-        type: 'danger',
-      },
-      {
-        ...this.coffeeMakerCard,
-        type: 'info',
-      },
-    ],
-    dark: this.commonStatusCardsSet,
-  };
-
-  constructor(private themeService: NbThemeService) {
-    this.themeService.getJsTheme()
-      .pipe(takeWhile(() => this.alive))
-      .subscribe(theme => {
-        this.statusCards = this.statusCardsByThemes[theme.name];
-    });
-
-    this.solarValue =42;
-
+  ngOnInit(): void {
+    this.companiesService.getCompanies({activo: true, linea: 'A', size:12})
+    .pipe(
+      map((page:GenericPage<any>)=>{
+        let result = page.content.map(e=>Object.assign({}, {title:e.NOMBRE_CORTO,imageSrc:`/api/empresas/${e.RFC}/logo`,description:e.GIRO,linkUrl:e.PAGINA_WEB}));
+        return result;
+      })
+    ).subscribe(result =>this.cards = result)
   }
 
-  ngOnDestroy() {
-    this.alive = false;
+  public goToLink(link:string){
+    console.log('Redirecting to :', link)
+    window.open(link, "_blank");
   }
+
+  /*
+  public async getlogoFromRFC(rfc:string){
+    let file: ResourceFile = await this.resourcesService.getResourceFile(rfc, 'EMPRESAS', 'LOGO').toPromise();
+    const url = `data:${file.formato}base64,${file.data}`;
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+  }*/
 }

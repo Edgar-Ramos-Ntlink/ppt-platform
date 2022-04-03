@@ -10,10 +10,17 @@ import com.business.unknow.services.entities.ResourceFile;
 import com.business.unknow.services.mapper.ResourceFileMapper;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,6 +32,9 @@ public class FilesService {
   @Autowired private ResourceFileMapper resourceFileMapper;
 
   @Autowired private S3FileService s3FileService;
+
+  @Value("classpath:/images/imagen-no-disponible.png")
+  private Resource noAvailableImage;
 
   public FacturaFileDto getFacturaFileByFolioAndType(String folio, String type)
       throws InvoiceManagerException {
@@ -75,6 +85,29 @@ public class FilesService {
               type, resource, reference),
           HttpStatus.CONFLICT.value());
     }
+  }
+
+  public ResponseEntity<byte[]> getCompanyImage(String rfc) throws IOException {
+
+    Optional<ResourceFile> resource =
+        resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(
+            S3BucketsEnum.EMPRESAS.name(), rfc, "LOGO");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+    byte[] bytes = null;
+    if (resource.isPresent()) {
+      headers.setContentType(MediaType.valueOf(resource.get().getFormato().replace(";", "")));
+      bytes =
+          s3FileService
+              .getS3InputStream(S3BucketsEnum.EMPRESAS, resource.get().getNombre())
+              .readAllBytes();
+    } else {
+      headers.setContentType(MediaType.IMAGE_PNG);
+      bytes = noAvailableImage.getInputStream().readAllBytes();
+      return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+    }
+    return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
   }
 
   public void upsertFacturaFile(

@@ -7,7 +7,7 @@ import { ResourceFile } from '../../models/resource-file';
 
 export abstract class CompaniesData {
 
-    abstract getCompanies(filterParams?: any): Observable<GenericPage<any>>;
+    abstract getCompanies(filterParams?: any): Observable<GenericPage<Empresa>>;
 
     abstract getCompaniesReport(filterParams?: any): Observable<ResourceFile>;
 

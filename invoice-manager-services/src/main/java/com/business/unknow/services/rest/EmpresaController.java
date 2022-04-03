@@ -4,6 +4,7 @@ import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.EmpresaService;
+import com.business.unknow.services.services.FilesService;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmpresaController {
 
   @Autowired private EmpresaService service;
+  @Autowired private FilesService fileService;
 
   @GetMapping("/empresas")
   public ResponseEntity<Page<Map<String, String>>> getEmpresasByParameter(
@@ -37,6 +39,11 @@ public class EmpresaController {
   public ResponseEntity<ResourceFileDto> getEmpresasByParametersReport(
       @RequestParam Map<String, String> parameters) throws IOException {
     return new ResponseEntity<>(service.getCompaniesReport(parameters), HttpStatus.OK);
+  }
+
+  @GetMapping(value = "/empresas/{rfc}/logo")
+  public ResponseEntity<byte[]> getCompanyLogo(@PathVariable String rfc) throws IOException {
+    return fileService.getCompanyImage(rfc);
   }
 
   @GetMapping("/empresas/{rfc}")

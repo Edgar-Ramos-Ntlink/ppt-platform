@@ -40,13 +40,16 @@ public class S3FileService {
     }
   }
 
-  public String getS3File(S3BucketsEnum bucket, String name) throws InvoiceManagerException {
+  public InputStream getS3InputStream(S3BucketsEnum bucket, String name) {
     AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(s3Properties.getRegion()).build();
     S3Object s3object =
         s3.getObject(s3Properties.getBucketName().concat("/").concat(bucket.name()), name);
-    InputStream inputStream = s3object.getObjectContent();
+    return s3object.getObjectContent();
+  }
+
+  public String getS3File(S3BucketsEnum bucket, String name) throws InvoiceManagerException {
     try {
-      return new String(Base64.getEncoder().encode(inputStream.readAllBytes()));
+      return new String(Base64.getEncoder().encode(getS3InputStream(bucket, name).readAllBytes()));
     } catch (IOException e) {
       throw new InvoiceManagerException(
           String.format("Error reading S3 file %s", name).concat(e.getMessage()),
