@@ -21,13 +21,9 @@
 
           <div class="col-4">
 
-            <label for="inputEmpresa" class="label">Empresa razon social</label>
-            <input type="text" class="form-control" (keyup)="getSelector($event)" [ngModel]="filterParams.empresarazon"
-             id="empresasId" list="dynmicList" placeholder="Razon social"/>
-            <datalist id="dynmicList">
-              <option *ngFor="let item of listEmpresasMatch" [value]="item">{{item}}</option>
-            </datalist>
-
+            <label for="inputEmpresaRazon" class="label">Empresa razon social</label>
+            <input  id="inputEmpresaRazon" class="form-control" fullWidth type="text" [(ngModel)]="filterParams.razonSocial"fullWidth
+             placeholder="Razon social"/>
           </div>
           <div class="col-4">
             <button class="btn btn-primary" style="width: 100%; margin-top: 28px;"

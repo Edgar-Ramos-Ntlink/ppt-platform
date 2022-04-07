@@ -75,7 +75,12 @@ public class CuentaBancariaService {
               criteriaBuilder.and(
                   criteriaBuilder.equal(root.get("clabe"), parameters.get("clabe"))));
         }
-
+        if (parameters.get("razonSocial") != null) {
+          predicates.add(
+              criteriaBuilder.and(
+                  criteriaBuilder.like(
+                      root.get("razonSocial"), "%" + parameters.get("razonSocial") + "%")));
+        }
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
       }
     };
