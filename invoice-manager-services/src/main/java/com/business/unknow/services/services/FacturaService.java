@@ -25,9 +25,7 @@ import com.business.unknow.services.services.builder.FacturaBuilderService;
 import com.business.unknow.services.services.builder.TimbradoBuilderService;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
 import com.business.unknow.services.services.evaluations.TimbradoEvaluatorService;
-import com.business.unknow.services.services.executor.FacturacionModernaExecutor;
 import com.business.unknow.services.services.executor.NtinkExecutorService;
-import com.business.unknow.services.services.executor.SwSapinsExecutorService;
 import com.business.unknow.services.services.executor.TimbradoExecutorService;
 import com.business.unknow.services.services.translators.FacturaTranslator;
 import com.business.unknow.services.services.translators.RelacionadosTranslator;
@@ -88,10 +86,6 @@ public class FacturaService {
   @Autowired private TimbradoBuilderService timbradoBuilderService;
 
   @Autowired private FacturaTranslator facturaTranslator;
-
-  @Autowired private SwSapinsExecutorService swSapinsExecutorService;
-
-  @Autowired private FacturacionModernaExecutor facturacionModernaExecutor;
 
   @Autowired private NtinkExecutorService ntinkExecutorService;
 
@@ -632,12 +626,6 @@ public class FacturaService {
             HttpStatus.BAD_REQUEST.value());
     }
     switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
-      case SW_SAPIENS:
-        swSapinsExecutorService.stamp(facturaContext);
-        break;
-      case FACTURACION_MODERNA:
-        facturacionModernaExecutor.stamp(facturaContext);
-        break;
       case NTLINK:
         ntinkExecutorService.stamp(facturaContext);
         break;
@@ -702,12 +690,6 @@ public class FacturaService {
 
     timbradoServiceEvaluator.facturaCancelacionValidation(facturaContext);
     switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
-      case SW_SAPIENS:
-        swSapinsExecutorService.cancelarFactura(facturaContext);
-        break;
-      case FACTURACION_MODERNA:
-        facturacionModernaExecutor.cancelarFactura(facturaContext);
-        break;
       case NTLINK:
         ntinkExecutorService.cancelarFactura(facturaContext);
         break;
