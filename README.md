@@ -23,3 +23,5 @@ VERSION 3.2.0
     - [x] 3.5.2 Facturas Filters and Read me
     - [x] 3.5.3 Sustitucion for Facturas Timbradas
     - [x] 3.5.4 Factura reportes with Folio Fiscal
+    - [x] 3.5.5 Empresa small fix
+    - [x] 3.5.6 Cuenta bancaria filter fix
