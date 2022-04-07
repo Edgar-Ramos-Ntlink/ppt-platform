@@ -1,16 +1,20 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import {
+  NbMediaBreakpointsService,
+  NbMenuService,
+  NbSidebarService,
+  NbThemeService,
+} from "@nebular/theme";
 
-import { LayoutService } from '../../../@core/utils';
-import { map, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
-import { UsersData } from '../../../@core/data/users-data';
-import { User } from '../../../@core/models/user';
+import { LayoutService } from "../../../@core/utils";
+import { map, takeUntil } from "rxjs/operators";
+import { Subject } from "rxjs";
+import { UsersData } from "../../../@core/data/users-data";
+import { User } from "../../../@core/models/user";
 
 @Component({
-  selector: 'ngx-one-column-layout',
-  styleUrls: ['./one-column.layout.scss'],
+  selector: "ngx-one-column-layout",
+  styleUrls: ["./one-column.layout.scss"],
   template: `
     <nb-layout windowMode>
       <nb-layout-header fixed>
@@ -19,20 +23,27 @@ import { User } from '../../../@core/models/user';
             <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
               <nb-icon icon="menu-2-outline"></nb-icon>
             </a>
-            <a class="logo" href="#" (click)="navigateHome()"><span>ADMINISTRADOR DE FACTURAS</span></a>
+            <a class="logo" href="#" (click)="navigateHome()"
+              ><span>ADMINISTRADOR DE FACTURAS</span></a
+            >
           </div>
         </div>
-    
+
         <div class="header-container clearfix">
           <!--nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary" class="float-right">
             <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
           </nb-select-->
-          <button class="btn btn-warning float-right" (click)="logout()"> Salir</button>
+          <button class="btn btn-warning float-right" (click)="logout()">
+            Salir
+          </button>
           <nb-actions size="small" class="float-right">
             <nb-action class="user-action">
-              <nb-user shape="rectangle"
-              [name]="user?.name"
-              [picture]="user?.urlPicture" title="Usuario">
+              <nb-user
+                shape="rectangle"
+                [name]="user?.name"
+                [picture]="user?.urlPicture"
+                title="Usuario"
+              >
               </nb-user>
             </nb-action>
           </nb-actions>
@@ -49,14 +60,15 @@ import { User } from '../../../@core/models/user';
 
       <nb-layout-footer fixed>
         <span class="created-by">
-          Desarrolado por <b><a href="http://www.ntlink.com.mx" target="_blank">NT LINK</a></b>  &copy; 2022. Todos los derechos reservados. V 4.0.0
+          Desarrolado por
+          <b><a href="http://www.ntlink.com.mx" target="_blank">NT LINK</a></b>
+          &copy; 2022. Todos los derechos reservados. V 4.0.0
         </span>
       </nb-layout-footer>
     </nb-layout>
   `,
 })
 export class OneColumnLayoutComponent implements OnInit, OnDestroy {
-
   @Input() user: User;
 
   private destroy$: Subject<void> = new Subject<void>();
@@ -64,53 +76,55 @@ export class OneColumnLayoutComponent implements OnInit, OnDestroy {
 
   themes = [
     {
-      value: 'default',
-      name: 'Light',
+      value: "default",
+      name: "Light",
     },
     {
-      value: 'dark',
-      name: 'Dark',
+      value: "dark",
+      name: "Dark",
     },
     {
-      value: 'cosmic',
-      name: 'Cosmic',
+      value: "cosmic",
+      name: "Cosmic",
     },
     {
-      value: 'corporate',
-      name: 'Corporate',
+      value: "corporate",
+      name: "Corporate",
     },
   ];
 
-  currentTheme = 'default';
+  currentTheme = "default";
 
-  
-  constructor(private sidebarService: NbSidebarService,
-              private menuService: NbMenuService,
-              private themeService: NbThemeService,
-              private layoutService: LayoutService,
-              private breakpointService: NbMediaBreakpointsService,
-              private userService: UsersData,
-              private router: Router) {
-  }
+  constructor(
+    private sidebarService: NbSidebarService,
+    private menuService: NbMenuService,
+    private themeService: NbThemeService,
+    private layoutService: LayoutService,
+    private breakpointService: NbMediaBreakpointsService,
+    private userService: UsersData
+  ) {}
 
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
 
-   
     const { xl } = this.breakpointService.getBreakpointsMap();
-    this.themeService.onMediaQueryChange()
+    this.themeService
+      .onMediaQueryChange()
       .pipe(
         map(([, currentBreakpoint]) => currentBreakpoint.width < xl),
-        takeUntil(this.destroy$),
+        takeUntil(this.destroy$)
       )
-      .subscribe((isLessThanXl: boolean) => this.userPictureOnly = isLessThanXl);
+      .subscribe(
+        (isLessThanXl: boolean) => (this.userPictureOnly = isLessThanXl)
+      );
 
-    this.themeService.onThemeChange()
+    this.themeService
+      .onThemeChange()
       .pipe(
         map(({ name }) => name),
-        takeUntil(this.destroy$),
+        takeUntil(this.destroy$)
       )
-      .subscribe(themeName => this.currentTheme = themeName);
+      .subscribe((themeName) => (this.currentTheme = themeName));
   }
 
   ngOnDestroy() {
@@ -123,7 +137,7 @@ export class OneColumnLayoutComponent implements OnInit, OnDestroy {
   }
 
   toggleSidebar(): boolean {
-    this.sidebarService.toggle(true, 'menu-sidebar');
+    this.sidebarService.toggle(true, "menu-sidebar");
     this.layoutService.changeLayoutSize();
 
     return false;
@@ -136,8 +150,13 @@ export class OneColumnLayoutComponent implements OnInit, OnDestroy {
 
   logout() {
     this.userService.logout().subscribe({
-      error(e) { console.error('logout',e) },
-      complete() { this.document.location.href = "https://mail.google.com/mail/u/0/?logout&hl=en"}
+      error(e) {
+        console.error("logout", e);
+      },
+      complete() {
+        this.document.location.href =
+          "https://mail.google.com/mail/u/0/?logout&hl=en";
+      },
     });
   }
 }
