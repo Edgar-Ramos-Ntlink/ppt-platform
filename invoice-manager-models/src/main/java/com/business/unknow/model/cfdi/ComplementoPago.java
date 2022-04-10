@@ -7,9 +7,19 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @XmlRootElement(name = "Pago", namespace = "http://www.sat.gob.mx/Pagos")
 @XmlAccessorType(XmlAccessType.FIELD)
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
 public class ComplementoPago {
 
   @XmlAttribute(name = "FechaPago")
@@ -34,76 +44,6 @@ public class ComplementoPago {
     return tipoCambioP;
   }
 
-  public void setTipoCambioP(BigDecimal tipoCambioP) {
-    this.tipoCambioP = tipoCambioP;
-  }
-
   @XmlElement(name = "DoctoRelacionado", namespace = "http://www.sat.gob.mx/Pagos")
   private List<ComplementoDocRelacionado> complementoDocRelacionado;
-
-  public String getFechaPago() {
-    return fechaPago;
-  }
-
-  public void setFechaPago(String fechaPago) {
-    this.fechaPago = fechaPago;
-  }
-
-  public String getFormaDePago() {
-    return formaDePago;
-  }
-
-  public void setFormaDePago(String formaDePago) {
-    this.formaDePago = formaDePago;
-  }
-
-  public String getMoneda() {
-    return moneda;
-  }
-
-  public void setMoneda(String moneda) {
-    this.moneda = moneda;
-  }
-
-  public String getMonto() {
-    return monto;
-  }
-
-  public void setMonto(String monto) {
-    this.monto = monto;
-  }
-
-  public List<ComplementoDocRelacionado> getComplementoDocRelacionado() {
-    return complementoDocRelacionado;
-  }
-
-  public void setComplementoDocRelacionado(
-      List<ComplementoDocRelacionado> complementoDocRelacionado) {
-    this.complementoDocRelacionado = complementoDocRelacionado;
-  }
-
-  public String getFormaDePagoDesc() {
-    return formaDePagoDesc;
-  }
-
-  public void setFormaDePagoDesc(String formaDePagoDesc) {
-    this.formaDePagoDesc = formaDePagoDesc;
-  }
-
-  @Override
-  public String toString() {
-    return "ComplementoPago [fechaPago="
-        + fechaPago
-        + ", formaDePago="
-        + formaDePago
-        + ", formaDePagoDesc="
-        + formaDePagoDesc
-        + ", moneda="
-        + moneda
-        + ", monto="
-        + monto
-        + ", complementoDocRelacionado="
-        + complementoDocRelacionado
-        + "]";
-  }
 }

@@ -4,9 +4,19 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @XmlRootElement(name = "Emisor", namespace = "http://www.sat.gob.mx/cfd/3")
 @XmlAccessorType(XmlAccessType.FIELD)
+@SuperBuilder(toBuilder = true)
+@AllArgsConstructor()
+@NoArgsConstructor()
+@Setter
+@Getter
 public class Emisor {
 
   @XmlAttribute(name = "Rfc")
@@ -17,33 +27,4 @@ public class Emisor {
 
   @XmlAttribute(name = "RegimenFiscal")
   private String regimenFiscal;
-
-  public String getRfc() {
-    return rfc;
-  }
-
-  public void setRfc(String rfc) {
-    this.rfc = rfc;
-  }
-
-  public String getNombre() {
-    return nombre;
-  }
-
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
-  }
-
-  public String getRegimenFiscal() {
-    return regimenFiscal;
-  }
-
-  public void setRegimenFiscal(String regimenFiscal) {
-    this.regimenFiscal = regimenFiscal;
-  }
-
-  @Override
-  public String toString() {
-    return "Emisor [rfc=" + rfc + ", nombre=" + nombre + ", regimenFiscal=" + regimenFiscal + "]";
-  }
 }

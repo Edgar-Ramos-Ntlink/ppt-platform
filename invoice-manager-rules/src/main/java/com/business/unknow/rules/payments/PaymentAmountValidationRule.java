@@ -7,19 +7,18 @@ import com.business.unknow.rules.common.Constants.PaymentsSuite;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Rule(
     name = PaymentsSuite.MONTO_PAGO_VALIDATION_RULE,
     description = PaymentsSuite.MONTO_PAGO_VALIDATION)
+@Slf4j
 public class PaymentAmountValidationRule {
-
-  private static final Logger log = LoggerFactory.getLogger(PaymentAmountValidationRule.class);
 
   @Condition
   public boolean condition(

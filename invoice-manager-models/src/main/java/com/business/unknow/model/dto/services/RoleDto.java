@@ -18,8 +18,6 @@ import lombok.extern.jackson.Jacksonized;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RoleDto implements Serializable {
 
-  private static final long serialVersionUID = 6929229782062286217L;
-
   private Integer id;
   private String role;
   private String description;

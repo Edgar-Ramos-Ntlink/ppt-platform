@@ -5,7 +5,20 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
+@ToString
 @Entity
 @Table(name = "CAT_BANCOS")
 public class Banco implements Serializable {
@@ -18,25 +31,4 @@ public class Banco implements Serializable {
 
   @Column(name = "NOMBRE")
   private String nombre;
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getNombre() {
-    return nombre;
-  }
-
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
-  }
-
-  @Override
-  public String toString() {
-    return "Catalog [id=" + id + ", nombre=" + nombre + "]";
-  }
 }

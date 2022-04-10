@@ -1,6 +1,5 @@
 package com.business.unknow.services.services;
 
-import com.business.unknow.builder.PagoBuilder;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
@@ -31,9 +30,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
@@ -47,6 +45,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 /** @author ralfdemoledor */
 @Service
+@Slf4j
 public class PagoService {
 
   @Autowired private PagoRepository repository;
@@ -66,8 +65,6 @@ public class PagoService {
   @Autowired private CfdiService cfdiService;
 
   @Autowired private DownloaderService downloaderService;
-
-  private static final Logger log = LoggerFactory.getLogger(PagoService.class);
 
   private Page<Pago> paymentsSearch(
       Optional<String> solicitante,
@@ -343,12 +340,13 @@ public class PagoService {
                         HttpStatus.NOT_FOUND,
                         String.format("El pago con el id %d no existe", idPago)));
 
-    PagoBuilder pagoBuilder =
-        new PagoBuilder(mapper.getPagoDtoFromEntity(entity)) // payment only update revision
-            .setRevision1(pago.getRevision1())
-            .setRevision2(pago.getRevision2())
-            .setRevisor1(pago.getRevisor1())
-            .setRevisor2(pago.getRevisor2());
+    PagoDto pagoDto = mapper.getPagoDtoFromEntity(entity); // payment only update revision
+    pagoDto.toBuilder()
+        .revision1(pago.getRevision1())
+        .revision2(pago.getRevision2())
+        .revisor1(pago.getRevisor1())
+        .revisor2(pago.getRevisor2())
+        .build();
     pagoEvaluatorService.validatePayment(pago);
 
     List<FacturaDto> facturas = new ArrayList<>();
@@ -359,8 +357,8 @@ public class PagoService {
     pagoEvaluatorService.validatePaymentUpdate(pago, mapper.getPagoDtoFromEntity(entity), facturas);
 
     if (pago.getStatusPago().equals(RevisionPagosEnum.RECHAZADO.name())) {
-      pagoBuilder.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
-      pagoBuilder.setComentarioPago(pago.getComentarioPago());
+      pagoDto.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
+      pagoDto.setComentarioPago(pago.getComentarioPago());
       for (FacturaDto factura : facturas) {
         if (MetodosPagoEnum.PUE.getClave().equals(factura.getMetodoPago())) {
           factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
@@ -369,7 +367,7 @@ public class PagoService {
         }
       }
     } else if (entity.getRevision1() && pago.getRevision2()) {
-      pagoBuilder.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
+      pagoDto.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
 
       List<Integer> idFacts =
           pago.getFacturas().stream()
@@ -383,8 +381,7 @@ public class PagoService {
         facturaService.updateFactura(idCfdi, fact);
       }
     }
-    return mapper.getPagoDtoFromEntity(
-        repository.save(mapper.getEntityFromPagoDto(pagoBuilder.build())));
+    return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoDto)));
   }
 
   @Transactional(

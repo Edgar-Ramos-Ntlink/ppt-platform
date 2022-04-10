@@ -5,7 +5,20 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
+@ToString
 @Entity
 @Table(name = "CAT_REGIMEN_FISCAL")
 public class RegimenFiscal {
@@ -25,59 +38,4 @@ public class RegimenFiscal {
 
   @Column(name = "INICIO_VIGENCIA")
   private Date inicioVigencia;
-
-  public Integer getClave() {
-    return clave;
-  }
-
-  public void setClave(Integer clave) {
-    this.clave = clave;
-  }
-
-  public String getDescripcion() {
-    return descripcion;
-  }
-
-  public void setDescripcion(String descripcion) {
-    this.descripcion = descripcion;
-  }
-
-  public boolean ispFisica() {
-    return pFisica;
-  }
-
-  public void setpFisica(boolean pFisica) {
-    this.pFisica = pFisica;
-  }
-
-  public boolean ispMoral() {
-    return pMoral;
-  }
-
-  public void setpMoral(boolean pMoral) {
-    this.pMoral = pMoral;
-  }
-
-  public Date getInicioVigencia() {
-    return inicioVigencia;
-  }
-
-  public void setInicioVigencia(Date inicioVigencia) {
-    this.inicioVigencia = inicioVigencia;
-  }
-
-  @Override
-  public String toString() {
-    return "RegimenFiscal [clave="
-        + clave
-        + ", descripcion="
-        + descripcion
-        + ", pFisica="
-        + pFisica
-        + ", pMoral="
-        + pMoral
-        + ", inicioVigencia="
-        + inicioVigencia
-        + "]";
-  }
 }

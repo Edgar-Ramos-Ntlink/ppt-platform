@@ -1,7 +1,19 @@
 package com.business.unknow.model.dto.cfdi;
 
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class EmisorDto implements Serializable {
 
   private static final long serialVersionUID = -6859374411200231323L;
@@ -11,10 +23,6 @@ public class EmisorDto implements Serializable {
   private String nombre;
   private String regimenFiscal;
   private String direccion;
-
-  public EmisorDto() {
-    super();
-  }
 
   public EmisorDto(String rfc, String nombre, String regimenFiscal, String direccion) {
     super();

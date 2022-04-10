@@ -15,12 +15,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class CatalogCacheService {
 
   private Map<String, UsoCfdi> usoCfdiMappings;
@@ -42,8 +42,6 @@ public class CatalogCacheService {
   @Autowired private ClaveUnidadRepository claveUnidadReppository;
 
   @Autowired private GiroRepository giroRepo;
-
-  private static final Logger log = LoggerFactory.getLogger(CatalogCacheService.class);
 
   @PostConstruct
   public void init() {

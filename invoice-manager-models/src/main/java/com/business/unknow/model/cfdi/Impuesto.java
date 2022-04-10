@@ -9,10 +9,21 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @XmlRootElement(name = "Impuestos", namespace = "http://www.sat.gob.mx/cfd/3")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = {"retenciones", "translados"})
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
 public class Impuesto {
 
   @XmlAttribute(name = "TotalImpuestosTrasladados")
@@ -28,47 +39,4 @@ public class Impuesto {
   @XmlElementWrapper(name = "Traslados", namespace = "http://www.sat.gob.mx/cfd/3")
   @XmlElement(name = "Traslado", namespace = "http://www.sat.gob.mx/cfd/3")
   private List<Translado> translados;
-
-  public Impuesto() {}
-
-  public BigDecimal getTotalImpuestosTrasladados() {
-    return totalImpuestosTrasladados;
-  }
-
-  public void setTotalImpuestosTrasladados(BigDecimal totalImpuestosTrasladados) {
-    this.totalImpuestosTrasladados = totalImpuestosTrasladados;
-  }
-
-  public List<Translado> getTranslados() {
-    return translados;
-  }
-
-  public void setTranslados(List<Translado> translados) {
-    this.translados = translados;
-  }
-
-  public List<Retencion> getRetenciones() {
-    return retenciones;
-  }
-
-  public void setRetenciones(List<Retencion> retenciones) {
-    this.retenciones = retenciones;
-  }
-
-  public BigDecimal getTotalImpuestosRetenidos() {
-    return totalImpuestosRetenidos;
-  }
-
-  public void setTotalImpuestosRetenidos(BigDecimal totalImpuestosRetenidos) {
-    this.totalImpuestosRetenidos = totalImpuestosRetenidos;
-  }
-
-  @Override
-  public String toString() {
-    return "Impuesto [totalImpuestosTrasladados="
-        + totalImpuestosTrasladados
-        + ", translados="
-        + translados
-        + "]";
-  }
 }

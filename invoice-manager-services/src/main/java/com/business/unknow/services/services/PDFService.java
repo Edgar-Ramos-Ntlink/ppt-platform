@@ -1,7 +1,6 @@
 /** */
 package com.business.unknow.services.services;
 
-import com.business.unknow.builder.FacturaPdfModelDtoBuilder;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
@@ -37,15 +36,14 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-/** @author ralfdemoledor */
 @Service
+@Slf4j
 public class PDFService {
 
   @Autowired private PDFGenerator pdfGenerator;
@@ -64,13 +62,11 @@ public class PDFService {
 
   @Autowired private FilesService filesService;
 
-  private static final Logger log = LoggerFactory.getLogger(PDFService.class);
-
   public FacturaPdfModelDto getPdfFromFactura(FacturaDto facturaDto, Cfdi cfdi)
       throws InvoiceCommonException, InvoiceManagerException {
 
-    FacturaPdfModelDtoBuilder fBuilder =
-        new FacturaPdfModelDtoBuilder().setFactura(getCfdiModelFromFacturaDto(facturaDto));
+    FacturaPdfModelDto fBuilder =
+        FacturaPdfModelDto.builder().factura(getCfdiModelFromFacturaDto(facturaDto)).build();
     try {
       fBuilder.setQr(
           filesService
@@ -88,19 +84,20 @@ public class PDFService {
       log.info(String.format("%s file for logo not found", facturaDto.getFolio()));
     }
 
-    fBuilder
-        .setMetodoPagoDesc(
+    fBuilder.toBuilder()
+        .metodoPagoDesc(
             MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
-        .setLogotipo(logo == null ? null : logo.getData())
-        .setTipoDeComprobanteDesc(
+        .logotipo(logo == null ? null : logo.getData())
+        .tipoDeComprobanteDesc(
             TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante())
                 .getDescripcion())
-        .setTotalDesc(
+        .totalDesc(
             numberTranslatorHelper.getStringNumber(
                 facturaDto.getCfdi().getTotal(), facturaDto.getCfdi().getMoneda()))
-        .setSubTotalDesc(
+        .subTotalDesc(
             numberTranslatorHelper.getStringNumber(
-                facturaDto.getCfdi().getSubtotal(), facturaDto.getCfdi().getMoneda()));
+                facturaDto.getCfdi().getSubtotal(), facturaDto.getCfdi().getMoneda()))
+        .build();
 
     RegimenFiscal regimenFiscal =
         catalogCacheService
@@ -119,7 +116,7 @@ public class PDFService {
               .getFormaPagoMappings()
               .get(
                   cfdi.getComplemento()
-                      .getComplemntoPago()
+                      .getComplementoPago()
                       .getComplementoPagos()
                       .get(0)
                       .getFormaDePago());
@@ -134,13 +131,13 @@ public class PDFService {
 
     fBuilder.setCadenaOriginal(facturaDto.getCadenaOriginalTimbrado());
 
-    return fBuilder.build();
+    return fBuilder;
   }
 
   public FacturaPdfModelDto getPdfFromFactura(FacturaContext context)
       throws InvoiceCommonException {
 
-    FacturaPdfModelDtoBuilder fBuilder = new FacturaPdfModelDtoBuilder();
+    FacturaPdfModelDto fBuilder = new FacturaPdfModelDto();
     FacturaDto facturaDto = context.getFacturaDto();
 
     fBuilder.setFactura(getCfdiModelFromContext(context));
@@ -160,22 +157,22 @@ public class PDFService {
     } catch (InvoiceManagerException e) {
       log.info(String.format("%s file for Qr not found", facturaDto.getFolio()));
     }
-    fBuilder
-        .setMetodoPagoDesc(
+    fBuilder.toBuilder()
+        .metodoPagoDesc(
             MetodosPagoEnum.findByValor(facturaDto.getCfdi().getMetodoPago()).getDescripcion())
-        .setLogotipo(logo == null ? null : logo.getData())
-        .setTipoDeComprobanteDesc(
+        .logotipo(logo == null ? null : logo.getData())
+        .tipoDeComprobanteDesc(
             TipoComprobanteEnum.findByValor(facturaDto.getCfdi().getTipoDeComprobante())
                 .getDescripcion())
-        .setTotalDesc(
+        .totalDesc(
             numberTranslatorHelper.getStringNumber(
                 facturaDto.getCfdi().getTotal(), facturaDto.getCfdi().getMoneda()))
-        .setSubTotalDesc(
+        .subTotalDesc(
             numberTranslatorHelper.getStringNumber(
-                facturaDto.getCfdi().getSubtotal(), facturaDto.getCfdi().getMoneda()));
-
-    fBuilder.setDireccionEmisor(facturaDto.getCfdi().getEmisor().getDireccion());
-    fBuilder.setDireccionReceptor(facturaDto.getCfdi().getReceptor().getDireccion());
+                facturaDto.getCfdi().getSubtotal(), facturaDto.getCfdi().getMoneda()))
+        .direccionEmisor(facturaDto.getCfdi().getEmisor().getDireccion())
+        .direccionReceptor(facturaDto.getCfdi().getReceptor().getDireccion())
+        .build();
 
     RegimenFiscal regimenFiscal =
         catalogCacheService
@@ -200,7 +197,7 @@ public class PDFService {
     fBuilder.setUsoCfdiDesc(usoCfdi == null ? null : usoCfdi.getDescripcion());
     fBuilder.setCadenaOriginal(facturaDto.getCadenaOriginalTimbrado());
 
-    return fBuilder.build();
+    return fBuilder;
   }
 
   private Cfdi getCfdiModelFromFacturaDto(FacturaDto dto) {
@@ -312,18 +309,18 @@ public class PDFService {
           .equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
         BigDecimal montoTotal = new BigDecimal(0);
         Optional<ComplementoPago> compLo =
-            context.getCfdi().getComplemento().getComplemntoPago().getComplementoPagos().stream()
+            context.getCfdi().getComplemento().getComplementoPago().getComplementoPagos().stream()
                 .findFirst();
         if (compLo.isPresent()) {
           model.setFormaPagoDesc(
               FormaPagoEnum.findByPagoClave(compLo.get().getFormaDePago()).getDescripcion());
         }
         for (ComplementoPago complementoPago :
-            context.getCfdi().getComplemento().getComplemntoPago().getComplementoPagos()) {
+            context.getCfdi().getComplemento().getComplementoPago().getComplementoPagos()) {
           montoTotal = montoTotal.add(new BigDecimal(complementoPago.getMonto()));
         }
         Optional<ComplementoPago> primerPago =
-            context.getCfdi().getComplemento().getComplemntoPago().getComplementoPagos().stream()
+            context.getCfdi().getComplemento().getComplementoPago().getComplementoPagos().stream()
                 .findFirst();
         model.setMontoTotal(montoTotal);
         model.setTotalDesc(

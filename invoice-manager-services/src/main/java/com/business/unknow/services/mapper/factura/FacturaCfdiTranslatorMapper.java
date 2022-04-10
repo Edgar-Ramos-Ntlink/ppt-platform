@@ -14,12 +14,16 @@ import com.business.unknow.model.dto.cfdi.RetencionDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.services.mapper.IgnoreUnmappedMapperConfig;
 import com.business.unknow.services.mapper.decorator.FacturaCfdiTranslatorDecorator;
+import org.mapstruct.Builder;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(config = IgnoreUnmappedMapperConfig.class)
+@Mapper(
+    config = IgnoreUnmappedMapperConfig.class,
+    componentModel = "spring",
+    builder = @Builder(disableBuilder = true))
 @DecoratedWith(FacturaCfdiTranslatorDecorator.class)
 public interface FacturaCfdiTranslatorMapper {
 

@@ -20,8 +20,6 @@ import lombok.extern.jackson.Jacksonized;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmpresaIngresosDto implements Serializable {
 
-  private static final long serialVersionUID = -6418483593324786047L;
-
   private Integer id;
   private String rfc;
   private String tipoDato;

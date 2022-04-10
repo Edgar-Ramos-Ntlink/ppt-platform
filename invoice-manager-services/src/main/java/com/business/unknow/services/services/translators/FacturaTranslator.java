@@ -5,9 +5,9 @@ import com.business.unknow.Constants.FacturaComplemento;
 import com.business.unknow.Constants.FacturaConstants;
 import com.business.unknow.enums.S3BucketsEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
-import com.business.unknow.model.cfdi.CFdiRelacionados;
 import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.cfdi.CfdiRelacionado;
+import com.business.unknow.model.cfdi.CfdiRelacionados;
 import com.business.unknow.model.cfdi.Complemento;
 import com.business.unknow.model.cfdi.ComplementoDocRelacionado;
 import com.business.unknow.model.cfdi.ComplementoPago;
@@ -35,13 +35,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class FacturaTranslator {
 
   @Autowired private CdfiHelper cdfiHelper;
@@ -55,8 +55,6 @@ public class FacturaTranslator {
   @Autowired private SignHelper signHelper;
 
   @Autowired private S3FileService s3service;
-
-  private static final Logger log = LoggerFactory.getLogger(FacturaTranslator.class);
 
   public FacturaContext translateFactura(FacturaContext context) throws InvoiceManagerException {
     try {
@@ -78,9 +76,10 @@ public class FacturaTranslator {
       List<Retencion> retenciones = new ArrayList<>();
       if (context.getFacturaDto().getCfdi().getRelacionado() != null) {
         RelacionadoDto relacionadoDto = context.getFacturaDto().getCfdi().getRelacionado();
-        cfdi.setcFdiRelacionados(new CFdiRelacionados(relacionadoDto.getTipoRelacion()));
-        cfdi.getcFdiRelacionados().setCfdiRelacionado(new CfdiRelacionado());
-        cfdi.getcFdiRelacionados().getCfdiRelacionado().setUuid(relacionadoDto.getRelacion());
+        cfdi.setCfdiRelacionados(
+            CfdiRelacionados.builder().tipoRelacion(relacionadoDto.getTipoRelacion()).build());
+        cfdi.getCfdiRelacionados().setCfdiRelacionado(new CfdiRelacionado());
+        cfdi.getCfdiRelacionados().getCfdiRelacionado().setUuid(relacionadoDto.getRelacion());
       }
       for (ConceptoDto conceptoDto : context.getFacturaDto().getCfdi().getConceptos()) {
         Concepto concepto = facturaCfdiTranslatorMapper.cfdiConcepto(conceptoDto);
@@ -142,9 +141,10 @@ public class FacturaTranslator {
       }
       if (context.getFacturaDto().getCfdi().getRelacionado() != null) {
         RelacionadoDto relacionadoDto = context.getFacturaDto().getCfdi().getRelacionado();
-        cfdi.setcFdiRelacionados(new CFdiRelacionados(relacionadoDto.getTipoRelacion()));
-        cfdi.getcFdiRelacionados().setCfdiRelacionado(new CfdiRelacionado());
-        cfdi.getcFdiRelacionados().getCfdiRelacionado().setUuid(relacionadoDto.getRelacion());
+        cfdi.setCfdiRelacionados(
+            CfdiRelacionados.builder().tipoRelacion(relacionadoDto.getTipoRelacion()).build());
+        cfdi.getCfdiRelacionados().setCfdiRelacionado(new CfdiRelacionado());
+        cfdi.getCfdiRelacionados().getCfdiRelacionado().setUuid(relacionadoDto.getRelacion());
       }
       Optional<CfdiPagoDto> primerPago =
           context.getFacturaDto().getCfdi().getComplemento().getPagos().stream().findFirst();
@@ -159,7 +159,7 @@ public class FacturaTranslator {
       }
       complementoPago.setFormaDePago(primerPago.get().getFormaPago());
       complementoPago.setMoneda(primerPago.get().getMoneda());
-      complemento.setComplemntoPago(complementoPagos);
+      complemento.setComplementoPago(complementoPagos);
       BigDecimal montoTotal = new BigDecimal(0);
       List<ComplementoPago> complementosPago = new ArrayList<>();
       List<ComplementoDocRelacionado> complementosRelacionados = new ArrayList<>();

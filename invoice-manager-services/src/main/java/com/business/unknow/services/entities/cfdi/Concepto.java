@@ -13,7 +13,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
+@ToString
 @Entity
 @Table(name = "CFDI_CONCEPTOS")
 public class Concepto implements Serializable {
@@ -64,147 +77,4 @@ public class Concepto implements Serializable {
 
   @OneToMany(mappedBy = "concepto")
   private List<Retencion> retenciones;
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getNoIdentificacion() {
-    return noIdentificacion;
-  }
-
-  public void setNoIdentificacion(String noIdentificacion) {
-    this.noIdentificacion = noIdentificacion;
-  }
-
-  public BigDecimal getCantidad() {
-    return cantidad;
-  }
-
-  public void setCantidad(BigDecimal cantidad) {
-    this.cantidad = cantidad;
-  }
-
-  public String getDescripcionCUPS() {
-    return descripcionCUPS;
-  }
-
-  public void setDescripcionCUPS(String descripcionCUPS) {
-    this.descripcionCUPS = descripcionCUPS;
-  }
-
-  public String getClaveUnidad() {
-    return claveUnidad;
-  }
-
-  public void setClaveUnidad(String claveUnidad) {
-    this.claveUnidad = claveUnidad;
-  }
-
-  public String getUnidad() {
-    return unidad;
-  }
-
-  public void setUnidad(String unidad) {
-    this.unidad = unidad;
-  }
-
-  public String getDescripcion() {
-    return descripcion;
-  }
-
-  public void setDescripcion(String descripcion) {
-    this.descripcion = descripcion;
-  }
-
-  public BigDecimal getValorUnitario() {
-    return valorUnitario;
-  }
-
-  public void setValorUnitario(BigDecimal valorUnitario) {
-    this.valorUnitario = valorUnitario;
-  }
-
-  public BigDecimal getImporte() {
-    return importe;
-  }
-
-  public void setImporte(BigDecimal importe) {
-    this.importe = importe;
-  }
-
-  public BigDecimal getDescuento() {
-    return descuento;
-  }
-
-  public void setDescuento(BigDecimal descuento) {
-    this.descuento = descuento;
-  }
-
-  public String getClaveProdServ() {
-    return claveProdServ;
-  }
-
-  public void setClaveProdServ(String claveProdServ) {
-    this.claveProdServ = claveProdServ;
-  }
-
-  public Cfdi getCfdi() {
-    return cfdi;
-  }
-
-  public void setCfdi(Cfdi cfdi) {
-    this.cfdi = cfdi;
-  }
-
-  public List<Impuesto> getImpuestos() {
-    return impuestos;
-  }
-
-  public void setImpuestos(List<Impuesto> impuestos) {
-    this.impuestos = impuestos;
-  }
-
-  public List<Retencion> getRetenciones() {
-    return retenciones;
-  }
-
-  public void setRetenciones(List<Retencion> retenciones) {
-    this.retenciones = retenciones;
-  }
-
-  @Override
-  public String toString() {
-    return "Concepto [id="
-        + id
-        + ", claveProdServ="
-        + claveProdServ
-        + ", noIdentificacion="
-        + noIdentificacion
-        + ", cantidad="
-        + cantidad
-        + ", claveUnidad="
-        + claveUnidad
-        + ", unidad="
-        + unidad
-        + ", descripcion="
-        + descripcion
-        + ", valorUnitario="
-        + valorUnitario
-        + ", importe="
-        + importe
-        + ", descuento="
-        + descuento
-        + ", cfdi="
-        + cfdi
-        + ", impuestos="
-        + impuestos
-        + ", retenciones="
-        + retenciones
-        + "]";
-  }
 }

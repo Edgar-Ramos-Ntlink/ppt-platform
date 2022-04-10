@@ -8,13 +8,13 @@ import com.business.unknow.services.repositories.NotificationRepository;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class NotificationService {
 
   @Autowired private NotificationRepository repository;
@@ -22,8 +22,6 @@ public class NotificationService {
   @Autowired private NotificationMapper mapper;
 
   private List<NotificationDto> notifications;
-
-  private static final Logger log = LoggerFactory.getLogger(NotificationService.class);
 
   @PostConstruct
   public void buildNotifications() {

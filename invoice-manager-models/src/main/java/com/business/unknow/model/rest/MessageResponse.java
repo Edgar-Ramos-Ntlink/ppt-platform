@@ -1,6 +1,11 @@
 package com.business.unknow.model.rest;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /** @author eej000f */
+@Getter
+@Setter
 public class MessageResponse {
   private String name;
 
@@ -8,14 +13,6 @@ public class MessageResponse {
 
   public MessageResponse(String name) {
     super();
-    this.name = name;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
     this.name = name;
   }
 }

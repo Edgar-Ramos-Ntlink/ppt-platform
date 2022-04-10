@@ -1,6 +1,5 @@
 package com.business.unknow.services.services.builder;
 
-import com.business.unknow.builder.FacturaContextBuilder;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
@@ -43,10 +42,10 @@ public class TimbradoBuilderService {
                             String.format(
                                 "La empresa con el rfc no existe %s", facturaDto.getRfcEmisor()),
                             HttpStatus.SC_NOT_FOUND)));
-    return new FacturaContextBuilder()
-        .setFacturaDto(factura)
-        .setEmpresaDto(empresaDto)
-        .setTipoDocumento(factura.getTipoDocumento())
+    return FacturaContext.builder()
+        .facturaDto(factura)
+        .empresaDto(empresaDto)
+        .tipoDocumento(factura.getTipoDocumento())
         .build();
   }
 
@@ -71,11 +70,11 @@ public class TimbradoBuilderService {
       pagosFactura = pagosService.findPagosByFolio(folio);
     }
 
-    return new FacturaContextBuilder()
-        .setFacturaDto(currentFacturaDto)
-        .setPagos(pagosFactura)
-        .setTipoDocumento(currentFacturaDto.getTipoDocumento())
-        .setEmpresaDto(empresaDto)
+    return FacturaContext.builder()
+        .facturaDto(currentFacturaDto)
+        .pagos(pagosFactura)
+        .tipoDocumento(currentFacturaDto.getTipoDocumento())
+        .empresaDto(empresaDto)
         .build();
   }
 }

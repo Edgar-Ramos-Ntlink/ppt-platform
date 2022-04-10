@@ -11,7 +11,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
+@ToString
 @Entity
 @Table(name = "CFDI_RETENCIONES")
 public class Retencion implements Serializable {
@@ -41,79 +54,4 @@ public class Retencion implements Serializable {
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "ID_CONCEPTO", referencedColumnName = "ID_CONCEPTO")
   private Concepto concepto;
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public BigDecimal getBase() {
-    return base;
-  }
-
-  public void setBase(BigDecimal base) {
-    this.base = base;
-  }
-
-  public String getImpuesto() {
-    return impuesto;
-  }
-
-  public void setImpuesto(String impuesto) {
-    this.impuesto = impuesto;
-  }
-
-  public String getTipoFactor() {
-    return tipoFactor;
-  }
-
-  public void setTipoFactor(String tipoFactor) {
-    this.tipoFactor = tipoFactor;
-  }
-
-  public BigDecimal getTasaOCuota() {
-    return tasaOCuota;
-  }
-
-  public void setTasaOCuota(BigDecimal tasaOCuota) {
-    this.tasaOCuota = tasaOCuota;
-  }
-
-  public BigDecimal getImporte() {
-    return importe;
-  }
-
-  public void setImporte(BigDecimal importe) {
-    this.importe = importe;
-  }
-
-  public Concepto getConcepto() {
-    return concepto;
-  }
-
-  public void setConcepto(Concepto concepto) {
-    this.concepto = concepto;
-  }
-
-  @Override
-  public String toString() {
-    return "Retencion [id="
-        + id
-        + ", base="
-        + base
-        + ", impuesto="
-        + impuesto
-        + ", tipoFactor="
-        + tipoFactor
-        + ", tasaOCuota="
-        + tasaOCuota
-        + ", importe="
-        + importe
-        + ", concepto="
-        + concepto
-        + "]";
-  }
 }

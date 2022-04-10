@@ -1,7 +1,6 @@
 package com.business.unknow.services.services.translators;
 
 import com.business.unknow.Constants.FacturaSustitucionConstants;
-import com.business.unknow.builder.ConceptoDtoBuilder;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.LineaEmpresaEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
@@ -149,18 +148,19 @@ public class RelacionadosTranslator {
             .getReceptor()
             .setUsoCfdi(FacturaSustitucionConstants.NOTA_CREDITO_USO_CFDI);
       }
-      ConceptoDtoBuilder concepto = new ConceptoDtoBuilder();
-      concepto
-          .setCantidad(new BigDecimal(1))
-          .setClaveProdServ(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_CONCEPTO)
-          .setDescripcion(FacturaSustitucionConstants.NOTA_CREDITO_DESC_CONCEPTO)
-          .setClaveUnidad(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_UNIDAD)
-          .setDescripcionCUPS(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_CONCEPTO_DESC)
-          .setValorUnitario(BigDecimal.ZERO)
-          .setImporte(BigDecimal.ZERO)
-          .setDescuento(BigDecimal.ZERO);
+      ConceptoDto concepto =
+          ConceptoDto.builder()
+              .cantidad(new BigDecimal(1))
+              .claveProdServ(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_CONCEPTO)
+              .descripcion(FacturaSustitucionConstants.NOTA_CREDITO_DESC_CONCEPTO)
+              .claveUnidad(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_UNIDAD)
+              .descripcionCUPS(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_CONCEPTO_DESC)
+              .valorUnitario(BigDecimal.ZERO)
+              .importe(BigDecimal.ZERO)
+              .descuento(BigDecimal.ZERO)
+              .build();
       facturaDto.getCfdi().setConceptos(new ArrayList<>());
-      facturaDto.getCfdi().getConceptos().add(concepto.build());
+      facturaDto.getCfdi().getConceptos().add(concepto);
       facturaDto.getCfdi().setComplemento(null);
     }
     RelacionadoDto relacionadoDto = new RelacionadoDto();

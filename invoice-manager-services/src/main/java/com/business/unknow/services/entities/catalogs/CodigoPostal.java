@@ -7,7 +7,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
+@ToString
 @Entity
 @Table(name = "CAT_CODIGO_POSTAL")
 public class CodigoPostal implements Serializable {
@@ -33,67 +46,4 @@ public class CodigoPostal implements Serializable {
 
   @Column(name = "COLONIA")
   private String colonia;
-
-  public String getCodigoPostal() {
-    return codigoPostal;
-  }
-
-  public void setCodigoPostal(String codigoPostal) {
-    this.codigoPostal = codigoPostal;
-  }
-
-  public String getEstado() {
-    return estado;
-  }
-
-  public void setEstado(String estado) {
-    this.estado = estado;
-  }
-
-  public String getMunicipio() {
-    return municipio;
-  }
-
-  public void setMunicipio(String municipio) {
-    this.municipio = municipio;
-  }
-
-  public String getCiudad() {
-    return ciudad;
-  }
-
-  public void setCiudad(String ciudad) {
-    this.ciudad = ciudad;
-  }
-
-  public String getColonia() {
-    return colonia;
-  }
-
-  public void setColonia(String colonia) {
-    this.colonia = colonia;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  @Override
-  public String toString() {
-    return "CodigoPostal [codigoPostal="
-        + codigoPostal
-        + ", estado="
-        + estado
-        + ", municipio="
-        + municipio
-        + ", ciudad="
-        + ciudad
-        + ", colonia="
-        + colonia
-        + "]";
-  }
 }

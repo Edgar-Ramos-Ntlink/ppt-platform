@@ -30,8 +30,7 @@ import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
@@ -41,8 +40,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-/** @author ralfdemoledor */
 @Service
+@Slf4j
 public class CfdiService {
 
   @Autowired private CfdiRepository repository;
@@ -70,8 +69,6 @@ public class CfdiService {
   @Autowired
   @Qualifier("CfdiValidator")
   private CfdiValidator validator;
-
-  private static final Logger log = LoggerFactory.getLogger(CfdiService.class);
 
   public CfdiDto getCfdiByFolio(String folio) {
     CfdiDto cfdiDto =

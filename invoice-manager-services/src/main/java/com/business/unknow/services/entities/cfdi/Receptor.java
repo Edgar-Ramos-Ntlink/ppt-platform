@@ -9,7 +9,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
+@ToString
 @Entity
 @Table(name = "CFDI_RECEPTORES")
 public class Receptor implements Serializable {
@@ -36,57 +49,4 @@ public class Receptor implements Serializable {
   @OneToOne
   @JoinColumn(name = "ID_CFDI", referencedColumnName = "ID_CFDI")
   private Cfdi cfdi;
-
-  public String getRfc() {
-    return rfc;
-  }
-
-  public void setRfc(String rfc) {
-    this.rfc = rfc;
-  }
-
-  public String getNombre() {
-    return nombre;
-  }
-
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
-  }
-
-  public String getUsoCfdi() {
-    return usoCfdi;
-  }
-
-  public void setUsoCfdi(String usoCfdi) {
-    this.usoCfdi = usoCfdi;
-  }
-
-  public String getDireccion() {
-    return direccion;
-  }
-
-  public void setDireccion(String direccion) {
-    this.direccion = direccion;
-  }
-
-  public Cfdi getCfdi() {
-    return cfdi;
-  }
-
-  public void setCfdi(Cfdi cfdi) {
-    this.cfdi = cfdi;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  @Override
-  public String toString() {
-    return "Receptor [rfc=" + rfc + ", nombre=" + nombre + ", usoCfdi=" + usoCfdi + "]";
-  }
 }

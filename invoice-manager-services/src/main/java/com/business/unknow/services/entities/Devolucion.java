@@ -13,6 +13,13 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -22,6 +29,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  *     <p>Las devoluciones solo pueden ser creadas para facturas pagadas y timbradas, de otro modo
  *     no es posible crear una devolucion
  */
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
+@ToString
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "DEVOLUCIONES")
@@ -86,129 +99,4 @@ public class Devolucion {
   @LastModifiedDate
   @Column(name = "FECHA_ACTUALIZACION")
   private Date fechaActualizacion;
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public Integer getIdPagoOrigen() {
-    return idPagoOrigen;
-  }
-
-  public void setIdPagoOrigen(Integer idPagoOrigen) {
-    this.idPagoOrigen = idPagoOrigen;
-  }
-
-  public String getFolio() {
-    return folio;
-  }
-
-  public void setFolio(String folio) {
-    this.folio = folio;
-  }
-
-  public BigDecimal getMonto() {
-    return monto;
-  }
-
-  public void setMonto(BigDecimal monto) {
-    this.monto = monto;
-  }
-
-  public String getReceptor() {
-    return receptor;
-  }
-
-  public void setReceptor(String receptor) {
-    this.receptor = receptor;
-  }
-
-  public String getTipoReceptor() {
-    return tipoReceptor;
-  }
-
-  public void setTipoReceptor(String tipoReceptor) {
-    this.tipoReceptor = tipoReceptor;
-  }
-
-  public Date getFechaCreacion() {
-    return fechaCreacion;
-  }
-
-  public void setFechaCreacion(Date fechaCreacion) {
-    this.fechaCreacion = fechaCreacion;
-  }
-
-  public Date getFechaActualizacion() {
-    return fechaActualizacion;
-  }
-
-  public void setFechaActualizacion(Date fechaActualizacion) {
-    this.fechaActualizacion = fechaActualizacion;
-  }
-
-  public BigDecimal getPagoMonto() {
-    return pagoMonto;
-  }
-
-  public void setPagoMonto(BigDecimal pagoMonto) {
-    this.pagoMonto = pagoMonto;
-  }
-
-  public BigDecimal getImpuesto() {
-    return impuesto;
-  }
-
-  public void setImpuesto(BigDecimal impuesto) {
-    this.impuesto = impuesto;
-  }
-
-  public BigDecimal getPorcentaje() {
-    return porcentaje;
-  }
-
-  public void setPorcentaje(BigDecimal porcentaje) {
-    this.porcentaje = porcentaje;
-  }
-
-  public String getTipo() {
-    return tipo;
-  }
-
-  public void setTipo(String tipo) {
-    this.tipo = tipo;
-  }
-
-  @Override
-  public String toString() {
-    return "Devolucion [id="
-        + id
-        + ", idPagoOrigen="
-        + idPagoOrigen
-        + ", tipo="
-        + tipo
-        + ", folio="
-        + folio
-        + ", pagoMonto="
-        + pagoMonto
-        + ", impuesto="
-        + impuesto
-        + ", porcentaje="
-        + porcentaje
-        + ", monto="
-        + monto
-        + ", receptor="
-        + receptor
-        + ", tipoReceptor="
-        + tipoReceptor
-        + ", fechaCreacion="
-        + fechaCreacion
-        + ", fechaActualizacion="
-        + fechaActualizacion
-        + "]";
-  }
 }

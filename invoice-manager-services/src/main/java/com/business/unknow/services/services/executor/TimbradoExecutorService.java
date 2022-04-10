@@ -1,11 +1,11 @@
 package com.business.unknow.services.services.executor;
 
-import com.business.unknow.builder.EmailConfigBuilder;
 import com.business.unknow.enums.LineaEmpresaEnum;
 import com.business.unknow.enums.S3BucketsEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.enums.TipoEmail;
+import com.business.unknow.model.config.EmailConfig;
 import com.business.unknow.model.config.FileConfig;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
@@ -24,6 +24,7 @@ import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.services.FilesService;
 import com.business.unknow.services.services.MailService;
 import com.business.unknow.services.services.S3FileService;
+import com.google.common.collect.ImmutableList;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
@@ -101,38 +102,51 @@ public class TimbradoExecutorService {
                           "Error getting PDF",
                           "No se guardo el PDF correctamente",
                           HttpStatus.SC_CONFLICT));
-      EmailConfigBuilder emailBuilder =
-          new EmailConfigBuilder()
-              .setEmisor(
+      EmailConfig email =
+          EmailConfig.builder()
+              .emisor(
                   tipoEmail.equals(TipoEmail.SEMEL_JACK)
                       ? context.getEmpresaDto().getCorreo()
                       : tipoEmail.getEmail())
-              .setPwEmisor(
+              .pwEmisor(
                   tipoEmail.equals(TipoEmail.SEMEL_JACK)
                       ? context.getEmpresaDto().getPwCorreo()
                       : tipoEmail.getPw())
-              .setAsunto(String.format("Factura %s", context.getFacturaDto().getFolio()))
-              .addReceptor(client.getCorreoPromotor())
-              .addReceptor(client.getInformacionFiscal().getCorreo())
-              .addReceptor(context.getEmpresaDto().getCorreo())
-              .setPort(tipoEmail.getPort())
-              .setDominio(
+              .asunto(String.format("Factura %s", context.getFacturaDto().getFolio()))
+              .receptor(
+                  ImmutableList.of(
+                      client.getCorreoPromotor(),
+                      client.getInformacionFiscal().getCorreo(),
+                      context.getEmpresaDto().getCorreo()))
+              .port(tipoEmail.getPort())
+              .dominio(
                   tipoEmail.equals(TipoEmail.SEMEL_JACK)
                       ? context.getEmpresaDto().getDominioCorreo()
                       : tipoEmail.getHost())
-              .addArchivo(
-                  new FileConfig(
-                      TipoArchivoEnum.XML,
-                      context.getFacturaDto().getFolio().concat(TipoArchivoEnum.XML.getFormat()),
-                      xml.getData()))
-              .addArchivo(
-                  new FileConfig(
-                      TipoArchivoEnum.PDF,
-                      context.getFacturaDto().getFolio().concat(TipoArchivoEnum.PDF.getFormat()),
-                      pdf.getData()))
-              .setCuerpo("Su factura timbrada es:");
+              .archivos(
+                  ImmutableList.of(
+                      FileConfig.builder()
+                          .tipoArchivo(TipoArchivoEnum.XML)
+                          .nombre(
+                              context
+                                  .getFacturaDto()
+                                  .getFolio()
+                                  .concat(TipoArchivoEnum.XML.getFormat()))
+                          .base64Content(xml.getData())
+                          .build(),
+                      FileConfig.builder()
+                          .tipoArchivo(TipoArchivoEnum.PDF)
+                          .nombre(
+                              context
+                                  .getFacturaDto()
+                                  .getFolio()
+                                  .concat(TipoArchivoEnum.PDF.getFormat()))
+                          .base64Content(pdf.getData())
+                          .build()))
+              .cuerpo("Su factura timbrada es:")
+              .build();
       try {
-        mailService.sendEmail(emailBuilder.build());
+        mailService.sendEmail(email);
       } catch (InvoiceCommonException e) {
         e.printStackTrace();
         throw new InvoiceManagerException(

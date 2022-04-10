@@ -5,7 +5,20 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
+@ToString
 @Entity
 @Table(name = "CAT_CLAVE_UNIDAD")
 public class ClaveUnidad implements Serializable {
@@ -24,49 +37,4 @@ public class ClaveUnidad implements Serializable {
 
   @Column(name = "NOMBRE")
   private String nombre;
-
-  public String getClave() {
-    return clave;
-  }
-
-  public void setClave(String clave) {
-    this.clave = clave;
-  }
-
-  public String getTipo() {
-    return tipo;
-  }
-
-  public void setTipo(String tipo) {
-    this.tipo = tipo;
-  }
-
-  public String getDescripcion() {
-    return descripcion;
-  }
-
-  public void setDescripcion(String descripcion) {
-    this.descripcion = descripcion;
-  }
-
-  public String getNombre() {
-    return nombre;
-  }
-
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
-  }
-
-  @Override
-  public String toString() {
-    return "ClaveUnidad [clave="
-        + clave
-        + ", tipo="
-        + tipo
-        + ", descripcion="
-        + descripcion
-        + ", nombre="
-        + nombre
-        + "]";
-  }
 }

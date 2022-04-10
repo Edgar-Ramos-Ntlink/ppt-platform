@@ -4,9 +4,19 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @XmlRootElement(name = "Receptor", namespace = "http://www.sat.gob.mx/cfd/3")
 @XmlAccessorType(XmlAccessType.FIELD)
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
 public class Receptor {
 
   @XmlAttribute(name = "Rfc")
@@ -17,33 +27,4 @@ public class Receptor {
 
   @XmlAttribute(name = "UsoCFDI")
   private String usoCfdi;
-
-  public String getRfc() {
-    return rfc;
-  }
-
-  public void setRfc(String rfc) {
-    this.rfc = rfc;
-  }
-
-  public String getNombre() {
-    return nombre;
-  }
-
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
-  }
-
-  public String getUsoCfdi() {
-    return usoCfdi;
-  }
-
-  public void setUsoCfdi(String usoCfdi) {
-    this.usoCfdi = usoCfdi;
-  }
-
-  @Override
-  public String toString() {
-    return "Receptor [rfc=" + rfc + ", nombre=" + nombre + ", usoCfdi=" + usoCfdi + "]";
-  }
 }

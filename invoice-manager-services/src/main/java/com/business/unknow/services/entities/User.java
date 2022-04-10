@@ -13,10 +13,23 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
+@ToString
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "USERS")
@@ -50,77 +63,4 @@ public class User implements Serializable {
 
   @OneToMany(mappedBy = "user")
   private List<Role> roles;
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public boolean isActivo() {
-    return activo;
-  }
-
-  public void setActivo(boolean activo) {
-    this.activo = activo;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getAlias() {
-    return alias;
-  }
-
-  public void setAlias(String alias) {
-    this.alias = alias;
-  }
-
-  public Date getFechaCreacion() {
-    return fechaCreacion;
-  }
-
-  public void setFechaCreacion(Date fechaCreacion) {
-    this.fechaCreacion = fechaCreacion;
-  }
-
-  public Date getFechaActualizacion() {
-    return fechaActualizacion;
-  }
-
-  public void setFechaActualizacion(Date fechaActualizacion) {
-    this.fechaActualizacion = fechaActualizacion;
-  }
-
-  public List<Role> getRoles() {
-    return roles;
-  }
-
-  public void setRoles(List<Role> roles) {
-    this.roles = roles;
-  }
-
-  @Override
-  public String toString() {
-    return "User [id="
-        + id
-        + ", roles="
-        + roles
-        + ", activo="
-        + activo
-        + ", correo="
-        + email
-        + ", fechaCreacion="
-        + fechaCreacion
-        + ", fechaActualizacion="
-        + fechaActualizacion
-        + "]";
-  }
 }

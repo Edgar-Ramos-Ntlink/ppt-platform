@@ -1,7 +1,19 @@
 package com.business.unknow.model.dto.cfdi;
 
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class ReceptorDto implements Serializable {
 
   private static final long serialVersionUID = 171758513601059506L;
@@ -10,10 +22,6 @@ public class ReceptorDto implements Serializable {
   private String nombre;
   private String usoCfdi;
   private String direccion;
-
-  public ReceptorDto() {
-    super();
-  }
 
   public ReceptorDto(String rfc, String nombre, String usoCfdi, String direccion) {
     super();
