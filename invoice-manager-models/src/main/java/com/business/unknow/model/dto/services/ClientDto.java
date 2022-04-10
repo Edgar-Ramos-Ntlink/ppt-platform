@@ -22,6 +22,8 @@ import lombok.extern.jackson.Jacksonized;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ClientDto implements Serializable {
 
+  private static final long serialVersionUID = 4951260411762447946L;
+
   private int id;
   private Boolean activo;
   private String notas;

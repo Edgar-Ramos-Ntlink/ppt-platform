@@ -1,11 +1,11 @@
 package com.business.unknow.model.context;
 
-import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.services.ContribuyenteDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.Serializable;
 import java.util.List;
 import lombok.AccessLevel;

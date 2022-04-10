@@ -1,6 +1,6 @@
 package com.business.unknow.model.dto;
 
-import com.business.unknow.model.cfdi.Cfdi;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.xml.bind.annotation.XmlAccessType;
