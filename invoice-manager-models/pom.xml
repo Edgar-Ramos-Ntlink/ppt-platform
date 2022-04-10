@@ -38,6 +38,12 @@
 			<groupId>com.mx.ntlink</groupId>
 			<artifactId>ntlink-utils</artifactId>
 			<version>${ntlink-utils-version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 	<build>
