@@ -2,15 +2,12 @@
 package com.business.unknow.services.services;
 
 import com.business.unknow.enums.FacturaStatusEnum;
-import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.S3BucketsEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoComprobanteEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.enums.TipoRelacionEnum;
-import com.business.unknow.model.cfdi.Cfdi;
-import com.business.unknow.model.cfdi.ComplementoPago;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.FacturaPdfModelDto;
@@ -27,6 +24,7 @@ import com.business.unknow.services.util.helpers.FacturaHelper;
 import com.business.unknow.services.util.helpers.FileHelper;
 import com.business.unknow.services.util.helpers.NumberTranslatorHelper;
 import com.business.unknow.services.util.pdf.PDFGenerator;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -34,7 +32,6 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,17 +108,20 @@ public class PDFService {
     fBuilder.setDireccionEmisor(facturaDto.getCfdi().getEmisor().getDireccion());
     fBuilder.setDireccionReceptor(facturaDto.getCfdi().getReceptor().getDireccion());
     if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
-      FormaPago formaPago =
-          catalogCacheService
-              .getFormaPagoMappings()
-              .get(
-                  cfdi.getComplemento()
-                      .getComplementoPago()
-                      .getComplementoPagos()
-                      .get(0)
-                      .getFormaDePago());
-      fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
+      // TODO validar complementos
+      /* FormaPago formaPago =
+            catalogCacheService
+                .getFormaPagoMappings()
+                .get(
+                    cfdi.getComplemento()
+                       .getComplementoPago()
+                        .getComplementoPagos()
+                        .get(0)
+                        .getFormaDePago());
+        Builder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
+      */
     } else {
+
       FormaPago formaPago =
           catalogCacheService.getFormaPagoMappings().get(facturaDto.getCfdi().getFormaPago());
       fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
@@ -238,7 +238,9 @@ public class PDFService {
           (context.getFacturaDto().getFechaCreacion() == null)
               ? new Date().toString()
               : context.getFacturaDto().getFechaCreacion().toString());
-      cfdi.getImpuestos()
+      cfdi.getImpuestos().stream()
+          .findFirst()
+          .get()
           .setTotalImpuestosTrasladados(cfdi.getTotal().subtract(cfdi.getSubtotal()));
       return cfdi;
     }
@@ -249,8 +251,14 @@ public class PDFService {
       BigDecimal retenciones = facturaTranslator.calculaRetenciones(factura);
       BigDecimal impuestos = facturaTranslator.calculaImpuestos(factura);
       FacturaPdfModelDto model = getPdfFromFactura(factura, cfdi);
-      model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
-      model.getFactura().getImpuestos().setTotalImpuestosTrasladados(impuestos);
+      model.getFactura().getImpuestos().stream()
+          .findFirst()
+          .get()
+          .setTotalImpuestosRetenidos(retenciones);
+      model.getFactura().getImpuestos().stream()
+          .findFirst()
+          .get()
+          .setTotalImpuestosTrasladados(impuestos);
       if (factura.getUuid() != null) {
         model.setUuid(factura.getUuid());
       }
@@ -287,11 +295,12 @@ public class PDFService {
   }
 
   public FacturaFileDto generateInvoicePDF(FacturaContext context) {
-    try {
+    // TODO GENERAR FACTURA CON UTILITIES
+    /* try {
       BigDecimal retenciones = facturaTranslator.calculaRetenciones(context);
 
       FacturaPdfModelDto model = getPdfFromFactura(context.getFacturaDto(), context.getCfdi());
-      model.getFactura().getImpuestos().setTotalImpuestosRetenidos(retenciones);
+      model.getFactura().getImpuestos().stream().findFirst().get().setTotalImpuestosRetenidos(retenciones);
       if (context.getFacturaDto().getUuid() != null) {
         model.setUuid(context.getFacturaDto().getUuid());
       }
@@ -359,6 +368,8 @@ public class PDFService {
       throw new ResponseStatusException(
           HttpStatus.INTERNAL_SERVER_ERROR, "The PDF cannot be created");
     }
+    */
+    return null;
   }
 
   private String getXSLFOTemplate(FacturaDto facturaDto) {

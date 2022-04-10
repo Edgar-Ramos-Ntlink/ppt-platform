@@ -1,8 +1,8 @@
 package com.business.unknow.services.util.helpers;
 
-import com.business.unknow.model.cfdi.Cfdi;
 import com.business.unknow.model.dto.FacturaPdfModelDto;
 import com.business.unknow.model.error.InvoiceCommonException;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.StringReader;
 import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;

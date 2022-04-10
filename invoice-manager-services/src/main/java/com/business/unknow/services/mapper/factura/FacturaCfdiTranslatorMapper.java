@@ -1,12 +1,6 @@
 package com.business.unknow.services.mapper.factura;
 
-import com.business.unknow.model.cfdi.Cfdi;
-import com.business.unknow.model.cfdi.ComplementoDocRelacionado;
-import com.business.unknow.model.cfdi.Concepto;
-import com.business.unknow.model.cfdi.Retencion;
-import com.business.unknow.model.cfdi.Translado;
 import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.ImpuestoDto;
@@ -14,6 +8,11 @@ import com.business.unknow.model.dto.cfdi.RetencionDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.services.mapper.IgnoreUnmappedMapperConfig;
 import com.business.unknow.services.mapper.decorator.FacturaCfdiTranslatorDecorator;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
+import com.mx.ntlink.cfdi.modelos.Concepto;
+import com.mx.ntlink.cfdi.modelos.Retencion;
+import com.mx.ntlink.cfdi.modelos.Traslado;
+import com.mx.ntlink.cfdi.modelos.complementos.DocumentoRelacionado;
 import org.mapstruct.Builder;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
@@ -49,7 +48,7 @@ public interface FacturaCfdiTranslatorMapper {
   })
   Cfdi cdfiRootInfo(FacturaDto facturaDto, EmpresaDto empresaDto);
 
-  @Mappings({
+  /*@Mappings({
     @Mapping(source = "cfdiDto.folio", target = "folio"),
     @Mapping(source = "cfdiDto.emisor.rfc", target = "emisor.rfc"),
     @Mapping(source = "cfdiDto.emisor.nombre", target = "emisor.nombre"),
@@ -76,6 +75,8 @@ public interface FacturaCfdiTranslatorMapper {
   })
   Cfdi complementoRootInfo(CfdiDto cfdiDto, EmpresaDto empresaDto);
 
+
+   */
   @Mappings({
     @Mapping(target = "impuestos", ignore = true),
     @Mapping(source = "cantidad", target = "cantidad"),
@@ -98,12 +99,12 @@ public interface FacturaCfdiTranslatorMapper {
     @Mapping(target = "numParcialidad", source = "cfdiPago.numeroParcialidad"),
     @Mapping(target = "serie", source = "cfdiPago.serie")
   })
-  ComplementoDocRelacionado complementoComponente(CfdiPagoDto cfdiPago);
+  DocumentoRelacionado complementoComponente(CfdiPagoDto cfdiPago);
 
   @Mappings({@Mapping(target = "impuestos", ignore = true)})
   Concepto cfdiConcepto(ConceptoDto dto);
 
-  Translado cfdiImpuesto(ImpuestoDto dto);
+  Traslado cfdiImpuesto(ImpuestoDto dto);
 
   Retencion cfdiRetencion(RetencionDto dto);
 }
