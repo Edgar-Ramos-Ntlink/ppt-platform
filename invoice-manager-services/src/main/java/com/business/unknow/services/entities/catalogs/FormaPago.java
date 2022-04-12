@@ -7,7 +7,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
+@ToString
 @Entity
 @Table(name = "CAT_FORMA_PAGO")
 public class FormaPago implements Serializable {
@@ -24,39 +37,4 @@ public class FormaPago implements Serializable {
 
   @Column(name = "SHORT_DESC")
   private String shortDescripcion;
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getDescripcion() {
-    return descripcion;
-  }
-
-  public void setDescripcion(String descripcion) {
-    this.descripcion = descripcion;
-  }
-
-  public String getShortDescripcion() {
-    return shortDescripcion;
-  }
-
-  public void setShortDescripcion(String shortDescripcion) {
-    this.shortDescripcion = shortDescripcion;
-  }
-
-  @Override
-  public String toString() {
-    return "FormaPago [id="
-        + id
-        + ", descripcion="
-        + descripcion
-        + ", shortDescripcion="
-        + shortDescripcion
-        + "]";
-  }
 }

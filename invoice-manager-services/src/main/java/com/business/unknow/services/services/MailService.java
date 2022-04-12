@@ -59,11 +59,11 @@ public class MailService {
         multipart.addBodyPart(text);
         for (FileConfig file : emailConfig.getArchivos()) {
           BodyPart fileBodyPart = new PreencodedMimeBodyPart("base64");
-          fileBodyPart.setText(file.getTipòArchivo().name());
+          fileBodyPart.setText(file.getTipoArchivo().name());
           ByteArrayDataSource rawData =
               new ByteArrayDataSource(
-                  file.getBase64Content().getBytes(), file.getTipòArchivo().getByteArrayData());
-          fileBodyPart.setFileName(file.getNombre().concat(file.getTipòArchivo().getFormat()));
+                  file.getBase64Content().getBytes(), file.getTipoArchivo().getByteArrayData());
+          fileBodyPart.setFileName(file.getNombre().concat(file.getTipoArchivo().getFormat()));
           fileBodyPart.setDataHandler(new DataHandler(rawData));
           multipart.addBodyPart(fileBodyPart);
         }

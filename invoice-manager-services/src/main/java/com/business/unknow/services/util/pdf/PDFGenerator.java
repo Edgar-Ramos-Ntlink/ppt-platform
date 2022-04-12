@@ -13,19 +13,18 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 @Component
+@Slf4j
 public class PDFGenerator {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PDFGenerator.class.getSimpleName());
   private FopFactory FOP_FACTORY = null;
 
   @PostConstruct
@@ -37,7 +36,7 @@ public class PDFGenerator {
               .getResourceAsStream("pdf-config/fop.xconf");
       FOP_FACTORY = FopFactory.newInstance(new File(".").toURI(), confStream);
     } catch (SAXException | IOException e) {
-      LOG.error("The FOP_FACTORY cannot be initialized", e);
+      log.error("The FOP_FACTORY cannot be initialized", e);
     }
   }
 
@@ -53,13 +52,13 @@ public class PDFGenerator {
       transformer.transform(new StreamSource(in), new SAXResult(fop.getDefaultHandler()));
 
     } catch (TransformerConfigurationException tce) {
-      LOG.error("TransformerConfigurationException", tce);
+      log.error("TransformerConfigurationException", tce);
       throw new RuntimeException(tce);
     } catch (TransformerException te) {
-      LOG.error("TransformerException", te);
+      log.error("TransformerException", te);
       throw new RuntimeException(te);
     } catch (FOPException e) {
-      LOG.error("FOPException", e);
+      log.error("FOPException", e);
       throw new RuntimeException(e);
     }
   }

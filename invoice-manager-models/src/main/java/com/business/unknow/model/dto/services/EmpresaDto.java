@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
@@ -16,14 +18,14 @@ import lombok.extern.jackson.Jacksonized;
 /** @author ralfdemoledor */
 @Jacksonized
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmpresaDto implements Serializable {
-
-  private static final long serialVersionUID = -5354660274346579595L;
 
   private int id;
 

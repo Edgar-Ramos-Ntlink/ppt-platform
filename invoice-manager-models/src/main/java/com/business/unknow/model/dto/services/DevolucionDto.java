@@ -24,8 +24,6 @@ import lombok.extern.jackson.Jacksonized;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DevolucionDto implements Serializable {
 
-  private static final long serialVersionUID = 6166507072002168875L;
-
   private Integer id;
   private Integer idPagoOrigen;
   private String tipo;

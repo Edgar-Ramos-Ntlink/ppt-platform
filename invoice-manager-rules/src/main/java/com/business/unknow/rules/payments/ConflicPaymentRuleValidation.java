@@ -4,20 +4,19 @@ package com.business.unknow.rules.payments;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.rules.common.Constants.PaymentsSuite;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** @author ralfdemoledor */
 @Rule(
     name = PaymentsSuite.CONFLICT_PAYMENT_VALIDATION_RULE,
     description = PaymentsSuite.CONFLICT_PAYMENT_VALIDATION_RULE_DESC)
+@Slf4j
 public class ConflicPaymentRuleValidation {
-
-  private static final Logger log = LoggerFactory.getLogger(ConflicPaymentRuleValidation.class);
 
   @Condition
   public boolean condition(

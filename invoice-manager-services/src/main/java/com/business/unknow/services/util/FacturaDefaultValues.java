@@ -1,7 +1,6 @@
 package com.business.unknow.services.util;
 
 import com.business.unknow.Constants.PagoPpdCreditoDefaults;
-import com.business.unknow.builder.PagoBuilder;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.model.dto.FacturaDto;
@@ -34,19 +33,19 @@ public class FacturaDefaultValues {
   }
 
   public PagoDto assignaDefaultsPagoPPD(CfdiDto cfdi) {
-    return new PagoBuilder()
-        .setBanco(PagoPpdCreditoDefaults.BANCO)
-        .setSolicitante(PagoPpdCreditoDefaults.USER)
-        .setCuenta(PagoPpdCreditoDefaults.CUENTA)
-        .setComentarioPago(PagoPpdCreditoDefaults.COMENTARIO)
-        .setFechaPago(new Date())
-        .setFormaPago(PagoPpdCreditoDefaults.FORMA_PAGO)
-        .setMoneda(PagoPpdCreditoDefaults.MONEDA)
-        .setMonto(cfdi.getTotal())
-        .setRevision1(false)
-        .setRevision2(false)
-        .setTipoDeCambio(new BigDecimal(PagoPpdCreditoDefaults.TIPO_CAMBIO))
-        .setStatusPago(PagoPpdCreditoDefaults.STATUS_PAGO)
+    return PagoDto.builder()
+        .banco(PagoPpdCreditoDefaults.BANCO)
+        .solicitante(PagoPpdCreditoDefaults.USER)
+        .cuenta(PagoPpdCreditoDefaults.CUENTA)
+        .comentarioPago(PagoPpdCreditoDefaults.COMENTARIO)
+        .fechaPago(new Date())
+        .formaPago(PagoPpdCreditoDefaults.FORMA_PAGO)
+        .moneda(PagoPpdCreditoDefaults.MONEDA)
+        .monto(cfdi.getTotal())
+        .revision1(false)
+        .revision2(false)
+        .tipoDeCambio(new BigDecimal(PagoPpdCreditoDefaults.TIPO_CAMBIO))
+        .statusPago(PagoPpdCreditoDefaults.STATUS_PAGO)
         .build();
   }
 

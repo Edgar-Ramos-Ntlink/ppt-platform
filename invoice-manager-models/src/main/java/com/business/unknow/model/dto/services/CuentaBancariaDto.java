@@ -21,8 +21,6 @@ import lombok.extern.jackson.Jacksonized;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CuentaBancariaDto implements Serializable {
 
-  private static final long serialVersionUID = 8643631228668299142L;
-
   private int id;
   private String rfc;
   private String banco;

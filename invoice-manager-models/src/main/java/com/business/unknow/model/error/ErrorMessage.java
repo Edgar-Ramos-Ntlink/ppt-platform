@@ -2,9 +2,11 @@ package com.business.unknow.model.error;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
+import lombok.ToString;
 
 /** @author eej000f */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@ToString
 public class ErrorMessage implements Serializable {
 
   private static final long serialVersionUID = -5565590990090533616L;
@@ -60,16 +62,5 @@ public class ErrorMessage implements Serializable {
 
   public void setDeveloperMessage(String developerMessage) {
     this.developerMessage = developerMessage;
-  }
-
-  @Override
-  public String toString() {
-    return "ErrorMessage [developerMessage="
-        + developerMessage
-        + ", httpStatus="
-        + httpStatus
-        + ", message="
-        + message
-        + "]";
   }
 }

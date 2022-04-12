@@ -7,8 +7,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,12 +16,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 @Component
+@Slf4j
 @Profile({"local"})
 public class LocalAuthenticationFilter extends GenericFilterBean {
 
   private static final String ANONYMOUS_USER = "anonymousUser";
-
-  private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)

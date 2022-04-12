@@ -2,11 +2,6 @@ package com.business.unknow.services.services.builder;
 
 import com.business.unknow.Constants;
 import com.business.unknow.Constants.ComplementoPpdDefaults;
-import com.business.unknow.builder.CfdiComplementoPagoBuilder;
-import com.business.unknow.builder.CfdiDtoBuilder;
-import com.business.unknow.builder.ConceptoDtoBuilder;
-import com.business.unknow.builder.FacturaBuilder;
-import com.business.unknow.builder.FacturaContextBuilder;
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
@@ -73,10 +68,10 @@ public class FacturaBuilderService {
                             "Pago a credito no encontrado",
                             String.format("No existe El emisor %s", facturaDto.getRfcEmisor()),
                             HttpStatus.SC_NOT_FOUND)));
-    return new FacturaContextBuilder()
-        .setEmpresaDto(empresaDto)
-        .setFacturaDto(facturaDto)
-        .setCurrentPago(pagoDto)
+    return FacturaContext.builder()
+        .empresaDto(empresaDto)
+        .facturaDto(facturaDto)
+        .currentPago(pagoDto)
         .build();
   }
 
@@ -95,67 +90,70 @@ public class FacturaBuilderService {
   }
 
   public FacturaDto buildFacturaDtoPagoPpdCreation(FacturaDto factura, PagoDto pago) {
-    return new FacturaBuilder()
-        .setTotal(pago.getMonto())
-        .setPackFacturacion(factura.getPackFacturacion())
-        .setSaldoPendiente(BigDecimal.ZERO)
-        .setLineaEmisor(factura.getLineaEmisor())
-        .setRfcEmisor(factura.getRfcEmisor())
-        .setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
-        .setRfcRemitente(factura.getRfcRemitente())
-        .setLineaRemitente(factura.getLineaRemitente())
-        .setRazonSocialEmisor(factura.getRazonSocialEmisor())
-        .setRazonSocialRemitente(factura.getRazonSocialRemitente())
-        .setValidacionTeso(false)
-        .setValidacionOper(false)
-        .setSolicitante(factura.getSolicitante())
-        .setTipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
+    return FacturaDto.builder()
+        .total(pago.getMonto())
+        .packFacturacion(factura.getPackFacturacion())
+        .saldoPendiente(BigDecimal.ZERO)
+        .lineaEmisor(factura.getLineaEmisor())
+        .rfcEmisor(factura.getRfcEmisor())
+        .metodoPago(ComplementoPpdDefaults.METODO_PAGO)
+        .rfcRemitente(factura.getRfcRemitente())
+        .lineaRemitente(factura.getLineaRemitente())
+        .razonSocialEmisor(factura.getRazonSocialEmisor())
+        .razonSocialRemitente(factura.getRazonSocialRemitente())
+        .validacionTeso(false)
+        .validacionOper(false)
+        .solicitante(factura.getSolicitante())
+        .tipoDocumento(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())
         .build();
   }
 
   public CfdiDto buildFacturaComplementoCreation(FacturaContext facturaContext) {
-    CfdiDtoBuilder cfdiBuilder =
-        new CfdiDtoBuilder()
-            .setVersion(ComplementoPpdDefaults.VERSION_CFDI)
-            .setLugarExpedicion(facturaContext.getEmpresaDto().getCp())
-            .setMoneda(ComplementoPpdDefaults.MONEDA)
-            .setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
-            .setFormaPago(
-                FormaPagoEnum.findByPagoValue(facturaContext.getCurrentPago().getFormaPago())
-                    .getClave())
-            .setNoCertificado(facturaContext.getEmpresaDto().getNoCertificado())
-            .setSerie(ComplementoPpdDefaults.SERIE)
-            .setSubtotal(new BigDecimal(ComplementoPpdDefaults.SUB_TOTAL))
-            .setTotal(new BigDecimal(ComplementoPpdDefaults.TOTAL))
-            .setComplemento(new ComplementoDto())
-            .setTipoDeComprobante(ComplementoPpdDefaults.COMPROBANTE)
-            .setEmisor(
-                new EmisorDto(
-                    facturaContext.getFacturaDto().getRfcEmisor(),
-                    facturaContext.getFacturaDto().getRazonSocialEmisor(),
-                    facturaContext.getFacturaDto().getCfdi().getEmisor().getRegimenFiscal(),
-                    facturaContext.getFacturaDto().getCfdi().getEmisor().getDireccion()))
-            .setReceptor(
-                new ReceptorDto(
-                    facturaContext.getFacturaDto().getRfcRemitente(),
-                    facturaContext.getFacturaDto().getRazonSocialRemitente(),
-                    ComplementoPpdDefaults.USO_CFDI,
-                    facturaContext.getFacturaDto().getCfdi().getReceptor().getDireccion()))
-            .setConceptos(buildFacturaComplementoConceptos());
-    return cfdiBuilder.build();
+    return CfdiDto.builder()
+        .version(ComplementoPpdDefaults.VERSION_CFDI)
+        .lugarExpedicion(facturaContext.getEmpresaDto().getCp())
+        .moneda(ComplementoPpdDefaults.MONEDA)
+        .metodoPago(ComplementoPpdDefaults.METODO_PAGO)
+        .formaPago(
+            FormaPagoEnum.findByPagoValue(facturaContext.getCurrentPago().getFormaPago())
+                .getClave())
+        .noCertificado(facturaContext.getEmpresaDto().getNoCertificado())
+        .serie(ComplementoPpdDefaults.SERIE)
+        .subtotal(new BigDecimal(ComplementoPpdDefaults.SUB_TOTAL))
+        .total(new BigDecimal(ComplementoPpdDefaults.TOTAL))
+        .complemento(new ComplementoDto())
+        .tipoDeComprobante(ComplementoPpdDefaults.COMPROBANTE)
+        .emisor(
+            EmisorDto.builder()
+                .rfc(facturaContext.getFacturaDto().getRfcEmisor())
+                .nombre(facturaContext.getFacturaDto().getRazonSocialEmisor())
+                .regimenFiscal(
+                    facturaContext.getFacturaDto().getCfdi().getEmisor().getRegimenFiscal())
+                .direccion(facturaContext.getFacturaDto().getCfdi().getEmisor().getDireccion())
+                .build())
+        .receptor(
+            ReceptorDto.builder()
+                .rfc(facturaContext.getFacturaDto().getRfcRemitente())
+                .nombre(facturaContext.getFacturaDto().getRazonSocialRemitente())
+                .usoCfdi(ComplementoPpdDefaults.USO_CFDI)
+                .direccion(facturaContext.getFacturaDto().getCfdi().getReceptor().getDireccion())
+                .build())
+        .conceptos(buildFacturaComplementoConceptos())
+        .build();
   }
 
   public List<ConceptoDto> buildFacturaComplementoConceptos() {
     List<ConceptoDto> conceptos = new ArrayList<ConceptoDto>();
-    ConceptoDtoBuilder conceptoBuilder =
-        new ConceptoDtoBuilder()
-            .setCantidad(new BigDecimal(ComplementoPpdDefaults.CANTIDAD))
-            .setClaveProdServ(ComplementoPpdDefaults.CLAVE_PROD)
-            .setClaveUnidad(ComplementoPpdDefaults.CLAVE)
-            .setDescripcion(ComplementoPpdDefaults.DESCRIPCION)
-            .setImporte(new BigDecimal(ComplementoPpdDefaults.IMPORTE))
-            .setValorUnitario(new BigDecimal(ComplementoPpdDefaults.VALOR_UNITARIO));
-    conceptos.add(conceptoBuilder.build());
+    ConceptoDto conceptoDto =
+        ConceptoDto.builder()
+            .cantidad(new BigDecimal(ComplementoPpdDefaults.CANTIDAD))
+            .claveProdServ(ComplementoPpdDefaults.CLAVE_PROD)
+            .claveUnidad(ComplementoPpdDefaults.CLAVE)
+            .descripcion(ComplementoPpdDefaults.DESCRIPCION)
+            .importe(new BigDecimal(ComplementoPpdDefaults.IMPORTE))
+            .valorUnitario(new BigDecimal(ComplementoPpdDefaults.VALOR_UNITARIO))
+            .build();
+    conceptos.add(conceptoDto);
     return conceptos;
   }
 
@@ -196,33 +194,34 @@ public class FacturaBuilderService {
                   .getMonto()
                   .divide(pagoDto.getTipoDeCambio(), 2, RoundingMode.HALF_UP);
         }
-        CfdiComplementoPagoBuilder cfdiComplementoPagoBuilder =
-            new CfdiComplementoPagoBuilder()
-                .setVersion(ComplementoPpdDefaults.VERSION)
-                .setFechaPago(pagoDto.getFechaPago())
-                .setFormaPago(FormaPagoEnum.findByPagoValue(pagoDto.getFormaPago()).getClave())
-                .setMoneda(pagoDto.getMoneda())
-                .setMonto(pagoDto.getMonto())
-                .setFolio(dto.getFolio())
-                .setIdDocumento(dto.getUuid())
-                .setImportePagado(montoPagado)
-                .setMonedaDr(cfdi.get().getMoneda())
-                .setMoneda(pagoDto.getMoneda())
-                .setValido(true)
-                .setMetodoPago(ComplementoPpdDefaults.METODO_PAGO)
-                .setSerie(ComplementoPpdDefaults.SERIE_PAGO)
-                .setNumeroParcialidad(cfdipago.get().getNumeroParcialidad() + 1)
-                .setImporteSaldoAnterior(dto.getSaldoPendiente())
-                .setTipoCambio(
+        CfdiPagoDto cfdiComplementoPago =
+            CfdiPagoDto.builder()
+                .version(ComplementoPpdDefaults.VERSION)
+                .fechaPago(pagoDto.getFechaPago())
+                .formaPago(FormaPagoEnum.findByPagoValue(pagoDto.getFormaPago()).getClave())
+                .moneda(pagoDto.getMoneda())
+                .monto(pagoDto.getMonto())
+                .folio(dto.getFolio())
+                .idDocumento(dto.getUuid())
+                .importePagado(montoPagado)
+                .monedaDr(cfdi.get().getMoneda())
+                .moneda(pagoDto.getMoneda())
+                .valido(true)
+                .metodoPago(ComplementoPpdDefaults.METODO_PAGO)
+                .serie(ComplementoPpdDefaults.SERIE_PAGO)
+                .numeroParcialidad(cfdipago.get().getNumeroParcialidad() + 1)
+                .importeSaldoAnterior(dto.getSaldoPendiente())
+                .tipoCambio(
                     cfdi.get().getMoneda().equals(pagoDto.getMoneda())
                         ? pagoDto.getTipoDeCambio()
-                        : new BigDecimal(1))
-                .setTipoCambioDr(
+                        : BigDecimal.valueOf(1))
+                .tipoCambioDr(
                     !cfdi.get().getMoneda().equals(pagoDto.getMoneda())
                         ? pagoDto.getTipoDeCambio()
-                        : new BigDecimal(1))
-                .setImporteSaldoInsoluto(dto.getSaldoPendiente().subtract(montoPagado));
-        cfdiPagos.add(cfdiComplementoPagoBuilder.build());
+                        : BigDecimal.valueOf(1))
+                .importeSaldoInsoluto(dto.getSaldoPendiente().subtract(montoPagado))
+                .build();
+        cfdiPagos.add(cfdiComplementoPago);
       } else {
         throw new InvoiceManagerException(
             "No tiene relacion de pago la factura",
@@ -252,10 +251,10 @@ public class FacturaBuilderService {
                 () ->
                     new InvoiceManagerException(
                         "Error al crear factura", "El receptor no exite", Constants.BAD_REQUEST));
-    return new FacturaContextBuilder()
-        .setFacturaDto(facturaDto)
-        .setEmpresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))
-        .setContribuyenteDto(contribuyenteMapper.getContribuyenteToFromEntity(contribuyente))
+    return FacturaContext.builder()
+        .facturaDto(facturaDto)
+        .empresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))
+        .contribuyenteDto(contribuyenteMapper.getContribuyenteToFromEntity(contribuyente))
         .build();
   }
 
@@ -287,11 +286,11 @@ public class FacturaBuilderService {
     List<FacturaFileDto> archivos = new ArrayList<>();
     archivos.add(xml);
     archivos.add(pdf);
-    return new FacturaContextBuilder()
-        .setFacturaDto(facturaDto)
-        .setFacturaFilesDto(archivos)
-        .setEmpresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))
-        .setContribuyenteDto(contribuyenteMapper.getContribuyenteToFromEntity(contribuyente))
+    return FacturaContext.builder()
+        .facturaDto(facturaDto)
+        .facturaFilesDto(archivos)
+        .empresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))
+        .contribuyenteDto(contribuyenteMapper.getContribuyenteToFromEntity(contribuyente))
         .build();
   }
 }

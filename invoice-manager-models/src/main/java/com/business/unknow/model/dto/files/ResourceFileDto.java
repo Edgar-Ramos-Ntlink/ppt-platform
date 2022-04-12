@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author ralfdemoledor
@@ -17,6 +20,9 @@ import java.util.Date;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
+@ToString
 public class ResourceFileDto implements Serializable {
 
   private static final long serialVersionUID = -8750055024664848580L;
@@ -42,105 +48,5 @@ public class ResourceFileDto implements Serializable {
     this.tipoRecurso = tipoRecurso;
     this.formato = formato;
     this.data = data;
-  }
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getTipoArchivo() {
-    return tipoArchivo;
-  }
-
-  public void setTipoArchivo(String tipoArchivo) {
-    this.tipoArchivo = tipoArchivo;
-  }
-
-  public String getReferencia() {
-    return referencia;
-  }
-
-  public void setReferencia(String referencia) {
-    this.referencia = referencia;
-  }
-
-  public String getTipoRecurso() {
-    return tipoRecurso;
-  }
-
-  public void setTipoRecurso(String tipoRecurso) {
-    this.tipoRecurso = tipoRecurso;
-  }
-
-  public String getData() {
-    return data;
-  }
-
-  public void setData(String data) {
-    this.data = data;
-  }
-
-  public Date getFechaCreacion() {
-    return fechaCreacion;
-  }
-
-  public void setFechaCreacion(Date fechaCreacion) {
-    this.fechaCreacion = fechaCreacion;
-  }
-
-  public String getFormato() {
-    return formato;
-  }
-
-  public void setFormato(String formato) {
-    this.formato = formato;
-  }
-
-  public String getExtension() {
-    return extension;
-  }
-
-  public void setExtension(String extension) {
-    this.extension = extension;
-  }
-
-  public String getNombre() {
-    return nombre;
-  }
-
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
-  }
-
-  @Override
-  public String toString() {
-    return "ResourceFileDto{"
-        + "id="
-        + id
-        + ", tipoArchivo='"
-        + tipoArchivo
-        + '\''
-        + ", referencia='"
-        + referencia
-        + '\''
-        + ", nombre='"
-        + nombre
-        + '\''
-        + ", tipoRecurso='"
-        + tipoRecurso
-        + '\''
-        + ", formato='"
-        + formato
-        + '\''
-        + ", extension='"
-        + extension
-        + '\''
-        + ", fechaCreacion="
-        + fechaCreacion
-        + '}';
   }
 }

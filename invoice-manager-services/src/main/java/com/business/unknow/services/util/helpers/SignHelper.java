@@ -22,13 +22,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.ssl.PKCS8Key;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class SignHelper {
-
-  private static final Logger log = LoggerFactory.getLogger(SignHelper.class);
 
   private String getKey(String key) throws InvoiceCommonException {
     byte[] decode = Base64.getDecoder().decode(key.getBytes(StandardCharsets.UTF_8));

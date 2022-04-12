@@ -20,10 +20,23 @@ import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
+@ToString
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "CLIENTES")
@@ -83,127 +96,4 @@ public class Client implements Serializable {
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "RFC", referencedColumnName = "RFC")
   private Contribuyente informacionFiscal;
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  public Boolean getActivo() {
-    return activo;
-  }
-
-  public void setActivo(Boolean activo) {
-    this.activo = activo;
-  }
-
-  public String getCorreoPromotor() {
-    return correoPromotor;
-  }
-
-  public void setCorreoPromotor(String correoPromotor) {
-    this.correoPromotor = correoPromotor;
-  }
-
-  public String getCorreoContacto() {
-    return correoContacto;
-  }
-
-  public void setCorreoContacto(String correoContacto) {
-    this.correoContacto = correoContacto;
-  }
-
-  public BigDecimal getPorcentajePromotor() {
-    return porcentajePromotor;
-  }
-
-  public void setPorcentajePromotor(BigDecimal porcentajePromotor) {
-    this.porcentajePromotor = porcentajePromotor;
-  }
-
-  public BigDecimal getPorcentajeCliente() {
-    return porcentajeCliente;
-  }
-
-  public void setPorcentajeCliente(BigDecimal porcentajeCliente) {
-    this.porcentajeCliente = porcentajeCliente;
-  }
-
-  public BigDecimal getPorcentajeDespacho() {
-    return porcentajeDespacho;
-  }
-
-  public void setPorcentajeDespacho(BigDecimal porcentajeDespacho) {
-    this.porcentajeDespacho = porcentajeDespacho;
-  }
-
-  public BigDecimal getPorcentajeContacto() {
-    return porcentajeContacto;
-  }
-
-  public void setPorcentajeContacto(BigDecimal porcentajeContacto) {
-    this.porcentajeContacto = porcentajeContacto;
-  }
-
-  public Date getFechaCreacion() {
-    return fechaCreacion;
-  }
-
-  public void setFechaCreacion(Date fechaCreacion) {
-    this.fechaCreacion = fechaCreacion;
-  }
-
-  public Date getFechaActualizacion() {
-    return fechaActualizacion;
-  }
-
-  public void setFechaActualizacion(Date fechaActualizacion) {
-    this.fechaActualizacion = fechaActualizacion;
-  }
-
-  public Contribuyente getInformacionFiscal() {
-    return informacionFiscal;
-  }
-
-  public void setInformacionFiscal(Contribuyente informacionFiscal) {
-    this.informacionFiscal = informacionFiscal;
-  }
-
-  public String getNotas() {
-    return notas;
-  }
-
-  public void setNotas(String notas) {
-    this.notas = notas;
-  }
-
-  @Override
-  public String toString() {
-    return "Client [id="
-        + id
-        + ", activo="
-        + activo
-        + ", correoPromotor="
-        + correoPromotor
-        + ", correoContacto="
-        + correoContacto
-        + ", porcentajePromotor="
-        + porcentajePromotor
-        + ", porcentajeCliente="
-        + porcentajeCliente
-        + ", porcentajeDespacho="
-        + porcentajeDespacho
-        + ", porcentajeContacto="
-        + porcentajeContacto
-        + ", fechaCreacion="
-        + fechaCreacion
-        + ", fechaActualizacion="
-        + fechaActualizacion
-        + ", informacionFiscal="
-        + informacionFiscal
-        + "]";
-  }
 }

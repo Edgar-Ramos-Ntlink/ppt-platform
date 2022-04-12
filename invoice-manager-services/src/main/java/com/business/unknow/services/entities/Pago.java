@@ -18,10 +18,21 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
+@ToString
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "PAGOS")
@@ -109,210 +120,5 @@ public class Pago implements Serializable {
   public void addFactura(PagoFactura factura) {
     this.facturas.add(factura);
     factura.setPago(this);
-  }
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getMoneda() {
-    return moneda;
-  }
-
-  public void setMoneda(String moneda) {
-    this.moneda = moneda;
-  }
-
-  public String getBanco() {
-    return banco;
-  }
-
-  public void setBanco(String banco) {
-    this.banco = banco;
-  }
-
-  public String getCuenta() {
-    return cuenta;
-  }
-
-  public void setCuenta(String cuenta) {
-    this.cuenta = cuenta;
-  }
-
-  public BigDecimal getTipoDeCambio() {
-    return tipoDeCambio;
-  }
-
-  public void setTipoDeCambio(BigDecimal tipoDeCambio) {
-    this.tipoDeCambio = tipoDeCambio;
-  }
-
-  public String getFormaPago() {
-    return formaPago;
-  }
-
-  public void setFormaPago(String formaPago) {
-    this.formaPago = formaPago;
-  }
-
-  public BigDecimal getMonto() {
-    return monto;
-  }
-
-  public void setMonto(BigDecimal monto) {
-    this.monto = monto;
-  }
-
-  public String getStatusPago() {
-    return statusPago;
-  }
-
-  public void setStatusPago(String statusPago) {
-    this.statusPago = statusPago;
-  }
-
-  public String getComentarioPago() {
-    return comentarioPago;
-  }
-
-  public void setComentarioPago(String comentarioPago) {
-    this.comentarioPago = comentarioPago;
-  }
-
-  public String getAcredor() {
-    return acredor;
-  }
-
-  public void setAcredor(String acredor) {
-    this.acredor = acredor;
-  }
-
-  public String getDeudor() {
-    return deudor;
-  }
-
-  public void setDeudor(String deudor) {
-    this.deudor = deudor;
-  }
-
-  public String getSolicitante() {
-    return solicitante;
-  }
-
-  public void setSolicitante(String solicitante) {
-    this.solicitante = solicitante;
-  }
-
-  public Boolean getRevision1() {
-    return revision1;
-  }
-
-  public void setRevision1(Boolean revision1) {
-    this.revision1 = revision1;
-  }
-
-  public Boolean getRevision2() {
-    return revision2;
-  }
-
-  public void setRevision2(Boolean revision2) {
-    this.revision2 = revision2;
-  }
-
-  public String getRevisor1() {
-    return revisor1;
-  }
-
-  public void setRevisor1(String revisor1) {
-    this.revisor1 = revisor1;
-  }
-
-  public String getRevisor2() {
-    return revisor2;
-  }
-
-  public void setRevisor2(String revisor2) {
-    this.revisor2 = revisor2;
-  }
-
-  public Date getFechaPago() {
-    return fechaPago;
-  }
-
-  public void setFechaPago(Date fechaPago) {
-    this.fechaPago = fechaPago;
-  }
-
-  public Date getFechaCreacion() {
-    return fechaCreacion;
-  }
-
-  public void setFechaCreacion(Date fechaCreacion) {
-    this.fechaCreacion = fechaCreacion;
-  }
-
-  public Date getFechaActualizacion() {
-    return fechaActualizacion;
-  }
-
-  public void setFechaActualizacion(Date fechaActualizacion) {
-    this.fechaActualizacion = fechaActualizacion;
-  }
-
-  public List<PagoFactura> getFacturas() {
-    return facturas;
-  }
-
-  public void setFacturas(List<PagoFactura> facturas) {
-    this.facturas = facturas;
-  }
-
-  @Override
-  public String toString() {
-    return "Pago [id="
-        + id
-        + ", moneda="
-        + moneda
-        + ", banco="
-        + banco
-        + ", cuenta="
-        + cuenta
-        + ", tipoDeCambio="
-        + tipoDeCambio
-        + ", formaPago="
-        + formaPago
-        + ", monto="
-        + monto
-        + ", statusPago="
-        + statusPago
-        + ", comentarioPago="
-        + comentarioPago
-        + ", acredor="
-        + acredor
-        + ", deudor="
-        + deudor
-        + ", solicitante="
-        + solicitante
-        + ", revision1="
-        + revision1
-        + ", revision2="
-        + revision2
-        + ", revisor1="
-        + revisor1
-        + ", revisor2="
-        + revisor2
-        + ", fechaPago="
-        + fechaPago
-        + ", fechaCreacion="
-        + fechaCreacion
-        + ", fechaActualizacion="
-        + fechaActualizacion
-        + ", facturas="
-        + facturas
-        + "]";
   }
 }

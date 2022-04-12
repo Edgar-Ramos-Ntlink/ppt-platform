@@ -1,6 +1,5 @@
 package com.business.unknow.services.services.builder;
 
-import com.business.unknow.builder.FacturaContextBuilder;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
@@ -49,9 +48,9 @@ public class DevolucionesBuilderService {
 
   public FacturaContext buildContextForDevolucionPue(FacturaDto dto) {
     List<PagoFactura> facturaPago = pagoFacturaRepository.findByFolio(dto.getFolio());
-    return new FacturaContextBuilder()
-        .setFacturaDto(dto)
-        .setIdPago(facturaPago.stream().findFirst().get().getPago().getId())
+    return FacturaContext.builder()
+        .facturaDto(dto)
+        .idPago(facturaPago.stream().findFirst().get().getPago().getId())
         .build();
   }
 
@@ -59,9 +58,9 @@ public class DevolucionesBuilderService {
     List<PagoFactura> facturaPago =
         pagoFacturaRepository.findByFolio(
             dto.getCfdi().getComplemento().getPagos().stream().findFirst().get().getFolio());
-    return new FacturaContextBuilder()
-        .setFacturaDto(dto)
-        .setIdPago(
+    return FacturaContext.builder()
+        .facturaDto(dto)
+        .idPago(
             facturaPago.stream()
                 .filter(a -> a.getIdCfdi().equals(dto.getIdCfdi()))
                 .findFirst()

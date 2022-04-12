@@ -49,8 +49,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -63,6 +62,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@Slf4j
 public class FacturaService {
 
   @Autowired private FacturaDao facturaDao;
@@ -102,8 +102,6 @@ public class FacturaService {
   @Autowired private RelacionadosTranslator sustitucionTranslator;
 
   private FacturaValidator validator = new FacturaValidator();
-
-  private static final Logger log = LoggerFactory.getLogger(FacturaService.class);
 
   private Specification<Factura> buildSearchFilters(Map<String, String> parameters) {
     String linea = (parameters.get("lineaEmisor") == null) ? "A" : parameters.get("lineaEmisor");

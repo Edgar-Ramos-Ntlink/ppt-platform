@@ -6,8 +6,20 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-/** @author ralfdemoledor */
+@Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter
+@Getter
+@ToString
 @Entity
 @Table(name = "CAT_CLAVE_PROD_SERV")
 public class ClaveProductoServicio {
@@ -24,49 +36,4 @@ public class ClaveProductoServicio {
 
   @Column(name = "INICIO_VIGENCIA")
   private Date inicioVigencia;
-
-  public Integer getClave() {
-    return clave;
-  }
-
-  public void setClave(Integer clave) {
-    this.clave = clave;
-  }
-
-  public String getDescripcion() {
-    return descripcion;
-  }
-
-  public void setDescripcion(String descripcion) {
-    this.descripcion = descripcion;
-  }
-
-  public String getSimilares() {
-    return similares;
-  }
-
-  public void setSimilares(String similares) {
-    this.similares = similares;
-  }
-
-  public Date getInicioVigencia() {
-    return inicioVigencia;
-  }
-
-  public void setInicioVigencia(Date inicioVigencia) {
-    this.inicioVigencia = inicioVigencia;
-  }
-
-  @Override
-  public String toString() {
-    return "ClaveProductoServicio [clave="
-        + clave
-        + ", descripcion="
-        + descripcion
-        + ", similares="
-        + similares
-        + ", inicioVigencia="
-        + inicioVigencia
-        + "]";
-  }
 }

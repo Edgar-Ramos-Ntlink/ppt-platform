@@ -5,19 +5,19 @@ import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.rules.common.Constants.PaymentsSuite;
 import java.math.BigDecimal;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Rule(
     name = PaymentsSuite.ZERO_AMMOUNT_VALIDATION_RULE,
     description = PaymentsSuite.ZERO_AMMOUNT_VALIDATION_RULE_DESC)
+@Slf4j
 public class ZeroAmmountValidationRule {
 
-  private static final Logger log = LoggerFactory.getLogger(ZeroAmmountValidationRule.class);
 
   @Condition
   public boolean condition(@Fact("payment") PagoDto currentPayment) {

@@ -15,7 +15,7 @@ import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
 @Jacksonized
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @Setter
 @ToString
