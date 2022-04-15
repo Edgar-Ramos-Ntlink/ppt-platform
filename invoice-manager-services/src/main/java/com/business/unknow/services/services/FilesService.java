@@ -9,10 +9,22 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.ResourceFile;
 import com.business.unknow.services.mapper.ResourceFileMapper;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
+import com.mx.ntlink.NtlinkUtilException;
+import com.mx.ntlink.aws.S3Utils;
+import com.mx.ntlink.cfdi.mappers.CfdiMapper;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
+import com.mx.ntlink.models.generated.Comprobante;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -25,16 +37,80 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@Slf4j
 public class FilesService {
 
   @Autowired private ResourceFileRepository resourceFileRepository;
 
   @Autowired private ResourceFileMapper resourceFileMapper;
 
+  // TODO VALIDAR ELIMINACION
   @Autowired private S3FileService s3FileService;
+
+  @Autowired private S3Utils s3Utils;
+
+  @Autowired private CfdiMapper cfdiMapper;
+
+  @Value("${s3.bucket}")
+  private String s3Bucket;
+
+  @Value("${s3.path}")
+  private String s3Path;
 
   @Value("classpath:/images/imagen-no-disponible.png")
   private Resource noAvailableImage;
+
+  /**
+   * Saves xml in S3 bucket
+   *
+   * @param name
+   * @param {@link Comprobante}
+   */
+  public void sendXmlToS3(String name, Comprobante comprobante) {
+    log.info("Saving {}.xml to S3", name);
+    try {
+      JAXBContext contextObj = JAXBContext.newInstance(Comprobante.class);
+      Marshaller marshallerObj = contextObj.createMarshaller();
+      marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+      ByteArrayOutputStream xmlStream = new ByteArrayOutputStream();
+      marshallerObj.marshal(comprobante, xmlStream);
+      s3Utils.upsertFile(s3Bucket, s3Path, name.concat(".xml"), xmlStream.toByteArray());
+    } catch (JAXBException | NtlinkUtilException e) {
+      throw new ResponseStatusException(
+          HttpStatus.CONFLICT,
+          String.format("Error saving Xml file in S3 with folio %s", comprobante.getFolio()));
+    }
+  }
+
+  /**
+   * Gets Cfdi from xml in S3 bucket
+   *
+   * @param folio
+   * @return @link Cfdi}
+   * @throws @link NtlinkUtilException}
+   */
+  public Cfdi getCfdiFromS3(String folio) throws NtlinkUtilException {
+    try {
+      JAXBContext contextObj = JAXBContext.newInstance(Comprobante.class);
+      Unmarshaller unmarshaller = contextObj.createUnmarshaller();
+      StringReader decodedString =
+          new StringReader(
+              new String(
+                  org.apache.commons.ssl.Base64.decodeBase64(
+                      s3Utils
+                          .getFile(s3Bucket, s3Path, folio.concat(".xml"))
+                          .getBytes(StandardCharsets.UTF_8))));
+      Comprobante comprobante = (Comprobante) unmarshaller.unmarshal(decodedString);
+      return cfdiMapper.comprobanteToCfdi(comprobante);
+    } catch (JAXBException e) {
+      throw new ResponseStatusException(
+          HttpStatus.CONFLICT, String.format("Error getting Xml file in S3 with folio %s", folio));
+    }
+  }
+
+  public void deleteCfdiFromS3(String folio) throws NtlinkUtilException {
+    s3Utils.deleteFile(s3Bucket, s3Path, folio.concat(".xml"));
+  }
 
   public FacturaFileDto getFacturaFileByFolioAndType(String folio, String type)
       throws InvoiceManagerException {
@@ -42,6 +118,7 @@ public class FilesService {
       String data =
           s3FileService.getS3File(
               S3BucketsEnum.CFDIS, folio.concat(TipoArchivoEnum.valueOf(type).getFormat()));
+
       FacturaFileDto fileDto = new FacturaFileDto();
       fileDto.setFolio(folio);
       fileDto.setData(data);

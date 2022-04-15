@@ -55,19 +55,22 @@ public class DevolucionesBuilderService {
   }
 
   public FacturaContext buildContextForDevolucionPpd(FacturaDto dto) {
-    List<PagoFactura> facturaPago =
-        pagoFacturaRepository.findByFolio(
-            dto.getCfdi().getComplemento().getPagos().stream().findFirst().get().getFolio());
-    return FacturaContext.builder()
-        .facturaDto(dto)
-        .idPago(
-            facturaPago.stream()
-                .filter(a -> a.getIdCfdi().equals(dto.getIdCfdi()))
-                .findFirst()
-                .get()
-                .getPago()
-                .getId())
-        .build();
+    // TODO VALIDATE DEVOLUCIONES
+    /*  List<PagoFactura> facturaPago =
+         pagoFacturaRepository.findByFolio(
+             dto.getCfdi().getComplemento().getPagos().stream().findFirst().get().getFolio());
+     return FacturaContext.builder()
+         .facturaDto(dto)
+         .idPago(
+             facturaPago.stream()
+                 .filter(a -> a.getIdCfdi().equals(dto.getIdCfdi()))
+                 .findFirst()
+                 .get()
+                 .getPago()
+                 .getId())
+         .build();
+    */
+    return null;
   }
 
   public Devolucion buildPagoDevolucion(PagoDevolucionDto dto) {

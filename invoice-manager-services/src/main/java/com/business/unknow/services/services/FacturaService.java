@@ -7,7 +7,6 @@ import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.enums.TipoEmail;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
@@ -31,6 +30,9 @@ import com.business.unknow.services.services.translators.FacturaTranslator;
 import com.business.unknow.services.services.translators.RelacionadosTranslator;
 import com.business.unknow.services.util.FacturaDefaultValues;
 import com.business.unknow.services.util.validators.FacturaValidator;
+import com.google.common.collect.ImmutableList;
+import com.mx.ntlink.NtlinkUtilException;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -362,14 +364,14 @@ public class FacturaService {
     List<CfdiPago> pagos = cfdiPagoRepository.findByIdCfdiAndParcialidad(folio, parcialidad);
     Optional<CfdiPago> pago = pagos.stream().findFirst();
     if (pago.isPresent()) {
-      return getFacturaBaseByPrefolio(pago.get().getCfdi().getId());
+      return getFacturaBaseByFolio(pago.get().getFolio());
     } else {
       throw new ResponseStatusException(
           HttpStatus.NOT_FOUND, String.format("La factura con el pre-folio %s no existe", folio));
     }
   }
 
-  public FacturaDto getFacturaByFolio(String folio) {
+  public FacturaDto getFacturaByFolio(String folio) throws NtlinkUtilException {
     FacturaDto factura =
         mapper.getFacturaDtoFromEntity(
             repository
@@ -380,21 +382,6 @@ public class FacturaService {
                             HttpStatus.NOT_FOUND,
                             String.format("La factura con el folio %s no existe", folio))));
     factura.setCfdi(cfdiService.getCfdiByFolio(folio));
-    return factura;
-  }
-
-  public FacturaDto getFacturaByIdCfdi(int id) {
-    CfdiDto cfdiDto = cfdiService.getCfdiById(id);
-    FacturaDto factura =
-        mapper.getFacturaDtoFromEntity(
-            repository
-                .findByFolio(cfdiDto.getFolio())
-                .orElseThrow(
-                    () ->
-                        new ResponseStatusException(
-                            HttpStatus.NOT_FOUND,
-                            String.format(
-                                "La factura con el folio %s no existe", cfdiDto.getFolio()))));
     return factura;
   }
 
@@ -409,15 +396,15 @@ public class FacturaService {
                         String.format("La factura con el folio %s no existe", folio))));
   }
 
-  public FacturaDto getFacturaBaseByPrefolio(Integer id) {
+  public FacturaDto getFacturaBaseByFolio(String folio) {
     return mapper.getFacturaDtoFromEntity(
         repository
-            .findByIdCfdi(id)
+            .findByFolio(folio)
             .orElseThrow(
                 () ->
                     new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        String.format("La factura con el pre-folio %d no existe", id))));
+                        String.format("La factura con el folio %S no existe", folio))));
   }
 
   @Transactional(
@@ -432,9 +419,9 @@ public class FacturaService {
         facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
     FacturaDto facturaBuilded =
         facturaServiceEvaluator.facturaEvaluation(facturaContext).getFacturaDto();
-    CfdiDto cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
+    Cfdi cfdi = cfdiService.insertNewCfdi(facturaDto.getCfdi());
     Factura entity = mapper.getEntityFromFacturaDto(facturaBuilded);
-    entity.setIdCfdi(cfdi.getId());
+    entity.setFolio(cfdi.getFolio());
     entity.setTotal(cfdi.getTotal());
     entity.setSaldoPendiente(cfdi.getTotal());
     FacturaDto saveFactura = mapper.getFacturaDtoFromEntity(repository.save(entity));
@@ -447,17 +434,17 @@ public class FacturaService {
   }
 
   public FacturaDto updateTotalAndSaldoFactura(
-      Integer idCfdi, Optional<BigDecimal> newTotal, Optional<BigDecimal> pago)
-      throws InvoiceManagerException {
+      String folioCfdi, Optional<BigDecimal> newTotal, Optional<BigDecimal> pago)
+      throws InvoiceManagerException, NtlinkUtilException {
     Factura factura =
         repository
-            .findByIdCfdi(idCfdi)
+            .findByFolio(folioCfdi)
             .orElseThrow(
                 () ->
                     new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        String.format("La factura con el pre-folio %d no existe", idCfdi)));
-    CfdiDto cfdi = cfdiService.getCfdiById(idCfdi);
+                        String.format("La factura con el folio %dsno existe", folioCfdi)));
+    Cfdi cfdi = cfdiService.getCfdiByFolio(folioCfdi);
     BigDecimal total = newTotal.isPresent() ? newTotal.get() : factura.getTotal();
     BigDecimal montoPagado =
         pagoService.findPagosByFolio(factura.getFolio()).stream()
@@ -480,16 +467,16 @@ public class FacturaService {
   }
 
   public FacturaDto updateTotalAndSaldoFacturaComplemento(
-      Integer idCfdi, Optional<BigDecimal> newTotal, Optional<BigDecimal> deuda)
+      String folio, Optional<BigDecimal> newTotal, Optional<BigDecimal> deuda)
       throws InvoiceManagerException {
     Factura factura =
         repository
-            .findByIdCfdi(idCfdi)
+            .findByFolio(folio)
             .orElseThrow(
                 () ->
                     new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        String.format("La factura con el pre-folio %d no existe", idCfdi)));
+                        String.format("La factura con el folio %s no existe", folio)));
     if (newTotal.isPresent()) {
       factura.setTotal(newTotal.get());
     }
@@ -501,16 +488,16 @@ public class FacturaService {
   }
 
   public FacturaDto updateTotalAndSaldoComplemento(
-      Integer idCfdi, Optional<BigDecimal> newTotal, Optional<BigDecimal> pago)
+      String folio, Optional<BigDecimal> newTotal, Optional<BigDecimal> pago)
       throws InvoiceManagerException {
     Factura factura =
         repository
-            .findByIdCfdi(idCfdi)
+            .findByFolio(folio)
             .orElseThrow(
                 () ->
                     new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        String.format("La factura con el pre-folio %d no existe", idCfdi)));
+                        String.format("La factura con el folio %s no existe", folio)));
     BigDecimal total = newTotal.isPresent() ? newTotal.get() : factura.getTotal();
     BigDecimal montoPagado =
         pagoService.findPagosByFolio(factura.getFolio()).stream()
@@ -528,21 +515,21 @@ public class FacturaService {
     return mapper.getFacturaDtoFromEntity(repository.save(factura));
   }
 
-  public FacturaDto updateFacturaStatus(Integer idCfdi, FacturaStatusEnum status) {
+  public FacturaDto updateFacturaStatus(String folio, FacturaStatusEnum status) {
     Factura factura =
         repository
-            .findByIdCfdi(idCfdi)
+            .findByFolio(folio)
             .orElseThrow(
                 () ->
                     new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        String.format("La factura con el pre-folio %d no existe", idCfdi)));
+                        String.format("La factura con el pre-folio %s no existe", folio)));
     factura.setStatusFactura(status.getValor());
     return mapper.getFacturaDtoFromEntity(repository.save(factura));
   }
 
-  public FacturaDto updateFactura(Integer idCfdi, FacturaDto facturaDto) {
-    Optional<Factura> factura = repository.findByIdCfdi(idCfdi);
+  public FacturaDto updateFactura(String folio, FacturaDto facturaDto) {
+    Optional<Factura> factura = repository.findByFolio(folio);
     if (factura.isPresent()) {
       facturaServiceEvaluator.facturaStatusValidation(facturaDto);
       factura.get().setStatusFactura(facturaDto.getStatusFactura());
@@ -552,13 +539,13 @@ public class FacturaService {
       return mapper.getFacturaDtoFromEntity(repository.save(factura.get()));
     } else {
       throw new ResponseStatusException(
-          HttpStatus.NOT_FOUND, String.format("La factura con el pre-folio %d no existe", idCfdi));
+          HttpStatus.NOT_FOUND, String.format("La factura con el pre-folio %s no existe", folio));
     }
   }
 
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
-  public void deleteFactura(String folio) throws InvoiceManagerException {
+  public void deleteFactura(String folio) throws InvoiceManagerException, NtlinkUtilException {
     Factura fact =
         repository
             .findByFolio(folio)
@@ -568,11 +555,11 @@ public class FacturaService {
                         HttpStatus.NOT_FOUND,
                         String.format("La factura con el folio %s no existe", folio)));
     repository.delete(fact);
-    cfdiService.deleteCfdi(fact.getIdCfdi());
+    cfdiService.deleteCfdi(fact.getFolio());
   }
 
   public FacturaDto createComplemento(String folio, PagoDto pagoDto)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     pagoDto.setMonto(pagoDto.getMonto().setScale(2));
     FacturaDto facturaDto = getBaseFacturaByFolio(folio);
     List<FacturaDto> facturas = new ArrayList<>();
@@ -588,7 +575,7 @@ public class FacturaService {
 
   // TIMBRADO
   public FacturaContext timbrarFactura(String folio, FacturaDto facturaDto)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     validator.validateTimbrado(facturaDto, folio);
     FacturaContext facturaContext =
         timbradoBuilderService.buildFacturaContextTimbrado(facturaDto, folio);
@@ -596,8 +583,7 @@ public class FacturaService {
     switch (TipoDocumentoEnum.findByDesc(facturaContext.getTipoDocumento())) {
       case NOTA_CREDITO:
         if (facturaDto.getIdCfdiRelacionadoPadre() != null) {
-          FacturaDto facturaPadre =
-              getFacturaBaseByPrefolio(facturaDto.getIdCfdiRelacionadoPadre());
+          FacturaDto facturaPadre = getFacturaBaseByFolio(facturaDto.getFolio());
           if (facturaDto.getTotal().compareTo(facturaPadre.getTotal()) > 0
               || facturaDto.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
             throw new InvoiceManagerException(
@@ -667,20 +653,20 @@ public class FacturaService {
   }
 
   public FacturaContext cancelarFactura(String folio, FacturaDto facturaDto)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     FacturaContext facturaContext =
         timbradoBuilderService.buildFacturaContextCancelado(facturaDto, folio);
     validator.validateTimbrado(facturaDto, folio);
     if (facturaDto.getTipoDocumento().equals("Factura")
         || facturaDto.getMetodoPago().equals("PPD")) {
       for (CfdiPagoDto cfdiPagoDto : cfdiService.getCfdiPagosByFolio(facturaDto.getFolio())) {
-        FacturaDto complemento = getFacturaByIdCfdi(cfdiPagoDto.getCfdi().getId());
+        FacturaDto complemento = getFacturaByFolio(cfdiPagoDto.getCfdi().getFolio());
         if (complemento.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
           cancelarFactura(complemento.getFolio(), complemento);
         } else {
           if (!complemento.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
             complemento.setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
-            updateFactura(complemento.getIdCfdi(), complemento);
+            updateFactura(complemento.getFolio(), complemento);
           }
         }
       }
@@ -702,7 +688,7 @@ public class FacturaService {
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public FacturaDto generateComplemento(List<FacturaDto> facturas, PagoDto pagoPpd)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     if (facturas.stream()
         .anyMatch(a -> !a.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor()))) {
       throw new InvoiceManagerException(
@@ -717,20 +703,22 @@ public class FacturaService {
       FacturaContext factContext =
           facturaBuilderService.buildFacturaContextPagoPpdCreation(
               pagoPpd, factura, factura.getFolio());
-      CfdiDto cfdiDto = facturaBuilderService.buildFacturaComplementoCreation(factContext);
+      Cfdi cfdi = facturaBuilderService.buildFacturaComplementoCreation(factContext);
       FacturaDto complemento =
           facturaBuilderService.buildFacturaDtoPagoPpdCreation(factura, pagoPpd);
       List<CfdiPagoDto> cfdiPagos =
           facturaBuilderService.buildFacturaComplementoPagos(factura, pagoPpd, facturas);
-      cfdiDto.setComplemento(new ComplementoDto());
-      cfdiDto.getComplemento().setPagos(cfdiPagos);
-      complemento.setCfdi(cfdiDto);
+      cfdi.setComplemento(ImmutableList.of(new ComplementoDto()));
+      // TODO validate Complementos
+      // cfdi.getComplemento().setPagos(cfdiPagos);
+      complemento.setCfdi(cfdi);
       facturaDefaultValues.assignaDefaultsComplemento(
           complemento, facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
-      CfdiDto cfdi = cfdiService.insertNewCfdi(complemento.getCfdi());
+      Cfdi createdCfdi = cfdiService.insertNewCfdi(complemento.getCfdi());
       Factura fact = mapper.getEntityFromFacturaDto(complemento);
-      fact.setIdCfdi(cfdi.getId());
-      for (FacturaDto dto : facturas) {
+      fact.setFolio(createdCfdi.getFolio());
+      // TODO VALIDAR PAGOS
+      /*for (FacturaDto dto : facturas) {
         Optional<CfdiPagoDto> cfdiPago =
             complemento.getCfdi().getComplemento().getPagos().stream()
                 .filter(a -> a.getFolio().equals(dto.getFolio()))
@@ -739,7 +727,7 @@ public class FacturaService {
             dto.getIdCfdi(),
             Optional.of(dto.getTotal()),
             Optional.of(cfdiPago.get().getImporteSaldoInsoluto()));
-      }
+      }*/
       return mapper.getFacturaDtoFromEntity(repository.save(fact));
     } else {
       throw new InvoiceManagerException(
@@ -749,7 +737,7 @@ public class FacturaService {
     }
   }
 
-  public void recreatePdf(CfdiDto dto) {
+  public void recreatePdf(Cfdi dto) {
     FacturaDto factura =
         mapper.getFacturaDtoFromEntity(
             repository
@@ -765,7 +753,7 @@ public class FacturaService {
   }
 
   public FacturaContext resendEmail(String folio, FacturaDto facturaDto)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     FacturaContext facturaContext =
         facturaBuilderService.buildEmailContext(folio, getFacturaByFolio(folio));
     timbradoExecutorService.sendEmail(facturaContext, TipoEmail.GMAIL);
@@ -773,7 +761,7 @@ public class FacturaService {
   }
 
   public FacturaDto postRelacion(FacturaDto dto, TipoDocumentoEnum tipoDocumento)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     FacturaDto facturaDto = getFacturaByFolio(dto.getFolio());
     if (TipoDocumentoEnum.FACTURA.getDescripcion().equals(facturaDto.getTipoDocumento())) {
       switch (tipoDocumento) {

@@ -17,6 +17,7 @@ import com.business.unknow.services.repositories.facturas.DevolucionRepository;
 import com.business.unknow.services.services.builder.DevolucionesBuilderService;
 import com.business.unknow.services.services.executor.DevolucionExecutorService;
 import com.business.unknow.services.util.validators.DevolucionValidator;
+import com.mx.ntlink.NtlinkUtilException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
@@ -130,7 +131,8 @@ public class DevolucionService {
     }
   }
 
-  public void generarDevoluciones(FacturaDto facturaDto) throws InvoiceManagerException {
+  public void generarDevoluciones(FacturaDto facturaDto)
+      throws InvoiceManagerException, NtlinkUtilException {
     Client client =
         clientRepository
             .findByCorreoPromotorAndClient(

@@ -10,9 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CfdiPagoRepository extends JpaRepository<CfdiPago, Integer> {
 
-  @Query("select p from CfdiPago p where p.cfdi.id=:id")
-  public List<CfdiPago> findByCfdi(@Param("id") int id);
-
   public List<CfdiPago> findByFolio(String folio);
 
   @Query("select p from CfdiPago p where p.folio=:folio AND p.numeroParcialidad=:parcialidad")

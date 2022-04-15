@@ -7,12 +7,8 @@ import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
-import com.business.unknow.model.dto.cfdi.ConceptoDto;
-import com.business.unknow.model.dto.cfdi.EmisorDto;
-import com.business.unknow.model.dto.cfdi.ReceptorDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
@@ -20,15 +16,20 @@ import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.entities.Empresa;
-import com.business.unknow.services.entities.cfdi.Cfdi;
 import com.business.unknow.services.entities.cfdi.CfdiPago;
 import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
-import com.business.unknow.services.repositories.facturas.CfdiRepository;
+import com.business.unknow.services.services.CfdiService;
 import com.business.unknow.services.services.FilesService;
+import com.google.common.collect.ImmutableList;
+import com.mx.ntlink.NtlinkUtilException;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
+import com.mx.ntlink.cfdi.modelos.Concepto;
+import com.mx.ntlink.cfdi.modelos.Emisor;
+import com.mx.ntlink.cfdi.modelos.Receptor;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class FacturaBuilderService {
 
   @Autowired private CfdiPagoRepository cfdiPagoRepository;
 
-  @Autowired private CfdiRepository cfdiRepository;
+  @Autowired private CfdiService cfdiService;
 
   @Autowired private EmpresaMapper empresaMapper;
 
@@ -108,8 +109,8 @@ public class FacturaBuilderService {
         .build();
   }
 
-  public CfdiDto buildFacturaComplementoCreation(FacturaContext facturaContext) {
-    return CfdiDto.builder()
+  public Cfdi buildFacturaComplementoCreation(FacturaContext facturaContext) {
+    return Cfdi.builder()
         .version(ComplementoPpdDefaults.VERSION_CFDI)
         .lugarExpedicion(facturaContext.getEmpresaDto().getCp())
         .moneda(ComplementoPpdDefaults.MONEDA)
@@ -121,10 +122,10 @@ public class FacturaBuilderService {
         .serie(ComplementoPpdDefaults.SERIE)
         .subtotal(new BigDecimal(ComplementoPpdDefaults.SUB_TOTAL))
         .total(new BigDecimal(ComplementoPpdDefaults.TOTAL))
-        .complemento(new ComplementoDto())
+        .complemento(ImmutableList.of(new ComplementoDto()))
         .tipoDeComprobante(ComplementoPpdDefaults.COMPROBANTE)
         .emisor(
-            EmisorDto.builder()
+            Emisor.builder()
                 .rfc(facturaContext.getFacturaDto().getRfcEmisor())
                 .nombre(facturaContext.getFacturaDto().getRazonSocialEmisor())
                 .regimenFiscal(
@@ -132,7 +133,7 @@ public class FacturaBuilderService {
                 .direccion(facturaContext.getFacturaDto().getCfdi().getEmisor().getDireccion())
                 .build())
         .receptor(
-            ReceptorDto.builder()
+            Receptor.builder()
                 .rfc(facturaContext.getFacturaDto().getRfcRemitente())
                 .nombre(facturaContext.getFacturaDto().getRazonSocialRemitente())
                 .usoCfdi(ComplementoPpdDefaults.USO_CFDI)
@@ -142,10 +143,10 @@ public class FacturaBuilderService {
         .build();
   }
 
-  public List<ConceptoDto> buildFacturaComplementoConceptos() {
-    List<ConceptoDto> conceptos = new ArrayList<ConceptoDto>();
-    ConceptoDto conceptoDto =
-        ConceptoDto.builder()
+  public List<Concepto> buildFacturaComplementoConceptos() {
+    List<Concepto> conceptos = new ArrayList<Concepto>();
+    Concepto concepto =
+        Concepto.builder()
             .cantidad(new BigDecimal(ComplementoPpdDefaults.CANTIDAD))
             .claveProdServ(ComplementoPpdDefaults.CLAVE_PROD)
             .claveUnidad(ComplementoPpdDefaults.CLAVE)
@@ -153,20 +154,20 @@ public class FacturaBuilderService {
             .importe(new BigDecimal(ComplementoPpdDefaults.IMPORTE))
             .valorUnitario(new BigDecimal(ComplementoPpdDefaults.VALOR_UNITARIO))
             .build();
-    conceptos.add(conceptoDto);
+    conceptos.add(concepto);
     return conceptos;
   }
 
   public List<CfdiPagoDto> buildFacturaComplementoPagos(
       FacturaDto complemento, PagoDto pagoDto, List<FacturaDto> dtos)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     List<CfdiPagoDto> cfdiPagos = new ArrayList<CfdiPagoDto>();
     for (FacturaDto dto : dtos) {
       List<CfdiPago> cfdiPAgos =
           cfdiPagoRepository.findByFolio(dto.getFolio()).stream()
               .filter(a -> a.getValido())
               .collect(Collectors.toList());
-      Optional<Cfdi> cfdi = cfdiRepository.findById(dto.getIdCfdi());
+      Cfdi cfdi = cfdiService.getCfdiByFolio(dto.getFolio());
       Optional<PagoFacturaDto> pagoFactura =
           pagoDto.getFacturas().stream()
               .filter(a -> a.getFolio().endsWith(dto.getFolio()))
@@ -185,7 +186,7 @@ public class FacturaBuilderService {
       }
       if (pagoFactura.isPresent()) {
         BigDecimal montoPagado;
-        if (cfdi.get().getMoneda().equals(pagoDto.getMoneda())) {
+        if (cfdi.getMoneda().equals(pagoDto.getMoneda())) {
           montoPagado = pagoFactura.get().getMonto();
         } else {
           montoPagado =
@@ -204,7 +205,7 @@ public class FacturaBuilderService {
                 .folio(dto.getFolio())
                 .idDocumento(dto.getUuid())
                 .importePagado(montoPagado)
-                .monedaDr(cfdi.get().getMoneda())
+                .monedaDr(cfdi.getMoneda())
                 .moneda(pagoDto.getMoneda())
                 .valido(true)
                 .metodoPago(ComplementoPpdDefaults.METODO_PAGO)
@@ -212,11 +213,11 @@ public class FacturaBuilderService {
                 .numeroParcialidad(cfdipago.get().getNumeroParcialidad() + 1)
                 .importeSaldoAnterior(dto.getSaldoPendiente())
                 .tipoCambio(
-                    cfdi.get().getMoneda().equals(pagoDto.getMoneda())
+                    cfdi.getMoneda().equals(pagoDto.getMoneda())
                         ? pagoDto.getTipoDeCambio()
                         : BigDecimal.valueOf(1))
                 .tipoCambioDr(
-                    !cfdi.get().getMoneda().equals(pagoDto.getMoneda())
+                    !cfdi.getMoneda().equals(pagoDto.getMoneda())
                         ? pagoDto.getTipoDeCambio()
                         : BigDecimal.valueOf(1))
                 .importeSaldoInsoluto(dto.getSaldoPendiente().subtract(montoPagado))

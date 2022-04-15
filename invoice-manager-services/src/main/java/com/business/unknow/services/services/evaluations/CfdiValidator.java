@@ -1,17 +1,17 @@
 package com.business.unknow.services.services.evaluations;
 
 import com.business.unknow.enums.MetodosPagoEnum;
-import com.business.unknow.model.dto.cfdi.CfdiDto;
-import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.util.validators.AbstractValidator;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
+import com.mx.ntlink.cfdi.modelos.Concepto;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service("CfdiValidator")
 public class CfdiValidator extends AbstractValidator {
 
-  public void validateCfdi(CfdiDto cfdi) throws InvoiceManagerException {
+  public void validateCfdi(Cfdi cfdi) throws InvoiceManagerException {
 
     checkNotNull(cfdi.getEmisor(), "Emisor info");
     checkNotNull(cfdi.getEmisor().getRfc(), "RFC Emisor");
@@ -46,7 +46,7 @@ public class CfdiValidator extends AbstractValidator {
           "Numero de comceptos invalido",
           HttpStatus.CONFLICT.value());
     } else {
-      for (ConceptoDto conceptoDto : cfdi.getConceptos()) {
+      for (Concepto conceptoDto : cfdi.getConceptos()) {
         checkNotNull(conceptoDto.getDescripcion(), "Descripción de concepto");
         checkNotEmpty(conceptoDto.getDescripcion(), "Descripción de concepto");
         checkNotNull(conceptoDto.getCantidad(), "cantidad concepto");
