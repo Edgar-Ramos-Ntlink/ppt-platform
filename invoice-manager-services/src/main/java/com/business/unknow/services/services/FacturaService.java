@@ -203,7 +203,7 @@ public class FacturaService {
       throws IOException {
     int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
     int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-
+    //TODO CREATE REPORTS TABLE IN BD
     parameters.put("tipoDocumento", "Factura");
 
     List<String> folios =
@@ -288,6 +288,8 @@ public class FacturaService {
       throws IOException {
     int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
     int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+   //TODO CREATE REPORTS TABLE IN BD
+
     parameters.put("tipoDocumento", "Complemento");
 
     List<String> folios =

@@ -61,10 +61,14 @@ public class CfdiService {
     recalculateCfdiAmmounts(cfdi);
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(cfdi);
     filesService.sendXmlToS3(cfdi.getFolio(), comprobante);
+    //TODO ADD CREATE PDF
+    //TODO ADD REPORT CONCEPTOS BDD
     return cfdiMapper.comprobanteToCfdi(comprobante);
   }
 
   public Cfdi updateCfdiBody(String folio, Cfdi cfdi) throws InvoiceManagerException {
+    //TODO ADD CREATE PDF
+    //TODO ADD REPORT CONCEPTOS BDD
     return insertNewCfdi(cfdi);
   }
 
