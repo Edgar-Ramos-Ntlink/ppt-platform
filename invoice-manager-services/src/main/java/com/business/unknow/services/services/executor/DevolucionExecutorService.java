@@ -2,14 +2,13 @@ package com.business.unknow.services.services.executor;
 
 import com.business.unknow.enums.ContactoDevolucionEnum;
 import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.cfdi.CfdiDto;
-import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.services.entities.Client;
 import com.business.unknow.services.entities.Devolucion;
 import com.business.unknow.services.repositories.facturas.DevolucionRepository;
 import com.business.unknow.services.services.FacturaService;
 import com.business.unknow.services.services.builder.DevolucionesBuilderService;
+import com.mx.ntlink.NtlinkUtilException;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,8 +83,10 @@ public class DevolucionExecutorService {
     }
   }
 
-  public void executeDevolucionForPpd(FacturaContext context, Client client) {
-    for (CfdiPagoDto pagoDto : context.getFacturaDto().getCfdi().getComplemento().getPagos()) {
+  public void executeDevolucionForPpd(FacturaContext context, Client client)
+      throws NtlinkUtilException {
+    // TODO validate Complemento Pagos
+    /* for (CfdiPagoDto pagoDto : context.getFacturaDto().getCfdi().getComplemento().getPagos()) {
       FacturaDto facturaDto = facturaService.getFacturaByFolio(pagoDto.getFolio());
       BigDecimal impuestos = calculaImpuestos(facturaDto.getCfdi());
       BigDecimal baseComisiones = impuestos.divide(facturaDto.getTotal(), 6, RoundingMode.HALF_UP);
@@ -151,19 +152,20 @@ public class DevolucionExecutorService {
                 ContactoDevolucionEnum.CONTACTO.name()));
       }
     }
+    */
   }
 
-  public BigDecimal calculaImporteBaseFactura(CfdiDto cfdiDto) {
+  public BigDecimal calculaImporteBaseFactura(Cfdi cfdi) {
     BigDecimal subtotal =
-        cfdiDto.getConceptos().stream()
+        cfdi.getConceptos().stream()
             .map(c -> c.getImporte())
             .reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2))
             .setScale(2, RoundingMode.HALF_UP);
     BigDecimal retenciones =
-        cfdiDto.getConceptos().stream()
+        cfdi.getConceptos().stream()
             .map(
                 i ->
-                    i.getRetenciones().stream()
+                    i.getImpuestos().stream().findFirst().get().getRetenciones().stream()
                         .map(imp -> imp.getImporte())
                         .reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2)))
             .reduce(BigDecimal.ZERO, (i1, i2) -> i1.add(i2))
@@ -171,12 +173,12 @@ public class DevolucionExecutorService {
     return subtotal.subtract(retenciones);
   }
 
-  public BigDecimal calculaImpuestos(CfdiDto cfdiDto) {
-    return cfdiDto.getConceptos().stream()
+  public BigDecimal calculaImpuestos(Cfdi cfdi) {
+    return cfdi.getConceptos().stream()
         .map(
             i ->
                 i.getImpuestos().stream()
-                    .map(imp -> imp.getImporte())
+                    .map(imp -> imp.getRetenciones().stream().findFirst().get().getImporte())
                     .reduce(
                         BigDecimal.ZERO,
                         (i1, i2) -> i1.add(i2))) // suma importe impuestos por concepto

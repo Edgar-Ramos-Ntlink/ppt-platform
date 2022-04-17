@@ -183,11 +183,12 @@ public class PDFService {
             .getUsoCfdiMappings()
             .get(facturaDto.getCfdi().getReceptor().getUsoCfdi());
     if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
-      FormaPago formaPago =
+      // TODO VALIDAR COMPLEMENTO PAGOS
+      /*FormaPago formaPago =
           catalogCacheService
               .getFormaPagoMappings()
               .get(facturaDto.getCfdi().getComplemento().getPagos().get(0).getFormaPago());
-      fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());
+      fBuilder.setFormaPagoDesc(formaPago == null ? null : formaPago.getDescripcion());*/
     } else {
       FormaPago formaPago =
           catalogCacheService.getFormaPagoMappings().get(facturaDto.getCfdi().getFormaPago());
@@ -207,11 +208,8 @@ public class PDFService {
           filesService.getFacturaFileByFolioAndType(dto.getFolio(), TipoArchivoEnum.XML.name());
       return facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(xml.getData()));
     } catch (InvoiceCommonException | InvoiceManagerException e) {
-      Cfdi cfdi = cfdiXmlMapper.getEntityFromCfdiDto(dto.getCfdi());
-      cfdi.setConceptos(
-          dto.getCfdi().getConceptos().stream()
-              .map(cfdiXmlMapper::getEntityFromConceptoDto)
-              .collect(Collectors.toList()));
+      Cfdi cfdi = dto.getCfdi();
+      cfdi.setConceptos(dto.getCfdi().getConceptos().stream().collect(Collectors.toList()));
       cfdi.setFecha(
           (dto.getFechaCreacion() == null)
               ? new Date().toString()
@@ -229,11 +227,9 @@ public class PDFService {
               .get();
       return facturaHelper.getFacturaFromString(fileHelper.stringDecodeBase64(xml.getData()));
     } catch (InvoiceCommonException e) {
-      Cfdi cfdi = cfdiXmlMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi());
+      Cfdi cfdi = context.getFacturaDto().getCfdi();
       cfdi.setConceptos(
-          context.getFacturaDto().getCfdi().getConceptos().stream()
-              .map(cfdiXmlMapper::getEntityFromConceptoDto)
-              .collect(Collectors.toList()));
+          context.getFacturaDto().getCfdi().getConceptos().stream().collect(Collectors.toList()));
       cfdi.setFecha(
           (context.getFacturaDto().getFechaCreacion() == null)
               ? new Date().toString()
@@ -262,11 +258,21 @@ public class PDFService {
       if (factura.getUuid() != null) {
         model.setUuid(factura.getUuid());
       }
-      if (factura.getCfdi() != null && factura.getCfdi().getRelacionado() != null) {
+      if (factura.getCfdi() != null
+          && factura.getCfdi().getCfdiRelacionados().getCfdiRelacionado().stream().findFirst().get()
+              != null) {
         model.setTipoRelacion(
-            TipoRelacionEnum.findById(factura.getCfdi().getRelacionado().getTipoRelacion())
+            TipoRelacionEnum.findById(
+                    factura.getCfdi().getCfdiRelacionados().getCfdiRelacionado().stream()
+                        .findFirst()
+                        .get()
+                        .getTipoRelacion())
                 .getValor());
-        model.setRelacion(factura.getCfdi().getRelacionado().getRelacion());
+        model.setRelacion(
+            factura.getCfdi().getCfdiRelacionados().getCfdiRelacionado().stream()
+                .findFirst()
+                .get()
+                .getUuid());
       }
       String xmlContent = new FacturaHelper().facturaPdfToXml(model);
       String xslfoTemplate = getXSLFOTemplate(factura);

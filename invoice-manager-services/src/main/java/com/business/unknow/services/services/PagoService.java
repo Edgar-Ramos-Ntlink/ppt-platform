@@ -7,7 +7,6 @@ import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
@@ -18,6 +17,8 @@ import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.PagoFacturaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
+import com.mx.ntlink.NtlinkUtilException;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.sql.SQLException;
@@ -233,7 +234,8 @@ public class PagoService {
 
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
-  public PagoDto insertNewPayment(PagoDto pagoDto) throws InvoiceManagerException {
+  public PagoDto insertNewPayment(PagoDto pagoDto)
+      throws InvoiceManagerException, NtlinkUtilException {
     pagoEvaluatorService.validatePayment(pagoDto);
     List<FacturaDto> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : pagoDto.getFacturas()) {
@@ -299,7 +301,7 @@ public class PagoService {
                 .findAny();
         if (pagoFact.isPresent()) {
           facturaService.updateTotalAndSaldoFactura(
-              dto.getIdCfdi(), Optional.empty(), Optional.of(pagoFact.get().getMonto()));
+              dto.getFolio(), Optional.empty(), Optional.of(pagoFact.get().getMonto()));
         }
       }
     }
@@ -309,7 +311,7 @@ public class PagoService {
       if (currentFactura.isPresent()
           && currentFactura.get().getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
         currentFactura.get().setValidacionTeso(true);
-        facturaService.updateFactura(currentFactura.get().getIdCfdi(), currentFactura.get());
+        facturaService.updateFactura(currentFactura.get().getFolio(), currentFactura.get());
         pagoDto.setStatusPago("ACEPTADO");
         pagoDto.setRevision1(true);
         pagoDto.setRevision2(true);
@@ -363,22 +365,22 @@ public class PagoService {
         if (MetodosPagoEnum.PUE.getClave().equals(factura.getMetodoPago())) {
           factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
           factura.setStatusDetail(pago.getComentarioPago());
-          facturaService.updateFactura(factura.getIdCfdi(), factura);
+          facturaService.updateFactura(factura.getFolio(), factura);
         }
       }
     } else if (entity.getRevision1() && pago.getRevision2()) {
       pagoDto.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
 
-      List<Integer> idFacts =
+      List<String> folioFacts =
           pago.getFacturas().stream()
-              .map(f -> f.getIdCfdi())
+              .map(f -> f.getFolio())
               .distinct()
               .collect(Collectors.toList());
 
-      for (Integer idCfdi : idFacts) {
-        FacturaDto fact = facturaService.getFacturaBaseByPrefolio(idCfdi);
+      for (String folioCfdi : folioFacts) {
+        FacturaDto fact = facturaService.getFacturaBaseByFolio(folioCfdi);
         fact.setValidacionTeso(true);
-        facturaService.updateFactura(idCfdi, fact);
+        facturaService.updateFactura(folioCfdi, fact);
       }
     }
     return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoDto)));
@@ -386,7 +388,7 @@ public class PagoService {
 
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
-  public void deletePago(Integer idPago) throws InvoiceManagerException {
+  public void deletePago(Integer idPago) throws InvoiceManagerException, NtlinkUtilException {
     PagoDto payment =
         mapper.getPagoDtoFromEntity(
             repository
@@ -409,9 +411,9 @@ public class PagoService {
               .filter(p -> p.getFolio().equals(facturaDto.getFolio()))
               .findAny();
       if (pagoFactOpt.isPresent()) {
-        CfdiDto cfdi = cfdiService.getCfdiByFolio(facturaDto.getFolio());
+        Cfdi cfdi = cfdiService.getCfdiByFolio(facturaDto.getFolio());
         facturaService.updateTotalAndSaldoFactura(
-            facturaDto.getIdCfdi(),
+            facturaDto.getFolio(),
             Optional.empty(),
             Optional.of(
                 cfdi.getMoneda().equals(payment.getMoneda())
@@ -423,12 +425,12 @@ public class PagoService {
                         .negate()));
       }
     }
-    for (Integer idCfdi :
+    for (String folioCfdi :
         payment.getFacturas().stream()
-            .map(f -> f.getIdCfdi())
+            .map(f -> f.getFolio())
             .distinct()
             .collect(Collectors.toList())) {
-      FacturaDto fact = facturaService.getFacturaBaseByPrefolio(idCfdi);
+      FacturaDto fact = facturaService.getFacturaBaseByFolio(folioCfdi);
       if (TipoDocumentoEnum.COMPLEMENTO.equals(
           TipoDocumentoEnum.findByDesc(fact.getTipoDocumento()))) {
         facturaService.deleteFactura(fact.getFolio());

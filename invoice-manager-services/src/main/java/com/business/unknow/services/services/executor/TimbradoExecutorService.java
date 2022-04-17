@@ -1,32 +1,23 @@
 package com.business.unknow.services.services.executor;
 
 import com.business.unknow.enums.LineaEmpresaEnum;
-import com.business.unknow.enums.S3BucketsEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
-import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.enums.TipoEmail;
 import com.business.unknow.model.config.EmailConfig;
 import com.business.unknow.model.config.FileConfig;
 import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Client;
-import com.business.unknow.services.entities.cfdi.CfdiPago;
-import com.business.unknow.services.entities.factura.Factura;
-import com.business.unknow.services.mapper.factura.CfdiMapper;
 import com.business.unknow.services.mapper.factura.FacturaMapper;
 import com.business.unknow.services.repositories.ClientRepository;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
-import com.business.unknow.services.repositories.facturas.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.services.FilesService;
 import com.business.unknow.services.services.MailService;
 import com.business.unknow.services.services.S3FileService;
 import com.google.common.collect.ImmutableList;
-import java.math.BigDecimal;
-import java.util.Optional;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,15 +27,11 @@ public class TimbradoExecutorService {
 
   @Autowired private FacturaRepository repository;
 
-  @Autowired private CfdiRepository cfdiRepository;
-
   @Autowired private CfdiPagoRepository cfdiPagoRepository;
 
   @Autowired private ClientRepository clientRepository;
 
   @Autowired private FacturaMapper mapper;
-
-  @Autowired private CfdiMapper cfdiMapper;
 
   @Autowired private MailService mailService;
 
@@ -53,17 +40,19 @@ public class TimbradoExecutorService {
   @Autowired private S3FileService s3FileService;
 
   public void updateFacturaAndCfdiValues(FacturaContext context) throws InvoiceManagerException {
-
-    repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
-    cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi()));
-    for (FacturaFileDto facturaFileDto : context.getFacturaFilesDto()) {
-      if (facturaFileDto != null) {
-        s3FileService.upsertS3File(
-            S3BucketsEnum.CFDIS,
-            context.getFacturaDto().getFolio().concat(facturaFileDto.getFileFormat().getFormat()),
-            facturaFileDto.getOutputStream());
-      }
-    }
+    // TODO use timbrado utils
+    /*
+       repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
+       cfdiRepository.save(cfdiMapper.getEntityFromCfdiDto(context.getFacturaDto().getCfdi()));
+       for (FacturaFileDto facturaFileDto : context.getFacturaFilesDto()) {
+         if (facturaFileDto != null) {
+           s3FileService.upsertS3File(
+               S3BucketsEnum.CFDIS,
+               context.getFacturaDto().getFolio().concat(facturaFileDto.getFileFormat().getFormat()),
+               facturaFileDto.getOutputStream());
+         }
+       }
+    */
   }
 
   public void sendEmail(FacturaContext context, TipoEmail tipoEmail)
@@ -156,29 +145,31 @@ public class TimbradoExecutorService {
   }
 
   public void updateCanceladoValues(FacturaContext context) {
-    repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
-    if (context
-        .getFacturaDto()
-        .getTipoDocumento()
-        .equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
+    // TODO USE TIMPRADO UTIL
+    /*   repository.save(mapper.getEntityFromFacturaDto(context.getFacturaDto()));
+      if (context
+          .getFacturaDto()
+          .getTipoDocumento()
+          .equals(TipoDocumentoEnum.COMPLEMENTO.getDescripcion())) {
 
-      if (context.getFacturaDto().getCfdi() != null
-          && context.getFacturaDto().getCfdi().getComplemento() != null
-          && context.getFacturaDto().getCfdi().getComplemento().getPagos() != null) {
-        for (CfdiPagoDto cfdiPagoDto :
-            context.getFacturaDto().getCfdi().getComplemento().getPagos()) {
-          CfdiPago cfdiPago = cfdiMapper.getEntityFromCdfiPagosDto(cfdiPagoDto);
-          cfdiPago.setValido(false);
-          cfdiPagoRepository.save(cfdiPago);
-          if (cfdiPagoDto.getImporteSaldoAnterior().compareTo(BigDecimal.ZERO) > 0) {
-            Optional<Factura> factura = repository.findByFolio(cfdiPagoDto.getFolio());
-            if (factura.isPresent()) {
-              factura.get().setSaldoPendiente(cfdiPagoDto.getImporteSaldoAnterior());
-              repository.save(factura.get());
+        if (context.getFacturaDto().getCfdi() != null
+            && context.getFacturaDto().getCfdi().getComplemento() != null
+            && context.getFacturaDto().getCfdi().getComplemento().getPagos() != null) {
+          for (CfdiPagoDto cfdiPagoDto :
+              context.getFacturaDto().getCfdi().getComplemento().getPagos()) {
+            CfdiPago cfdiPago = cfdiMapper.getEntityFromCdfiPagosDto(cfdiPagoDto);
+            cfdiPago.setValido(false);
+            cfdiPagoRepository.save(cfdiPago);
+            if (cfdiPagoDto.getImporteSaldoAnterior().compareTo(BigDecimal.ZERO) > 0) {
+              Optional<Factura> factura = repository.findByFolio(cfdiPagoDto.getFolio());
+              if (factura.isPresent()) {
+                factura.get().setSaldoPendiente(cfdiPagoDto.getImporteSaldoAnterior());
+                repository.save(factura.get());
+              }
             }
           }
         }
       }
-    }
+    */
   }
 }

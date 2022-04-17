@@ -10,6 +10,7 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.DevolucionService;
 import com.business.unknow.services.services.FacturaService;
 import com.business.unknow.services.services.PagoService;
+import com.mx.ntlink.NtlinkUtilException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,8 @@ public class FacturaController {
   }
 
   @GetMapping("/{folio}")
-  public ResponseEntity<FacturaDto> getFactura(@PathVariable String folio) {
+  public ResponseEntity<FacturaDto> getFactura(@PathVariable String folio)
+      throws NtlinkUtilException {
     return new ResponseEntity<>(service.getFacturaByFolio(folio), HttpStatus.OK);
   }
 
@@ -80,17 +82,17 @@ public class FacturaController {
     return new ResponseEntity<>(service.insertNewFacturaWithDetail(factura), HttpStatus.CREATED);
   }
 
-  @PutMapping("/{idCfdi}")
+  @PutMapping("/{folio}")
   public ResponseEntity<FacturaDto> updateFactura(
-      @PathVariable Integer idCfdi, @RequestBody @Valid FacturaDto factura) {
-    return new ResponseEntity<>(service.updateFactura(idCfdi, factura), HttpStatus.OK);
+      @PathVariable String folio, @RequestBody @Valid FacturaDto factura) {
+    return new ResponseEntity<>(service.updateFactura(folio, factura), HttpStatus.OK);
   }
 
   // TIMBRADO
   @PostMapping("/{folio}/timbrar")
   public ResponseEntity<FacturaDto> timbrarFactura(
       @PathVariable String folio, @RequestBody @Valid FacturaDto facturaDto)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(
         service.timbrarFactura(folio, facturaDto).getFacturaDto(), HttpStatus.OK);
   }
@@ -98,7 +100,7 @@ public class FacturaController {
   @PostMapping("/{folio}/cancelar")
   public ResponseEntity<FacturaContext> cancelarFactura(
       @PathVariable String folio, @RequestBody @Valid FacturaDto facturaDto)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(service.cancelarFactura(folio, facturaDto), HttpStatus.OK);
   }
 
@@ -114,13 +116,14 @@ public class FacturaController {
   @PostMapping("/{folio}/correos")
   public ResponseEntity<FacturaContext> renviarCorreos(
       @PathVariable String folio, @RequestBody @Valid FacturaDto facturaDto)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(service.resendEmail(folio, facturaDto), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/complementos")
   public ResponseEntity<FacturaDto> getComplementos(
-      @PathVariable String folio, @RequestBody @Valid PagoDto pago) throws InvoiceManagerException {
+      @PathVariable String folio, @RequestBody @Valid PagoDto pago)
+      throws InvoiceManagerException, NtlinkUtilException {
     FacturaDto facturaDto = service.createComplemento(folio, pago);
     return new ResponseEntity<>(
         service.timbrarFactura(facturaDto.getFolio(), facturaDto).getFacturaDto(), HttpStatus.OK);
@@ -128,14 +131,14 @@ public class FacturaController {
 
   @PostMapping("/{folio}/sustitucion")
   public ResponseEntity<FacturaDto> postSustitucion(@RequestBody @Valid FacturaDto facturaDto)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(
         service.postRelacion(facturaDto, TipoDocumentoEnum.FACTURA), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/nota-credito")
   public ResponseEntity<FacturaDto> postNotaCredito(@RequestBody @Valid FacturaDto facturaDto)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(
         service.postRelacion(facturaDto, TipoDocumentoEnum.NOTA_CREDITO), HttpStatus.OK);
   }

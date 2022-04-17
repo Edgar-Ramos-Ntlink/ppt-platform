@@ -10,6 +10,7 @@ import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.services.FacturaService;
 import com.business.unknow.services.services.PagoService;
+import com.mx.ntlink.NtlinkUtilException;
 import java.util.List;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class TimbradoBuilderService {
   @Autowired private PagoService pagosService;
 
   public FacturaContext buildFacturaContextCancelado(FacturaDto facturaDto, String folio)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     FacturaDto factura = facturaService.getFacturaByFolio(folio);
     factura.setMotivo(facturaDto.getMotivo());
     factura.setFolioSustituto(facturaDto.getFolioSustituto());
@@ -50,7 +51,7 @@ public class TimbradoBuilderService {
   }
 
   public FacturaContext buildFacturaContextTimbrado(FacturaDto facturaDto, String folio)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     FacturaDto currentFacturaDto = facturaService.getFacturaByFolio(folio);
     currentFacturaDto.setPackFacturacion(facturaDto.getPackFacturacion());
     EmpresaDto empresaDto =

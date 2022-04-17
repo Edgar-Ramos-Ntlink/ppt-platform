@@ -6,11 +6,10 @@ import com.business.unknow.enums.LineaEmpresaEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
-import com.business.unknow.model.dto.cfdi.ConceptoDto;
-import com.business.unknow.model.dto.cfdi.ImpuestoDto;
-import com.business.unknow.model.dto.cfdi.RelacionadoDto;
-import com.business.unknow.model.dto.cfdi.RetencionDto;
+import com.google.common.collect.ImmutableList;
+import com.mx.ntlink.cfdi.modelos.CfdiRelacionado;
+import com.mx.ntlink.cfdi.modelos.CfdiRelacionados;
+import com.mx.ntlink.cfdi.modelos.Concepto;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import org.springframework.http.HttpStatus;
@@ -66,40 +65,20 @@ public class RelacionadosTranslator {
     }
     facturaDto.setId(0);
     if (facturaDto.getCfdi() != null) {
-      facturaDto.getCfdi().setId(null);
-      if (facturaDto.getCfdi().getEmisor() != null) {
-        facturaDto.getCfdi().getEmisor().setId(null);
-      }
-      if (facturaDto.getCfdi().getReceptor() != null) {
-        facturaDto.getCfdi().getReceptor().setId(null);
-      }
-      if (facturaDto.getCfdi().getConceptos() != null) {
-        for (ConceptoDto conceptoDto : facturaDto.getCfdi().getConceptos()) {
-          conceptoDto.setId(null);
-
-          if (conceptoDto.getImpuestos() != null) {
-            for (ImpuestoDto impuestoDto : conceptoDto.getImpuestos()) {
-              impuestoDto.setId(null);
-            }
-          }
-          if (conceptoDto.getRetenciones() != null) {
-            for (RetencionDto retencionDto : conceptoDto.getRetenciones()) {
-              retencionDto.setId(null);
-            }
-          }
-        }
-      }
-      if (facturaDto.getCfdi().getComplemento() != null
+      // TODO validate Complemento Pago
+      /* if (facturaDto.getCfdi().getComplemento() != null
           && facturaDto.getCfdi().getComplemento().getPagos() != null) {
         for (CfdiPagoDto cfdiPagoDto : facturaDto.getCfdi().getComplemento().getPagos()) {
           cfdiPagoDto.setId(0);
         }
-      }
+      }*/
 
-      RelacionadoDto relacionadoDto = new RelacionadoDto();
-      relacionadoDto.setRelacion(facturaDto.getUuid());
-      relacionadoDto.setTipoRelacion("04");
-      facturaDto.getCfdi().setRelacionado(relacionadoDto);
+      CfdiRelacionado relacionado =
+          CfdiRelacionado.builder().tipoRelacion("004").uuid(facturaDto.getUuid()).build();
+      facturaDto
+          .getCfdi()
+          .setCfdiRelacionados(
+              CfdiRelacionados.builder().cfdiRelacionado(ImmutableList.of(relacionado)).build());
       facturaDto.setUuid(null);
     }
   }
@@ -132,29 +111,29 @@ public class RelacionadosTranslator {
     facturaDto.setStatusFactura(1);
     facturaDto.setId(0);
     if (facturaDto.getCfdi() != null) {
-      facturaDto.getCfdi().setId(null);
-      facturaDto.getCfdi().setImpuestosRetenidos(BigDecimal.ZERO);
-      facturaDto.getCfdi().setImpuestosTrasladados(BigDecimal.ZERO);
+      facturaDto.getCfdi().getImpuestos().stream()
+          .findFirst()
+          .get()
+          .setTotalImpuestosRetenidos(BigDecimal.ZERO);
+      facturaDto.getCfdi().getImpuestos().stream()
+          .findFirst()
+          .get()
+          .setTotalImpuestosTrasladados(BigDecimal.ZERO);
       facturaDto.getCfdi().setSubtotal(BigDecimal.ZERO);
       facturaDto.getCfdi().setTotal(BigDecimal.ZERO);
       facturaDto.getCfdi().setTipoDeComprobante("E");
-      if (facturaDto.getCfdi().getEmisor() != null) {
-        facturaDto.getCfdi().getEmisor().setId(null);
-      }
       if (facturaDto.getCfdi().getReceptor() != null) {
-        facturaDto.getCfdi().getReceptor().setId(null);
         facturaDto
             .getCfdi()
             .getReceptor()
             .setUsoCfdi(FacturaSustitucionConstants.NOTA_CREDITO_USO_CFDI);
       }
-      ConceptoDto concepto =
-          ConceptoDto.builder()
+      Concepto concepto =
+          Concepto.builder()
               .cantidad(new BigDecimal(1))
               .claveProdServ(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_CONCEPTO)
               .descripcion(FacturaSustitucionConstants.NOTA_CREDITO_DESC_CONCEPTO)
               .claveUnidad(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_UNIDAD)
-              .descripcionCUPS(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_CONCEPTO_DESC)
               .valorUnitario(BigDecimal.ZERO)
               .importe(BigDecimal.ZERO)
               .descuento(BigDecimal.ZERO)
@@ -163,10 +142,12 @@ public class RelacionadosTranslator {
       facturaDto.getCfdi().getConceptos().add(concepto);
       facturaDto.getCfdi().setComplemento(null);
     }
-    RelacionadoDto relacionadoDto = new RelacionadoDto();
-    relacionadoDto.setRelacion(facturaDto.getUuid());
-    relacionadoDto.setTipoRelacion("01");
-    facturaDto.getCfdi().setRelacionado(relacionadoDto);
+    CfdiRelacionado relacionado =
+        CfdiRelacionado.builder().uuid(facturaDto.getUuid()).tipoRelacion("01").build();
+    facturaDto
+        .getCfdi()
+        .setCfdiRelacionados(
+            CfdiRelacionados.builder().cfdiRelacionado(ImmutableList.of(relacionado)).build());
     facturaDto.setUuid(null);
   }
 }

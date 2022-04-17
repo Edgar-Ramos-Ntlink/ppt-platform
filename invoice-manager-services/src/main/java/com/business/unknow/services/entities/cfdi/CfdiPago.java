@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -86,10 +84,6 @@ public class CfdiPago implements Serializable {
 
   @Column(name = "VALIDO", columnDefinition = "TINYINT")
   private Boolean valido;
-
-  @ManyToOne
-  @JoinColumn(name = "ID_CFDI", nullable = false)
-  private Cfdi cfdi;
 
   public CfdiPago(BigDecimal importeSaldoInsoluto, int numeroParcialidad) {
     super();

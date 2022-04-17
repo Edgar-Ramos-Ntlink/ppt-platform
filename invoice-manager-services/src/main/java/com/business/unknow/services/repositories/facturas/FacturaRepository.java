@@ -19,8 +19,6 @@ public interface FacturaRepository
 
   public Optional<Factura> findByFolio(String folio);
 
-  public Optional<Factura> findByIdCfdi(Integer id);
-
   public Page<Factura> findByFolioIgnoreCaseContaining(String folio, Pageable pageable);
 
   public Page<Factura> findByIdCfdi(Integer prefolio, Pageable pageable);

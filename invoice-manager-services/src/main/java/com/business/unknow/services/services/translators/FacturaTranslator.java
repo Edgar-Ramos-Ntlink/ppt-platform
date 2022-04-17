@@ -7,8 +7,6 @@ import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
-import com.business.unknow.model.dto.cfdi.ConceptoDto;
-import com.business.unknow.model.dto.cfdi.RelacionadoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.mapper.factura.FacturaCfdiTranslatorMapper;
@@ -70,24 +68,26 @@ public class FacturaTranslator {
       BigDecimal totalRetenciones = new BigDecimal(0);
       List<Traslado> impuestos = new ArrayList<>();
       List<Retencion> retenciones = new ArrayList<>();
-      if (context.getFacturaDto().getCfdi().getRelacionado() != null) {
-        RelacionadoDto relacionadoDto = context.getFacturaDto().getCfdi().getRelacionado();
+      if (context.getFacturaDto().getCfdi().getCfdiRelacionados() != null) {
+        CfdiRelacionado relacionado =
+            context.getFacturaDto().getCfdi().getCfdiRelacionados().getCfdiRelacionado().stream()
+                .findFirst()
+                .get();
         cfdi.setCfdiRelacionados(
-            CfdiRelacionados.builder().tipoRelacion(relacionadoDto.getTipoRelacion()).build());
+            CfdiRelacionados.builder().tipoRelacion(relacionado.getTipoRelacion()).build());
         cfdi.getCfdiRelacionados()
             .setCfdiRelacionado(ImmutableList.of(CfdiRelacionado.builder().build()));
         cfdi.getCfdiRelacionados().getCfdiRelacionado().stream()
             .findFirst()
             .get()
-            .setUuid(relacionadoDto.getRelacion());
+            .setUuid(relacionado.getTipoRelacion());
       }
-      for (ConceptoDto conceptoDto : context.getFacturaDto().getCfdi().getConceptos()) {
-        Concepto concepto = facturaCfdiTranslatorMapper.cfdiConcepto(conceptoDto);
+      for (Concepto concepto : context.getFacturaDto().getCfdi().getConceptos()) {
         cfdi.getConceptos().add(concepto);
-        if (!conceptoDto.getImpuestos().isEmpty()) {
+        if (!concepto.getImpuestos().isEmpty()) {
           totalImpuestos = calculaImpuestos(impuestos, concepto, totalImpuestos);
         }
-        if (!conceptoDto.getRetenciones().isEmpty()) {
+        if (!concepto.getImpuestos().stream().findFirst().get().getRetenciones().isEmpty()) {
           totalRetenciones = calculaRetenciones(retenciones, concepto, totalRetenciones);
         }
       }
@@ -227,7 +227,7 @@ public class FacturaTranslator {
         signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getFiel(), llavePrivada);
     context.setXml(cdfiHelper.putsSign(xml, sello));
     if (context.getFacturaDto().getCfdi().getComplemento() == null) {
-      context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());
+      context.getFacturaDto().getCfdi().setComplemento(ImmutableList.of(new ComplementoDto()));
     }
   }
 
@@ -252,7 +252,7 @@ public class FacturaTranslator {
     String sello =
         signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getFiel(), llavePrivada);
     context.setXml(cdfiHelper.putsSign(xml, sello).replace("standalone=\"no\"", ""));
-    context.getFacturaDto().getCfdi().setComplemento(new ComplementoDto());
+    context.getFacturaDto().getCfdi().setComplemento(ImmutableList.of(new ComplementoDto()));
   }
 
   public BigDecimal calculaImpuestos(
@@ -268,9 +268,8 @@ public class FacturaTranslator {
   public BigDecimal calculaRetenciones(FacturaDto facturaDto) {
     BigDecimal totalRetenciones = new BigDecimal(0);
     List<Retencion> retenciones = new ArrayList<>();
-    for (ConceptoDto conceptoDto : facturaDto.getCfdi().getConceptos()) {
-      Concepto concepto = facturaCfdiTranslatorMapper.cfdiConcepto(conceptoDto);
-      if (!conceptoDto.getRetenciones().isEmpty()) {
+    for (Concepto concepto : facturaDto.getCfdi().getConceptos()) {
+      if (!concepto.getImpuestos().stream().findFirst().get().getRetenciones().isEmpty()) {
         totalRetenciones = calculaRetenciones(retenciones, concepto, totalRetenciones);
       }
     }
@@ -281,9 +280,8 @@ public class FacturaTranslator {
   public BigDecimal calculaImpuestos(FacturaDto facturaDto) {
     BigDecimal totalImpuestos = new BigDecimal(0);
     List<Traslado> traslados = new ArrayList<>();
-    for (ConceptoDto conceptoDto : facturaDto.getCfdi().getConceptos()) {
-      Concepto concepto = facturaCfdiTranslatorMapper.cfdiConcepto(conceptoDto);
-      if (!conceptoDto.getImpuestos().isEmpty()) {
+    for (Concepto concepto : facturaDto.getCfdi().getConceptos()) {
+      if (!concepto.getImpuestos().isEmpty()) {
         totalImpuestos = calculaImpuestos(traslados, concepto, totalImpuestos);
       }
     }

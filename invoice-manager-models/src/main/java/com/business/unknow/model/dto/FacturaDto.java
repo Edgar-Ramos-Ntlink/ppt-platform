@@ -1,10 +1,10 @@
 package com.business.unknow.model.dto;
 
 import com.business.unknow.Constants;
-import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -64,7 +64,7 @@ public class FacturaDto implements Serializable {
   private Integer idCfdiRelacionadoPadre;
   private BigDecimal total;
   private BigDecimal saldoPendiente;
-  private CfdiDto cfdi;
+  private Cfdi cfdi;
   private Boolean validacionTeso;
   private Boolean validacionOper;
 }

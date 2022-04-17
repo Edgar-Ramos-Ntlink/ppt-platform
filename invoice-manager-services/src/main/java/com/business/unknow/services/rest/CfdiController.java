@@ -2,13 +2,13 @@
 package com.business.unknow.services.rest;
 
 import com.business.unknow.model.dto.FacturaDto;
-import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
-import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.CfdiService;
 import com.business.unknow.services.services.FacturaService;
 import com.business.unknow.services.services.evaluations.CfdiValidator;
+import com.mx.ntlink.NtlinkUtilException;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,45 +39,46 @@ public class CfdiController {
 
   // CFDI
   @PostMapping("/validacion")
-  public ResponseEntity<String> validateCfdi(@RequestBody @Valid CfdiDto cfdi)
+  public ResponseEntity<String> validateCfdi(@RequestBody @Valid Cfdi cfdi)
       throws InvoiceManagerException {
     validator.validateCfdi(cfdi);
     return new ResponseEntity<>("VALIDA", HttpStatus.OK);
   }
 
   @PostMapping("/calcular/montos")
-  public ResponseEntity<CfdiDto> calculateMontosCfdi(@RequestBody @Valid CfdiDto cfdi)
+  public ResponseEntity<Cfdi> calculateMontosCfdi(@RequestBody @Valid Cfdi cfdi)
       throws InvoiceManagerException {
     validator.validateCfdi(cfdi);
     return new ResponseEntity<>(cfdiService.recalculateCfdiAmmounts(cfdi), HttpStatus.OK);
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<CfdiDto> getfacturaCfdi(@PathVariable Integer id) {
-    return new ResponseEntity<>(cfdiService.getCfdiById(id), HttpStatus.OK);
+  @GetMapping("/{folio}")
+  public ResponseEntity<Cfdi> getfacturaCfdi(@PathVariable String folio)
+      throws NtlinkUtilException {
+    return new ResponseEntity<>(cfdiService.getCfdiByFolio(folio), HttpStatus.OK);
   }
 
-  @GetMapping("/{id}/facturaInfo")
-  public ResponseEntity<FacturaDto> getfacturabyIdCfdi(@PathVariable Integer id) {
-    return new ResponseEntity<>(facturaService.getFacturaBaseByPrefolio(id), HttpStatus.OK);
+  @GetMapping("/{folio}/facturaInfo")
+  public ResponseEntity<FacturaDto> getfacturabyFolioCfdi(@PathVariable String folio) {
+    return new ResponseEntity<>(facturaService.getFacturaBaseByFolio(folio), HttpStatus.OK);
   }
 
   @PostMapping("")
-  public ResponseEntity<CfdiDto> insertFacturaCfdi(
-      @PathVariable String folio, @RequestBody @Valid CfdiDto cfdi) throws InvoiceManagerException {
+  public ResponseEntity<Cfdi> insertFacturaCfdi(
+      @PathVariable String folio, @RequestBody @Valid Cfdi cfdi) throws InvoiceManagerException {
     return new ResponseEntity<>(cfdiService.insertNewCfdi(cfdi), HttpStatus.OK);
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<CfdiDto> updateFacturaCfdi(
-      @PathVariable Integer id, @RequestBody @Valid CfdiDto cfdi) throws InvoiceManagerException {
-    return new ResponseEntity<>(cfdiService.updateCfdiBody(id, cfdi), HttpStatus.OK);
+  @PutMapping("/{folio}")
+  public ResponseEntity<Cfdi> updateFacturaCfdi(
+      @PathVariable String folio, @RequestBody @Valid Cfdi cfdi) throws InvoiceManagerException {
+    return new ResponseEntity<>(cfdiService.updateCfdiBody(folio, cfdi), HttpStatus.OK);
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteFacturaCfdi(@PathVariable Integer id)
-      throws InvoiceManagerException {
-    cfdiService.deleteCfdi(id);
+  @DeleteMapping("/{folio}")
+  public ResponseEntity<Void> deleteFacturaCfdi(@PathVariable String folio)
+      throws NtlinkUtilException {
+    cfdiService.deleteCfdi(folio);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
@@ -85,32 +86,5 @@ public class CfdiController {
   @GetMapping("/{id}/pagos")
   public ResponseEntity<List<CfdiPagoDto>> getPagosPPD(@PathVariable Integer id) {
     return new ResponseEntity<>(cfdiService.getPagosPPD(id), HttpStatus.OK);
-  }
-
-  // CONCEPTOS
-  @PostMapping("/{idCfdi}/conceptos")
-  public ResponseEntity<CfdiDto> insertConcepto(
-      @PathVariable Integer idCfdi, @RequestBody @Valid ConceptoDto conceptoDto)
-      throws InvoiceManagerException {
-    CfdiDto dto = cfdiService.insertNewConceptoToCfdi(idCfdi, conceptoDto);
-    facturaService.recreatePdf(dto);
-    return new ResponseEntity<>(dto, HttpStatus.CREATED);
-  }
-
-  @PutMapping("/{idCfdi}/conceptos/{id}")
-  public ResponseEntity<CfdiDto> updateConcepto(
-      @PathVariable Integer idCfdi,
-      @PathVariable Integer id,
-      @RequestBody @Valid ConceptoDto concepto)
-      throws InvoiceManagerException {
-    CfdiDto dto = cfdiService.updateConceptoFromCfdi(idCfdi, id, concepto);
-    return new ResponseEntity<>(dto, HttpStatus.OK);
-  }
-
-  @DeleteMapping("/{idCfdi}/conceptos/{id}")
-  public ResponseEntity<CfdiDto> deleteConcepto(
-      @PathVariable Integer idCfdi, @PathVariable Integer id) throws InvoiceManagerException {
-    CfdiDto dto = cfdiService.removeConceptFromCfdi(idCfdi, id);
-    return new ResponseEntity<>(dto, HttpStatus.NO_CONTENT);
   }
 }
