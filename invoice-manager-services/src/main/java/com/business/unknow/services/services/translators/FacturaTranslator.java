@@ -10,7 +10,7 @@ import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.mapper.factura.FacturaCfdiTranslatorMapper;
-import com.business.unknow.services.services.S3FileService;
+import com.business.unknow.services.services.FilesService;
 import com.business.unknow.services.util.helpers.CdfiHelper;
 import com.business.unknow.services.util.helpers.DateHelper;
 import com.business.unknow.services.util.helpers.FacturaHelper;
@@ -48,7 +48,7 @@ public class FacturaTranslator {
 
   @Autowired private SignHelper signHelper;
 
-  @Autowired private S3FileService s3service;
+  @Autowired private FilesService fileService;
 
   public FacturaContext translateFactura(FacturaContext context) throws InvoiceManagerException {
     try {
@@ -57,7 +57,7 @@ public class FacturaTranslator {
               context.getFacturaDto(), context.getEmpresaDto());
 
       cfdi.setCertificado(
-          s3service.getS3File(
+          fileService.getS3File(
               S3BucketsEnum.EMPRESAS,
               String.format(
                   "%s-%s%s",
@@ -215,7 +215,7 @@ public class FacturaTranslator {
     String cadenaOriginal = signHelper.getCadena(xml);
 
     String llavePrivada =
-        s3service.getS3File(
+        fileService.getS3File(
             S3BucketsEnum.EMPRESAS,
             String.format(
                 "%s-%s%s",
@@ -242,7 +242,7 @@ public class FacturaTranslator {
                 : new Date());
     String cadenaOriginal = signHelper.getCadena(xml);
     String llavePrivada =
-        s3service.getS3File(
+        fileService.getS3File(
             S3BucketsEnum.EMPRESAS,
             String.format(
                 "%s-%s%s",

@@ -16,7 +16,6 @@ import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.services.FilesService;
 import com.business.unknow.services.services.MailService;
-import com.business.unknow.services.services.S3FileService;
 import com.google.common.collect.ImmutableList;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +35,6 @@ public class TimbradoExecutorService {
   @Autowired private MailService mailService;
 
   @Autowired private FilesService filesService;
-
-  @Autowired private S3FileService s3FileService;
 
   public void updateFacturaAndCfdiValues(FacturaContext context) throws InvoiceManagerException {
     // TODO use timbrado utils
