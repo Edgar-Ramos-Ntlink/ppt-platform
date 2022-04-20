@@ -26,3 +26,4 @@ VERSION 3.2.0
 - [x] 4.0.0 Angular 12 update, CFDI 4.0 models integration, dynamic dashboard
   - [x] 4.1.0 Removing External SDK module
   - [x] 4.2.0 Removing S3 dependencies
+  - [x] 4.3.0 Factura Reportes CFDI 4.0
