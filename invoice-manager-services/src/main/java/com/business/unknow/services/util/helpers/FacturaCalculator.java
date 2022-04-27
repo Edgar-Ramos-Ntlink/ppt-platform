@@ -1,7 +1,7 @@
 package com.business.unknow.services.util.helpers;
 
 import com.business.unknow.Constants;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.error.InvoiceManagerException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,7 +12,7 @@ public class FacturaCalculator {
 
   private DateHelper dateHelper = new DateHelper();
 
-  public String folioEncrypt(FacturaDto dto) throws InvoiceManagerException {
+  public String folioEncrypt(FacturaCustom dto) throws InvoiceManagerException {
     SimpleDateFormat dt1 = new SimpleDateFormat(Constants.DATE_STANDAR_FORMAT);
     String cadena =
         String.format(
@@ -32,7 +32,7 @@ public class FacturaCalculator {
     }
   }
 
-  public void assignFolioInFacturaDtoEncrypt(FacturaDto dto) throws InvoiceManagerException {
+  public void assignFolioInFacturaDtoEncrypt(FacturaCustom dto) throws InvoiceManagerException {
     String folio = folioEncrypt(dto);
     dto.setFolio(folio);
     if (dto.getCfdi() != null) {
@@ -40,7 +40,7 @@ public class FacturaCalculator {
     }
   }
 
-  public void assignFolioInFacturaDto(FacturaDto dto) {
+  public void assignFolioInFacturaDto(FacturaCustom dto) {
     String folio = dateHelper.getStringFromFecha(new Date(), Constants.DATE_FOLIO_GENERIC_FORMAT);
     dto.setFolio(folio);
     if (dto.getCfdi() != null) {
@@ -48,7 +48,7 @@ public class FacturaCalculator {
     }
   }
 
-  public void assignPreFolioInFacturaDto(FacturaDto dto, int amount) {
+  public void assignPreFolioInFacturaDto(FacturaCustom dto, int amount) {
     String amountWithZeros = String.format("%05d", amount + 1);
     String folio =
         String.format(

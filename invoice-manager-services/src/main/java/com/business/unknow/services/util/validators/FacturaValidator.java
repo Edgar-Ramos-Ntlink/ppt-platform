@@ -1,20 +1,20 @@
 package com.business.unknow.services.util.validators;
 
 import com.business.unknow.Constants;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 
 public class FacturaValidator extends AbstractValidator {
 
-  public void validatePostFactura(FacturaDto dto) throws InvoiceManagerException {
+  public void validatePostFactura(FacturaCustom dto) throws InvoiceManagerException {
     checkNotNull(dto.getRfcEmisor(), "Rfc Emisor");
     checkNotNull(dto.getRazonSocialEmisor(), "Razon Social Emisor");
     checkNotNull(dto.getRfcRemitente(), "Rfc Remitente");
     checkNotNull(dto.getRazonSocialRemitente(), "Razon Social Remitente");
   }
 
-  public void validatePostComplementoDto(FacturaDto dto, String folio)
+  public void validatePostComplementoDto(FacturaCustom dto, String folio)
       throws InvoiceManagerException {
     checkNotNull(dto.getRfcEmisor(), "Rfc Emisor");
     checkNotNull(dto.getRazonSocialEmisor(), "Razon Social Emisor");
@@ -22,7 +22,7 @@ public class FacturaValidator extends AbstractValidator {
     checkNotNull(dto.getRazonSocialRemitente(), "Razon Social Remitente");
   }
 
-  public void validateTimbrado(FacturaDto dto, String folio) throws InvoiceManagerException {
+  public void validateTimbrado(FacturaCustom dto, String folio) throws InvoiceManagerException {
     checkNotNull(dto.getFolio(), "folio ");
     if (!folio.equals(dto.getFolio())) {
       throw new InvoiceManagerException(
@@ -30,7 +30,7 @@ public class FacturaValidator extends AbstractValidator {
     }
   }
 
-  public void validatePostFacturaWithDetail(FacturaDto dto) throws InvoiceManagerException {
+  public void validatePostFacturaWithDetail(FacturaCustom dto) throws InvoiceManagerException {
     checkNotNull(dto.getRfcEmisor(), "Rfc Emisor");
     checkNotNull(dto.getRazonSocialEmisor(), "Razon Social Emisor");
     checkNotNull(dto.getRfcRemitente(), "Rfc Remitente");

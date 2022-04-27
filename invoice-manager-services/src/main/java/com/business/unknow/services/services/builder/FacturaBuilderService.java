@@ -6,7 +6,7 @@ import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
@@ -58,7 +58,7 @@ public class FacturaBuilderService {
   @Autowired private FilesService filesService;
 
   public FacturaContext buildFacturaContextPagoPpdCreation(
-      PagoDto pagoDto, FacturaDto facturaDto, String folio) throws InvoiceManagerException {
+          PagoDto pagoDto, FacturaCustom facturaDto, String folio) throws InvoiceManagerException {
     EmpresaDto empresaDto =
         empresaMapper.getEmpresaDtoFromEntity(
             empresaRepository
@@ -90,8 +90,8 @@ public class FacturaBuilderService {
     return null;
   }
 
-  public FacturaDto buildFacturaDtoPagoPpdCreation(FacturaDto factura, PagoDto pago) {
-    return FacturaDto.builder()
+  public FacturaCustom buildFacturaDtoPagoPpdCreation(FacturaCustom factura, PagoDto pago) {
+    return FacturaCustom.builder()
         .total(pago.getMonto())
         .packFacturacion(factura.getPackFacturacion())
         .saldoPendiente(BigDecimal.ZERO)
@@ -159,10 +159,10 @@ public class FacturaBuilderService {
   }
 
   public List<CfdiPagoDto> buildFacturaComplementoPagos(
-      FacturaDto complemento, PagoDto pagoDto, List<FacturaDto> dtos)
+          FacturaCustom complemento, PagoDto pagoDto, List<FacturaCustom> dtos)
       throws InvoiceManagerException, NtlinkUtilException {
     List<CfdiPagoDto> cfdiPagos = new ArrayList<CfdiPagoDto>();
-    for (FacturaDto dto : dtos) {
+    for (FacturaCustom dto : dtos) {
       List<CfdiPago> cfdiPAgos =
           cfdiPagoRepository.findByFolio(dto.getFolio()).stream()
               .filter(a -> a.getValido())
@@ -233,7 +233,7 @@ public class FacturaBuilderService {
     return cfdiPagos;
   }
 
-  public FacturaContext buildFacturaContextCreateFactura(FacturaDto facturaDto)
+  public FacturaContext buildFacturaContextCreateFactura(FacturaCustom facturaDto)
       throws InvoiceManagerException {
     Empresa empresa =
         empresaRepository
@@ -259,7 +259,7 @@ public class FacturaBuilderService {
         .build();
   }
 
-  public FacturaContext buildEmailContext(String folio, FacturaDto facturaDto)
+  public FacturaContext buildEmailContext(String folio, FacturaCustom facturaDto)
       throws InvoiceManagerException {
     Empresa empresa =
         empresaRepository

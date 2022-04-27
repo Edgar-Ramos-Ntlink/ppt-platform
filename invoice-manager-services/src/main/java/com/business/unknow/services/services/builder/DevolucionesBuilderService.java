@@ -1,7 +1,7 @@
 package com.business.unknow.services.services.builder;
 
 import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
 import com.business.unknow.model.dto.services.DevolucionDto;
 import com.business.unknow.services.entities.Devolucion;
@@ -46,7 +46,7 @@ public class DevolucionesBuilderService {
             .build());
   }
 
-  public FacturaContext buildContextForDevolucionPue(FacturaDto dto) {
+  public FacturaContext buildContextForDevolucionPue(FacturaCustom dto) {
     List<PagoFactura> facturaPago = pagoFacturaRepository.findByFolio(dto.getFolio());
     return FacturaContext.builder()
         .facturaDto(dto)
@@ -54,7 +54,7 @@ public class DevolucionesBuilderService {
         .build();
   }
 
-  public FacturaContext buildContextForDevolucionPpd(FacturaDto dto) {
+  public FacturaContext buildContextForDevolucionPpd(FacturaCustom dto) {
     // TODO VALIDATE DEVOLUCIONES
     /*  List<PagoFactura> facturaPago =
          pagoFacturaRepository.findByFolio(

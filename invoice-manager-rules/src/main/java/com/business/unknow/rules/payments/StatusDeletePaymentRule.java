@@ -2,7 +2,7 @@ package com.business.unknow.rules.payments;
 
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.rules.common.Constants.DeletePagoSuite;
 import java.util.List;
@@ -18,9 +18,9 @@ public class StatusDeletePaymentRule {
 
   @Condition
   public boolean condition(
-      @Fact("payment") PagoDto payment, @Fact("facturas") List<FacturaDto> facturas) {
+      @Fact("payment") PagoDto payment, @Fact("facturas") List<FacturaCustom> facturas) {
 
-    for (FacturaDto invoice : facturas) {
+    for (FacturaCustom invoice : facturas) {
       if (MetodosPagoEnum.PUE.getClave().equals(invoice.getMetodoPago())
           && (FacturaStatusEnum.TIMBRADA.getValor().equals(invoice.getStatusFactura())
               || FacturaStatusEnum.CANCELADA.getValor().equals(invoice.getStatusFactura()))) {

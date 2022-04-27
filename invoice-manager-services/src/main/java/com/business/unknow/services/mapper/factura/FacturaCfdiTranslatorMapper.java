@@ -1,6 +1,6 @@
 package com.business.unknow.services.mapper.factura;
 
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.cfdi.ImpuestoDto;
@@ -12,7 +12,7 @@ import com.mx.ntlink.cfdi.modelos.Cfdi;
 import com.mx.ntlink.cfdi.modelos.Concepto;
 import com.mx.ntlink.cfdi.modelos.Retencion;
 import com.mx.ntlink.cfdi.modelos.Traslado;
-import com.mx.ntlink.cfdi.modelos.complementos.DocumentoRelacionado;
+import com.mx.ntlink.cfdi.modelos.complementos.pagos.DocumentoRelacionado;
 import org.mapstruct.Builder;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
@@ -46,7 +46,7 @@ public interface FacturaCfdiTranslatorMapper {
     @Mapping(source = "facturaDto.cfdi.sello", target = "sello"),
     @Mapping(source = "empresaDto.cp", target = "lugarExpedicion")
   })
-  Cfdi cdfiRootInfo(FacturaDto facturaDto, EmpresaDto empresaDto);
+  Cfdi cdfiRootInfo(FacturaCustom facturaDto, EmpresaDto empresaDto);
 
   /*@Mappings({
     @Mapping(source = "cfdiDto.folio", target = "folio"),

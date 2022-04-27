@@ -9,7 +9,7 @@ import com.business.unknow.enums.TipoComprobanteEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.enums.TipoRelacionEnum;
 import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.FacturaPdfModelDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
@@ -59,7 +59,7 @@ public class PDFService {
 
   @Autowired private FilesService filesService;
 
-  public FacturaPdfModelDto getPdfFromFactura(FacturaDto facturaDto, Cfdi cfdi)
+  public FacturaPdfModelDto getPdfFromFactura(FacturaCustom facturaDto, Cfdi cfdi)
       throws InvoiceCommonException, InvoiceManagerException {
 
     FacturaPdfModelDto fBuilder =
@@ -138,7 +138,7 @@ public class PDFService {
       throws InvoiceCommonException {
 
     FacturaPdfModelDto fBuilder = new FacturaPdfModelDto();
-    FacturaDto facturaDto = context.getFacturaDto();
+    FacturaCustom facturaDto = context.getFacturaDto();
 
     fBuilder.setFactura(getCfdiModelFromContext(context));
     try {
@@ -201,7 +201,7 @@ public class PDFService {
     return fBuilder;
   }
 
-  private Cfdi getCfdiModelFromFacturaDto(FacturaDto dto) {
+  private Cfdi getCfdiModelFromFacturaDto(FacturaCustom dto) {
     try {
       // TODO la factura deberia ser recuperada de la BD no del XML
       FacturaFileDto xml =
@@ -242,7 +242,7 @@ public class PDFService {
     }
   }
 
-  public FacturaFileDto generateInvoicePDF(FacturaDto factura, Cfdi cfdi) {
+  public FacturaFileDto generateInvoicePDF(FacturaCustom factura, Cfdi cfdi) {
     try {
       BigDecimal retenciones = facturaTranslator.calculaRetenciones(factura);
       BigDecimal impuestos = facturaTranslator.calculaImpuestos(factura);
@@ -378,7 +378,7 @@ public class PDFService {
     return null;
   }
 
-  private String getXSLFOTemplate(FacturaDto facturaDto) {
+  private String getXSLFOTemplate(FacturaCustom facturaDto) {
     if (facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
         || facturaDto.getTipoDocumento().equals(TipoDocumentoEnum.NOTA_CREDITO.getDescripcion())) {
       if (facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {

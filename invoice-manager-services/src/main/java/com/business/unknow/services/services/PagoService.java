@@ -6,7 +6,7 @@ import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
@@ -237,9 +237,9 @@ public class PagoService {
   public PagoDto insertNewPayment(PagoDto pagoDto)
       throws InvoiceManagerException, NtlinkUtilException {
     pagoEvaluatorService.validatePayment(pagoDto);
-    List<FacturaDto> facturas = new ArrayList<>();
+    List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : pagoDto.getFacturas()) {
-      FacturaDto factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
+      FacturaCustom factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
       facturas.add(factura);
       // Populate missing information
       pagoFact.setAcredor(factura.getRazonSocialEmisor());
@@ -252,12 +252,12 @@ public class PagoService {
     }
     pagoEvaluatorService.validatePaymentCreation(pagoDto, facturas);
 
-    List<FacturaDto> factPpd =
+    List<FacturaCustom> factPpd =
         facturas.stream()
             .filter(f -> MetodosPagoEnum.PPD.name().equals(f.getMetodoPago()))
             .collect(Collectors.toList());
 
-    List<FacturaDto> factPue =
+    List<FacturaCustom> factPue =
         facturas.stream()
             .filter(f -> MetodosPagoEnum.PUE.name().equals(f.getMetodoPago()))
             .collect(Collectors.toList());
@@ -266,7 +266,7 @@ public class PagoService {
       log.info(
           "Generando complemento para : {}",
           factPpd.stream().map(f -> f.getFolio()).collect(Collectors.toList()));
-      FacturaDto fact = facturaService.generateComplemento(facturas, pagoDto);
+      FacturaCustom fact = facturaService.generateComplemento(facturas, pagoDto);
       factPpd.forEach(
           f -> {
             Optional<PagoFacturaDto> pagoFact =
@@ -290,7 +290,7 @@ public class PagoService {
             }
           });
     }
-    for (FacturaDto dto : facturas) {
+    for (FacturaCustom dto : facturas) {
       if (!FormaPagoEnum.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())
           && dto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
           && dto.getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
@@ -307,7 +307,7 @@ public class PagoService {
     }
     if (FormaPagoEnum.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())
         && facturas.size() == 1) {
-      Optional<FacturaDto> currentFactura = facturas.stream().findFirst();
+      Optional<FacturaCustom> currentFactura = facturas.stream().findFirst();
       if (currentFactura.isPresent()
           && currentFactura.get().getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
         currentFactura.get().setValidacionTeso(true);
@@ -351,9 +351,9 @@ public class PagoService {
         .build();
     pagoEvaluatorService.validatePayment(pago);
 
-    List<FacturaDto> facturas = new ArrayList<>();
+    List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : pago.getFacturas()) {
-      FacturaDto factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
+      FacturaCustom factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
       facturas.add(factura);
     }
     pagoEvaluatorService.validatePaymentUpdate(pago, mapper.getPagoDtoFromEntity(entity), facturas);
@@ -361,7 +361,7 @@ public class PagoService {
     if (pago.getStatusPago().equals(RevisionPagosEnum.RECHAZADO.name())) {
       pagoDto.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
       pagoDto.setComentarioPago(pago.getComentarioPago());
-      for (FacturaDto factura : facturas) {
+      for (FacturaCustom factura : facturas) {
         if (MetodosPagoEnum.PUE.getClave().equals(factura.getMetodoPago())) {
           factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
           factura.setStatusDetail(pago.getComentarioPago());
@@ -378,7 +378,7 @@ public class PagoService {
               .collect(Collectors.toList());
 
       for (String folioCfdi : folioFacts) {
-        FacturaDto fact = facturaService.getFacturaBaseByFolio(folioCfdi);
+        FacturaCustom fact = facturaService.getFacturaBaseByFolio(folioCfdi);
         fact.setValidacionTeso(true);
         facturaService.updateFactura(folioCfdi, fact);
       }
@@ -398,14 +398,14 @@ public class PagoService {
                         new ResponseStatusException(
                             HttpStatus.NOT_FOUND,
                             String.format("El pago con id %d no existe", idPago))));
-    List<FacturaDto> facturas = new ArrayList<>();
+    List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : payment.getFacturas()) {
-      FacturaDto factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
+      FacturaCustom factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
       facturas.add(factura);
     }
     pagoEvaluatorService.deletepaymentValidation(payment, facturas);
 
-    for (FacturaDto facturaDto : facturas) {
+    for (FacturaCustom facturaDto : facturas) {
       Optional<PagoFacturaDto> pagoFactOpt =
           payment.getFacturas().stream()
               .filter(p -> p.getFolio().equals(facturaDto.getFolio()))
@@ -430,7 +430,7 @@ public class PagoService {
             .map(f -> f.getFolio())
             .distinct()
             .collect(Collectors.toList())) {
-      FacturaDto fact = facturaService.getFacturaBaseByFolio(folioCfdi);
+      FacturaCustom fact = facturaService.getFacturaBaseByFolio(folioCfdi);
       if (TipoDocumentoEnum.COMPLEMENTO.equals(
           TipoDocumentoEnum.findByDesc(fact.getTipoDocumento()))) {
         facturaService.deleteFactura(fact.getFolio());

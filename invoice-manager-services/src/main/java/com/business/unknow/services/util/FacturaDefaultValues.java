@@ -3,7 +3,7 @@ package com.business.unknow.services.util;
 import com.business.unknow.Constants.PagoPpdCreditoDefaults;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -15,7 +15,7 @@ public class FacturaDefaultValues {
 
   private FacturaCalculator facturaCalculator = new FacturaCalculator();
 
-  public void assignaDefaultsFactura(FacturaDto facturaDto, int amount)
+  public void assignaDefaultsFactura(FacturaCustom facturaDto, int amount)
       throws InvoiceManagerException {
     facturaDto.setSaldoPendiente(facturaDto.getTotal());
     facturaDto.setPackFacturacion(PackFacturarionEnum.NTLINK.name());
@@ -49,7 +49,7 @@ public class FacturaDefaultValues {
         .build();
   }
 
-  public void assignaDefaultsComplemento(FacturaDto facturaDto, int amount)
+  public void assignaDefaultsComplemento(FacturaCustom facturaDto, int amount)
       throws InvoiceManagerException {
     facturaDto.setFechaCreacion(new Date());
     facturaDto.setFechaActualizacion(new Date());

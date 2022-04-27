@@ -2,7 +2,7 @@ package com.business.unknow.services.services.builder;
 
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -27,9 +27,9 @@ public class TimbradoBuilderService {
 
   @Autowired private PagoService pagosService;
 
-  public FacturaContext buildFacturaContextCancelado(FacturaDto facturaDto, String folio)
+  public FacturaContext buildFacturaContextCancelado(FacturaCustom facturaDto, String folio)
       throws InvoiceManagerException, NtlinkUtilException {
-    FacturaDto factura = facturaService.getFacturaByFolio(folio);
+    FacturaCustom factura = facturaService.getFacturaByFolio(folio);
     factura.setMotivo(facturaDto.getMotivo());
     factura.setFolioSustituto(facturaDto.getFolioSustituto());
     EmpresaDto empresaDto =
@@ -50,9 +50,9 @@ public class TimbradoBuilderService {
         .build();
   }
 
-  public FacturaContext buildFacturaContextTimbrado(FacturaDto facturaDto, String folio)
+  public FacturaContext buildFacturaContextTimbrado(FacturaCustom facturaDto, String folio)
       throws InvoiceManagerException, NtlinkUtilException {
-    FacturaDto currentFacturaDto = facturaService.getFacturaByFolio(folio);
+    FacturaCustom currentFacturaDto = facturaService.getFacturaByFolio(folio);
     currentFacturaDto.setPackFacturacion(facturaDto.getPackFacturacion());
     EmpresaDto empresaDto =
         empresaMapper.getEmpresaDtoFromEntity(

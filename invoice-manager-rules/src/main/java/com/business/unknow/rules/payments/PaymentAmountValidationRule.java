@@ -1,6 +1,6 @@
 package com.business.unknow.rules.payments;
 
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.rules.common.Constants.PaymentsSuite;
@@ -22,7 +22,7 @@ public class PaymentAmountValidationRule {
 
   @Condition
   public boolean condition(
-      @Fact("payment") PagoDto currentPayment, @Fact("facturas") List<FacturaDto> facturas) {
+      @Fact("payment") PagoDto currentPayment, @Fact("facturas") List<FacturaCustom> facturas) {
     if (facturas != null && currentPayment != null) {
       BigDecimal total =
           currentPayment.getFacturas().stream()

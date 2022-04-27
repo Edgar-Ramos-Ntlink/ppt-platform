@@ -1,7 +1,7 @@
 package com.business.unknow.services.services.evaluations;
 
 import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.rules.suites.facturas.FacturaSuite;
 import com.business.unknow.rules.suites.facturas.FacturaValidationSuite;
@@ -25,7 +25,7 @@ public class FacturaEvaluatorService extends AbstractEvaluatorService {
     return facturaContext;
   }
 
-  public void facturaStatusValidation(FacturaDto facturaDto) {
+  public void facturaStatusValidation(FacturaCustom facturaDto) {
     Facts facts = new Facts();
     facts.put("factura", facturaDto);
     rulesEngine.fire(facturaValidationSuite.getSuite(), facts);

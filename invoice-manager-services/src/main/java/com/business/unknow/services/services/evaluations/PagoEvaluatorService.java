@@ -1,6 +1,6 @@
 package com.business.unknow.services.services.evaluations;
 
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -27,7 +27,7 @@ public class PagoEvaluatorService extends AbstractValidator {
 
   @Autowired private PaymentUpdateSuite updateSuite;
 
-  public void deletepaymentValidation(PagoDto payment, List<FacturaDto> facturas)
+  public void deletepaymentValidation(PagoDto payment, List<FacturaCustom> facturas)
       throws InvoiceManagerException {
     Facts facts = new Facts();
     List<String> results = new ArrayList<>();
@@ -44,7 +44,7 @@ public class PagoEvaluatorService extends AbstractValidator {
     }
   }
 
-  public void validatePaymentCreation(PagoDto currentPayment, List<FacturaDto> facturas)
+  public void validatePaymentCreation(PagoDto currentPayment, List<FacturaCustom> facturas)
       throws InvoiceManagerException {
     Facts facts = new Facts();
     List<String> results = new ArrayList<>();
@@ -62,7 +62,7 @@ public class PagoEvaluatorService extends AbstractValidator {
   }
 
   public void validatePaymentUpdate(
-      PagoDto currentPayment, PagoDto dbPayment, List<FacturaDto> facturas)
+      PagoDto currentPayment, PagoDto dbPayment, List<FacturaCustom> facturas)
       throws InvoiceManagerException {
     Facts facts = new Facts();
     List<String> results = new ArrayList<>();

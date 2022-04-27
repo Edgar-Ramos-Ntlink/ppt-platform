@@ -3,7 +3,7 @@ package com.business.unknow.rules.payments;
 
 import com.business.unknow.enums.FormaPagoEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.rules.common.Constants.PaymentsSuite;
 import java.util.List;
@@ -20,9 +20,9 @@ public class CreditPaymentRule {
 
   @Condition
   public boolean condition(
-      @Fact("payment") PagoDto currentPayment, @Fact("facturas") List<FacturaDto> facturas) {
+      @Fact("payment") PagoDto currentPayment, @Fact("facturas") List<FacturaCustom> facturas) {
 
-    for (FacturaDto facturaDto : facturas) {
+    for (FacturaCustom facturaDto : facturas) {
       if (MetodosPagoEnum.PPD.name().equals(facturaDto.getMetodoPago())
           && FormaPagoEnum.CREDITO.name().equals(currentPayment.getFormaPago())) {
         return true;
