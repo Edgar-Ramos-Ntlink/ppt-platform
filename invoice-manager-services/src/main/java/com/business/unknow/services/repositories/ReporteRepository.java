@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReporteRepository extends JpaRepository<Reporte, Integer> {
 
-    public List<Reporte> findByFolio(String folio);
+  public List<Reporte> findByFolio(String folio);
 }

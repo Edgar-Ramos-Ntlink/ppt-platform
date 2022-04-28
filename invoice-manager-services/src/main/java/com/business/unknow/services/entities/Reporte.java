@@ -23,56 +23,56 @@ import lombok.ToString;
 @ToString
 public class Reporte {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_REPORTE")
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID_REPORTE")
+  private Integer id;
 
-    @Column(name = "FOLIO")
-    private String folio;
+  @Column(name = "FOLIO")
+  private String folio;
 
-    @Column(name = "TIPO_COMPROBANTE")
-    private String tipoDeComprobante;
+  @Column(name = "TIPO_COMPROBANTE")
+  private String tipoDeComprobante;
 
-    @Column(name = "IMP_TRASLADADOS")
-    private BigDecimal impuestosTrasladados;
+  @Column(name = "IMP_TRASLADADOS")
+  private BigDecimal impuestosTrasladados;
 
-    @Column(name = "IMP_RETENIDOS")
-    private BigDecimal impuestosRetenidos;
+  @Column(name = "IMP_RETENIDOS")
+  private BigDecimal impuestosRetenidos;
 
-    @Column(name = "SUB_TOTAL")
-    private BigDecimal subtotal;
+  @Column(name = "SUB_TOTAL")
+  private BigDecimal subtotal;
 
-    @Column(name = "TOTAL")
-    private BigDecimal total;
+  @Column(name = "TOTAL")
+  private BigDecimal total;
 
-    @Column(name = "METODO_PAGO")
-    private String metodoPago;
+  @Column(name = "METODO_PAGO")
+  private String metodoPago;
 
-    @Column(name = "FORMA_PAGO")
-    private String formaPago;
+  @Column(name = "FORMA_PAGO")
+  private String formaPago;
 
-    @Column(name = "MONEDA")
-    private String moneda;
+  @Column(name = "MONEDA")
+  private String moneda;
 
-    @Column(name = "CANTIDAD")
-    private BigDecimal cantidad;
+  @Column(name = "CANTIDAD")
+  private BigDecimal cantidad;
 
-    @Column(name = "CLAVE_UNIDAD")
-    private String claveUnidad;
+  @Column(name = "CLAVE_UNIDAD")
+  private String claveUnidad;
 
-    @Column(name = "UNIDAD")
-    private String unidad;
+  @Column(name = "UNIDAD")
+  private String unidad;
 
-    @Column(name = "CLAVE_PROD_SERV")
-    private String claveProdServ;
+  @Column(name = "CLAVE_PROD_SERV")
+  private String claveProdServ;
 
-    @Column(name = "DESCRIPCION")
-    private String descripcion;
+  @Column(name = "DESCRIPCION")
+  private String descripcion;
 
-    @Column(name = "VALOR_UNITARIO")
-    private BigDecimal valorUnitario;
+  @Column(name = "VALOR_UNITARIO")
+  private BigDecimal valorUnitario;
 
-    @Column(name = "IMPORTE")
-    private BigDecimal importe;
+  @Column(name = "IMPORTE")
+  private BigDecimal importe;
 }
