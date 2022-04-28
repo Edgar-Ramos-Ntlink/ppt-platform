@@ -2,6 +2,8 @@ package com.business.unknow.services.services;
 
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.services.entities.Reporte;
+import com.business.unknow.services.repositories.ReporteRepository;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.services.evaluations.CfdiValidator;
 import com.mx.ntlink.NtlinkUtilException;
@@ -27,6 +29,8 @@ public class CfdiService {
   @Autowired private FacturaService facturaService;
 
   @Autowired private CatalogCacheService cacheCatalogsService;
+
+  @Autowired private ReporteRepository reporteRepository;
 
   @Autowired
   @Qualifier("CfdiValidator")
