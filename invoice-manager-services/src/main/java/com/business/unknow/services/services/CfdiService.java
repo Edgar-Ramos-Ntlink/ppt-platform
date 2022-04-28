@@ -80,4 +80,42 @@ public class CfdiService {
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(cfdi);
     return cfdiMapper.comprobanteToCfdi(comprobante);
   }
+
+  private void createReportData(Cfdi cfdi) {
+    cfdi.getConceptos().stream()
+        .forEach(
+            concepto -> {
+              reporteRepository.save(
+                  Reporte.builder()
+                      .folio(cfdi.getFolio())
+                      .tipoDeComprobante(cfdi.getTipoDeComprobante())
+                      .impuestosTrasladados(
+                          cfdi.getImpuestos().stream()
+                              .findFirst()
+                              .get()
+                              .getTotalImpuestosTrasladados())
+                      .impuestosRetenidos(
+                          cfdi.getImpuestos().stream()
+                              .findFirst()
+                              .get()
+                              .getTotalImpuestosRetenidos())
+                      .subtotal(cfdi.getSubtotal())
+                      .total(cfdi.getTotal())
+                      .metodoPago(cfdi.getMetodoPago())
+                      .formaPago(cfdi.getFormaPago())
+                      .moneda(cfdi.getMoneda())
+                      .cantidad(concepto.getCantidad())
+                      .claveUnidad(concepto.getClaveUnidad())
+                      .descripcion(concepto.getDescripcion())
+                      .valorUnitario(concepto.getValorUnitario())
+                      .importe(concepto.getImporte())
+                      .build());
+            });
+  }
+
+  private void deleteReportData(Cfdi cfdi) {
+    List<Reporte> reportes = reporteRepository.findByFolio(cfdi.getFolio());
+    reportes.stream().forEach(reporte -> reporteRepository.delete(reporte));
+  }
+
 }
