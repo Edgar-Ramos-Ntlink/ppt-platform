@@ -9,7 +9,6 @@ import com.business.unknow.services.services.evaluations.CfdiValidator;
 import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.mappers.CfdiMapper;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
-import com.mx.ntlink.cfdi.modelos.Concepto;
 import com.mx.ntlink.models.generated.Comprobante;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -86,30 +85,40 @@ public class CfdiService {
     return cfdiMapper.comprobanteToCfdi(comprobante);
   }
 
-  private void createReportData(Cfdi cfdi){
-    cfdi.getConceptos().stream().forEach(concepto -> {
-      reporteRepository.save( Reporte.builder()
-              .folio(cfdi.getFolio())
-              .tipoDeComprobante(cfdi.getTipoDeComprobante())
-              .impuestosTrasladados(cfdi.getImpuestos().stream().findFirst().get().getTotalImpuestosTrasladados())
-              .impuestosRetenidos(cfdi.getImpuestos().stream().findFirst().get().getTotalImpuestosRetenidos())
-              .subtotal(cfdi.getSubtotal())
-              .total(cfdi.getTotal())
-              .metodoPago(cfdi.getMetodoPago())
-              .formaPago(cfdi.getFormaPago())
-              .moneda(cfdi.getMoneda())
-              .cantidad(concepto.getCantidad())
-              .claveUnidad(concepto.getClaveUnidad())
-              .descripcion(concepto.getDescripcion())
-              .valorUnitario(concepto.getValorUnitario())
-              .importe(concepto.getImporte())
-              .build());
-    });
+  private void createReportData(Cfdi cfdi) {
+    cfdi.getConceptos().stream()
+        .forEach(
+            concepto -> {
+              reporteRepository.save(
+                  Reporte.builder()
+                      .folio(cfdi.getFolio())
+                      .tipoDeComprobante(cfdi.getTipoDeComprobante())
+                      .impuestosTrasladados(
+                          cfdi.getImpuestos().stream()
+                              .findFirst()
+                              .get()
+                              .getTotalImpuestosTrasladados())
+                      .impuestosRetenidos(
+                          cfdi.getImpuestos().stream()
+                              .findFirst()
+                              .get()
+                              .getTotalImpuestosRetenidos())
+                      .subtotal(cfdi.getSubtotal())
+                      .total(cfdi.getTotal())
+                      .metodoPago(cfdi.getMetodoPago())
+                      .formaPago(cfdi.getFormaPago())
+                      .moneda(cfdi.getMoneda())
+                      .cantidad(concepto.getCantidad())
+                      .claveUnidad(concepto.getClaveUnidad())
+                      .descripcion(concepto.getDescripcion())
+                      .valorUnitario(concepto.getValorUnitario())
+                      .importe(concepto.getImporte())
+                      .build());
+            });
   }
 
-  private void deleteReportData(Cfdi cfdi){
+  private void deleteReportData(Cfdi cfdi) {
     List<Reporte> reportes = reporteRepository.findByFolio(cfdi.getFolio());
-    reportes.stream().forEach(reporte-> reporteRepository.delete(reporte));
+    reportes.stream().forEach(reporte -> reporteRepository.delete(reporte));
   }
-
 }
