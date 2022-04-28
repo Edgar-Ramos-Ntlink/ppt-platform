@@ -45,6 +45,8 @@ public class FacturaCustom implements Serializable {
   private String notas;
   private String motivo;
   private String folioSustituto;
+  private BigDecimal impuestosRetenidos;
+  private BigDecimal impuestosTrasladados;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
@@ -90,5 +92,4 @@ public class FacturaCustom implements Serializable {
   private String tipoRelacion;
   private String relacion;
   private String selloSat;
-
 }

@@ -22,57 +22,57 @@ import lombok.experimental.SuperBuilder;
 @XmlAccessorType(XmlAccessType.NONE)
 public class FacturaPdf {
 
-    @XmlElement(name = "Qr")
-    private String qr;
+  @XmlElement(name = "Qr")
+  private String qr;
 
-    @XmlElement(name = "CadenaOriginal")
-    private String cadenaOriginal;
+  @XmlElement(name = "CadenaOriginal")
+  private String cadenaOriginal;
 
-    @XmlElement(name = "folioPadre")
-    private String folioPadre;
+  @XmlElement(name = "folioPadre")
+  private String folioPadre;
 
-    @XmlElement(name = "TotalDesc")
-    private String totalDesc;
+  @XmlElement(name = "TotalDesc")
+  private String totalDesc;
 
-    @XmlElement(name = "SubTotalDesc")
-    private String subTotalDesc;
+  @XmlElement(name = "SubTotalDesc")
+  private String subTotalDesc;
 
-    @XmlElement(name = "UsoCfdiDesc")
-    private String usoCfdiDesc;
+  @XmlElement(name = "UsoCfdiDesc")
+  private String usoCfdiDesc;
 
-    @XmlElement(name = "RegimenFiscalDesc")
-    private String regimenFiscalDesc;
+  @XmlElement(name = "RegimenFiscalDesc")
+  private String regimenFiscalDesc;
 
-    @XmlElement(name = "FormaPagoDesc")
-    private String formaPagoDesc;
+  @XmlElement(name = "FormaPagoDesc")
+  private String formaPagoDesc;
 
-    @XmlElement(name = "MetodoPagoDesc")
-    private String metodoPagoDesc;
+  @XmlElement(name = "MetodoPagoDesc")
+  private String metodoPagoDesc;
 
-    @XmlElement(name = "DireccionEmisor")
-    private String direccionEmisor;
+  @XmlElement(name = "DireccionEmisor")
+  private String direccionEmisor;
 
-    @XmlElement(name = "DireccionReceptor")
-    private String direccionReceptor;
+  @XmlElement(name = "DireccionReceptor")
+  private String direccionReceptor;
 
-    @XmlElement(name = "TipoDeComprobanteDesc")
-    private String tipoDeComprobanteDesc;
+  @XmlElement(name = "TipoDeComprobanteDesc")
+  private String tipoDeComprobanteDesc;
 
-    @XmlElement(name = "Logotipo")
-    private String logotipo;
+  @XmlElement(name = "Logotipo")
+  private String logotipo;
 
-    @XmlElement(name = "factura")
-    private Comprobante cfdi;
+  @XmlElement(name = "factura")
+  private Comprobante cfdi;
 
-    @XmlElement(name = "TipoRelacion")
-    private String tipoRelacion;
+  @XmlElement(name = "TipoRelacion")
+  private String tipoRelacion;
 
-    @XmlElement(name = "Relacion")
-    private String relacion;
+  @XmlElement(name = "Relacion")
+  private String relacion;
 
-    @XmlElement(name = "UUID")
-    private String uuid;
+  @XmlElement(name = "UUID")
+  private String uuid;
 
-    @XmlElement(name = "SelloSat")
-    private String selloSat;
+  @XmlElement(name = "SelloSat")
+  private String selloSat;
 }

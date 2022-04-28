@@ -8,7 +8,7 @@ import com.business.unknow.services.entities.catalogs.UsoCfdi;
 import com.business.unknow.services.repositories.catalogs.ClaveUnidadRepository;
 import com.business.unknow.services.repositories.catalogs.FormaPagoRepository;
 import com.business.unknow.services.repositories.catalogs.GiroRepository;
-import com.business.unknow.services.repositories.catalogs.RegimanFiscalRepository;
+import com.business.unknow.services.repositories.catalogs.RegimenFiscalRepository;
 import com.business.unknow.services.repositories.catalogs.UsoCfdiRepository;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class CatalogCacheService {
 
   @Autowired private FormaPagoRepository formaPagoRepository;
 
-  @Autowired private RegimanFiscalRepository regimanFiscalRepository;
+  @Autowired private RegimenFiscalRepository regimanFiscalRepository;
 
   @Autowired private ClaveUnidadRepository claveUnidadReppository;
 

@@ -311,7 +311,7 @@ public class PagoService {
       if (currentFactura.isPresent()
           && currentFactura.get().getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
         currentFactura.get().setValidacionTeso(true);
-        facturaService.updateFactura(currentFactura.get().getFolio(), currentFactura.get());
+        facturaService.updateFacturaCustom(currentFactura.get().getFolio(), currentFactura.get());
         pagoDto.setStatusPago("ACEPTADO");
         pagoDto.setRevision1(true);
         pagoDto.setRevision2(true);
@@ -332,7 +332,8 @@ public class PagoService {
 
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
-  public PagoDto updatePago(Integer idPago, PagoDto pago) throws InvoiceManagerException {
+  public PagoDto updatePago(Integer idPago, PagoDto pago)
+      throws InvoiceManagerException, NtlinkUtilException {
     Pago entity =
         repository
             .findById(idPago)
@@ -365,7 +366,7 @@ public class PagoService {
         if (MetodosPagoEnum.PUE.getClave().equals(factura.getMetodoPago())) {
           factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
           factura.setStatusDetail(pago.getComentarioPago());
-          facturaService.updateFactura(factura.getFolio(), factura);
+          facturaService.updateFacturaCustom(factura.getFolio(), factura);
         }
       }
     } else if (entity.getRevision1() && pago.getRevision2()) {
@@ -380,7 +381,7 @@ public class PagoService {
       for (String folioCfdi : folioFacts) {
         FacturaCustom fact = facturaService.getFacturaBaseByFolio(folioCfdi);
         fact.setValidacionTeso(true);
-        facturaService.updateFactura(folioCfdi, fact);
+        facturaService.updateFacturaCustom(folioCfdi, fact);
       }
     }
     return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoDto)));

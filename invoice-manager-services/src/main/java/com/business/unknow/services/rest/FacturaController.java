@@ -78,14 +78,15 @@ public class FacturaController {
 
   @PostMapping
   public ResponseEntity<FacturaCustom> createFacturaCustom(
-          @RequestBody @Valid FacturaCustom factura)
-          throws InvoiceManagerException, NtlinkUtilException {
+      @RequestBody @Valid FacturaCustom factura)
+      throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(service.createFacturaCustom(factura), HttpStatus.CREATED);
   }
 
   @PutMapping("/{folio}")
   public ResponseEntity<FacturaCustom> updateFactura(
-      @PathVariable String folio, @RequestBody @Valid FacturaCustom factura) throws InvoiceManagerException, NtlinkUtilException {
+      @PathVariable String folio, @RequestBody @Valid FacturaCustom factura)
+      throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(service.updateFacturaCustom(folio, factura), HttpStatus.OK);
   }
 

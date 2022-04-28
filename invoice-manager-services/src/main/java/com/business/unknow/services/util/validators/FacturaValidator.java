@@ -4,7 +4,10 @@ import com.business.unknow.Constants;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.error.InvoiceManagerException;
+import org.apache.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
+@Service
 public class FacturaValidator extends AbstractValidator {
 
   public void validatePostFactura(FacturaCustom dto) throws InvoiceManagerException {
@@ -47,5 +50,14 @@ public class FacturaValidator extends AbstractValidator {
       throw new InvoiceManagerException(
           "Error al crear Cfdi", "Los folios son diferentes", Constants.BAD_REQUEST);
     }
+  }
+
+  public void validate(FacturaCustom dto, String folio) throws InvoiceManagerException {
+    checkNotNull(dto.getFolio(), "folio ");
+    if (!folio.equals(dto.getFolio())) {
+      throw new InvoiceManagerException(
+          "Error en folio:Los folios son diferentes", HttpStatus.SC_BAD_REQUEST);
+    }
+    validatePostFacturaWithDetail(dto);
   }
 }

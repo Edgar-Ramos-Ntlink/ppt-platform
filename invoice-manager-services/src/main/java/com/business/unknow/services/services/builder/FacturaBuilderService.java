@@ -58,7 +58,7 @@ public class FacturaBuilderService {
   @Autowired private FilesService filesService;
 
   public FacturaContext buildFacturaContextPagoPpdCreation(
-          PagoDto pagoDto, FacturaCustom facturaDto, String folio) throws InvoiceManagerException {
+      PagoDto pagoDto, FacturaCustom facturaDto, String folio) throws InvoiceManagerException {
     EmpresaDto empresaDto =
         empresaMapper.getEmpresaDtoFromEntity(
             empresaRepository
@@ -159,7 +159,7 @@ public class FacturaBuilderService {
   }
 
   public List<CfdiPagoDto> buildFacturaComplementoPagos(
-          FacturaCustom complemento, PagoDto pagoDto, List<FacturaCustom> dtos)
+      FacturaCustom complemento, PagoDto pagoDto, List<FacturaCustom> dtos)
       throws InvoiceManagerException, NtlinkUtilException {
     List<CfdiPagoDto> cfdiPagos = new ArrayList<CfdiPagoDto>();
     for (FacturaCustom dto : dtos) {

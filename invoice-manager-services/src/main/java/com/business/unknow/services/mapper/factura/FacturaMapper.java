@@ -13,5 +13,5 @@ public interface FacturaMapper {
 
   List<FacturaCustom> getFacturaDtosFromEntities(List<Factura> entities);
 
-  Factura getEntityFromFacturaDto(FacturaCustom dto);
+  Factura getEntityFromFacturaCustom(FacturaCustom dto);
 }

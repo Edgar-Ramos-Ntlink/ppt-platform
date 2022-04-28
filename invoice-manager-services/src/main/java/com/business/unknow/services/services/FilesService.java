@@ -96,8 +96,8 @@ public class FilesService {
       s3Utils.upsertFile(s3Bucket, s3Path, name.concat(".json"), json);
     } catch (JsonProcessingException | NtlinkUtilException e) {
       throw new ResponseStatusException(
-              HttpStatus.CONFLICT,
-              String.format("Error saving Json file in S3 with folio %s", facturaCustom.getFolio()));
+          HttpStatus.CONFLICT,
+          String.format("Error saving Json file in S3 with folio %s", facturaCustom.getFolio()));
     }
   }
   /**
@@ -112,7 +112,7 @@ public class FilesService {
       s3Utils.upsertFile(s3Bucket, s3Path, name.concat(format), file);
     } catch (NtlinkUtilException e) {
       throw new ResponseStatusException(
-              HttpStatus.CONFLICT, String.format("Error saving pdf file in S3 with folio %s", name));
+          HttpStatus.CONFLICT, String.format("Error saving pdf file in S3 with folio %s", name));
     }
   }
 

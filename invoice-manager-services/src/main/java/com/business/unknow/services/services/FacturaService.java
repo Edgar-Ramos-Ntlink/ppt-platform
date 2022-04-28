@@ -3,11 +3,12 @@ package com.business.unknow.services.services;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
+import com.business.unknow.enums.S3BucketsEnum;
+import com.business.unknow.enums.TipoComprobanteEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.enums.TipoEmail;
 import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaCustom;
-import com.business.unknow.model.dto.FacturaPdf;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
@@ -30,11 +31,15 @@ import com.business.unknow.services.services.executor.TimbradoExecutorService;
 import com.business.unknow.services.services.translators.FacturaTranslator;
 import com.business.unknow.services.services.translators.RelacionadosTranslator;
 import com.business.unknow.services.util.FacturaDefaultValues;
+import com.business.unknow.services.util.FacturaUtils;
 import com.business.unknow.services.util.validators.FacturaValidator;
 import com.google.common.collect.ImmutableList;
 import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.mappers.CfdiMapper;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
+import com.mx.ntlink.cfdi.modelos.Impuesto;
+import com.mx.ntlink.models.generated.Comprobante;
+import com.mx.ntlink.util.NumberTranslatorUtil;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -53,10 +58,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
-
-import com.mx.ntlink.cfdi.modelos.Impuesto;
-import com.mx.ntlink.models.generated.Comprobante;
-import com.mx.ntlink.util.NumberTranslatorUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -109,11 +110,13 @@ public class FacturaService {
 
   @Autowired private RelacionadosTranslator sustitucionTranslator;
 
-    @Autowired private FilesService filesService;
+  @Autowired private FilesService filesService;
 
-    @Autowired private CfdiMapper cfdiMapper;
+  @Autowired private CfdiMapper cfdiMapper;
 
-  private FacturaValidator validator = new FacturaValidator();
+  @Autowired private FacturaValidator validator;
+
+  @Autowired private CatalogsService catalogService;
 
   private Specification<Factura> buildSearchFilters(Map<String, String> parameters) {
     String linea = (parameters.get("lineaEmisor") == null) ? "A" : parameters.get("lineaEmisor");
@@ -419,55 +422,58 @@ public class FacturaService {
                         String.format("La factura con el folio %S no existe", folio))));
   }
 
-    @Transactional(
-            rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
-    public FacturaCustom createFacturaCustom(FacturaCustom facturaCustom)
-            throws InvoiceManagerException, NtlinkUtilException {
-        facturaCustom =
-                assignFacturaData(
-                        facturaCustom, facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
-        InvoiceValidator.validate(facturaCustom, facturaCustom.getFolio());
-        Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
-        Factura save = repository.save(mapper.getEntityFromDto(facturaCustom));
-        facturaCustom.setFechaCreacion(save.getFechaCreacion());
-        facturaCustom.setFechaActualizacion(save.getFechaActualizacion());
-        filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
-        filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
-        FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
-        facturaPdf.setCfdi(comprobante);
-        // TODO enable pdf generation
-        //byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
-        //filesService.sendFileToS3(facturaCustom.getFolio(), pdf, ".pdf");
-        return facturaCustom;
-    }
+  @Transactional(
+      rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
+  public FacturaCustom createFacturaCustom(FacturaCustom facturaCustom)
+      throws InvoiceManagerException, NtlinkUtilException {
+    facturaCustom =
+        assignFacturaData(
+            facturaCustom, facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
+    validator.validate(facturaCustom, facturaCustom.getFolio());
+    Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
+    Factura save = repository.save(mapper.getEntityFromFacturaCustom(facturaCustom));
+    facturaCustom.setFechaCreacion(save.getFechaCreacion());
+    facturaCustom.setFechaActualizacion(save.getFechaActualizacion());
+    filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
+    filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
+    // TODO enable pdf generation
+    // FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
+    // facturaPdf.setCfdi(comprobante);
+    // byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
+    // filesService.sendFileToS3(facturaCustom.getFolio(), pdf, ".pdf");
+    return facturaCustom;
+  }
 
-    @Transactional(
-            rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
-    public FacturaCustom updateFacturaCustom(String folio, FacturaCustom facturaCustom)
-            throws InvoiceManagerException, NtlinkUtilException {
-        Factura factura =
-                repository
-                        .findByFolio(folio)
-                        .orElseThrow(
-                                () ->
-                                        new ResponseStatusException(
-                                                HttpStatus.NOT_FOUND,
-                                                String.format("La factura con el folio %d no existe", folio)));
-        facturaServiceEvaluator.invoiceStatusValidation(facturaCustom);
-        facturaCustom.setCfdi(cfdiService.updateCfdi(facturaCustom.getCfdi()));
-        InvoiceValidator.validate(facturaCustom, facturaCustom.getFolio());
-        Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
-        Factura entityFromDto = mapper.getEntityFromDto(facturaCustom);
-        entityFromDto.setId(factura.getId());
-        repository.save(entityFromDto);
-        filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
-        filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
-        FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
-        facturaPdf.setCfdi(comprobante);
-        byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
-        filesService.sendFileToS3(facturaCustom.getFolio(), pdf, ".pdf");
-        return facturaCustom;
-    }
+  @Transactional(
+      rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
+  public FacturaCustom updateFacturaCustom(String folio, FacturaCustom facturaCustom)
+      throws InvoiceManagerException, NtlinkUtilException {
+    Factura factura =
+        repository
+            .findByFolio(folio)
+            .orElseThrow(
+                () ->
+                    new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("La factura con el folio %d no existe", folio)));
+    facturaServiceEvaluator.facturaStatusValidation(facturaCustom);
+    facturaCustom.setCfdi(
+        cfdiService.updateCfdiBody(facturaCustom.getFolio(), facturaCustom.getCfdi()));
+    validator.validate(facturaCustom, facturaCustom.getFolio());
+    Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
+    Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
+    entityFromDto.setId(factura.getId());
+    repository.save(entityFromDto);
+    filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
+    filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
+
+    // TODO enable pdf generation
+    // FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
+    // facturaPdf.setCfdi(comprobante);
+    // byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
+    // filesService.sendFileToS3(facturaCustom.getFolio(), pdf, ".pdf");
+    return facturaCustom;
+  }
 
   public FacturaCustom updateTotalAndSaldoFactura(
       String folioCfdi, Optional<BigDecimal> newTotal, Optional<BigDecimal> pago)
@@ -563,7 +569,6 @@ public class FacturaService {
     factura.setStatusFactura(status.getValor());
     return mapper.getFacturaDtoFromEntity(repository.save(factura));
   }
-
 
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
@@ -688,7 +693,7 @@ public class FacturaService {
         } else {
           if (!complemento.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
             complemento.setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
-            updateFactura(complemento.getFolio(), complemento);
+            // updateFactura(complemento.getFolio(), complemento);
           }
         }
       }
@@ -737,7 +742,7 @@ public class FacturaService {
       facturaDefaultValues.assignaDefaultsComplemento(
           complemento, facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
       Cfdi createdCfdi = cfdiService.insertNewCfdi(complemento.getCfdi());
-      Factura fact = mapper.getEntityFromFacturaDto(complemento);
+      Factura fact = mapper.getEntityFromFacturaCustom(complemento);
       fact.setFolio(createdCfdi.getFolio());
       // TODO VALIDAR PAGOS
       /*for (FacturaDto dto : facturas) {
@@ -803,7 +808,7 @@ public class FacturaService {
       facturaDto = createFacturaCustom(facturaDto);
       FacturaCustom facturaAnterior = getFacturaByFolio(dto.getFolio());
       facturaAnterior.setIdCfdiRelacionado(facturaDto.getIdCfdi());
-      repository.save(mapper.getEntityFromFacturaDto(facturaAnterior));
+      repository.save(mapper.getEntityFromFacturaCustom(facturaAnterior));
       return dto;
     } else {
       throw new InvoiceManagerException(
@@ -812,65 +817,65 @@ public class FacturaService {
     }
   }
 
-    private FacturaCustom assignFacturaData(FacturaCustom facturaCustom, int amount)
-            throws NtlinkUtilException, InvoiceManagerException {
-        String folio =
-                facturaCustom.getFolio() == null ? FacturaUtils.generateFolio() : facturaCustom.getFolio();
-        Cfdi cfdi = cfdiService.recalculateCfdi(facturaCustom.getCfdi());
-        cfdi.setFolio(folio);
-        return facturaCustom.toBuilder()
-                .cfdi(cfdi)
-                .total(facturaCustom.getCfdi().getTotal())
-                .saldoPendiente(facturaCustom.getCfdi().getTotal())
-                .totalDesc(
-                        NumberTranslatorUtil.getStringNumber(
-                                facturaCustom.getCfdi().getTotal(), facturaCustom.getCfdi().getMoneda()))
-                .subTotalDesc(
-                        NumberTranslatorUtil.getStringNumber(
-                                facturaCustom.getCfdi().getSubtotal(), facturaCustom.getCfdi().getMoneda()))
-                .usoCfdiDesc(
-                        catalogService
-                                .getCfdiUseByKey(facturaCustom.getCfdi().getReceptor().getUsoCfdi())
-                                .getDescripcion())
-                .regimenFiscalDesc(
-                        catalogService
-                                .getTaxRegimeByKey(facturaCustom.getCfdi().getEmisor().getRegimenFiscal())
-                                .getDescripcion())
-                .formaPagoDesc(
-                        catalogService
-                                .getPaymentFormByKey(facturaCustom.getCfdi().getFormaPago())
-                                .getDescripcion())
-                .metodoPagoDesc(
-                        MetodosPago.findByValor(facturaCustom.getCfdi().getMetodoPago()).getDescripcion())
-                .tipoDeComprobanteDesc(
-                        TipoComprobante.findByValor(facturaCustom.getCfdi().getTipoDeComprobante())
-                                .getDescripcion())
-                .logotipo(
-                        facturaCustom.getLogotipo() == null
-                                ? filesService
-                                .getResourceFileByResourceReferenceAndType(
-                                        "EMPRESA", facturaCustom.getRfcEmisor(), "LOGO")
-                                .getData()
-                                : facturaCustom.getLogotipo())
-                .impuestosTrasladados(
-                        facturaCustom.getCfdi().getImpuestos().stream()
-                                .collect(
-                                        Collectors.reducing(
-                                                BigDecimal.ZERO, Impuesto::getTotalImpuestosTrasladados, BigDecimal::add)))
-                .impuestosRetenidos(
-                        facturaCustom.getCfdi().getImpuestos().stream()
-                                .collect(
-                                        Collectors.reducing(
-                                                BigDecimal.ZERO, Impuesto::getTotalImpuestosRetenidos, BigDecimal::add)))
-                .folio(folio)
-                .preFolio(
-                        facturaCustom.getPreFolio() == null
-                                ? FacturaUtils.generatePreFolio(amount)
-                                : facturaCustom.getPreFolio())
-                .statusFactura(
-                        facturaCustom.getStatusFactura() == null
-                                ? FacturaStatus.VALIDACION_OPERACIONES.getValor()
-                                : facturaCustom.getStatusFactura())
-                .build();
-    }
+  private FacturaCustom assignFacturaData(FacturaCustom facturaCustom, int amount)
+      throws NtlinkUtilException, InvoiceManagerException {
+    String folio =
+        facturaCustom.getFolio() == null ? FacturaUtils.generateFolio() : facturaCustom.getFolio();
+    Cfdi cfdi = cfdiService.recalculateCfdiAmmounts(facturaCustom.getCfdi());
+    cfdi.setFolio(folio);
+    return facturaCustom.toBuilder()
+        .cfdi(cfdi)
+        .total(facturaCustom.getCfdi().getTotal())
+        .saldoPendiente(facturaCustom.getCfdi().getTotal())
+        .totalDesc(
+            NumberTranslatorUtil.getStringNumber(
+                facturaCustom.getCfdi().getTotal(), facturaCustom.getCfdi().getMoneda()))
+        .subTotalDesc(
+            NumberTranslatorUtil.getStringNumber(
+                facturaCustom.getCfdi().getSubtotal(), facturaCustom.getCfdi().getMoneda()))
+        .usoCfdiDesc(
+            catalogService
+                .getCfdiUseByKey(facturaCustom.getCfdi().getReceptor().getUsoCfdi())
+                .getDescripcion())
+        .regimenFiscalDesc(
+            catalogService
+                .getTaxRegimeByKey(facturaCustom.getCfdi().getEmisor().getRegimenFiscal())
+                .getDescripcion())
+        .formaPagoDesc(
+            catalogService
+                .getPaymentFormByKey(facturaCustom.getCfdi().getFormaPago())
+                .getDescripcion())
+        .metodoPagoDesc(
+            MetodosPagoEnum.findByValor(facturaCustom.getCfdi().getMetodoPago()).getDescripcion())
+        .tipoDeComprobanteDesc(
+            TipoComprobanteEnum.findByValor(facturaCustom.getCfdi().getTipoDeComprobante())
+                .getDescripcion())
+        .logotipo(
+            facturaCustom.getLogotipo() == null
+                ? filesService
+                    .getResourceFileByResourceReferenceAndType(
+                        S3BucketsEnum.EMPRESAS, facturaCustom.getRfcEmisor(), "LOGO")
+                    .getData()
+                : facturaCustom.getLogotipo())
+        .impuestosTrasladados(
+            facturaCustom.getCfdi().getImpuestos().stream()
+                .collect(
+                    Collectors.reducing(
+                        BigDecimal.ZERO, Impuesto::getTotalImpuestosTrasladados, BigDecimal::add)))
+        .impuestosRetenidos(
+            facturaCustom.getCfdi().getImpuestos().stream()
+                .collect(
+                    Collectors.reducing(
+                        BigDecimal.ZERO, Impuesto::getTotalImpuestosRetenidos, BigDecimal::add)))
+        .folio(folio)
+        .preFolio(
+            facturaCustom.getPreFolio() == null
+                ? FacturaUtils.generatePreFolio(amount)
+                : facturaCustom.getPreFolio())
+        .statusFactura(
+            facturaCustom.getStatusFactura() == null
+                ? FacturaStatusEnum.VALIDACION_OPERACIONES.getValor()
+                : facturaCustom.getStatusFactura())
+        .build();
+  }
 }
