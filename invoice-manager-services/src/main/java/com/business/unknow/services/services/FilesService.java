@@ -54,9 +54,6 @@ public class FilesService {
   @Value("${s3.bucket}")
   private String s3Bucket;
 
-  @Value("${s3.path}")
-  private String s3Path;
-
   @Value("classpath:/images/imagen-no-disponible.png")
   private Resource noAvailableImage;
 
@@ -93,7 +90,7 @@ public class FilesService {
     try {
       ObjectMapper objectMapper = new ObjectMapper();
       byte[] json = objectMapper.writeValueAsBytes(facturaCustom);
-      s3Utils.upsertFile(s3Bucket, s3Path, name.concat(".json"), json);
+      s3Utils.upsertFile(s3Bucket, S3BucketsEnum.CFDIS.name(), name.concat(".json"), json);
     } catch (JsonProcessingException | NtlinkUtilException e) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
@@ -106,10 +103,10 @@ public class FilesService {
    * @param name
    * @param {@link FacturaCustom}
    */
-  public void sendFileToS3(String name, byte[] file, String format) {
+  public void sendFileToS3(String name, byte[] file, String format, S3BucketsEnum bucket) {
     log.info("Saving {} file {} to S3", name, format);
     try {
-      s3Utils.upsertFile(s3Bucket, s3Path, name.concat(format), file);
+      s3Utils.upsertFile(s3Bucket, bucket.name(), name.concat(format), file);
     } catch (NtlinkUtilException e) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT, String.format("Error saving pdf file in S3 with folio %s", name));
