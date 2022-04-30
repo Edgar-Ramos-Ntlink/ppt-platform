@@ -3,12 +3,15 @@ package com.business.unknow.services.services;
 import com.amazonaws.util.Base64;
 import com.business.unknow.enums.S3BucketsEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.ResourceFile;
 import com.business.unknow.services.mapper.ResourceFileMapper;
 import com.business.unknow.services.repositories.files.ResourceFileRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.aws.S3Utils;
 import com.mx.ntlink.cfdi.mappers.CfdiMapper;
@@ -74,6 +77,39 @@ public class FilesService {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
           String.format("Error saving Xml file in S3 with folio %s", comprobante.getFolio()));
+    }
+  }
+  /**
+   * Saves json metadata in S3 bucket
+   *
+   * @param name
+   * @param {@link FacturaCustom}
+   */
+  public void sendFacturaCustomToS3(String name, FacturaCustom facturaCustom) {
+    log.info("Saving {}.json to S3", name);
+    try {
+      ObjectMapper objectMapper = new ObjectMapper();
+      byte[] json = objectMapper.writeValueAsBytes(facturaCustom);
+      s3Utils.upsertFile(s3Bucket, S3BucketsEnum.CFDIS.name(), name.concat(".json"), json);
+    } catch (JsonProcessingException | NtlinkUtilException e) {
+      throw new ResponseStatusException(
+          HttpStatus.CONFLICT,
+          String.format("Error saving Json file in S3 with folio %s", facturaCustom.getFolio()));
+    }
+  }
+  /**
+   * Saves file in S3 bucket
+   *
+   * @param name
+   * @param {@link FacturaCustom}
+   */
+  public void sendFileToS3(String name, byte[] file, String format, S3BucketsEnum bucket) {
+    log.info("Saving {} file {} to S3", name, format);
+    try {
+      s3Utils.upsertFile(s3Bucket, bucket.name(), name.concat(format), file);
+    } catch (NtlinkUtilException e) {
+      throw new ResponseStatusException(
+          HttpStatus.CONFLICT, String.format("Error saving pdf file in S3 with folio %s", name));
     }
   }
 

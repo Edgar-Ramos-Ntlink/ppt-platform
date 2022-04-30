@@ -5,12 +5,14 @@ import com.business.unknow.model.dto.catalogs.CatalogDto;
 import com.business.unknow.model.dto.catalogs.ClaveProductoServicioDto;
 import com.business.unknow.model.dto.catalogs.ClaveUnidadDto;
 import com.business.unknow.model.dto.catalogs.CodigoPostalDto;
+import com.business.unknow.model.dto.catalogs.FormaPagoDto;
 import com.business.unknow.model.dto.catalogs.RegimenFiscalDto;
 import com.business.unknow.model.dto.catalogs.UsoCfdiDto;
 import com.business.unknow.services.entities.catalogs.Banco;
 import com.business.unknow.services.entities.catalogs.ClaveProductoServicio;
 import com.business.unknow.services.entities.catalogs.ClaveUnidad;
 import com.business.unknow.services.entities.catalogs.CodigoPostal;
+import com.business.unknow.services.entities.catalogs.FormaPago;
 import com.business.unknow.services.entities.catalogs.Giro;
 import com.business.unknow.services.entities.catalogs.RegimenFiscal;
 import com.business.unknow.services.entities.catalogs.StatusDevolucion;
@@ -62,4 +64,6 @@ public interface CatalogsMapper {
   List<CatalogDto> getStatusEventoDtosFromEntities(List<StatusEvento> entities);
 
   List<CatalogDto> getStatusDevolucionDtosFromEntities(List<StatusDevolucion> entities);
+
+  FormaPagoDto getFormaPagoDtoFromEntity(FormaPago enity);
 }

@@ -17,13 +17,13 @@ import lombok.ToString;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class FacturaDto implements Serializable {
+public class FacturaCustom implements Serializable {
 
   private static final long serialVersionUID = -1019751668989298682L;
   private Integer id;
@@ -45,6 +45,8 @@ public class FacturaDto implements Serializable {
   private String notas;
   private String motivo;
   private String folioSustituto;
+  private BigDecimal impuestosRetenidos;
+  private BigDecimal impuestosTrasladados;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
@@ -64,7 +66,30 @@ public class FacturaDto implements Serializable {
   private Integer idCfdiRelacionadoPadre;
   private BigDecimal total;
   private BigDecimal saldoPendiente;
-  private Cfdi cfdi;
+
   private Boolean validacionTeso;
   private Boolean validacionOper;
+
+  // aditional factura Custom fields
+
+  private String qr;
+  private String cadenaOriginal;
+  // TODO:VALIDAR SI ES NECESARIA
+  private String folioPadre;
+  private String totalDesc;
+  private String subTotalDesc;
+  private String usoCfdiDesc;
+  private String regimenFiscalDesc;
+  private String formaPagoDesc;
+  private String metodoPagoDesc;
+  private String direccionEmisor;
+  private String direccionReceptor;
+  private String tipoDeComprobanteDesc;
+  private String logotipo;
+  private String xml;
+  private Cfdi cfdi;
+  private String montoTotalDesc;
+  private String tipoRelacion;
+  private String relacion;
+  private String selloSat;
 }

@@ -1,6 +1,6 @@
 package com.business.unknow.model.context;
 
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.services.ContribuyenteDto;
@@ -23,9 +23,9 @@ public class FacturaContext implements Serializable {
   private static final long serialVersionUID = 661221684069242273L;
   private String tipoFactura;
   private String tipoDocumento;
-  private FacturaDto facturaDto;
-  private FacturaDto facturaPadreDto;
-  private List<FacturaDto> complementos;
+  private FacturaCustom facturaDto;
+  private FacturaCustom facturaPadreDto;
+  private List<FacturaCustom> complementos;
   private List<PagoDto> pagos;
   private PagoDto pagoCredito;
   private PagoDto currentPago;

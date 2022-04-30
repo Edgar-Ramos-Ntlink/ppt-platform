@@ -1,7 +1,7 @@
 /** */
 package com.business.unknow.services.rest;
 
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.CfdiService;
@@ -59,7 +59,7 @@ public class CfdiController {
   }
 
   @GetMapping("/{folio}/facturaInfo")
-  public ResponseEntity<FacturaDto> getfacturabyFolioCfdi(@PathVariable String folio) {
+  public ResponseEntity<FacturaCustom> getfacturabyFolioCfdi(@PathVariable String folio) {
     return new ResponseEntity<>(facturaService.getFacturaBaseByFolio(folio), HttpStatus.OK);
   }
 

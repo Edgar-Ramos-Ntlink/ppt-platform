@@ -88,7 +88,7 @@ public class PagosController {
   @PutMapping("/{idPago}")
   public ResponseEntity<PagoDto> updatePago(
       @PathVariable(name = "idPago") Integer idPago, @RequestBody @Valid PagoDto pagoDto)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(pagoService.updatePago(idPago, pagoDto), HttpStatus.OK);
   }
 

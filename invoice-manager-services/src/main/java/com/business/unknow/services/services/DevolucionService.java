@@ -2,7 +2,7 @@ package com.business.unknow.services.services;
 
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
 import com.business.unknow.model.dto.services.DevolucionDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -131,7 +131,7 @@ public class DevolucionService {
     }
   }
 
-  public void generarDevoluciones(FacturaDto facturaDto)
+  public void generarDevoluciones(FacturaCustom facturaDto)
       throws InvoiceManagerException, NtlinkUtilException {
     Client client =
         clientRepository

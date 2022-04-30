@@ -5,7 +5,7 @@ import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.LineaEmpresaEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.google.common.collect.ImmutableList;
 import com.mx.ntlink.cfdi.modelos.CfdiRelacionado;
 import com.mx.ntlink.cfdi.modelos.CfdiRelacionados;
@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class RelacionadosTranslator {
 
-  public FacturaDto sustitucionComplemento(FacturaDto facturaDto) {
+  public FacturaCustom sustitucionComplemento(FacturaCustom facturaDto) {
     if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
       throw new ResponseStatusException(
           HttpStatus.NOT_FOUND,
@@ -32,7 +32,7 @@ public class RelacionadosTranslator {
     return facturaDto;
   }
 
-  public FacturaDto sustitucionFactura(FacturaDto facturaDto) {
+  public FacturaCustom sustitucionFactura(FacturaCustom facturaDto) {
     if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
@@ -44,7 +44,7 @@ public class RelacionadosTranslator {
     return facturaDto;
   }
 
-  private void updateBaseInfoSustitucion(FacturaDto facturaDto) {
+  private void updateBaseInfoSustitucion(FacturaCustom facturaDto) {
     facturaDto.setCadenaOriginalTimbrado(null);
     facturaDto.setFechaTimbrado(null);
     facturaDto.setFolio(null);
@@ -83,7 +83,7 @@ public class RelacionadosTranslator {
     }
   }
 
-  public FacturaDto notaCreditoFactura(FacturaDto facturaDto) {
+  public FacturaCustom notaCreditoFactura(FacturaCustom facturaDto) {
     if (facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
       updateBaseInfoNotaCredito(facturaDto);
       return facturaDto;
@@ -96,7 +96,7 @@ public class RelacionadosTranslator {
     }
   }
 
-  private void updateBaseInfoNotaCredito(FacturaDto facturaDto) {
+  private void updateBaseInfoNotaCredito(FacturaCustom facturaDto) {
     facturaDto.setCadenaOriginalTimbrado(null);
     facturaDto.setFechaTimbrado(null);
     facturaDto.setFolio(null);

@@ -1,7 +1,7 @@
 package com.business.unknow.services.mapper.decorator;
 
 import com.business.unknow.Constants.FacturaConstants;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.cfdi.ConceptoDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.services.mapper.factura.FacturaCfdiTranslatorMapper;
@@ -30,7 +30,7 @@ public abstract class FacturaCfdiTranslatorDecorator implements FacturaCfdiTrans
   */
 
   @Override
-  public Cfdi cdfiRootInfo(FacturaDto facturaDto, EmpresaDto empresaDto) {
+  public Cfdi cdfiRootInfo(FacturaCustom facturaDto, EmpresaDto empresaDto) {
     Cfdi cfdi = delegate.cdfiRootInfo(facturaDto, empresaDto);
     if (cfdi.getMoneda().equals("MXN")) {
       cfdi.setTipoCambio(BigDecimal.ONE);

@@ -2,6 +2,8 @@ package com.business.unknow.services.services;
 
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.services.entities.Reporte;
+import com.business.unknow.services.repositories.ReporteRepository;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.services.evaluations.CfdiValidator;
 import com.mx.ntlink.NtlinkUtilException;
@@ -27,6 +29,8 @@ public class CfdiService {
   @Autowired private FacturaService facturaService;
 
   @Autowired private CatalogCacheService cacheCatalogsService;
+
+  @Autowired private ReporteRepository reporteRepository;
 
   @Autowired
   @Qualifier("CfdiValidator")
@@ -61,14 +65,14 @@ public class CfdiService {
     recalculateCfdiAmmounts(cfdi);
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(cfdi);
     filesService.sendXmlToS3(cfdi.getFolio(), comprobante);
+    createReportData(cfdi);
     // TODO ADD CREATE PDF
-    // TODO ADD REPORT CONCEPTOS BDD
     return cfdiMapper.comprobanteToCfdi(comprobante);
   }
 
   public Cfdi updateCfdiBody(String folio, Cfdi cfdi) throws InvoiceManagerException {
+    deleteReportData(cfdi);
     // TODO ADD CREATE PDF
-    // TODO ADD REPORT CONCEPTOS BDD
     return insertNewCfdi(cfdi);
   }
 
@@ -117,5 +121,4 @@ public class CfdiService {
     List<Reporte> reportes = reporteRepository.findByFolio(cfdi.getFolio());
     reportes.stream().forEach(reporte -> reporteRepository.delete(reporte));
   }
-
 }

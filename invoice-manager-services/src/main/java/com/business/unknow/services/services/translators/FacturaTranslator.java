@@ -5,7 +5,7 @@ import com.business.unknow.Constants.FacturaComplemento;
 import com.business.unknow.enums.S3BucketsEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.context.FacturaContext;
-import com.business.unknow.model.dto.FacturaDto;
+import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -265,7 +265,7 @@ public class FacturaTranslator {
     return calculaRetenciones(context.getFacturaDto());
   }
 
-  public BigDecimal calculaRetenciones(FacturaDto facturaDto) {
+  public BigDecimal calculaRetenciones(FacturaCustom facturaDto) {
     BigDecimal totalRetenciones = new BigDecimal(0);
     List<Retencion> retenciones = new ArrayList<>();
     for (Concepto concepto : facturaDto.getCfdi().getConceptos()) {
@@ -277,7 +277,7 @@ public class FacturaTranslator {
     return totalRetenciones;
   }
 
-  public BigDecimal calculaImpuestos(FacturaDto facturaDto) {
+  public BigDecimal calculaImpuestos(FacturaCustom facturaDto) {
     BigDecimal totalImpuestos = new BigDecimal(0);
     List<Traslado> traslados = new ArrayList<>();
     for (Concepto concepto : facturaDto.getCfdi().getConceptos()) {
