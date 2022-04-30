@@ -218,30 +218,6 @@ public class CatalogsService {
         formaPagoRepository.findAll().stream()
             .collect(Collectors.toMap(FormaPago::getId, e -> mapper.getFormaPagoDtoFromEntity(e)));
     log.info("Mappings paymentFormMappings loaded {}", paymentFormMappings.size());
-    /*
-    driveKeyMappings =
-            claveUnidadReppository.findAll().stream()
-                    .collect(
-                            Collectors.toMap(ClaveUnidad::getClave, e -> mapper.getDtoFromEntity(e)));
-    log.info("Mappings driveKeyMappings loaded {}", driveKeyMappings.size());
-    turnMappings =
-            giroRepository.findAll().stream()
-                    .collect(
-                            Collectors.toMap(
-                                    a -> a.getId().toString(), e -> mapper.getDtoFromEntity(e)));
-    log.info("Mappings giroMappings loaded {}", turnMappings.size());
-    bankMappings =
-            bancoRepository.findAll().stream()
-                    .collect(Collectors.toMap(Banco::getId, e -> mapper.getDtoFromEntity(e)));
-    log.info("Mappings bankMappings loaded {}", bankMappings.size());
-    statusEventMappings =
-            statusEventoRepository.findAll().stream()
-                    .collect(
-                            Collectors.toMap(
-                                    a -> a.getId().toString(), e -> mapper.getDtoFromEntity(e)));
-    log.info("Mappings statusEventMappings loaded {}", statusEventMappings.size());
-
-    */
   }
 
   public UsoCfdiDto getCfdiUseByKey(String key) {

@@ -121,5 +121,4 @@ public class CfdiService {
     List<Reporte> reportes = reporteRepository.findByFolio(cfdi.getFolio());
     reportes.stream().forEach(reporte -> reporteRepository.delete(reporte));
   }
-
 }
