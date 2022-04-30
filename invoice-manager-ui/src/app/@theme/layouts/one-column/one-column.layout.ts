@@ -60,7 +60,7 @@ import { User } from "../../../@core/models/user";
 
       <nb-layout-footer fixed>
         <span class="created-by">
-          Desarrolado por
+          Desarrollado por
           <b><a href="http://www.ntlink.com.mx" target="_blank">NT LINK</a></b>
           &copy; 2022. Todos los derechos reservados. V 4.0.0
         </span>

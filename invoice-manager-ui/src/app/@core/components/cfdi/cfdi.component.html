@@ -1,0 +1,104 @@
+<div class="clearfix" *ngIf="cfdi?.folio">
+  <button nbButton status="success" size="small" (click)="updateCfdi()" [nbSpinner]="loading"
+    class="float-right ml-2 mr-2" [disabled]="loading" nbSpinnerStatus="success"
+    *ngIf="allowEdit && cfdi.folio !== undefined" nbSpinnerSize="small" nbSpinnerMessage="">
+    Actualizar CFDI <i class="fa fa-sync" style="margin-left: 10px"></i>
+  </button>
+
+  <button type="button" class="btn btn-sm btn-outline-primary float-right ml-2 mr-2" (click)="downloadPdf()">
+    <i class="fa fa-file-pdf"></i>
+  </button>
+
+  <button type="button" *ngIf="factura.statusFactura == 3"
+    class="btn btn-sm btn-outline-primary float-right ml-2 mr-2" (click)="downloadXml()">
+    <i class="fa fa-code"></i>
+  </button>
+
+  <button type="button" *ngIf="factura?.idCfdiRelacionado" class="btn btn-sm btn-outline-success float-right ml-1 mr-1"
+    (click)="goToRelacionado(factura?.idCfdiRelacionado)">
+    <i class="fa fa-link"></i>
+  </button>
+  
+  <button type="button" *ngIf="factura?.idCfdiRelacionadoPadre"
+    class="btn btn-sm btn-outline-success float-right ml-1 mr-1"
+    (click)="returnToSourceFact(factura?.idCfdiRelacionadoPadre)">
+    <i class="fa fa-arrow-left"></i>
+  </button>
+  
+  <span class="badge badge-secondary ml-1 mr-1 float-right" *ngIf="factura?.cfdi">
+    <strong *ngIf="factura?.cfdi.relacionado">CFDI RELACIONADO :
+      {{ factura?.cfdi.relacionado.relacion }}</strong>
+  </span>
+</div>
+
+<div class="row" *ngIf="cfdi">
+  <div class="col-md-12">
+    <nt-emisor *ngIf="cfdi.emisor && cfdi.emisor.rfc !== undefined" [emisor]="cfdi.emisor"
+      [direccion]="factura.direccionEmisor"></nt-emisor>
+
+    <br />
+
+    <nt-receptor *ngIf="cfdi.receptor && cfdi.receptor.rfc !== undefined" [(receptor)]="cfdi.receptor"
+      [direccion]="factura.direccionReceptor" [allowEdit]="allowEdit || cfdi.tipoDeComprobante === 'E'"></nt-receptor>
+
+    <br />
+    <div *ngIf="factura.direccionReceptor">
+      <p class="font-weight-bold">Información CFDI</p>
+
+      <div class="row">
+        <div class="col-md-2">
+          <label for="inputDocType" class="label">Tipo Documento</label>
+          <select id="inputDocType" style="display: block" class="form-control" disabled
+            [(ngModel)]="cfdi.tipoDeComprobante">
+            <option value="*">Seleccionar</option>
+            <option value="I">Factura Ingreso</option>
+            <option value="E">Factura Egreso(Nota credito)</option>
+            <option value="P">Complemento(pago)</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label for="inputPayMethod" class="label">Metodo de Pago</label>
+          <select id="inputPayMethod" style="display: block" class="form-control" [ngModel]="cfdi.metodoPago"
+            [disabled]="cfdi.folio !== undefined" (change)="onPayMethodChange($event.target.value)">
+            <option value="*">Seleccionar</option>
+            <option value="PUE">Factura pagada (PUE)</option>
+            <option value="PPD">Factura pago por definir(PPD)</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="inputPaytype" class="label">Forma de Pago</label>
+          <select selected="1" id="inputPaytype" style="display: block" class="form-control"
+            [disabled]="cfdi.metodoPago === '*' || !allowEdit" [ngModel]="cfdi.formaPago"
+            (change)="onPayWayChange($event.target.value)">
+            <option value="*">Seleccionar</option>
+            <option *ngFor="let payType of payTypeCat" [(value)]="payType.id">
+              {{ payType.nombre }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label for="inputCoin" class="label">Moneda</label>
+          <select id="inputCoin" style="display: block" class="form-control" [disabled]="!allowEdit"
+            [ngModel]="cfdi.moneda" (change)="onCoinChange($event.target.value)">
+            <option value="*">Seleccionar</option>
+            <option value="XXX">N/A</option>
+            <option value="MXN">Peso MX</option>
+            <option value="USD">Dolar US</option>
+          </select>
+        </div>
+        <div class="col-md-2" *ngIf="cfdi.moneda === 'USD'">
+          <label for="payChangeType" class="label">Tipo de Cambio</label>
+          <input id="inputChangeType" class="form-control" type="number" [(ngModel)]="cfdi.tipoCambio" />
+        </div>
+      </div>
+      <br />
+      <div *ngIf="cfdi.tipoDeComprobante !== 'P' && cfdi.formaPago !== '*'">
+        <nt-conceptos [(cfdi)]="cfdi" [allowEdit]="allowEdit"></nt-conceptos>
+      </div>
+    </div>
+
+    <br />
+    <nt-complementos-pago></nt-complementos-pago>
+  </div>
+</div>

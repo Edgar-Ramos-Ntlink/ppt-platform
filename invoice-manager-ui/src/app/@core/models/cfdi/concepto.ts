@@ -5,31 +5,33 @@ import { InformacionAduanera } from "./informacion-aduanera";
 import { Parte } from "./parte";
 
 export class Concepto {
-
-  public id: number;
-
-  public claveProdServ: string;
+  public claveProdServ: string; // required
   public noIdentificacion: string;
-  public cantidad: number;
-  public claveUnidad: string;
-  public unidad: string;
-  public descripcion: string;
-  public valorUnitario: number;
-  public importe: number;
-  public descuento: number;
-  public objetoImp: string;
-  public impuestos: Impuesto[];
+  public cantidad: number; //required
+  public claveUnidad: string; //required
+  public unidad: string; // optional
+  public descripcion: string; // required
+  public valorUnitario: number; //required
+  public importe: number; //required
+  public descuento: number; // optional
+  public objetoImp: string; // optional
+  public impuestos: Impuesto[]; //required
 
   public aCuentaTerceros: ACuentaTerceros;
   public informacionAduanera: InformacionAduanera;
   public cuentaPredial: CuentaPredial;
   public parte: Parte;
 
-  constructor(){
-    this.cantidad = 0;
-    this.valorUnitario = 1;
-    this.importe = 1;
-    this.importe = 1;
+  constructor() {
     this.impuestos = [];
+    this.descuento = 0;
+    this.importe = 0;
+    this.valorUnitario = 0;
+    this.cantidad = 1;
+    this.claveProdServ = "84111506 ";
+    this.claveUnidad = "E48";
+    this.unidad = "Unidad de Servicio";
+    this.descripcion = "100 FOLIOS PORTAL";
+    this.objetoImp = "02";
   }
 }

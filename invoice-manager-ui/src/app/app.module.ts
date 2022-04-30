@@ -19,6 +19,10 @@ import {
 import { UnauthorizedComponent } from './auth/unauthorized/unauthorized.component';
 import { SesionLostComponent } from './auth/sesion-lost/sesion-lost.component';
 import { UnavailableServiceComponent } from './auth/unavailable-service/unavailable-service.component';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { reducers, metaReducers } from './reducers';
 
 
 
@@ -37,6 +41,9 @@ import { UnavailableServiceComponent } from './auth/unavailable-service/unavaila
     NbWindowModule.forRoot(),
     NbToastrModule.forRoot(),
     CoreModule.forRoot(),
+    StoreModule.forRoot(reducers),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
   ],
   providers: [
     {

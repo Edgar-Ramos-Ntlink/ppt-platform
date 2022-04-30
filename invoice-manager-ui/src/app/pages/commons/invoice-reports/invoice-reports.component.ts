@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GenericPage } from '../../../models/generic-page';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { UsersData } from '../../../@core/data/users-data';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { FilesData } from '../../../@core/data/files-data';
-import { Factura } from '../../../models/factura';
 import { UtilsService } from '../../../@core/util-services/utils.service';
+import { Factura } from '../../../@core/models/factura';
 
 @Component({
   selector: 'ngx-invoice-reports',
@@ -239,7 +239,7 @@ export class InvoiceReportsComponent implements OnInit {
 
   public reSendEmail(folio: string) {
     this.loading = true;
-    this.invoiceService.reSendEmail(folio, new Factura).subscribe(
+    this.invoiceService.reSendEmail(folio, new Factura()).subscribe(
       factura => {
         this.loading = false;
       }, error => {

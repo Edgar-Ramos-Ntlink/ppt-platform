@@ -23,15 +23,12 @@ import { ClientesComponent } from './clientes/clientes.component';
 import { ClienteComponent } from './cliente/cliente.component';
 import { EmpresaComponent } from './empresa/empresa.component';
 import { EmpresasComponent } from './empresas/empresas.component';
-import { PagosFacturaComponent } from './pagos-factura/pagos-factura.component';
+import { PagosFacturaComponent } from './pagos-facturas/pagos-facturas.component';
 import { PagosComponent } from './pagos/pagos.component';
 import { ValidacionPagoComponent } from './pagos/validacion-pago/validacion-pago.component';
-import { ConceptosComponent } from './conceptos/conceptos.component';
 import { InvoiceReportsComponent } from './invoice-reports/invoice-reports.component';
-import { CfdiComponent } from './cfdi/cfdi.component';
 import { AsignacionPagosComponent } from './asignacion-pagos/asignacion-pagos.component';
 import { AutocompleteLibModule} from 'angular-ng-autocomplete';
-import { PagoFacturaComponent } from './pago-factura/pago-factura.component';
 import { GenerarComplementoComponent } from './generar-complemento/generar-complemento.component';
 import { MulticomplementosComponent } from './multicomplementos/multicomplementos.component';
 import { CuentasBancariasComponent } from './cuentas-bancarias/cuentas-bancarias.component';
@@ -46,11 +43,8 @@ import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.compo
     PagosFacturaComponent,
     PagosComponent,
     ValidacionPagoComponent,
-    ConceptosComponent,
     InvoiceReportsComponent,
-    CfdiComponent,
     AsignacionPagosComponent,
-    PagoFacturaComponent,
     GenerarComplementoComponent,
     MulticomplementosComponent,
     CuentasBancariasComponent,
@@ -86,11 +80,8 @@ import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.compo
     PagosFacturaComponent,
     PagosComponent,
     ValidacionPagoComponent,
-    PagoFacturaComponent,
     GenerarComplementoComponent,
     MulticomplementosComponent,
-    ConceptosComponent,
-    CfdiComponent,
     AsignacionPagosComponent,
     CuentasBancariasComponent,
     FormsModule,

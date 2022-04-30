@@ -1,0 +1,71 @@
+<div *ngIf="complementos && complementos.length > 0 && cfdi.folio !== undefined">
+    <p class="font-weight-bold">Complementos</p>
+    <br />
+    <div class="table-responsive slide_1">
+      <table class="table table-sm">
+        <thead class="thead-dark">
+          <tr>
+            <th class="text-center">Acciones</th>
+            <th class="text-center">Folio</th>
+            <th class="text-center">UUID</th>
+            <th class="text-center">Fecha pago</th>
+            <th class="text-center">Parcialidad</th>
+            <th class="text-center">Valido</th>
+            <th class="text-center">Importe Pagado</th>
+            <th class="text-center">Saldo Anterior</th>
+            <th class="text-center">Saldo Insoluto</th>
+            <th class="text-center">Moneda</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let complemento of complementos">
+            <td scope="row" class="text-center">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                *ngIf="
+                  cfdi.metodoPago === 'PPD' && cfdi.tipoDeComprobante !== 'P'
+                "
+                (click)="redirectToChildCfdi(complemento.cfdi.folio)"
+              >
+                <i class="fa fa-search"></i>
+              </button>
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary"
+                *ngIf="
+                  cfdi.metodoPago === 'PPD' && cfdi.tipoDeComprobante === 'P'
+                "
+                (click)="redirectToCfdi(complemento.folio)"
+              >
+                <i class="fa fa-search"></i>
+              </button>
+            </td>
+            <td scope="row" class="text-center">{{ complemento.folio }}</td>
+            <td scope="row" class="text-center">
+              {{ complemento.idDocumento }}
+            </td>
+            <td scope="row" class="text-center">
+              {{ complemento.fechaPago }}
+            </td>
+            <td scope="row" class="text-center">
+              {{ complemento.numeroParcialidad }}
+            </td>
+            <td scope="row" class="text-center">
+              {{ complemento.valido ? "valido" : "invalido" }}
+            </td>
+            <td scope="row" class="text-center">
+              {{ complemento.importePagado | currency }}
+            </td>
+            <td scope="row" class="text-center">
+              {{ complemento.importeSaldoAnterior | currency }}
+            </td>
+            <td scope="row" class="text-center">
+              {{ complemento.importeSaldoInsoluto | currency }}
+            </td>
+            <td scope="row" class="text-center">{{ complemento.moneda }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

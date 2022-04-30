@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Cfdi } from '../models/cfdi/cfdi';
-import { Concepto } from '../models/cfdi/concepto';
 
 @Injectable({
   providedIn: 'root',
@@ -11,28 +10,20 @@ export class CfdiService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public getCfdiByFolio(prefolio: number): Observable<any > {
+  public getCfdiByFolio(prefolio: string): Observable<any> {
     return this.httpClient.get(`../api/cfdis/${prefolio}`);
   }
 
-  public calcularMontosCfdi(cfdi: Cfdi): Observable<any> {
-    return this.httpClient.post('../api/cfdis/calcular/montos', cfdi);
-  }
-
   public updateCfdi(cfdi: Cfdi): Observable<any> {
-    return this.httpClient.put(`../api/cfdis/${cfdi.id}`, cfdi);
+    return this.httpClient.put(`../api/cfdis/${cfdi.folio}`, cfdi);
   }
 
-  public insertConcepto(prefolio: number, concepto: Concepto): Observable<any> {
-    return this.httpClient.post(`../api/cfdis/${prefolio}/conceptos`, concepto);
+  public recalculateCfdi(cfdi: Cfdi): Observable<any> {
+    return this.httpClient.put(`../api/cfdis/recalculate`, cfdi);
   }
 
-  public updateConcepto(prefolio: number, id: number, concepto: Concepto): Observable<any> {
-    return this.httpClient.put(`../api/cfdis/${prefolio}/conceptos/${id}`, concepto);
-  }
-
-  public deleteConcepto(prefolio: number, conceptoId: number): Observable<any> {
-    return this.httpClient.delete(`../api/cfdis/${prefolio}/conceptos/${conceptoId}`);
+  public findInvoicePaymentComplementsByFolio(folio: string): Observable<any> {
+    return this.httpClient.get(`../api/cfdis/${folio}/payments`);
   }
 
   public findPagosPPD(prefolio: number): Observable<any> {

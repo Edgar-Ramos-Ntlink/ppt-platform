@@ -1,0 +1,30 @@
+<div class="ml-2 mr-2" *ngIf="status">
+  <span class="badge badge-primary" *ngIf="status == '1'"
+    >Validacion operaciones</span
+  >
+  <span class="badge badge-primary" *ngIf="status == '2'">
+    Validacion tesoreria
+  </span>
+  <span class="badge badge-success" *ngIf="status == '3'">Timbrada</span>
+
+  <span class="badge badge-primary" *ngIf="status == '4'"> Por Timbrar </span>
+
+  <span class="badge badge-warning" *ngIf="status == '5'"
+    >Rechazo tesoreria</span
+  >
+
+  <span class="badge badge-warning" *ngIf="status == '6'"
+    >Rechazo Operaciones</span
+  >
+
+  <span class="badge badge-danger" *ngIf="status == '7'">Cancelada</span>
+
+  <span class="badge badge-primary" *ngIf="status == '8'"
+    >Por Timbrar Contabilidad</span
+  >
+
+  <span class="badge badge-warning" *ngIf="status == '9'"
+    >Rechazo Contabilidad</span
+  >
+  
+</div>

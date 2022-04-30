@@ -10,7 +10,7 @@ import { EmpresaComponent } from '../commons/empresa/empresa.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
 import { LineaXComponent } from './linea-x/linea-x.component';
 import { MulticomplementosComponent } from '../commons/multicomplementos/multicomplementos.component';
-import { PagosFacturaComponent } from '../commons/pagos-factura/pagos-factura.component';
+import { PagosFacturaComponent } from '../commons/pagos-facturas/pagos-facturas.component';
 import { PagosComponent } from '../commons/pagos/pagos.component';
 import { CuentasBancariasComponent } from '../commons/cuentas-bancarias/cuentas-bancarias.component';
 import { CuentaBancariaComponent } from '../commons/cuenta-bancaria/cuenta-bancaria.component';

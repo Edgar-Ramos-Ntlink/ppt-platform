@@ -1,12 +1,5 @@
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import {
-  NbLoginComponent,
-  NbLogoutComponent,
-  NbRegisterComponent,
-  NbRequestPasswordComponent,
-  NbResetPasswordComponent,
-} from '@nebular/auth';
 import { UnauthorizedComponent } from './auth/unauthorized/unauthorized.component';
 import { UnavailableServiceComponent } from './auth/unavailable-service/unavailable-service.component';
 import { SesionLostComponent } from './auth/sesion-lost/sesion-lost.component';

@@ -1,0 +1,143 @@
+<nb-card *ngIf="concepto">
+  <nb-card-header>
+    <div class="clearfix">
+      <strong class="float-left">Concepto</strong>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <div class="col-sm-9">
+        <label for="inputProdServ" class="label"
+          >Palabra clave producto servicio</label
+        >
+        <small id="serachHelp" *ngIf="formInfo.claveProdServFlag" class="form-text text-danger">Es necesario completar los 8 digitos de la clave</small>
+        <ng-autocomplete
+          id="inputProdServ"
+          [data]="prodServCat"
+          [searchKeyword]="'descripcion'"
+          placeholder="Escribe la clave o una descripcion corta"
+          (inputChanged)="buscarClaveProductoServicio($event)"
+          (selected)="onClaveSelected($event)"
+          [itemTemplate]="cTemplate"
+          [notFoundTemplate]="NFTemplate"
+        >
+        </ng-autocomplete>
+        
+        <ng-template #cTemplate let-item>
+          <div class="item">
+            <span [innerHTML]="item.descripcion"></span>
+          </div>
+        </ng-template>
+
+        <ng-template #NFTemplate let-notFound>
+          <span>No hay coincidencias</span>
+        </ng-template>
+      </div>
+      <div class="col-sm-3">
+        <button
+          class="btn btn-primary"
+          style="width: 100%; margin-top: 28px"
+          (click)="openSatCatalog()"
+        >
+          Catalogo SAT
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <label for="inputdesc" class="label">Descripción</label>
+        <input
+          id="inputdesc"
+          class="form-control"
+          fullWidth
+          type="text"
+          [(ngModel)]="concepto.descripcion"
+          placeholder="Descripción del producto"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <label for="inputunidad" class="label">Unidad Medida</label>
+        <select
+          id="inputunidad"
+          style="display: block"
+          class="form-control"
+          (change)="onSelectUnidad($event.target.value)"
+          [(ngModel)]="concepto.claveUnidad"
+        >
+          <option value="*">Seleccionar</option>
+          <option *ngFor="let clave of claveUnidadCat" [(value)]="clave.clave">
+            {{ clave.nombre }}
+          </option>
+        </select>
+      </div>
+      <div class="col-sm-2">
+        <label for="inputCantidad" class="label">Cantidad</label>
+        <input
+          id="inputCantidad"
+          class="form-control"
+          fullWidth
+          type="number"
+          min="0"
+          placeholder="Cantidad"
+          [(ngModel)]="concepto.cantidad"
+        />
+      </div>
+      <div class="col-sm-2">
+        <label for="inputPrecio" class="label">Precio Unitario</label>
+        <input
+          id="inputPrecio"
+          class="form-control"
+          fullWidth
+          type="number"
+          min="0"
+          placeholder="Precio Unitario"
+          [(ngModel)]="concepto.valorUnitario"
+        />
+      </div>
+      <div class="col-sm-2">
+        <label for="inputObjImp" class="label">Objeto Implementacion</label>
+        <select
+          id="inputObjImp"
+          style="display: block"
+          class="form-control"
+          [(ngModel)]="concepto.objetoImp"
+        >
+          <option value="*">Seleccionar</option>
+          <option value="01">No objeto de impuesto.</option>
+          <option value="02">Sí objeto de impuesto.</option>
+          <option value="03">
+            Sí objeto del impuesto y no obligado al desglose.
+          </option>
+        </select>
+      </div>
+      <div class="col-sm-2 align-self-end">
+        <input
+          type="checkbox"
+          [(ngModel)]="formInfo.iva"
+          class="form-check-input"
+          id="iva"
+          (change)="ivaCheckboxChange()"
+        />
+        <label class="form-check-label" for="iva">IVA 16%</label>
+        <!--br>
+            <input type="checkbox" [(ngModel)]="formInfo.retencion" class="form-check-input" id="retencion" [disabled]="!concepto.iva">
+            <label class="form-check-label "  for="retencion">RETENCIÓN</label-->
+      </div>
+    </div>
+  </nb-card-body>
+  <nb-card-footer>
+    <div class="clearfix">
+      <button class="float-right btn btn-warning ml-2 mr-2" (click)="exit()">
+        Salir
+      </button>
+      <button
+        class="float-right btn btn-success ml-2 mr-2"
+        (click)="submit(concepto)"
+      >
+        Enviar
+      </button>
+    </div>
+  </nb-card-footer>
+</nb-card>
