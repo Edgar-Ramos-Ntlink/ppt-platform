@@ -39,9 +39,8 @@ public class CatalogsController {
   }
 
   @GetMapping("/clave-unidad")
-  public ResponseEntity<List<ClaveUnidadDto>> getClaveUnidad(
-      @RequestParam(name = "nombre", required = true) String nombre) {
-    return new ResponseEntity<>(service.getClaveUnidadByNombre(nombre), HttpStatus.OK);
+  public ResponseEntity<List<ClaveUnidadDto>> getClaveUnidad() {
+    return new ResponseEntity<>(service.getClaveUnidadCatalog(), HttpStatus.OK);
   }
 
   @GetMapping("/uso-cdfi")

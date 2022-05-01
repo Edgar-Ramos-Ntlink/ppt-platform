@@ -186,8 +186,8 @@ public class FilesService {
       return s3Utils.getFileInputStream(s3Bucket, bucket.name(), name);
     } catch (NtlinkUtilException e) {
       throw new ResponseStatusException(
-              HttpStatus.CONFLICT,
-              String.format("Error getting S3 file %s", name).concat(e.getMessage()));
+          HttpStatus.CONFLICT,
+          String.format("Error getting S3 file %s", name).concat(e.getMessage()));
     }
   }
 
@@ -253,8 +253,7 @@ public class FilesService {
     byte[] bytes = null;
     if (resource.isPresent()) {
       headers.setContentType(MediaType.valueOf(resource.get().getFormato().replace(";", "")));
-      bytes =
-              getS3InputStream(S3BucketsEnum.EMPRESAS, resource.get().getNombre()).readAllBytes();
+      bytes = getS3InputStream(S3BucketsEnum.EMPRESAS, resource.get().getNombre()).readAllBytes();
     } else {
       headers.setContentType(MediaType.IMAGE_PNG);
       bytes = noAvailableImage.getInputStream().readAllBytes();

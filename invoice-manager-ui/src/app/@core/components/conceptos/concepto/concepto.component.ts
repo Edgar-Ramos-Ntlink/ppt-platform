@@ -18,7 +18,7 @@ export class ConceptoComponent implements OnInit {
     prodServ: "*",
     unidad: "*",
     claveProdServ: "",
-    claveProdServFlag:false,
+    claveProdServFlag: false,
     iva: true,
   };
 
@@ -34,7 +34,7 @@ export class ConceptoComponent implements OnInit {
 
   ngOnInit(): void {
     this.catalogsService
-      .getDriveKeys()
+      .getClaveUnidadCatalog()
       .then((unidadCat) => (this.claveUnidadCat = unidadCat))
       .then(() => (this.formInfo.unidad = "E48"));
     this.buscarClaveProductoServicio("84111506");
