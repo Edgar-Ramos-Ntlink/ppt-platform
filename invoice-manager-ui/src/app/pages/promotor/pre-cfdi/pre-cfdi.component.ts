@@ -10,17 +10,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { GenericPage } from '../../../models/generic-page';
-import { User } from '../../../@core/models/user';
 import { CfdiData } from '../../../@core/data/cfdi-data';
-import {
-    NbComponentStatus,
-    NbGlobalPhysicalPosition,
-    NbToastrService,
-} from '@nebular/theme';
+import { NbToastrService } from '@nebular/theme';
 import { Pago } from '../../../@core/models/cfdi/pago';
 import { Cfdi } from '../../../@core/models/cfdi/cfdi';
 import { Factura } from '../../../@core/models/factura';
@@ -28,6 +22,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../reducers';
 import { updateInvoice } from '../../../@core/core.actions';
 import { NtError } from '../../../@core/models/nt-error';
+import { AppConstants } from '../../../models/app-constants';
 
 @Component({
     selector: 'nt-pre-cfdi',
@@ -39,11 +34,9 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     public pagosCfdi: Pago[] = [];
     public girosCat: Catalogo[] = [];
     public companiesCat: Empresa[] = [];
-    public validationCat: Catalogo[] = [];
-
     public clientsCat: Client[] = [];
+
     public factura: Factura = new Factura();
-    public user: User;
 
     public formInfo = {
         clientName: '',
@@ -65,7 +58,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         private invoiceService: InvoicesData,
         private cfdiService: CfdiData,
         private cfdiValidator: CfdiValidatorService,
-        private userService: UsersData,
         private filesService: FilesData,
         private downloadService: DonwloadFileService,
         private toastrService: NbToastrService,
@@ -75,22 +67,14 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        this.userService
-            .getUserInfo()
-            .then((user) => (this.user = user as User));
+        this.route.paramMap.subscribe((route) => {
+            this.folio = route.get('folio');
+        });
         this.initInvoice();
-        /* preloaded cats*/
-        this.catalogsService
-            .getStatusValidacion()
-            .then((cat) => (this.validationCat = cat));
-        this.catalogsService
-            .getAllGiros()
-            .then((cat) => (this.girosCat = cat))
-            .then(() => {
-                this.route.paramMap.subscribe((route) => {
-                    this.folio = route.get('folio');
-                });
-            });
+        this.clientsService
+            .getClientsByPromotor(sessionStorage.getItem('email'))
+            .subscribe((clients) => (this.clientsCat = clients));
+        this.catalogsService.getAllGiros().then((cat) => (this.girosCat = cat));
     }
 
     ngOnDestroy() {
@@ -102,10 +86,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         /** INIT VARIABLES **/
         this.factura = new Factura();
         this.loading = false;
-        this.factura.cfdi.moneda = 'MXN';
-        this.factura.cfdi.metodoPago = '*';
-        this.factura.cfdi.formaPago = '*';
-        this.factura.cfdi.receptor.usoCfdi = '*';
         this.clientSearchMsg = '';
     }
 
@@ -148,9 +128,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                     .toPromise();
             }
         } catch (error) {
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.toastrService.danger(
+                error?.message,
+                'Error recuperando giros',
+                AppConstants.TOAST_CONFIG
+            );
         }
     }
 
@@ -176,7 +158,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
             if (razonSocial !== undefined && razonSocial.length >= 5) {
                 this.clientsCat = await this.clientsService
                     .getClients({
-                        promotor: this.user.email,
+                        promotor: sessionStorage.getItem('email'),
                         razonSocial: razonSocial,
                         page: '0',
                         size: '20',
@@ -200,9 +182,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                 this.clientSearchMsg = '';
             }
         } catch (error) {
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.toastrService.danger(
+                error?.message,
+                'Error en la busqueda de clientes',
+                AppConstants.TOAST_CONFIG
+            );
         }
     }
 
@@ -245,7 +229,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         this.loading = true;
 
         try {
-            this.factura.solicitante = this.user.email;
+            this.factura.solicitante = sessionStorage.getItem('email');
             this.factura.lineaEmisor = 'A';
             this.factura.lineaRemitente = 'CLIENTE';
             this.factura.metodoPago = this.factura.cfdi.metodoPago;
@@ -258,20 +242,22 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                     .insertNewInvoice(this.factura)
                     .toPromise();
                 await this.getInvoiceByFolio(this.folio);
-                this.showToast(
-                    'info',
-                    'Exito!',
-                    'El CFDI se solicitó correctamente'
+                this.toastrService.success(
+                    'operación exitosa',
+                    'El CFDI se solicitó correctamente',
+                    AppConstants.TOAST_CONFIG
                 );
             } else {
-                for (const msg of errorMessages) {
-                    this.showToast('warning', 'Falta información', msg, true);
-                }
+                errorMessages.forEach((e) =>
+                    this.toastrService.warning(e, 'Validacion')
+                );
             }
         } catch (error) {
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.toastrService.danger(
+                error?.message,
+                'Error en la solicitud del CFDI',
+                AppConstants.TOAST_CONFIG
+            );
         }
         this.loading = false;
     }
@@ -286,11 +272,17 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
             factura.validacionTeso = false;
             await this.invoiceService.updateInvoice(factura).toPromise();
             await this.getInvoiceByFolio(this.folio);
-            this.showToast('info', 'Exito!', 'Factura recuperada exitosamente');
+            this.toastrService.success(
+                'operación exitosa',
+                'Factura recuperada exitosamente',
+                AppConstants.TOAST_CONFIG
+            );
         } catch (error) {
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.toastrService.danger(
+                error?.message,
+                'Error en la revalidacion del CFDI',
+                AppConstants.TOAST_CONFIG
+            );
         }
         this.loading = false;
     }
@@ -324,24 +316,5 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                     'text/xml;charset=utf8;'
                 )
             );
-    }
-
-    private showToast(
-        type: NbComponentStatus,
-        title: string,
-        body: string,
-        clickdestroy?: boolean
-    ) {
-        const config = {
-            status: type,
-            destroyByClick: clickdestroy || false,
-            duration: 8000,
-            hasIcon: true,
-            position: NbGlobalPhysicalPosition.TOP_RIGHT,
-            preventDuplicates: true,
-        };
-        const titleContent = title ? `${title}` : 'xxxx';
-
-        this.toastrService.show(body, titleContent, config);
     }
 }

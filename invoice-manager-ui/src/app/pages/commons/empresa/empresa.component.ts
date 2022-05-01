@@ -84,7 +84,6 @@ export class EmpresaComponent implements OnInit {
         private downloadService: DonwloadFileService,
         private catalogsService: CatalogsData,
         private empresaService: CompaniesData,
-        private userService: UsersData,
         private resourcesService: FilesData,
         private accountsService: CuentasData,
         private companiesValidatorService: CompaniesValidatorService
@@ -100,20 +99,9 @@ export class EmpresaComponent implements OnInit {
         this.companyInfo.pais = 'México';
 
         this.calculateYears();
-        this.userService.getUserInfo().then(
-            (user) => {
-                this.user = user;
-                this.isAdministrator =
-                    user.roles.find((u) => u.role == 'ADMINISTRADOR') !=
-                    undefined;
-            },
-            (error) => {
-                let msg =
-                    error.error.message ||
-                    `${error.statusText} : ${error.message}`;
-                this.showToast('danger', 'Error', msg, true);
-            }
-        );
+        this.user = JSON.parse(sessionStorage.getItem('user'));
+        this.isAdministrator =
+            this.user.roles.find((u) => u.role == 'ADMINISTRADOR') != undefined;
 
         this.catalogsService
             .getAllGiros()

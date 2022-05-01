@@ -91,26 +91,22 @@ public class ClientService {
 
   public ClientDto insertNewClient(ClientDto cliente) throws InvoiceManagerException {
     clientValidator.validatePostCliente(cliente);
-    cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().trim());
-    Optional<Contribuyente> entity =
-        contribuyenteRepository.findByRfc(cliente.getInformacionFiscal().getRfc());
+    cliente.setRfc(cliente.getRfc().trim());
+    Optional<Contribuyente> entity = contribuyenteRepository.findByRfc(cliente.getRfc());
     Optional<Client> client =
-        repository.findByCorreoPromotorAndClient(
-            cliente.getCorreoPromotor(), cliente.getInformacionFiscal().getRfc());
+        repository.findByCorreoPromotorAndClient(cliente.getCorreoPromotor(), cliente.getRfc());
     cliente.setCorreoContacto(
         contactoHelper.translateContacto(
-            cliente.getInformacionFiscal().getRfc(),
-            cliente.getCorreoPromotor(),
-            cliente.getPorcentajeContacto()));
+            cliente.getRfc(), cliente.getCorreoPromotor(), cliente.getPorcentajeContacto()));
     Client clientEntity = mapper.getEntityFromClientDto(cliente);
     if (!entity.isPresent() && !client.isPresent()) {
-      cliente.getInformacionFiscal().setRfc(cliente.getInformacionFiscal().getRfc().toUpperCase());
+      cliente.setRfc(cliente.getRfc().toUpperCase());
     } else if (entity.isPresent() && client.isPresent()) {
       throw new ResponseStatusException(
           HttpStatus.BAD_REQUEST,
           String.format(
               "El RFC %s  para  el promotor %s ya existe en el sistema",
-              cliente.getInformacionFiscal().getRfc(), cliente.getCorreoPromotor()));
+              cliente.getRfc(), cliente.getCorreoPromotor()));
     } else if (entity.isPresent() && !client.isPresent()) {
       clientEntity.setInformacionFiscal(entity.get());
     }
@@ -122,9 +118,7 @@ public class ClientService {
     clientValidator.validatePostCliente(client);
     client.setCorreoContacto(
         contactoHelper.translateContacto(
-            client.getInformacionFiscal().getRfc(),
-            client.getCorreoPromotor(),
-            client.getPorcentajeContacto()));
+            client.getRfc(), client.getCorreoPromotor(), client.getPorcentajeContacto()));
     if (repository.findByCorreoPromotorAndClient(client.getCorreoPromotor(), rfc).isPresent()) {
       return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(client)));
     } else {
