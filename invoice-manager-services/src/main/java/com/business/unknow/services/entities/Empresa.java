@@ -49,6 +49,9 @@ public class Empresa implements Serializable {
   @Column(name = "OPERATIVA")
   private Boolean operativa;
 
+  @Column(name = "BLOCKED")
+  private Boolean blocked;
+
   @Column(name = "ESTATUS")
   private String estatus;
 
