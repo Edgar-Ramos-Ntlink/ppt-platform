@@ -179,6 +179,7 @@ public class EmpresaService {
                       e.getPais(),
                       e.getCp()));
               row.put("LINEA", e.getTipo());
+              row.put("BLOCKED", e.getBlocked().toString());
               row.put("ACTIVA", e.getActivo() ? "SI" : "NO");
               row.put("GIRO", cacheService.getGiroEmpresa(e.getGiro()).orElse("SIN GIRO"));
               row.put("REGIMEN_FISCAL", e.getRegimenFiscal());

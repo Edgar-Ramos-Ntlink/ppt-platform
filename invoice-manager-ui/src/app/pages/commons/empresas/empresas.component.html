@@ -167,8 +167,9 @@
             <tbody>
               <tr *ngFor="let fila of page.content">
                 <td scope="row" class="text-center"> <button class="btn btn-outline-primary"
+                  [disabled]="!(module === 'legal') && fila.BLOCKED=== 'true'"
                     (click)="redirectToEmpresa(fila.RFC)"><i class="fa fa-edit"></i></button>
-                </td>
+                  </td>
                 <td scope="row">{{fila.NOMBRE_CORTO}}</td>
                 <td scope="row">{{fila.EMPRESA}}</td>
                 <td scope="row">{{fila.RFC}}</td>

@@ -31,6 +31,8 @@ public class EmpresaDto implements Serializable {
 
   private Boolean operativa;
 
+  private Boolean blocked;
+
   private String estatus;
 
   private Integer giro;
