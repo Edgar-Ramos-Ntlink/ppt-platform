@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.business.unknow</groupId>
 	<artifactId>invoice-manager-platform</artifactId>
-	<version>3.5.7</version>
+	<version>3.5.8</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>invoice-manager-models</module>
