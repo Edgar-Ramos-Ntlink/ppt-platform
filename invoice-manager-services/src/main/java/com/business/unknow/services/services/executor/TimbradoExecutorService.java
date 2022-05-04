@@ -12,6 +12,7 @@ import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.services.config.properties.GlocalConfigs;
 import com.business.unknow.services.entities.Client;
 import com.business.unknow.services.entities.cfdi.CfdiPago;
 import com.business.unknow.services.entities.factura.Factura;
@@ -50,6 +51,8 @@ public class TimbradoExecutorService {
   @Autowired private FilesService filesService;
 
   @Autowired private S3FileService s3FileService;
+
+  @Autowired private GlocalConfigs glocalConfigs;
 
   public void updateFacturaAndCfdiValues(FacturaContext context) throws InvoiceManagerException {
 
@@ -106,11 +109,11 @@ public class TimbradoExecutorService {
               .setEmisor(
                   tipoEmail.equals(TipoEmail.SEMEL_JACK)
                       ? context.getEmpresaDto().getCorreo()
-                      : tipoEmail.getEmail())
+                      : glocalConfigs.getEmail())
               .setPwEmisor(
                   tipoEmail.equals(TipoEmail.SEMEL_JACK)
                       ? context.getEmpresaDto().getPwCorreo()
-                      : tipoEmail.getPw())
+                      : glocalConfigs.getEmailPw())
               .setAsunto(String.format("Factura %s", context.getFacturaDto().getFolio()))
               .addReceptor(client.getCorreoPromotor())
               .addReceptor(client.getInformacionFiscal().getCorreo())
@@ -119,7 +122,7 @@ public class TimbradoExecutorService {
               .setDominio(
                   tipoEmail.equals(TipoEmail.SEMEL_JACK)
                       ? context.getEmpresaDto().getDominioCorreo()
-                      : tipoEmail.getHost())
+                      : glocalConfigs.getEmailHost())
               .addArchivo(
                   new FileConfig(
                       TipoArchivoEnum.XML,
