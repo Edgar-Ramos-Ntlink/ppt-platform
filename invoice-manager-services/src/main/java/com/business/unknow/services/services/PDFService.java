@@ -18,7 +18,6 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.catalogs.FormaPago;
 import com.business.unknow.services.entities.catalogs.RegimenFiscal;
 import com.business.unknow.services.entities.catalogs.UsoCfdi;
-import com.business.unknow.services.mapper.xml.CfdiXmlMapper;
 import com.business.unknow.services.services.translators.FacturaTranslator;
 import com.business.unknow.services.util.helpers.FacturaHelper;
 import com.business.unknow.services.util.helpers.FileHelper;
@@ -50,8 +49,6 @@ public class PDFService {
   @Autowired private FileHelper fileHelper;
 
   @Autowired private CatalogCacheService catalogCacheService;
-
-  @Autowired private CfdiXmlMapper cfdiXmlMapper;
 
   @Autowired private NumberTranslatorHelper numberTranslatorHelper;
 

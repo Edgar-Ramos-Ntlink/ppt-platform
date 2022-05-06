@@ -9,7 +9,6 @@ import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.mapper.factura.FacturaCfdiTranslatorMapper;
 import com.business.unknow.services.services.FilesService;
 import com.business.unknow.services.util.helpers.CdfiHelper;
 import com.business.unknow.services.util.helpers.DateHelper;
@@ -44,17 +43,13 @@ public class FacturaTranslator {
 
   @Autowired private DateHelper dateHelper;
 
-  @Autowired private FacturaCfdiTranslatorMapper facturaCfdiTranslatorMapper;
-
   @Autowired private SignHelper signHelper;
 
   @Autowired private FilesService fileService;
 
   public FacturaContext translateFactura(FacturaContext context) throws InvoiceManagerException {
     try {
-      Cfdi cfdi =
-          facturaCfdiTranslatorMapper.cdfiRootInfo(
-              context.getFacturaDto(), context.getEmpresaDto());
+      Cfdi cfdi = context.getCfdi();
 
       cfdi.setCertificado(
           fileService.getS3File(

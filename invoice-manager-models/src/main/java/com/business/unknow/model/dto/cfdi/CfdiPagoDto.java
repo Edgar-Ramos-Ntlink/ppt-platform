@@ -1,5 +1,6 @@
 package com.business.unknow.model.dto.cfdi;
 
+import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -61,7 +62,7 @@ public class CfdiPagoDto implements Serializable {
 
   private String montoDesc;
   private boolean valido;
-  private CfdiDto cfdi;
+  private Cfdi cfdi;
   private BigDecimal tipoCambioDr;
   private BigDecimal tipoCambio;
 }
