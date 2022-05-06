@@ -4,10 +4,10 @@ import com.business.unknow.Constants.PagoPpdCreditoDefaults;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.model.dto.FacturaCustom;
-import com.business.unknow.model.dto.cfdi.CfdiDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.util.helpers.FacturaCalculator;
+import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -32,7 +32,7 @@ public class FacturaDefaultValues {
     facturaCalculator.assignPreFolioInFacturaDto(facturaDto, amount);
   }
 
-  public PagoDto assignaDefaultsPagoPPD(CfdiDto cfdi) {
+  public PagoDto assignaDefaultsPagoPPD(Cfdi cfdi) {
     return PagoDto.builder()
         .banco(PagoPpdCreditoDefaults.BANCO)
         .solicitante(PagoPpdCreditoDefaults.USER)
