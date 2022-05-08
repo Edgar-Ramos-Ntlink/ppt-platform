@@ -10,20 +10,17 @@ import { Client } from '../../../models/client';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
-import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
-import { GenericPage } from '../../../models/generic-page';
-import { User } from '../../../@core/models/user';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { Pago } from '../../../@core/models/cfdi/pago';
 import { Factura } from '../../../@core/models/factura';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../reducers';
 import { NtError } from '../../../@core/models/nt-error';
-import { updateInvoice } from '../../../@core/core.actions';
+import { initInvoice, updateInvoice } from '../../../@core/core.actions';
+import { invoice } from '../../../@core/core.selectors';
 
 @Component({
     selector: 'ngx-revision',
@@ -41,6 +38,7 @@ export class RevisionComponent implements OnInit {
     public factura: Factura = new Factura();
     
     public soporte: boolean = false;
+    // TODO DELETE THIS FIELDS
     public successMessage: string;
     public errorMessages: string[] = [];
     public formInfo = {
@@ -58,62 +56,40 @@ export class RevisionComponent implements OnInit {
     constructor(
         private catalogsService: CatalogsData,
         private clientsService: ClientsData,
-        private companiesService: CompaniesData,
         private invoiceService: InvoicesData,
         private cfdiService: CfdiData,
         private cfdiValidator: CfdiValidatorService,
-        private userService: UsersData,
-        private filesService: FilesData,
-        private downloadService: DonwloadFileService,
-        private dialogService: NbDialogService,
         private toastrService: NbToastrService,
+        private dialogService: NbDialogService,
         private route: ActivatedRoute,
-        private router: Router,
         private store: Store<AppState>
-    ) {}
+    ) { }
 
     ngOnInit() {
-        this.loading = true;
-        this.initInvoice();
-        /* preloaded cats*/
-        this.catalogsService
-            .getStatusValidacion()
-            .then((cat) => (this.validationCat = cat));
-        this.catalogsService
-            .getAllGiros()
-            .then((cat) => (this.girosCat = cat))
-            .then(() => {
-                this.route.paramMap.subscribe((route) => {
-                    this.folio = route.get('folio');
-                    if (this.folio !== '*') {
-                        this.getInvoiceByFolio(this.folio);
-                    }
-                });
-            });
+        this.route.paramMap.subscribe((route) => {
+            const folio = route.get('folio');
+            this.loading = true;
+            this.getInvoiceByFolio(folio)
+            this.folio = folio;
+        });
+
+        
+
+        this.catalogsService.getAllGiros().then((cat) => (this.girosCat = cat));
+        this.store.pipe(select(invoice)).subscribe((fact) => (this.factura = fact));
     }
 
     ngOnDestroy() {
-        /** CLEAN VARIABLES **/
-        this.factura = new Factura();
+        this.store.dispatch(initInvoice({ invoice: new Factura() }));
     }
 
-    public initInvoice() {
-        /** INIT VARIABLES **/
-        this.factura = new Factura();
-        /* this.loading = false; */
-        this.factura.cfdi.moneda = 'MXN';
-        this.factura.cfdi.metodoPago = '*';
-        this.factura.cfdi.formaPago = '*';
-        this.factura.cfdi.receptor.usoCfdi = '*';
-        this.errorMessages = [];
-        this.successMessage = undefined;
-    }
 
     public getInvoiceByFolio(folio: string) {
         this.pagosCfdi = [];
         this.invoiceService.getInvoiceByFolio(folio).subscribe(
             (invoice) => {
                 this.store.dispatch(updateInvoice({ invoice }));
+                this.loading = false;
                 if (
                     invoice.metodoPago === 'PPD' &&
                     invoice.cfdi.tipoDeComprobante === 'P'
@@ -132,78 +108,10 @@ export class RevisionComponent implements OnInit {
             },
             (error: NtError) => {
                 this.toastrService.danger(error.message);
-                this.initInvoice();
+                this.store.dispatch(initInvoice({ invoice: new Factura() }));
+                this.loading = false;
             }
         );
-    }
-
-    onGiroSelection(giroId: string) {
-        const value = +giroId;
-        if (isNaN(value)) {
-            this.companiesCat = [];
-        } else {
-            this.companiesService
-                .getCompaniesByLineaAndGiro('A', Number(giroId))
-                .subscribe(
-                    (companies) => (this.companiesCat = companies),
-                    (error: HttpErrorResponse) =>
-                        this.errorMessages.push(
-                            error.error.message ||
-                                `${error.statusText} : ${error.message}`
-                        )
-                );
-        }
-    }
-
-    onCompanySelected(companyId: string) {
-        this.companyInfo = this.companiesCat.find(
-            (c) => c.id === Number(companyId)
-        );
-        // TODO Mover todo esta logica a un servicio de contrsuccion
-        this.factura.rfcEmisor = this.companyInfo.rfc;
-        this.factura.razonSocialEmisor =
-            this.companyInfo.razonSocial.toUpperCase();
-        this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
-        this.factura.cfdi.emisor.rfc = this.companyInfo.rfc;
-        this.factura.cfdi.emisor.nombre =
-            this.companyInfo.razonSocial.toUpperCase();
-        this.factura.cfdi.lugarExpedicion = this.companyInfo.cp;
-        this.factura.direccionEmisor =
-            this.cfdiValidator.generateCompanyAddress(this.companyInfo);
-    }
-
-
-    public downloadPdf(folio: string) {
-        this.filesService
-            .getFacturaFile(folio, 'PDF')
-            .subscribe((file) =>
-                this.downloadService.downloadFile(
-                    file.data,
-                    `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`,
-                    'application/pdf;'
-                )
-            );
-    }
-    public downloadXml(folio: string) {
-        this.filesService
-            .getFacturaFile(folio, 'XML')
-            .subscribe((file) =>
-                this.downloadService.downloadFile(
-                    file.data,
-                    `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`,
-                    'text/xml;charset=utf8;'
-                )
-            );
-    }
-
-    public returnToSourceFact(idCfdi: number) {
-        this.successMessage = undefined;
-        this.router.navigate([`./pages/operaciones/revision/${idCfdi}`]);
-    }
-
-    public goToRelacionado(idCfdi: number) {
-        this.successMessage = undefined;
-        this.router.navigate([`./pages/operaciones/revision/${idCfdi}`]);
     }
 
     public linkInvoice(factura: Factura) {

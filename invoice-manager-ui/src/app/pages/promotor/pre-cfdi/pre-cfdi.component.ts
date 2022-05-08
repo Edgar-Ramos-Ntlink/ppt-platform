@@ -239,35 +239,35 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
     public async revalidateInvoice() {
         this.loading = true;
-        try {
-            const factura = { ...this.factura };
-
-            factura.statusFactura = '1';
-            factura.validacionOper = false;
-            factura.validacionTeso = false;
-            await this.invoiceService.updateInvoice(factura).toPromise();
-            await this.getInvoiceByFolio(this.folio);
-            this.toastrService.success(
-                'operación exitosa',
-                'Factura recuperada exitosamente',
-                AppConstants.TOAST_CONFIG
-            );
-        } catch (error) {
-            this.toastrService.danger(
-                error?.message,
-                'Error en la revalidacion del CFDI',
-                AppConstants.TOAST_CONFIG
-            );
-        }
-        this.loading = false;
+        const fact:Factura = JSON.parse(JSON.stringify(this.factura));
+        fact.statusFactura = '1';
+        fact.validacionOper = false;
+        fact.total = this.factura.cfdi.total;
+        fact.metodoPago = this.factura.cfdi.metodoPago;
+        fact.saldoPendiente = this.factura.cfdi.total;
+        this.invoiceService.updateInvoice(fact).subscribe(
+            (invoice) => {
+                this.loading = false;
+                this.store.dispatch(updateInvoice({ invoice }));
+                this.toastrService.success('acctualización exitosa','CFDI Revalidado', AppConstants.TOAST_CONFIG)
+            },
+            (error: NtError) => {
+                this.loading = false;
+                this.toastrService.danger(
+                    error?.message,
+                    'Error en la revalidacion del CFDI',
+                    AppConstants.TOAST_CONFIG
+                );
+            }
+        );
     }
 
-    public returnToSourceFact(idCfdi: number) {
-        this.router.navigate([`./pages/operaciones/revision/${idCfdi}`]);
+    public returnToSourceFact(folio: number) {
+        this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
     }
 
-    public goToRelacionado(idCfdi: number) {
-        this.router.navigate([`./pages/operaciones/revision/${idCfdi}`]);
+    public goToRelacionado(folio: number) {
+        this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
     }
 
     public downloadPdf(folio: string) {

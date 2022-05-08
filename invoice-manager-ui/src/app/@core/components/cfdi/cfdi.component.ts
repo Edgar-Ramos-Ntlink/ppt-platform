@@ -92,6 +92,7 @@ export class CfdiComponent implements OnInit {
             (invoice) => {
                 this.loading = false;
                 this.store.dispatch(updateInvoice({ invoice }));
+                this.toastrService.success('acctualización exitosa','CFDI actualizado')
             },
             (error: NtError) => {
                 this.loading = false;

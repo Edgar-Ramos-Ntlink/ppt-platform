@@ -75,30 +75,6 @@
         [(ngModel)]="newPayment.monto"
       />
     </div>
-    <div class="col-sm-3">
-      <label for="referencia" class="label">Referencia</label>
-      <input
-        id="referencia"
-        class="form-control"
-        fullWidth
-        type="text"
-        min="0"
-        placeholder="Referencia"
-        [(ngModel)]="newPayment.referencia"
-      />
-    </div>
-    <div class="col-sm-3">
-      <label for="detalle" class="label">Detalle</label>
-      <input
-        id="detalle"
-        class="form-control"
-        fullWidth
-        type="text"
-        min="0"
-        placeholder="detalle"
-        [(ngModel)]="newPayment.detalle"
-      />
-    </div>
     <div class="col-md-3">
       <label for="payAmmount" class="label">Fecha de pago</label>
       <input
@@ -129,9 +105,10 @@
             paymentForm.filename
           }}</label>
         </div>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        
         <button
           nbButton
+          class="ml-2 mr-2"
           status="primary"
           size="medium"
           (click)="sendPayment()"

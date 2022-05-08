@@ -13,39 +13,13 @@
                         [status]="factura.statusFactura"
                       >
                       </nt-invoice-status>
-                    <!--span class="badge badge-primary" style="margin-left: 10px" *ngIf="factura">{{ factura.statusFactura
-                        }}</span>
+                    
                     <button nbButton status="success" size="small" (click)="revalidateInvoice()" [nbSpinner]="loading"
-                        class="float-right puff_center ml-1 mr-1" [disabled]="loading" nbSpinnerStatus="success"
-                        *ngIf="factura.statusFactura.indexOf('Rechazo') === 0" nbSpinnerSize="small"
+                        class="float-right ml-1 mr-1" [disabled]="loading" nbSpinnerStatus="success"
+                        *ngIf="factura?.statusFactura == '6' || factura?.statusFactura == '5'" nbSpinnerSize="small"
                         nbSpinnerMessage="">
                         revalidar Factura<i class="fa fa-check" style="margin-left: 10px"></i>
                     </button>
-                    <button type="button" class="btn btn-sm btn-outline-primary float-right ml-1 mr-1"
-                        (click)="downloadPdf(factura.folio)">
-                        <i class="fa fa-file-pdf"></i>
-                    </button>
-                    <button type="button" *ngIf="factura.statusFactura == 'Timbrada'"
-                        class="btn btn-sm btn-outline-primary float-right ml-1 mr-1"
-                        (click)="downloadXml(factura.folio)">
-                        <i class="fa fa-code"></i>
-                    </button>
-
-                    <button type="button" *ngIf="factura.idCfdiRelacionado"
-                        class="btn btn-sm btn-outline-success float-right ml-1 mr-1"
-                        (click)="goToRelacionado(factura.idCfdiRelacionado)">
-                        <i class="fa fa-link"></i>
-                    </button>
-                    <button type="button" *ngIf="factura.idCfdiRelacionadoPadre"
-                        class="btn btn-sm btn-outline-success float-right ml-1 mr-1" (click)="
-                            returnToSourceFact(factura.idCfdiRelacionadoPadre)
-                        ">
-                        <i class="fa fa-arrow-left"></i>
-                    </button>
-                    <span class="badge badge-secondary ml-1 mr-1 float-right" *ngIf="factura.cfdi.id">
-                        <strong *ngIf="factura.cfdi.relacionado">CFDI RELACIONADO :
-                            {{ factura.cfdi.relacionado.relacion }}</strong>
-                    </span-->
                 </div>
             </nb-card-header>
             <nb-card-body>
