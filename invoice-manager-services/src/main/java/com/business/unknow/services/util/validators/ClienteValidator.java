@@ -56,11 +56,14 @@ public class ClienteValidator extends AbstractValidator {
     }
     if (!dto.getCp().matches("^[0-9]{5}(?:-[0-9]{4})?$")) {
       throw new InvoiceManagerException(
-              "El codigo postal es incorrecto:No debe llevar letras", Constants.BAD_REQUEST);
+          "El codigo postal es incorrecto:No debe llevar letras", Constants.BAD_REQUEST);
     }
-    if (!dto.getRfc().matches("^[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]?$")) {
+    if (!dto.getRfc()
+        .matches(
+            "^[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]?$")) {
       throw new InvoiceManagerException(
-              "RFC invalido, verifique que no contenga espacios o caracteres inválidos", Constants.BAD_REQUEST);
+          "RFC invalido, verifique que no contenga espacios o caracteres inválidos",
+          Constants.BAD_REQUEST);
     }
     if (dto.getCorreo() != null && !dto.getCorreo().isEmpty()) {
       checkValidEmail(dto.getCorreo());

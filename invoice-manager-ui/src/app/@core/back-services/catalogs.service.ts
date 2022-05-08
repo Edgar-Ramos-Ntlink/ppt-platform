@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Catalogo } from '../../models/catalogos/catalogo';
+import { ClaveProductoServicio } from '../../models/catalogos/producto-servicio';
+import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -32,23 +34,42 @@ export class CatalogsService {
             .toPromise();
     }
 
-    public getProductoServiciosByDescription(
-        description: string
-    ): Promise<any> {
+    public getProductoServiciosByDescription(description: string): Promise<any> {
         const params: HttpParams = new HttpParams().append(
-            'descripcion',
-            description
+          "descripcion",
+          description
         );
         return this.httpClient
-            .get('/api/catalogs/producto-servicios', { params: params })
-            .toPromise();
-    }
-    public getProductoServiciosByClave(clave: string): Promise<any> {
-        const params: HttpParams = new HttpParams().append('clave', clave);
+          .get<ClaveProductoServicio[]>("/api/catalogs/producto-servicios", {
+            params: params,
+          })
+          .pipe(
+            map((r) =>
+              r.map((c) => {
+                c.descripcion = `${c.clave} - ${c.descripcion}`;
+                return c;
+              })
+            )
+          )
+          .toPromise();
+      }
+    
+      public getProductoServiciosByClave(clave: string): Promise<any> {
+        const params: HttpParams = new HttpParams().append("clave", clave);
         return this.httpClient
-            .get('/api/catalogs/producto-servicios', { params: params })
-            .toPromise();
-    }
+          .get<ClaveProductoServicio[]>("/api/catalogs/producto-servicios", {
+            params: params,
+          })
+          .pipe(
+            map((r) =>
+              r.map((c) => {
+                c.descripcion = `${c.clave} - ${c.descripcion}`;
+                return c;
+              })
+            )
+          )
+          .toPromise();
+      }
     public getClaveUnidadCatalog(): Promise<any> {
         return this.httpClient.get(`/api/catalogs/clave-unidad`).toPromise();
     }

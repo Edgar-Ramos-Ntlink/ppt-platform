@@ -37,7 +37,6 @@ export class ConceptoComponent implements OnInit {
       .getClaveUnidadCatalog()
       .then((unidadCat) => (this.claveUnidadCat = unidadCat))
       .then(() => (this.formInfo.unidad = "E48"));
-    this.buscarClaveProductoServicio("84111506");
   }
 
   public onSelectUnidad(clave: string) {

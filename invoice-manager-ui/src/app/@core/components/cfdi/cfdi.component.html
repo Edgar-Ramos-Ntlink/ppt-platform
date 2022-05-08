@@ -93,6 +93,7 @@
         </div>
       </div>
       <br />
+      
       <div *ngIf="cfdi.tipoDeComprobante !== 'P' && cfdi.formaPago !== '*'">
         <nt-conceptos [(cfdi)]="cfdi" [allowEdit]="allowEdit"></nt-conceptos>
       </div>

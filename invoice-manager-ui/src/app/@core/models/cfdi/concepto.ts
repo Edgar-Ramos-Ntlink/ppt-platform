@@ -28,10 +28,10 @@ export class Concepto {
     this.importe = 0;
     this.valorUnitario = 0;
     this.cantidad = 1;
-    this.claveProdServ = "84111506 ";
+    this.claveProdServ = "";
     this.claveUnidad = "E48";
     this.unidad = "Unidad de Servicio";
-    this.descripcion = "100 FOLIOS PORTAL";
+    this.descripcion = "";
     this.objetoImp = "02";
   }
 }

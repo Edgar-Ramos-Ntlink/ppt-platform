@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
-import { Contribuyente } from '../../../models/contribuyente';
 import { Empresa } from '../../../models/empresa';
 import { Client } from '../../../models/client';
 import { InvoicesData } from '../../../@core/data/invoices-data';
@@ -12,15 +11,13 @@ import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
-import { GenericPage } from '../../../models/generic-page';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { NbToastrService } from '@nebular/theme';
 import { Pago } from '../../../@core/models/cfdi/pago';
-import { Cfdi } from '../../../@core/models/cfdi/cfdi';
 import { Factura } from '../../../@core/models/factura';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../reducers';
-import { addEmisor, addReceptor, initInvoice, updateCfdi, updateEmisorAddress, updateInvoice, updateReceptorAddress } from '../../../@core/core.actions';
+import { addReceptor, initInvoice, updateInvoice, updateReceptorAddress } from '../../../@core/core.actions';
 import { NtError } from '../../../@core/models/nt-error';
 import { AppConstants } from '../../../models/app-constants';
 import { Receptor } from '../../../@core/models/cfdi/receptor';
@@ -68,27 +65,30 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.route.paramMap.subscribe((route) => {
-            this.folio = route.get('folio');
+            const folio = route.get('folio');
+            
+            if (folio === '*') {
+                this.loading = true;
+                this.store.dispatch(initInvoice({ invoice: new Factura() }));
+                this.clientsService
+                    .getClientsByPromotor(sessionStorage.getItem('email'))
+                    .subscribe((clients) => { this.clientsCat = clients; this.loading = false }, (error) => this.loading = false);
+            } else {
+                this.getInvoiceByFolio(folio)
+            }
+            this.folio = folio;
         });
-        this.initInvoice();
-        this.clientsService
-            .getClientsByPromotor(sessionStorage.getItem('email'))
-            .pipe(
-                map((clients: Client[]) => clients.map(c => { c.razonSocial = `${c.rfc} - ${c.razonSocial}`; return c; }))
-            ).subscribe((clients) => (this.clientsCat = clients));
+
+        
+
         this.catalogsService.getAllGiros().then((cat) => (this.girosCat = cat));
         this.store.pipe(select(invoice)).subscribe((fact) => (this.factura = fact));
     }
 
     ngOnDestroy() {
-        /** CLEAN VARIABLES **/
-        this.factura = new Factura();
+        this.store.dispatch(initInvoice({ invoice: new Factura() }));
     }
 
-    public initInvoice() {
-        this.loading = false;
-        this.store.dispatch(initInvoice({ invoice:new Factura() }));
-    }
 
     public getInvoiceByFolio(folio: string) {
         this.pagosCfdi = [];
@@ -113,7 +113,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
             },
             (error: NtError) => {
                 this.toastrService.danger(error.message);
-                this.initInvoice();
+                this.store.dispatch(initInvoice({ invoice: new Factura() }));
+                this.loading = false;
             }
         );
     }
@@ -191,8 +192,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     }
 
     limpiarForma() {
-        this.initInvoice();
-        this.factura = new Factura();
+        this.store.dispatch(initInvoice({ invoice: new Factura() }));
     }
 
     isValidCfdi(): boolean {
@@ -201,39 +201,44 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
     public async solicitarCfdi() {
         this.loading = true;
-
         try {
-            this.factura.solicitante = sessionStorage.getItem('email');
-            this.factura.lineaEmisor = 'A';
-            this.factura.lineaRemitente = 'CLIENTE';
-            this.factura.metodoPago = this.factura.cfdi.metodoPago;
-            const errorMessages = this.cfdiValidator.validarCfdi({
-                ...this.factura.cfdi,
-            });
-
-            if (errorMessages.length === 0) {
-                const invoice = await this.invoiceService
-                    .insertNewInvoice(this.factura)
-                    .toPromise();
-                await this.getInvoiceByFolio(this.folio);
-                this.toastrService.success(
-                    'operación exitosa',
-                    'El CFDI se solicitó correctamente',
-                    AppConstants.TOAST_CONFIG
-                );
+            let invoice = JSON.parse(JSON.stringify(this.factura));
+            invoice.solicitante = sessionStorage.getItem("email");
+            invoice.lineaEmisor = "A";
+            invoice.lineaRemitente = "CLIENTE";
+            invoice.metodoPago = invoice.cfdi.metodoPago;
+            invoice.formaPago = invoice.cfdi.formaPago;
+            invoice.rfcEmisor = invoice.cfdi.emisor.rfc;
+            invoice.razonSocialEmisor = invoice.cfdi.emisor.nombre;
+            invoice.rfcRemitente = invoice.cfdi.receptor.rfc;
+            invoice.razonSocialRemitente = invoice.cfdi.receptor.nombre;
+            if (invoice.metodoPago === 'PPD') {
+                invoice.statusFactura = "4";
             } else {
-                errorMessages.forEach((e) =>
-                    this.toastrService.warning(e, 'Validacion')
+                invoice.statusFactura = "1";
+            }
+
+            let errors: string[] = this.cfdiValidator.validarCfdi(invoice.cfdi);
+            if (errors.length === 0) {
+                console.log("Sending invoice", invoice);
+                invoice = await this.invoiceService
+                    .insertNewInvoice(invoice)
+                    .toPromise();
+                this.loading = false;
+                this.toastrService.success(
+                    "Solicitud de factura enviada correctamente"
                 );
+                this.store.dispatch(updateInvoice({ invoice }));
+            } else {
+                errors.forEach((e) =>
+                    this.toastrService.warning("Información incompleta", e, AppConstants.TOAST_CONFIG)
+                );
+                this.loading = false;
             }
         } catch (error) {
-            this.toastrService.danger(
-                error?.message,
-                'Error en la solicitud del CFDI',
-                AppConstants.TOAST_CONFIG
-            );
+            this.loading = false;
+            this.toastrService.danger(error?.message, "Error", AppConstants.TOAST_CONFIG);
         }
-        this.loading = false;
     }
 
     public async revalidateInvoice() {

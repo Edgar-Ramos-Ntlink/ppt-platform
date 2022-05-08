@@ -396,6 +396,7 @@ public class FacturaService {
                         new ResponseStatusException(
                             HttpStatus.NOT_FOUND,
                             String.format("La factura con el folio %s no existe", folio))));
+    // TODO recover factura metadata from S3 instead from DB table
     factura.setCfdi(cfdiService.getCfdiByFolio(folio));
     return factura;
   }
