@@ -212,12 +212,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
             invoice.razonSocialEmisor = invoice.cfdi.emisor.nombre;
             invoice.rfcRemitente = invoice.cfdi.receptor.rfc;
             invoice.razonSocialRemitente = invoice.cfdi.receptor.nombre;
-            if (invoice.metodoPago === 'PPD') {
-                invoice.statusFactura = "4";
-            } else {
-                invoice.statusFactura = "1";
-            }
-
+            invoice.statusFactura = "1";
+            
             let errors: string[] = this.cfdiValidator.validarCfdi(invoice.cfdi);
             if (errors.length === 0) {
                 console.log("Sending invoice", invoice);

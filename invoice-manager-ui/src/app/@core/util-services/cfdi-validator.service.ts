@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CatalogsData } from '../data/catalogs-data';
 import { UsoCfdi } from '../../models/catalogos/uso-cfdi';
-import { Contribuyente } from '../../models/contribuyente';
 import { subtract, bignumber, multiply, format } from 'mathjs';
 import { CfdiService } from '../back-services/cfdi.service';
 import { Empresa } from '../../models/empresa';
@@ -68,23 +67,23 @@ export class CfdiValidatorService {
         const base = +format(
             subtract(bignumber(concepto.importe), bignumber(concepto.descuento))
         );
-
-        const impuestos = new Impuesto();
+        concepto.impuestos = [];
+        const impuesto = new Impuesto();
         if (concepto.objetoImp != '01') {
-            const impuesto = +format(multiply(base, bignumber(0.16))); // TODO calcular impuestos dinamicamente no solo IVA
-            impuestos.traslados = [
-                new Traslado('002', 'Tasa', '0.160000', base, impuesto),
+            const imp = +format(multiply(base, bignumber(0.16))); // TODO calcular impuestos dinamicamente no solo IVA
+            impuesto.traslados = [
+                new Traslado('002', 'Tasa', '0.160000', base, imp),
             ];
         } else {
-            impuestos.traslados = [new Traslado('000', 'Tasa', '0', 0, 0)];
+            impuesto.traslados = [new Traslado('000', 'Tasa', '0', 0, 0)];
         }
         if (retencion) {
             const retencion = +format(multiply(base, bignumber(0.06))); // TODO calcular retencion dinamicamente
-            impuestos.retenciones = [
+            impuesto.retenciones = [
                 new Retencion('002', 'Tasa', '0.060000', base, retencion),
             ];
         }
-        concepto.impuestos.push(impuestos);
+        concepto.impuestos.push(impuesto);
 
         return concepto;
     }

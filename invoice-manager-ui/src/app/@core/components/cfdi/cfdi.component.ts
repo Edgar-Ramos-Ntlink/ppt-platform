@@ -56,14 +56,15 @@ export class CfdiComponent implements OnInit {
     }
 
     onPayMethodChange(clave: string) {
-        const cfdi = { ...this.cfdi };
+        const invoice = JSON.parse(JSON.stringify(this.factura));
         if (clave === 'PPD') {
-            cfdi.formaPago = '99';
+            invoice.cfdi.formaPago = '99';
         } else {
-            cfdi.formaPago = '01';
+            invoice.cfdi.formaPago = '01';
         }
-        cfdi.metodoPago = clave;
-        this.store.dispatch(updateCfdi({ cfdi }));
+        invoice.cfdi.metodoPago = clave;
+        invoice.metodoPago = clave
+        this.store.dispatch(updateInvoice({ invoice }));
     }
 
     onPayWayChange(clave: string) {
@@ -83,7 +84,11 @@ export class CfdiComponent implements OnInit {
 
     updateCfdi() {
         this.loading = true;
-        this.invoiceService.updateInvoice(this.factura).subscribe(
+        const fact:Factura = JSON.parse(JSON.stringify(this.factura));
+        fact.total = this.cfdi.total;
+        fact.metodoPago = this.cfdi.metodoPago;
+        fact.saldoPendiente = this.cfdi.total;
+        this.invoiceService.updateInvoice(fact).subscribe(
             (invoice) => {
                 this.loading = false;
                 this.store.dispatch(updateInvoice({ invoice }));

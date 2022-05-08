@@ -99,7 +99,7 @@ export class ConceptoComponent implements OnInit {
     this.ref.close();
   }
 
-  submit(object: Concepto) {
+  submit() {
     const concepto = this.cfdiValidator.buildConcepto(
       { ...this.concepto },
       this.formInfo.iva,

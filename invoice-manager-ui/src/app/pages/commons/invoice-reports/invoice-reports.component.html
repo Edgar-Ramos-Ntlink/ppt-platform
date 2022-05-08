@@ -419,7 +419,7 @@
                 <td scope="row">{{fila.razonSocialRemitente}}</td>
                 <td scope="row">{{fila.tipoDocumento}}</td>
                 <td scope="row">{{fila.metodoPago}}</td>
-                <td scope="row">{{fila.statusFactura}}</td>
+                <td scope="row"> <nt-invoice-status [status]="fila.statusFactura"></nt-invoice-status></td>
                 <td scope="row">{{fila.total | currency}}</td>
                 <td scope="row">{{fila.saldoPendiente | currency}}</td>
                 <td scope="row">{{fila.solicitante}}</td>

@@ -33,6 +33,7 @@ import com.business.unknow.services.services.translators.RelacionadosTranslator;
 import com.business.unknow.services.util.FacturaDefaultValues;
 import com.business.unknow.services.util.FacturaUtils;
 import com.business.unknow.services.util.validators.FacturaValidator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.mappers.CfdiMapper;
@@ -41,6 +42,7 @@ import com.mx.ntlink.cfdi.modelos.Impuesto;
 import com.mx.ntlink.models.generated.Comprobante;
 import com.mx.ntlink.util.NumberTranslatorUtil;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
@@ -386,19 +388,26 @@ public class FacturaService {
     }
   }
 
-  public FacturaCustom getFacturaByFolio(String folio) throws NtlinkUtilException {
-    FacturaCustom factura =
-        mapper.getFacturaDtoFromEntity(
-            repository
-                .findByFolio(folio)
-                .orElseThrow(
-                    () ->
-                        new ResponseStatusException(
-                            HttpStatus.NOT_FOUND,
-                            String.format("La factura con el folio %s no existe", folio))));
-    // TODO recover factura metadata from S3 instead from DB table
-    factura.setCfdi(cfdiService.getCfdiByFolio(folio));
-    return factura;
+  public FacturaCustom getFacturaByFolio(String folio) {
+    try {
+      FacturaCustom factura =
+          mapper.getFacturaDtoFromEntity(
+              repository
+                  .findByFolio(folio)
+                  .orElseThrow(
+                      () ->
+                          new ResponseStatusException(
+                              HttpStatus.NOT_FOUND,
+                              String.format("La factura con el folio %s no existe", folio))));
+
+      InputStream is =
+          filesService.getS3InputStream(S3BucketsEnum.CFDIS, String.format("%s.json", folio));
+
+      return new ObjectMapper().readValue(is.readAllBytes(), FacturaCustom.class);
+    } catch (IOException e) {
+      throw new ResponseStatusException(
+          HttpStatus.INTERNAL_SERVER_ERROR, "Error recuperando detalles de la factura");
+    }
   }
 
   public FacturaCustom getBaseFacturaByFolio(String folio) {
@@ -448,7 +457,7 @@ public class FacturaService {
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public FacturaCustom updateFacturaCustom(String folio, FacturaCustom facturaCustom)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException {
     Factura factura =
         repository
             .findByFolio(folio)

@@ -96,7 +96,10 @@ export class ConceptosComponent implements OnInit {
         } else {
           if (this.cfdi.folio && this.cfdi.folio.length > 0) {
             // update invoice in backend side
-          const fact = {...this.factura,cfdi:cfdi,total:cfdi.total}
+            const result = await this.cfdiService
+            .recalculateCfdi(cfdi)
+            .toPromise();
+          const fact = {...this.factura,cfdi:result,total:result.total, saldoPendiente:result.total}
           const invoice = await this.invoiceService.updateInvoice(fact).toPromise();
           this.store.dispatch(updateInvoice({ invoice }));
           } else {

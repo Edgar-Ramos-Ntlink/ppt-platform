@@ -1,6 +1,6 @@
 <div class="row slide_2">
     <div class="col-md-12">
-        <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
+        <nb-card class="col-md-12 col-lg-12" [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="medium">
             <nb-card-header>
                 <div class="clearfix" *ngIf="factura">
                     <p class="h6 float-left" *ngIf="folio !== '*'">
@@ -48,8 +48,8 @@
                     </span-->
                 </div>
             </nb-card-header>
-            <nb-card-body  [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="medium">
-                <div *ngIf="folio === '*'">
+            <nb-card-body>
+                <div *ngIf="folio === '*' && !factura.folio">
                     <p class="font-weight-bold">
                         Información Emisor y Receptor
                     </p>
@@ -80,7 +80,7 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="inputCliente" class="label">Escribe el rfc o razon social del cliente</label>
+                            <label for="inputCliente" class="label">Nombre o razon social del cliente</label>
                             <ng-autocomplete [data]="clientsCat" [searchKeyword]="'razonSocial'"
                                 placeholder="Escribe el nombre o razon social del cliente"
                                 (selected)="onClientSelected($event)"
@@ -107,9 +107,8 @@
                 <nt-cfdi [allowEdit]="
             factura?.tipoDocumento !== 'Complemento' &&
             (factura?.folio === undefined ||
-              factura?.statusFactura == 'Validacion operaciones' ||
-              factura?.statusFactura == 'Validacion tesoreria')
-          ">
+              factura?.statusFactura == 1 ||
+              factura?.statusFactura == 2)">
                 </nt-cfdi>
 
                 <div class="row" *ngIf="
@@ -132,7 +131,7 @@
                         [disabled]="loading" nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
                         SOLICITAR CFDI
                     </button>
-                    <!--  <button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button> -->
+                    <!--button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button-->
                 </div>
                 <br />
 

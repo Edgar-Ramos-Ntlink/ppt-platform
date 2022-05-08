@@ -56,11 +56,10 @@
             <option value="P">Complemento(pago)</option>
           </select>
         </div>
-
         <div class="col-md-3">
           <label for="inputPayMethod" class="label">Metodo de Pago</label>
           <select id="inputPayMethod" style="display: block" class="form-control" [ngModel]="cfdi.metodoPago"
-            [disabled]="cfdi.folio !== undefined" (change)="onPayMethodChange($event.target.value)">
+            [disabled]="!allowEdit" (change)="onPayMethodChange($event.target.value)">
             <option value="*">Seleccionar</option>
             <option value="PUE">Factura pagada (PUE)</option>
             <option value="PPD">Factura pago por definir(PPD)</option>

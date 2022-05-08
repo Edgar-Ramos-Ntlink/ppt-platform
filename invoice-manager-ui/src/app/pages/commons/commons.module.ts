@@ -33,6 +33,7 @@ import { GenerarComplementoComponent } from './generar-complemento/generar-compl
 import { MulticomplementosComponent } from './multicomplementos/multicomplementos.component';
 import { CuentasBancariasComponent } from './cuentas-bancarias/cuentas-bancarias.component';
 import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.component';
+import { CoreModule } from '../../@core/core.module';
 
 @NgModule({
     declarations: [
@@ -53,6 +54,7 @@ import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.compo
     ],
     imports: [
         CommonModule,
+        CoreModule,
         AutocompleteLibModule,
         FormsModule,
         NbTabsetModule,
