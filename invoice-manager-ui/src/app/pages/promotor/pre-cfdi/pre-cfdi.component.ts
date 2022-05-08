@@ -18,11 +18,14 @@ import { NbToastrService } from '@nebular/theme';
 import { Pago } from '../../../@core/models/cfdi/pago';
 import { Cfdi } from '../../../@core/models/cfdi/cfdi';
 import { Factura } from '../../../@core/models/factura';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../reducers';
-import { updateInvoice } from '../../../@core/core.actions';
+import { addEmisor, addReceptor, initInvoice, updateCfdi, updateEmisorAddress, updateInvoice, updateReceptorAddress } from '../../../@core/core.actions';
 import { NtError } from '../../../@core/models/nt-error';
 import { AppConstants } from '../../../models/app-constants';
+import { Receptor } from '../../../@core/models/cfdi/receptor';
+import { invoice } from '../../../@core/core.selectors';
+import { Emisor } from '../../../@core/models/cfdi/emisor';
 
 @Component({
     selector: 'nt-pre-cfdi',
@@ -45,9 +48,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         giro: '*',
         empresa: '*',
     };
-    public clientInfo: Contribuyente;
-    public companyInfo: Empresa;
-
     public loading: boolean = false;
     public clientSearchMsg = '';
 
@@ -64,7 +64,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
         private store: Store<AppState>
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.route.paramMap.subscribe((route) => {
@@ -73,8 +73,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         this.initInvoice();
         this.clientsService
             .getClientsByPromotor(sessionStorage.getItem('email'))
-            .subscribe((clients) => (this.clientsCat = clients));
+            .pipe(
+                map((clients: Client[]) => clients.map(c => { c.razonSocial = `${c.rfc} - ${c.razonSocial}`; return c; }))
+            ).subscribe((clients) => (this.clientsCat = clients));
         this.catalogsService.getAllGiros().then((cat) => (this.girosCat = cat));
+        this.store.pipe(select(invoice)).subscribe((fact) => (this.factura = fact));
     }
 
     ngOnDestroy() {
@@ -83,10 +86,8 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     }
 
     public initInvoice() {
-        /** INIT VARIABLES **/
-        this.factura = new Factura();
         this.loading = false;
-        this.clientSearchMsg = '';
+        this.store.dispatch(initInvoice({ invoice:new Factura() }));
     }
 
     public getInvoiceByFolio(folio: string) {
@@ -137,88 +138,61 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     }
 
     onCompanySelected(companyId: string) {
-        this.companyInfo = this.companiesCat.find(
+        const companyInfo = this.companiesCat.find(
             (c) => c.id === Number(companyId)
         );
-        // TODO Mover todo esta logica a un servicio de contrsuccion
-        this.factura.rfcEmisor = this.companyInfo.rfc;
-        this.factura.razonSocialEmisor =
-            this.companyInfo.razonSocial.toUpperCase();
-        this.factura.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
-        this.factura.cfdi.emisor.rfc = this.companyInfo.rfc;
-        this.factura.cfdi.emisor.nombre =
-            this.companyInfo.razonSocial.toUpperCase();
-        this.factura.cfdi.lugarExpedicion = this.companyInfo.cp;
-        this.factura.direccionEmisor =
-            this.cfdiValidator.generateCompanyAddress(this.companyInfo);
+
+        const emisor = new Emisor();
+        emisor.rfc = companyInfo.rfc.toUpperCase();
+        emisor.nombre = companyInfo.razonSocial.toUpperCase();
+        emisor.regimenFiscal =
+            "601" || companyInfo.regimenFiscal;
+
+        let invoice = JSON.parse(JSON.stringify(this.factura));
+        invoice.cfdi.emisor = emisor;
+        invoice.rfcEmisor = emisor.rfc;
+        invoice.razonSocialEmisor = emisor.nombre;
+        invoice.lineaEmisor = companyInfo.tipo;
+        invoice.lineaRemitente = 'CLIENTE';
+        invoice.cfdi.lugarExpedicion = companyInfo.cp;
+        invoice.direccionEmisor = this.cfdiValidator.generateAddress(
+            companyInfo
+        );
+
+        this.store.dispatch(updateInvoice({ invoice }));
     }
 
-    public async buscarClientInfo(razonSocial: string) {
-        try {
-            if (razonSocial !== undefined && razonSocial.length >= 5) {
-                this.clientsCat = await this.clientsService
-                    .getClients({
-                        promotor: sessionStorage.getItem('email'),
-                        razonSocial: razonSocial,
-                        page: '0',
-                        size: '20',
-                    })
-                    .pipe(
-                        map(
-                            (clientsPage: GenericPage<Client>) =>
-                                clientsPage.content
-                        )
-                    )
-                    .toPromise();
-                if (this.clientsCat.length > 0) {
-                    this.formInfo.clientRfc = this.clientsCat[0].id.toString();
-                    this.onClientSelected(this.formInfo.clientRfc);
-                } else {
-                    this.clientSearchMsg = `No se encuentran  clientes con nombre ${razonSocial}`;
-                }
-            } else {
-                this.clientsCat = [];
-                this.clientInfo = undefined;
-                this.clientSearchMsg = '';
-            }
-        } catch (error) {
-            this.toastrService.danger(
-                error?.message,
-                'Error en la busqueda de clientes',
-                AppConstants.TOAST_CONFIG
-            );
-        }
-    }
 
-    public onClientSelected(id: string) {
-        const value = +id;
-        this.clientSearchMsg = '';
-        if (!isNaN(value)) {
-            const client = this.clientsCat.find((c) => c.id === Number(value));
-            this.clientInfo = client.informacionFiscal;
-            // mover esta logica a un servicio de construccion
-            this.factura.rfcRemitente = this.clientInfo.rfc;
-            this.factura.razonSocialRemitente =
-                this.clientInfo.razonSocial.toUpperCase();
-            this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
-            this.factura.cfdi.receptor.nombre =
-                this.clientInfo.razonSocial.toUpperCase();
-            this.factura.direccionReceptor = this.cfdiValidator.generateAddress(
-                this.clientInfo
+    public onClientSelected(client: Client) {
+        if (!client.activo) {
+            this.toastrService.warning(
+                `El cliente ${client.razonSocial} no se encuentra activo,notifique al supervisor para activarlo`,
+                "Cliente inactivo"
             );
-            if (!client.activo) {
-                this.clientSearchMsg = `El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo,notifique a operciones para activarlo`;
-            }
+            return;
         }
+
+        if (client.regimenFiscal == undefined || client.regimenFiscal == null || client.regimenFiscal === '*') {
+            this.toastrService.warning(
+                `El cliente ${client.razonSocial} no cuenta con regimen fiscal, delo de alta antes de continuar`,
+                "Informacion faltante"
+            );
+            return;
+        }
+        let receptor = new Receptor();
+        receptor.rfc = client.rfc.toUpperCase();
+        receptor.nombre = client.razonSocial.toUpperCase();
+        receptor.domicilioFiscalReceptor = client.cp;
+        receptor.regimenFiscalReceptor = client.regimenFiscal;
+
+        let address = this.cfdiValidator.generateAddress(client);
+        this.store.dispatch(addReceptor({ receptor }));
+        this.store.dispatch(updateReceptorAddress({ address }));
     }
 
     limpiarForma() {
         this.initInvoice();
-        this.clientInfo = undefined;
-        this.companyInfo = undefined;
         this.factura = new Factura();
-        this.factura.cfdi = new Cfdi();
-        this.factura.cfdi.conceptos = [];
     }
 
     isValidCfdi(): boolean {

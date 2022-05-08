@@ -1,4 +1,4 @@
-import { Contribuyente } from './contribuyente';
+import { string } from "mathjs";
 
 export class Client {
 
@@ -11,9 +11,25 @@ export class Client {
     public porcentajeContacto: number;
     public correoPromotor: string;
     public correoContacto: string;
+    
+    public rfc: string;
+    public giro: string;
+    public nombre: string;
+    public razonSocial: string;
+    public calle: string;
+    public noInterior: number;
+    public noExterior: number;
+    public municipio: string;
+    public regimenFiscal: string;
+    public estado: string;
+    public pais: string;
+    public localidad: string;
+    public cp: string;
+    public coo: string;
+    public correo: string;
     public fechaCreacion: Date;
     public fechaActualizacion: Date;
-    public informacionFiscal: Contribuyente;
+    
 
 
     constructor() {
@@ -22,7 +38,7 @@ export class Client {
         this.porcentajeDespacho = 0;
         this.porcentajeContacto = 0;
         this.correoContacto = '';
-        this.informacionFiscal = new Contribuyente();
+        this.regimenFiscal = '*';
     }
 
 }

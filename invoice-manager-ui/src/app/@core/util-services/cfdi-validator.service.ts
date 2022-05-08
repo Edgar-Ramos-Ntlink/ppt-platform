@@ -128,7 +128,7 @@ export class CfdiValidatorService {
         return this.cfdiService.recalculateCfdi(cfdi).toPromise();
     }
 
-    public generateAddress(contribuyente: Contribuyente) {
+    public generateAddress(contribuyente: any) {
         let address = `${contribuyente.calle}`.trim();
         if (
             contribuyente.noExterior !== undefined &&

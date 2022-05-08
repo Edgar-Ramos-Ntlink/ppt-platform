@@ -44,6 +44,7 @@ export class AuthInterceptor implements HttpInterceptor {
                 }
                 const msg =
                     err.error.message || `${err.statusText} : ${err.message}`;
+                    
                 return throwError(new NtError(msg, err.error));
             })
         );

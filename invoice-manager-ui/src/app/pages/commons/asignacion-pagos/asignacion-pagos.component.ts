@@ -1,11 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PagoBase } from '../../../models/pago-base';
 import { GenericPage } from '../../../models/generic-page';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { map } from 'rxjs/operators';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { Client } from '../../../models/client';
-import { UsersData } from '../../../@core/data/users-data';
 import { User } from '../../../@core/models/user';
 import { Contribuyente } from '../../../models/contribuyente';
 import { Cuenta } from '../../../models/cuenta';
@@ -51,7 +50,6 @@ export class AsignacionPagosComponent implements OnInit {
     constructor(
         protected ref: NbDialogRef<AsignacionPagosComponent>,
         private paymentsService: PaymentsData,
-        private userService: UsersData,
         private clientsService: ClientsData,
         private invoiceService: InvoicesData,
         private accountsService: CuentasData,
@@ -70,24 +68,14 @@ export class AsignacionPagosComponent implements OnInit {
         this.paymentsService
             .getFormasPago()
             .subscribe((payTypes) => (this.payTypeCat = payTypes));
-        this.userService.getUserInfo().then((user) => {
-            this.user = user;
-        });
         if (this.module === 'promotor') {
-            this.userService.getUserInfo().then((user) => {
-                this.user = user;
-                this.filterParams.solicitante = user.email;
+            
+                this.filterParams.solicitante = sessionStorage.getItem('user');
                 this.clientsService
                     .getClientsByPromotor(this.filterParams.solicitante)
-                    .pipe(
-                        map((clients: Client[]) =>
-                            clients.map((c) => c.informacionFiscal)
-                        )
-                    )
                     .subscribe((clients) => {
                         this.clientsCat = clients;
                     });
-            });
         } else {
             this.clientsService
                 .getClients({ page: '0', size: '1000' })
@@ -95,11 +83,6 @@ export class AsignacionPagosComponent implements OnInit {
                     map(
                         (clientsPage: GenericPage<Client>) =>
                             clientsPage.content
-                    )
-                )
-                .pipe(
-                    map((clients: Client[]) =>
-                        clients.map((c) => c.informacionFiscal)
                     )
                 )
                 .subscribe((clients) => {
@@ -220,7 +203,7 @@ export class AsignacionPagosComponent implements OnInit {
         payment.solicitante =
             this.module !== 'promotor'
                 ? (payment.solicitante = this.page.content[0].solicitante)
-                : this.user.email;
+                : sessionStorage.getItem('email');;
         this.payErrorMessages =
             this.paymentValidator.validatePagoSimple(payment);
         if (this.payErrorMessages.length === 0) {

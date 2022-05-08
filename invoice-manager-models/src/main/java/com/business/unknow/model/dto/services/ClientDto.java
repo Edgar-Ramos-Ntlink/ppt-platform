@@ -40,6 +40,7 @@ public class ClientDto implements Serializable {
   private boolean moral;
   private String curp;
   private String razonSocial;
+  private String regimenFiscal;
   private String calle;
   private String noExterior;
   private String noInterior;

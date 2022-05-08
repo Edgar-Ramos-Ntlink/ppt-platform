@@ -25,12 +25,7 @@ public class ClienteValidator extends AbstractValidator {
     checkNotEmpty(dto.getRfc(), "RFC");
     checkNotNull(dto.getCorreo(), "Correo");
     checkNotEmpty(dto.getCorreo(), "Correo");
-    if (dto.getNotas() == null || dto.getNotas().isEmpty()) {
-      throw new InvoiceManagerException(
-          "Debe tener nota o Archivo Fiscal.",
-          "Debe tener nota o Archivo Fiscal para poder ser creado.",
-          Constants.BAD_REQUEST);
-    }
+
     if (dto.getPorcentajeCliente().compareTo(BigDecimal.ZERO) < 0) {
       throw new InvoiceManagerException(
           "El porcentaje debe ser positivo",
@@ -59,9 +54,13 @@ public class ClienteValidator extends AbstractValidator {
               "El porcentaje %s debe ser positivo", dto.getPorcentajePromotor().toString()),
           Constants.BAD_REQUEST);
     }
-    if (dto.getCp().matches("[a-zA-Z]+")) {
+    if (!dto.getCp().matches("^[0-9]{5}(?:-[0-9]{4})?$")) {
       throw new InvoiceManagerException(
-          "El codigo postal esta incorrect", "No debe llevar letras", Constants.BAD_REQUEST);
+              "El codigo postal es incorrecto:No debe llevar letras", Constants.BAD_REQUEST);
+    }
+    if (!dto.getRfc().matches("^[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]?$")) {
+      throw new InvoiceManagerException(
+              "RFC invalido, verifique que no contenga espacios o caracteres inválidos", Constants.BAD_REQUEST);
     }
     if (dto.getCorreo() != null && !dto.getCorreo().isEmpty()) {
       checkValidEmail(dto.getCorreo());

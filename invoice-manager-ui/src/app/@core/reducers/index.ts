@@ -46,9 +46,27 @@ export const coreReducer = createReducer(
     };
   }),
 
+  on(CoreActions.updateEmisorAddress, (state, action) => {
+    return {
+      invoice: { ...state.invoice, direccionEmisor: action.address },
+      complementos: state.complementos
+    };
+  }),
+
   on(CoreActions.updateCfdi, (state, action) => {
     return {
       invoice: { ...state.invoice, cfdi: action.cfdi },
+      complementos: state.complementos
+    };
+  }),
+
+  on(CoreActions.addEmisor, (state, action) => {
+    const cfdi = { ...state.invoice.cfdi, emisor: action.emisor };
+    return {
+      invoice: {
+        ...state.invoice,
+        cfdi: cfdi,
+      },
       complementos: state.complementos
     };
   }),

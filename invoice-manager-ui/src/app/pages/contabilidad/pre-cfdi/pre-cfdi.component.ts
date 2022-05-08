@@ -11,14 +11,10 @@ import { InvoicesData } from '../../../@core/data/invoices-data';
 import { PagoBase } from '../../../models/pago-base';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
-import { map } from 'rxjs/operators';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { UsersData } from '../../../@core/data/users-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { PaymentsData } from '../../../@core/data/payments-data';
-import { ClientsData } from '../../../@core/data/clients-data';
-import { GenericPage } from '../../../models/generic-page';
 import { Client } from '../../../models/client';
 import { User } from '../../../@core/models/user';
 import { CfdiData } from '../../../@core/data/cfdi-data';
@@ -59,7 +55,6 @@ export class PreCfdiComponent implements OnInit {
     public payment: Pago;
     public factura: Factura;
     public folioParam: string;
-    public user: User;
     public soporte: boolean = false;
     public folio: string;
 
@@ -112,12 +107,10 @@ export class PreCfdiComponent implements OnInit {
     constructor(
         private dialogService: NbDialogService,
         private catalogsService: CatalogsData,
-        private clientsService: ClientsData,
         private companiesService: CompaniesData,
         private invoiceService: InvoicesData,
         private filesService: FilesData,
         private cfdiService: CfdiData,
-        private userService: UsersData,
         private cfdiValidator: CfdiValidatorService,
         private paymentsService: PaymentsData,
         private toastrService: NbToastrService,
@@ -128,18 +121,7 @@ export class PreCfdiComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.userService
-            .getUserInfo()
-            .then((user) => (this.user = user as User));
-        this.userService
-            .getUserInfo()
-            .then((user) => (this.user = user as User))
-            .then(
-                () =>
-                    (this.soporte = this.user.roles
-                        .map((a) => a.role)
-                        .includes('SOPORTE'))
-            );
+        
         this.initInvoice();
         this.paymentsService
             .getFormasPago()
@@ -360,7 +342,7 @@ export class PreCfdiComponent implements OnInit {
     public solicitarCfdi() {
         this.loading = true;
         this.errorMessages = [];
-        this.factura.solicitante = this.user.email;
+        this.factura.solicitante = sessionStorage.getItem('email');
         if (
             this.clientInfo === undefined ||
             this.clientInfo.rfc === undefined
@@ -689,63 +671,5 @@ export class PreCfdiComponent implements OnInit {
         this.factura.direccionEmisor =
             this.cfdiValidator.generateCompanyAddress(this.companyInfo);
     }
-
-    buscarClientInfo(razonSocial: string) {
-        if (razonSocial !== undefined && razonSocial.length > 5) {
-            this.clientsService
-                .getClients({ razonSocial: razonSocial, page: '0', size: '20' })
-                .pipe(
-                    map(
-                        (clientsPage: GenericPage<Client>) =>
-                            clientsPage.content
-                    )
-                )
-                .subscribe(
-                    (clients) => {
-                        this.clientsCat = clients;
-                        if (clients.length > 0) {
-                            this.formInfo.clientRfc = clients[0].id.toString();
-                            this.onClientSelected(this.formInfo.clientRfc);
-                        }
-                    },
-                    (error: HttpErrorResponse) => {
-                        this.errorMessages.push(
-                            error.error.message ||
-                                `${error.statusText} : ${error.message}`
-                        );
-                        this.clientsCat = [];
-                        this.clientInfo = undefined;
-                    }
-                );
-        } else {
-            this.clientsCat = [];
-            this.clientInfo = undefined;
-        }
-    }
-
-    onClientSelected(id: string) {
-        const value = +id;
-        if (!isNaN(value)) {
-            const client = this.clientsCat.find((c) => c.id === Number(value));
-
-            // mover esta logica a un servicio de construccion
-            this.factura.rfcRemitente = client.informacionFiscal.rfc;
-            this.factura.razonSocialRemitente =
-                client.informacionFiscal.razonSocial.toUpperCase();
-            this.factura.cfdi.receptor.rfc = client.informacionFiscal.rfc;
-            this.factura.cfdi.receptor.nombre =
-                client.informacionFiscal.razonSocial.toUpperCase();
-            this.factura.direccionReceptor = this.cfdiValidator.generateAddress(
-                client.informacionFiscal
-            );
-            if (!client.activo) {
-                this.errorMessages.push(
-                    `El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema.`
-                );
-                this.errorMessages.push(
-                    'Notifique al departamento de operaciones,puede proceder a solicitar el pre-CFDI'
-                );
-            }
-        }
-    }
+    
 }

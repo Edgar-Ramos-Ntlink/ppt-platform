@@ -29,13 +29,6 @@ export class ClientsValidatorService {
           description: 'correo promotor',
         },
         {
-          field: 'informacionFiscal',
-          description: 'informacion fiscal',
-        },
-      ];
-    
-      camposObligatoriosInformacionFiscal = [
-        {
           field: 'rfc',
           description: 'RFC',
         },
@@ -63,6 +56,14 @@ export class ClientsValidatorService {
           field: 'calle',
           description: 'Calle',
         },
+        {
+          field: 'regimenFiscal',
+          description: 'Regimen Fiscal',
+        },
+      ];
+    
+      camposObligatoriosInformacionFiscal = [
+        
       ];
 
       public validarCliente(cliente: Client) {
@@ -71,14 +72,8 @@ export class ClientsValidatorService {
             throw 'El cliente a validar tiene un valor de null';
           }
 
-        this.camposObligatoriosInformacionFiscal.forEach(campo => {
-          if(cliente.informacionFiscal[campo.field] === null
-            || cliente.informacionFiscal[campo.field] === '') {
-              messages.push(`El campo '${campo.description}' es obligatorio`);
-            }
-        });
         this.camposObligatoriosCliente.forEach(campo => {
-          if (cliente[campo.field] === null
+          if (cliente[campo.field] === null || cliente[campo.field] === '*'
             || cliente[campo.field] === '') {
               messages.push(`El campo '${campo.description}' es obligatorio`);
             }

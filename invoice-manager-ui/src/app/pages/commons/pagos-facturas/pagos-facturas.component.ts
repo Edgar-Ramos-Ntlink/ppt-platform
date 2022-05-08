@@ -55,7 +55,7 @@ interface PagoFacturaModel {
     styleUrls: ['./pagos-facturas.component.scss'],
 })
 export class PagosFacturaComponent implements OnInit {
-    public user: User;
+
     customColumn = 'ACCIONES';
     defaultHeaders = [
         'MONTO',
@@ -95,24 +95,19 @@ export class PagosFacturaComponent implements OnInit {
         private filesService: FilesData,
         private paymentsService: PaymentsData,
         private router: Router,
-        private usersService: UsersData,
         private downloadService: DonwloadFileService,
         private dataSourceBuilder: NbTreeGridDataSourceBuilder<PagoFacturaModel>
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.errorMessages = [];
         this.module = this.router.url.split('/')[2];
 
-        this.usersService
-            .getUserInfo()
-            .then((user) => {
-                this.user = user;
-                if (this.module === 'promotor') {
-                    this.filterParams.solicitante = user.email;
-                }
-            })
-            .then(() => this.updateDataTable());
+
+        if (this.module === 'promotor') {
+            this.filterParams.solicitante = sessionStorage.getItem('email');
+        }
+        this.updateDataTable();
     }
 
     getShowOn(index: number) {
@@ -183,7 +178,7 @@ export class PagosFacturaComponent implements OnInit {
             (error: HttpErrorResponse) =>
                 this.errorMessages.push(
                     error.error.message ||
-                        `${error.statusText} : ${error.message}`
+                    `${error.statusText} : ${error.message}`
                 )
         );
     }

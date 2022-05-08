@@ -9,8 +9,8 @@ import {
 import { LayoutService } from "../../../@core/utils";
 import { map, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
-import { UsersData } from "../../../@core/data/users-data";
 import { User } from "../../../@core/models/user";
+import { AuthService } from "../../../auth/auth.service";
 
 @Component({
   selector: "ngx-one-column-layout",
@@ -101,7 +101,7 @@ export class OneColumnLayoutComponent implements OnInit, OnDestroy {
     private themeService: NbThemeService,
     private layoutService: LayoutService,
     private breakpointService: NbMediaBreakpointsService,
-    private userService: UsersData
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -149,7 +149,7 @@ export class OneColumnLayoutComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.userService.logout().subscribe({
+    this.authService.logout().subscribe({
       error(e) {
         console.error("logout", e);
       },

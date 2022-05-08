@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 
 import { GenericPage } from '../../../models/generic-page';
 import { PaymentsData } from '../../../@core/data/payments-data';
-import { UsersData } from '../../../@core/data/users-data';
 import { NbDialogService } from '@nebular/theme';
 import { ValidacionPagoComponent } from './validacion-pago/validacion-pago.component';
 import { PagoBase } from '../../../models/pago-base';
@@ -27,7 +26,6 @@ export class PagosComponent implements OnInit {
   public pageSize = '10';
 
   constructor(
-    private userService: UsersData,
     private paymentService: PaymentsData,
     private downloadService: DonwloadFileService,
     private router: Router,
@@ -36,7 +34,7 @@ export class PagosComponent implements OnInit {
 
   ngOnInit() {
 
-
+    this.user = JSON.parse(sessionStorage.getItem('user'));
     this.vista = this.router.url.split('/')[3];
     this.module = this.router.url.split('/')[2];
     if (this.vista === 'validacion-pagos') {
@@ -46,7 +44,6 @@ export class PagosComponent implements OnInit {
       this.filterParams.status = 'ACEPTADO';
     }
     this.updateDataTable();
-    this.userService.getUserInfo().then(user => this.user = user);
   }
 
   public updateDataTable(currentPage?: number, pageSize?: number) {

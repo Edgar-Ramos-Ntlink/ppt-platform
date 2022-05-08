@@ -16,7 +16,6 @@ import { PagosValidatorService } from '../../../@core/util-services/pagos-valida
 import { ResourceFile } from '../../../models/resource-file';
 import { PagoFactura } from '../../../models/pago-factura';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Client } from '../../../models/client';
 import { map } from 'rxjs/operators';
 import { Factura } from '../../../@core/models/factura';
 
@@ -28,7 +27,6 @@ import { Factura } from '../../../@core/models/factura';
 export class MulticomplementosComponent implements OnInit {
     public module: string = 'promotor';
     public page: GenericPage<any>;
-    public user: User;
     public fileInput: any;
     public paymentForm = { payType: '*', bankAccount: '*', filename: '' };
     public newPayment: PagoBase = new PagoBase();
@@ -67,20 +65,13 @@ export class MulticomplementosComponent implements OnInit {
         this.paymentsService
             .getFormasPago()
             .subscribe((payTypes) => (this.payTypeCat = payTypes));
-        this.userService.getUserInfo().then((user) => {
-            this.user = user;
-            this.filterParams.solicitante = user.email;
+        
+            this.filterParams.solicitante = sessionStorage.getItem('email');
             this.clientsService
-                .getClientsByPromotor(user.email)
-                .pipe(
-                    map((clients: Client[]) =>
-                        clients.map((c) => c.informacionFiscal)
-                    )
-                )
+                .getClientsByPromotor(sessionStorage.getItem('email'))
                 .subscribe((clients) => {
                     this.clientsCat = clients;
                 });
-        });
     }
 
     selectClient(cliente: Contribuyente) {
@@ -89,7 +80,7 @@ export class MulticomplementosComponent implements OnInit {
         this.invoiceService
             .getInvoices({
                 remitente: cliente.razonSocial,
-                solicitante: this.user.email,
+                solicitante: sessionStorage.getItem('email'),
                 page: 0,
                 size: 10000,
             })
@@ -191,7 +182,7 @@ export class MulticomplementosComponent implements OnInit {
         payment.solicitante =
             this.module !== 'promotor'
                 ? (payment.solicitante = this.page.content[0].solicitante)
-                : this.user.email;
+                : sessionStorage.getItem('email');
         this.payErrorMessages =
             this.paymentValidator.validatePagoSimple(payment);
         if (this.payErrorMessages.length === 0) {

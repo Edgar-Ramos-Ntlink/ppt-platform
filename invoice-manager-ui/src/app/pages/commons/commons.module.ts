@@ -84,6 +84,7 @@ import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.compo
         MulticomplementosComponent,
         AsignacionPagosComponent,
         CuentasBancariasComponent,
+        AutocompleteLibModule,
         FormsModule,
         CommonModule,
         NbTabsetModule,

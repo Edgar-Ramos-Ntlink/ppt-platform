@@ -60,6 +60,7 @@
       <textarea
         id="direccioneReceptor"
         type="text"
+        (ngModelChange)="addressChange($event)"
         style="margin-top: 0px; margin-bottom: 0px; height: 38px"
         [(ngModel)]="direccion"
         [disabled]="!allowEdit"

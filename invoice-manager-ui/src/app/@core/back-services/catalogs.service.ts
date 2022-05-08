@@ -10,7 +10,6 @@ export class CatalogsService {
     private usoCfdi = undefined;
     private regimenFiscal = undefined;
     private statusPago = undefined;
-    private statusDevolucion = undefined;
     private statusValidacion = undefined;
 
     constructor(private httpClient: HttpClient) {}
@@ -121,21 +120,7 @@ export class CatalogsService {
             }
         });
     }
-    public getStatusDevolucion(): Promise<any> {
-        return new Promise((resolve) => {
-            if (this.statusDevolucion !== undefined) {
-                resolve(this.statusDevolucion);
-            } else {
-                this.httpClient
-                    .get('/api/catalogs/status-devolucion')
-                    .subscribe((cat) => {
-                        this.statusDevolucion = cat;
-                        resolve(cat);
-                    });
-            }
-        });
-    }
-
+    
     public getFormasPago(metodo?: string): Promise<any> {
         return new Promise((resolve) => {
             if (metodo === 'PUE') {

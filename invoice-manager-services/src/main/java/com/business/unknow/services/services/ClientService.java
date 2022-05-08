@@ -9,6 +9,7 @@ import com.business.unknow.services.repositories.ClientRepository;
 import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.util.helpers.ContactoHelper;
 import com.business.unknow.services.util.validators.ClienteValidator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,8 +120,14 @@ public class ClientService {
     client.setCorreoContacto(
         contactoHelper.translateContacto(
             client.getRfc(), client.getCorreoPromotor(), client.getPorcentajeContacto()));
-    if (repository.findByCorreoPromotorAndClient(client.getCorreoPromotor(), rfc).isPresent()) {
-      return mapper.getClientDtoFromEntity(repository.save(mapper.getEntityFromClientDto(client)));
+    Optional<Client> dbClient =
+        repository.findByCorreoPromotorAndClient(client.getCorreoPromotor(), rfc);
+    if (dbClient.isPresent()) {
+      Client entity = mapper.getEntityFromClientDto(client);
+      entity.getInformacionFiscal().setId(dbClient.get().getInformacionFiscal().getId());
+      entity.getInformacionFiscal().setFechaCreacion(dbClient.get().getFechaCreacion());
+      entity.getInformacionFiscal().setFechaActualizacion(new Date());
+      return mapper.getClientDtoFromEntity(repository.save(entity));
     } else {
       throw new ResponseStatusException(
           HttpStatus.NOT_FOUND, String.format("El cliente con el rfc %s no existe", rfc));

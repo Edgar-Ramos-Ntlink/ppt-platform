@@ -81,17 +81,17 @@
             <tbody>
               <tr *ngFor="let fila of page.content">
                 <td scope="row" class="text-center"> <button class="btn btn-sm btn-outline-primary"
-                    (click)="redirectToCliente(fila.informacionFiscal.rfc,fila.correoPromotor)"><i class="fa fa-edit"></i></button>
+                    (click)="redirectToCliente(fila.rfc,fila.correoPromotor)"><i class="fa fa-edit"></i></button>
                 </td>
-                <td scope="row">{{fila.informacionFiscal.rfc}}</td>
-                <td scope="row">{{fila.informacionFiscal.razonSocial}}</td>
+                <td scope="row">{{fila.rfc}}</td>
+                <td scope="row">{{fila.razonSocial}}</td>
                 <td scope="row" *ngIf="fila.activo">ACTIVO</td>
                 <td scope="row" *ngIf="!fila.activo">INACTIVO</td>
                 <td scope="row">{{fila.correoPromotor}}</td>
-                <td scope="row">{{fila.informacionFiscal.correo}}</td>
-                <td scope="row">{{fila.informacionFiscal.calle}} , {{fila.informacionFiscal.noExterior}},
-                  {{fila.informacionFiscal.localidad}}, {{fila.informacionFiscal.municipio}}, C.P.
-                  {{fila.informacionFiscal.cp}}</td>
+                <td scope="row">{{fila.correo}}</td>
+                <td scope="row">{{fila.calle}} , {{fila.noExterior}},
+                  {{fila.localidad}}, {{fila.municipio}}, C.P.
+                  {{fila.cp}}</td>
               </tr>
             </tbody>
           </table>

@@ -18,98 +18,115 @@
         <strong>Datos generales del cliente</strong>
 
         <br>
-        <div class="row slide_1">
+        <br>
+        <div class="row">
           <div class="col-md-4">
             <div class="form-group">
               <label for="inputRFC" class="label">RFC</label>
-              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.rfc" [disabled]="clientInfo.id !== undefined" nbInput fullWidth id="inputRFC"
+              <input type="text" [(ngModel)]="clientInfo.rfc" [disabled]="clientInfo.id !== undefined" class="form-control" fullWidth id="inputRFC"
                 placeholder="RFC cliente">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <label for="inputSocialReason" class="label">Razón Social</label>
-              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.razonSocial" nbInput fullWidth [disabled]="clientInfo.activo"
+              <input type="text" [(ngModel)]="clientInfo.razonSocial" class="form-control" fullWidth [disabled]="clientInfo.activo"
                 id="inputSocialReason" placeholder="Razón Social">
             </div>
           </div>
           <div class="col-sm-2">
             <label for="inputPais" class="label">País</label>
-            <nb-select id="inputPais" selected="0" fullWidth style="display:block;" [disabled]="clientInfo.activo">
-              <nb-option value="0">México</nb-option>
-            </nb-select>
+            <select id="inputPais" selected="0" fullWidth class="form-control" style="display:block;" [(ngModel)]="clientInfo.pais" [disabled]="clientInfo.activo">
+              <option value="MEX">México</option>
+            </select>
           </div>
           
         </div>
-        <div class="row slide_2">
+        <div class="row">
           <div class="col-sm-2">
             <div class="form-group">
               <label for="inputZipCode" class="label">Código Postal</label>
-              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.cp" (ngModelChange)="zipCodeInfo($event)" [disabled]="clientInfo.activo"
-                nbInput fullWidth id="inputZipCode" placeholder="00300">
+              <input type="text" [(ngModel)]="clientInfo.cp" (ngModelChange)="zipCodeInfo($event)" 
+                class="form-control" fullWidth id="inputZipCode" placeholder="00300">
             </div>
           </div>
-          <div [ngClass]="{'col-sm-4': formInfo.coloniaId !=='other', 'col-sm-2': formInfo.coloniaId ==='other'}" *ngIf="clientInfo.id === undefined || !clientInfo.activo">
+          <div [ngClass]="{'col-sm-4': formInfo.coloniaId !=='other', 'col-sm-2': formInfo.coloniaId ==='other'}">
             <div class="form-group">
               <label for="inputColonia" class="label">Seleccionar colonia</label>
-              <nb-select id="inputColonia" [(ngModel)]="formInfo.coloniaId" fullWidth [disabled]="clientInfo.activo"
-                (selectedChange)="onLocation($event)" style="display:block;">
-                <nb-option value="*">Seleccionar</nb-option>
-                <nb-option *ngFor="let colonia of colonias; let i = index" [value]="i">{{colonia}}</nb-option>
-                <nb-option value="other">Otra</nb-option>
-              </nb-select>
+              <select id="inputColonia" [(ngModel)]="formInfo.coloniaId" fullWidth
+                (selectedChange)="onLocation($event)" style="display:block;" class="form-control">
+                <option value="*">Seleccionar</option>
+                <option *ngFor="let colonia of colonias; let i = index" [value]="i">{{colonia}}</option>
+                <option value="other">Otra</option>
+              </select>
             </div>
           </div>
-          
-          <div [ngClass]="{'col-sm-4': formInfo.coloniaId !=='other', 'col-sm-3': formInfo.coloniaId ==='other'}"  *ngIf="clientInfo.activo || formInfo.coloniaId==='other'">
+          <div [ngClass]="{'col-sm-4': formInfo.coloniaId !=='other', 'col-sm-3': formInfo.coloniaId ==='other'}"  *ngIf="formInfo.coloniaId==='other'">
             <div class="form-group">
               <label for="inputLocalidad" class="label">Colonia</label>
-              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.localidad" nbInput fullWidth [disabled]="clientInfo.activo"
+              <input type="text" [(ngModel)]="clientInfo.localidad" class="form-control" fullWidth 
                 id="inputLocalidad" placeholder="Escriba la colonia">
             </div>
           </div>
           <div class="col-sm-2">
             <label for="inputState" class="label">Estado</label>
-            <input type="text" [(ngModel)]="clientInfo.informacionFiscal.estado" nbInput fullWidth id="inputState" [disabled]="clientInfo.activo"
+            <input type="text" [(ngModel)]="clientInfo.estado" class="form-control" fullWidth id="inputState" 
               placeholder="Estado">
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputCity" class="label">Municipio/Delegación</label>
-              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.municipio" nbInput fullWidth id="inputCity" [disabled]="clientInfo.activo"
+              <input type="text" [(ngModel)]="clientInfo.municipio" class="form-control" fullWidth id="inputCity"
                 placeholder="Municipio/Delegación">
             </div>
           </div>
         </div>
         
-        <div class="row slide_4">
+        <div class="row">
           <div class="col-md-6">
             <div class="form-group">
               <label for="inputCalle" class="label">Calle</label>
-              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.calle" nbInput fullWidth id="inputCalle" [disabled]="clientInfo.activo"
+              <input type="text" [(ngModel)]="clientInfo.calle" class="form-control" fullWidth id="inputCalle" 
                 placeholder="Calle">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="inputExterior" class="label">No. exterior</label>
-              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.noExterior" nbInput fullWidth [disabled]="clientInfo.activo"
+              <input type="text" [(ngModel)]="clientInfo.noExterior" class="form-control" fullWidth 
                 id="inputExterior" placeholder="No. exterior">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="inputInterior" class="label">No. interior</label>
-              <input type="text" [(ngModel)]="clientInfo.informacionFiscal.noInterior" nbInput fullWidth [disabled]="clientInfo.activo"
+              <input type="text" [(ngModel)]="clientInfo.noInterior" class="form-control" fullWidth 
                 id="inputInterior" placeholder="No. interior">
             </div>
           </div>
         </div>
-        <div class="row slide_3">
+        <div class="row">
+          <div class="col-sm-2">
+            <label for="inputRegimen" class="label">Regimen Fiscal</label>
+            <select
+              id="inputRegimen"
+              style="display: block"
+              class="form-control"
+              [(ngModel)]="clientInfo.regimenFiscal"
+            >
+              <option value="*">Seleccionar</option>
+              <option
+                *ngFor="let regimen of regimenes"
+                [(value)]="regimen.clave"
+              >
+                {{ regimen.descripcion }}
+              </option>
+            </select>
+          </div>
           <div class="col-sm-6">
             <div class="form-group">
               <label for="inputEmail" class="label">Correo Cliente</label>
-              <input type="email" [(ngModel)]="clientInfo.informacionFiscal.correo" nbInput fullWidth id="inputEmail" [disabled]="clientInfo.activo"
+              <input type="email" [(ngModel)]="clientInfo.correo" class="form-control" fullWidth id="inputEmail" 
                 placeholder="Email">
             </div>
           </div>
@@ -117,32 +134,32 @@
 
   
         <strong>Comisiones del cliente</strong>
-        <div class="row slide_4">
+        <div class="row">
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputPromotor" class="label">Promotor</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajePromotor" id="inputPromotor" [disabled]="clientInfo.activo || module === 'operaciones'" 
+              <input type="number" class="form-control" fullWidth [(ngModel)]="clientInfo.porcentajePromotor" id="inputPromotor" [disabled]="clientInfo.activo || module === 'operaciones'" 
                 placeholder="4" min="0" max="8">
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputCliente" class="label">Cliente</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeCliente" id="inputCliente" [disabled]="clientInfo.activo || module === 'operaciones'"
+              <input type="number" class="form-control" fullWidth [(ngModel)]="clientInfo.porcentajeCliente" id="inputCliente" [disabled]="clientInfo.activo || module === 'operaciones'"
                 placeholder="4" min="0" max="8">
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputdespacho" class="label">Despacho</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeDespacho" id="inputdespacho" [disabled]="clientInfo.activo || module === 'operaciones'"
+              <input type="number" class="form-control" fullWidth [(ngModel)]="clientInfo.porcentajeDespacho" id="inputdespacho" [disabled]="clientInfo.activo || module === 'operaciones'"
                 placeholder="4" min="0" max="16">
             </div>
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputContacto" class="label">Contacto</label>
-              <input type="number" nbInput fullWidth [(ngModel)]="clientInfo.porcentajeContacto" id="inputContacto" [disabled]="clientInfo.activo || module === 'operaciones'"
+              <input type="number" class="form-control" fullWidth [(ngModel)]="clientInfo.porcentajeContacto" id="inputContacto" [disabled]="clientInfo.activo || module === 'operaciones'"
                 placeholder="4" min="0" max="4">
             </div>
           </div>
@@ -150,20 +167,20 @@
         <br>
         <strong>Notas adicionales</strong>
         <br>
-        <div class="row slide_4">
+        <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
               <label for="inputNotes" class="label">Notas cliente</label>
-              <textarea type="text" [(ngModel)]="clientInfo.notas" nbInput fullWidth id="inputNotes" [disabled]="clientInfo.activo" maxlength="280" cols="3"
+              <textarea type="text" [(ngModel)]="clientInfo.notas" class="form-control" fullWidth id="inputNotes"  maxlength="280" cols="3"
                 placeholder="Notas adicionales cliente"></textarea>
             </div>
           </div>
-          <div class="form-group col-sm-6">
+          <div class="form-group col-sm-6" *ngIf="clientInfo.id">
             <label for="certFile" class="label">Comprobante cedula fiscal</label>
 
             <div class="input-group">
               <div class="custom-file" id="documentFile">
-                <input type="file" class="custom-file-input" id="documentFile" [disabled]="clientInfo.activo" 
+                <input type="file" class="custom-file-input" id="documentFile" [disabled]="!clientInfo.id" 
                   accept=".pdf,.xls,.xlsx,.doc, .docx,image/*" (change)="fileDataUploadListener($event)"
                   style="display:block;" aria-describedby="inputDocFile">
                 <label class="custom-file-label" style="background-color: #f7f9fc;" for="inputDocFile">{{formInfo.fileDataName}}</label>
@@ -171,21 +188,21 @@
             </div>
             <small id="clientFileHelp" *ngIf="dataFile != undefined" class="form-text text-primary">El cliente ya cuenta con constancia de situacion fiscal</small>
             <small id="clientFileHelp" *ngIf="dataFile == undefined" class="form-text text-danger">La constancia de situacion fiscal es un documento requerido</small>
-            <button class="btn d-inline mt-2 ml-2 mr-2" [ngClass]="{'btn-outline-success': !clientInfo.activo && formInfo.fileDataName.length > 0 , 'btn-outline-secondary': clientInfo.activo || formInfo.fileDataName.length == 0 }" 
-              (click)="uploadFile()" *ngIf="clientInfo.id !== undefined" [disabled]="clientInfo.activo || formInfo.fileDataName.length == 0">
+            <button class="btn d-inline mt-2 ml-2 mr-2" [ngClass]="{'btn-outline-success': formInfo.fileDataName.length > 0 , 'btn-outline-secondary': formInfo.fileDataName.length == 0 }" 
+              (click)="uploadFile()" *ngIf="clientInfo.id !== undefined" [disabled]="formInfo.fileDataName.length == 0">
               <i class="fa fa-upload"></i></button>
-            <button class="btn d-inline mt-2 ml-2 mr-2" [ngClass]="{'btn-outline-primary': !clientInfo.activo && dataFile!= undefined && dataFile.id != undefined, 'btn-outline-secondary': clientInfo.activo || !dataFile || dataFile.id ==undefined}" 
-            (click)="downloadFile()" *ngIf="clientInfo.id !== undefined" [disabled]="clientInfo.activo || !dataFile || dataFile.id ==undefined">
+            <button class="btn d-inline mt-2 ml-2 mr-2" [ngClass]="{'btn-outline-primary': dataFile!= undefined && dataFile.id != undefined, 'btn-outline-secondary': !dataFile || dataFile.id ==undefined}" 
+            (click)="downloadFile()" *ngIf="clientInfo.id !== undefined" [disabled]="!dataFile || dataFile.id ==undefined">
                 <i class="fa fa-download"></i></button>
           </div>
         </div>
 
         
-        <div class="puff_center" class="form-inline">
+        <div class="form-inline">
           <button type="button" *ngIf="clientInfo.id === undefined && module === 'promotor'"
             [disabled]="loading"
             (click)="insertClient()" nbButton status="primary">GUARDAR</button>
-          <button type="button"  *ngIf="clientInfo.id !== undefined && !clientInfo.activo" [disabled]="loading" (click)="updateClient()" nbButton
+          <button type="button"  *ngIf="clientInfo.id !== undefined" [disabled]="loading" (click)="updateClient()" nbButton
             status="primary">ACTUALIZAR</button>
         </div>
       </nb-card-body>

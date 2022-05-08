@@ -1,5 +1,6 @@
 import { createAction, props } from "@ngrx/store";
 import { Cfdi } from "./models/cfdi/cfdi";
+import { Emisor } from "./models/cfdi/emisor";
 import { Receptor } from "./models/cfdi/receptor";
 import { ComplementoPago } from "./models/complemento-pago";
 import { Factura } from "./models/factura";
@@ -21,8 +22,18 @@ export const addReceptor = createAction(
   props<{ receptor: Receptor }>()
 );
 
+export const addEmisor = createAction(
+  "[CFDI - emisor] adding emisor",
+  props<{ emisor: Emisor }>()
+);
+
 export const updateReceptorAddress = createAction(
   "[INVOICE - receptorAddress] updating receptor address",
+  props<{ address: string }>()
+);
+
+export const updateEmisorAddress = createAction(
+  "[INVOICE - emisorAddress] updating emisor address",
   props<{ address: string }>()
 );
 

@@ -4,9 +4,7 @@ import { CompaniesData } from '../../../@core/data/companies-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Empresa } from '../../../models/empresa';
-import { UsersData } from '../../../@core/data/users-data';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
-import { User } from '../../../@core/models/user';
 import { Cfdi } from '../../../@core/models/cfdi/cfdi';
 import { Concepto } from '../../../@core/models/cfdi/concepto';
 import { Factura } from '../../../@core/models/factura';
@@ -27,7 +25,6 @@ export class CargaMasivaComponent implements OnInit {
         filename: '',
         dataValid: false,
     };
-    public user: User;
     public errorMessages: string[] = [];
     private companies: any = {};
 
@@ -35,14 +32,10 @@ export class CargaMasivaComponent implements OnInit {
         private companyService: CompaniesData,
         private cfdiValidator: CfdiValidatorService,
         private invoiceService: InvoicesData,
-        private catalogsData: CatalogsData,
-        private userService: UsersData
+        private catalogsData: CatalogsData
     ) {}
 
     ngOnInit() {
-        this.userService
-            .getUserInfo()
-            .then((user) => (this.user = user as User));
         this.params = {
             lineaRetiro: 'A',
             lineaDeposito: 'B',
@@ -248,7 +241,7 @@ export class CargaMasivaComponent implements OnInit {
         factura.lineaRemitente = this.params.lineaRetiro;
         factura.metodoPago = transfer.METODO_PAGO;
         factura.statusFactura = '8';
-        factura.solicitante = this.user.email;
+        factura.solicitante = sessionStorage.getItem('email');
         const cfdi = new Cfdi();
         cfdi.receptor.nombre = receptorCompany.razonSocial;
         cfdi.receptor.rfc = transfer.RFC_RECEPTOR;

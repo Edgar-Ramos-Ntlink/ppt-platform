@@ -1,7 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Catalogo } from '../../../models/catalogos/catalogo';
-import { UsersData } from '../../../@core/data/users-data';
 import { Empresa } from '../../../models/empresa';
 import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
@@ -12,16 +11,12 @@ import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validato
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Client } from '../../../models/client';
-import { ClientsData } from '../../../@core/data/clients-data';
 import { Contribuyente } from '../../../models/contribuyente';
-import { map } from 'rxjs/operators';
-import { GenericPage } from '../../../models/generic-page';
 import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
 import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
 import { PagoBase } from '../../../models/pago-base';
 import { NbDialogService, NbToastrService } from '@nebular/theme';
 import { PaymentsData } from '../../../@core/data/payments-data';
-import { User } from '../../../@core/models/user';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { Concepto } from '../../../@core/models/cfdi/concepto';
 import { Pago } from '../../../@core/models/cfdi/pago';
@@ -29,8 +24,9 @@ import { Cfdi } from '../../../@core/models/cfdi/cfdi';
 import { Factura } from '../../../@core/models/factura';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../reducers';
-import { updateInvoice } from '../../../@core/core.actions';
+import { addReceptor, updateInvoice, updateReceptorAddress } from '../../../@core/core.actions';
 import { NtError } from '../../../@core/models/nt-error';
+import { Receptor } from '../../../@core/models/cfdi/receptor';
 
 @Component({
     selector: 'ngx-linea-x',
@@ -60,7 +56,6 @@ export class LineaXComponent implements OnInit {
     public payment: Pago;
     public factura: Factura;
     public folio: string;
-    public user: User;
 
     public complementos: Factura[] = [];
 
@@ -113,12 +108,10 @@ export class LineaXComponent implements OnInit {
     constructor(
         private dialogService: NbDialogService,
         private catalogsService: CatalogsData,
-        private clientsService: ClientsData,
         private companiesService: CompaniesData,
         private invoiceService: InvoicesData,
         private cfdiService: CfdiData,
         private filesService: FilesData,
-        private userService: UsersData,
         private cfdiValidator: CfdiValidatorService,
         private paymentsService: PaymentsData,
         private downloadService: DonwloadFileService,
@@ -130,9 +123,7 @@ export class LineaXComponent implements OnInit {
 
     ngOnInit() {
         this.loading = true;
-        this.userService
-            .getUserInfo()
-            .then((user) => (this.user = user as User));
+        
         this.initInvoice();
         this.paymentsService
             .getFormasPago()
@@ -259,64 +250,34 @@ export class LineaXComponent implements OnInit {
             this.cfdiValidator.generateCompanyAddress(this.companyInfo);
     }
 
-    buscarClientInfo(razonSocial: string) {
-        if (razonSocial !== undefined && razonSocial.length > 5) {
-            this.clientsService
-                .getClients({ razonSocial: razonSocial, page: '0', size: '20' })
-                .pipe(
-                    map(
-                        (clientsPage: GenericPage<Client>) =>
-                            clientsPage.content
-                    )
-                )
-                .subscribe(
-                    (clients) => {
-                        this.clientsCat = clients;
-                        if (clients.length > 0) {
-                            this.formInfo.clientRfc = clients[0].id.toString();
-                            this.onClientSelected(this.formInfo.clientRfc);
-                        }
-                    },
-                    (error: HttpErrorResponse) => {
-                        this.errorMessages.push(
-                            error.error.message ||
-                                `${error.statusText} : ${error.message}`
-                        );
-                        this.clientsCat = [];
-                        this.clientInfo = undefined;
-                    }
-                );
-        } else {
-            this.clientsCat = [];
-            this.clientInfo = undefined;
-        }
-    }
 
-    onClientSelected(id: string) {
-        const value = +id;
-        if (!isNaN(value)) {
-            const client = this.clientsCat.find((c) => c.id === Number(value));
-            this.clientInfo = client.informacionFiscal;
-            // mover esta logica a un servicio de construccion
-            this.factura.rfcRemitente = this.clientInfo.rfc;
-            this.factura.razonSocialRemitente =
-                this.clientInfo.razonSocial.toUpperCase();
-            this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
-            this.factura.cfdi.receptor.nombre =
-                this.clientInfo.razonSocial.toUpperCase();
-            this.factura.direccionReceptor = this.cfdiValidator.generateAddress(
-                this.clientInfo
-            );
-            if (!client.activo) {
-                this.errorMessages.push(
-                    `El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema.`
-                );
-                this.errorMessages.push(
-                    'Notifique al departamento de operaciones,puede proceder a solicitar el pre-CFDI'
-                );
-            }
+    public onClientSelected(client: Client) {
+        if (!client.activo) {
+          this.toastrService.warning(
+            `El cliente ${client.razonSocial} no se encuentra activo,notifique al supervisor para activarlo`,
+            "Cliente inactivo"
+          );
+          return;
         }
-    }
+    
+        if (client.regimenFiscal == undefined || client.regimenFiscal == null) {
+          this.toastrService.warning(
+            `El cliente ${client.razonSocial} no cuenta con regimen fiscal, delo de alta antes de continuar`,
+            "Informacion faltante"
+          );
+          return;
+        }
+        let receptor = new Receptor();
+        receptor.rfc = client.rfc.toUpperCase();
+        receptor.nombre = client.razonSocial.toUpperCase();
+        receptor.domicilioFiscalReceptor = client.cp;
+        receptor.regimenFiscalReceptor = client.regimenFiscal;
+    
+        let address = this.cfdiValidator.generateAddress(client);
+        this.store.dispatch(addReceptor({ receptor }));
+        this.store.dispatch(updateReceptorAddress({ address }));
+      }
+
 
     public downloadPdf(folio: string) {
         this.filesService
@@ -344,7 +305,7 @@ export class LineaXComponent implements OnInit {
     public solicitarCfdi() {
         this.loading = true;
         this.errorMessages = [];
-        this.factura.solicitante = this.user.email;
+        this.factura.solicitante = sessionStorage.getItem('email');
         this.factura.lineaEmisor = this.LINEAEMISOR;
         this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'CLIENTE';
         this.factura.metodoPago = this.factura.cfdi.metodoPago;

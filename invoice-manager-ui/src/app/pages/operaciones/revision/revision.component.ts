@@ -39,7 +39,7 @@ export class RevisionComponent implements OnInit {
 
     public clientsCat: Client[] = [];
     public factura: Factura = new Factura();
-    public user: User;
+    
     public soporte: boolean = false;
     public successMessage: string;
     public errorMessages: string[] = [];
@@ -74,15 +74,6 @@ export class RevisionComponent implements OnInit {
 
     ngOnInit() {
         this.loading = true;
-        this.userService
-            .getUserInfo()
-            .then((user) => (this.user = user as User))
-            .then(
-                () =>
-                    (this.soporte = this.user.roles
-                        .map((a) => a.role)
-                        .includes('SOPORTE'))
-            );
         this.initInvoice();
         /* preloaded cats*/
         this.catalogsService
@@ -181,69 +172,6 @@ export class RevisionComponent implements OnInit {
             this.cfdiValidator.generateCompanyAddress(this.companyInfo);
     }
 
-    buscarClientInfo(razonSocial: string) {
-        if (razonSocial !== undefined && razonSocial.length > 5) {
-            this.clientsService
-                .getClients({
-                    promotor: this.user.email,
-                    razonSocial: razonSocial,
-                    page: '0',
-                    size: '20',
-                })
-                .pipe(
-                    map(
-                        (clientsPage: GenericPage<Client>) =>
-                            clientsPage.content
-                    )
-                )
-                .subscribe(
-                    (clients) => {
-                        this.clientsCat = clients;
-                        if (clients.length > 0) {
-                            this.formInfo.clientRfc = clients[0].id.toString();
-                            this.onClientSelected(this.formInfo.clientRfc);
-                        }
-                    },
-                    (error: HttpErrorResponse) => {
-                        this.errorMessages.push(
-                            error.error.message ||
-                                `${error.statusText} : ${error.message}`
-                        );
-                        this.clientsCat = [];
-                        this.clientInfo = undefined;
-                    }
-                );
-        } else {
-            this.clientsCat = [];
-            this.clientInfo = undefined;
-        }
-    }
-
-    onClientSelected(id: string) {
-        const value = +id;
-        if (!isNaN(value)) {
-            const client = this.clientsCat.find((c) => c.id === Number(value));
-            this.clientInfo = client.informacionFiscal;
-            // mover esta logica a un servicio de construccion
-            this.factura.rfcRemitente = this.clientInfo.rfc;
-            this.factura.razonSocialRemitente =
-                this.clientInfo.razonSocial.toUpperCase();
-            this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
-            this.factura.cfdi.receptor.nombre =
-                this.clientInfo.razonSocial.toUpperCase();
-            this.factura.direccionReceptor = this.cfdiValidator.generateAddress(
-                this.clientInfo
-            );
-            if (!client.activo) {
-                this.errorMessages.push(
-                    `El cliente ${client.informacionFiscal.razonSocial} no se encuentra activo en el sistema.`
-                );
-                this.errorMessages.push(
-                    'Notifique al departamento de operaciones,puede proceder a solicitar el pre-CFDI'
-                );
-            }
-        }
-    }
 
     public downloadPdf(folio: string) {
         this.filesService
