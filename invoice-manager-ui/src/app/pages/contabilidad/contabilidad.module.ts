@@ -7,6 +7,7 @@ import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { CommonsModule } from '../commons/commons.module';
 import { DonwloadFileService } from '../../@core/util-services/download-file-service';
 import { CargaMasivaComponent } from './carga-masiva/carga-masiva.component';
+import { CoreModule } from '../../@core/core.module';
 
 @NgModule({
   declarations: [ContabilidadComponent,
@@ -15,6 +16,7 @@ import { CargaMasivaComponent } from './carga-masiva/carga-masiva.component';
   imports: [
     ContabilidadRoutingModule,
     CommonsModule,
+    CoreModule,
     NbDialogModule.forChild(),
   ],
   providers: [ DonwloadFileService ],

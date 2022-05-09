@@ -34,11 +34,28 @@ public class ClientDto implements Serializable {
   private String correoPromotor;
   private String correoContacto;
 
+  private String rfc;
+  private String giro;
+  private String nombre;
+  private boolean moral;
+  private String curp;
+  private String razonSocial;
+  private String regimenFiscal;
+  private String calle;
+  private String noExterior;
+  private String noInterior;
+  private String municipio;
+  private String localidad;
+  private String estado;
+  private String pais;
+  private String coo;
+  private String cp;
+  private String correo;
+  private String telefono;
+
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
   private Date fechaActualizacion;
-
-  private ContribuyenteDto informacionFiscal;
 }

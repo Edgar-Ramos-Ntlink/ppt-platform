@@ -9,8 +9,8 @@ import {
 import { LayoutService } from "../../../@core/utils";
 import { map, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
-import { UsersData } from "../../../@core/data/users-data";
 import { User } from "../../../@core/models/user";
+import { AuthService } from "../../../auth/auth.service";
 
 @Component({
   selector: "ngx-one-column-layout",
@@ -60,7 +60,7 @@ import { User } from "../../../@core/models/user";
 
       <nb-layout-footer fixed>
         <span class="created-by">
-          Desarrolado por
+          Desarrollado por
           <b><a href="http://www.ntlink.com.mx" target="_blank">NT LINK</a></b>
           &copy; 2022. Todos los derechos reservados. V 4.0.0
         </span>
@@ -101,7 +101,7 @@ export class OneColumnLayoutComponent implements OnInit, OnDestroy {
     private themeService: NbThemeService,
     private layoutService: LayoutService,
     private breakpointService: NbMediaBreakpointsService,
-    private userService: UsersData
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -149,7 +149,7 @@ export class OneColumnLayoutComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.userService.logout().subscribe({
+    this.authService.logout().subscribe({
       error(e) {
         console.error("logout", e);
       },

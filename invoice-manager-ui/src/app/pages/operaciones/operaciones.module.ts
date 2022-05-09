@@ -7,6 +7,7 @@ import { DonwloadFileService } from '../../@core/util-services/download-file-ser
 import { LineaXComponent } from './linea-x/linea-x.component';
 import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion-pagos.component';
 import { ValidacionPagoComponent } from '../commons/pagos/validacion-pago/validacion-pago.component';
+import { CoreModule } from '../../@core/core.module';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { ValidacionPagoComponent } from '../commons/pagos/validacion-pago/valida
   imports: [
     OperacionesRoutingModule,
     CommonsModule,
+    CoreModule,
   ],
   entryComponents: [AsignacionPagosComponent, ValidacionPagoComponent],
   providers: [ DonwloadFileService ],

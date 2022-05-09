@@ -45,7 +45,7 @@ public class CfdiController {
     return new ResponseEntity<>("VALIDA", HttpStatus.OK);
   }
 
-  @PostMapping("/calcular/montos")
+  @PutMapping("/recalculate")
   public ResponseEntity<Cfdi> calculateMontosCfdi(@RequestBody @Valid Cfdi cfdi)
       throws InvoiceManagerException {
     validator.validateCfdi(cfdi);

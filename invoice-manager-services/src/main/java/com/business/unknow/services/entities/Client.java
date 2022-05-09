@@ -95,5 +95,6 @@ public class Client implements Serializable {
 
   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "RFC", referencedColumnName = "RFC")
-  private Contribuyente informacionFiscal;
+  @Builder.Default
+  private Contribuyente informacionFiscal = new Contribuyente();
 }

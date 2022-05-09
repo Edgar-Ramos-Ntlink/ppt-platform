@@ -380,15 +380,15 @@
               <tr *ngFor="let fila of page.content">
 
                 <td scope="row" class="text-center" style="min-width: 180px;">
-                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="redirectToCfdi(fila.idCfdi)"><i
+                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="redirectToCfdi(fila.folio)"><i
                       class="fa fa-search"></i>
                   </button>
-                  <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="module === 'promotor'"
+                  <!--button type="button" class="btn btn-sm btn-outline-primary" *ngIf="module === 'promotor'"
                     [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Validacion operaciones' && fila.statusFactura !== 'Validacion tesoreria' ), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') && (fila.statusFactura === 'Validacion operaciones' || fila.statusFactura === 'Validacion tesoreria') }"
                     [disabled]="(fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD') || (fila.statusFactura !== 'Validacion operaciones' && fila.statusFactura !== 'Validacion tesoreria' )"
                     (click)="redirectToPreferences(fila.folio)"><i class="fa fa-wallet"></i>
                   </button>
-                  <!--button type="button" class="btn btn-sm btn-outline-primary"
+                  <button type="button" class="btn btn-sm btn-outline-primary"
                     *ngIf="module !== 'promotor' && module !== 'contabilidad'"
                     [ngClass]="{'btn-outline-secondary': (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD'), 'btn-outline-primary':(fila.tipoDocumento == 'Complemento' || fila.metodoPago == 'PUE') }"
                     [disabled]=" (fila.tipoDocumento === 'Factura' && fila.metodoPago === 'PPD')"
@@ -419,7 +419,7 @@
                 <td scope="row">{{fila.razonSocialRemitente}}</td>
                 <td scope="row">{{fila.tipoDocumento}}</td>
                 <td scope="row">{{fila.metodoPago}}</td>
-                <td scope="row">{{fila.statusFactura}}</td>
+                <td scope="row"> <nt-invoice-status [status]="fila.statusFactura"></nt-invoice-status></td>
                 <td scope="row">{{fila.total | currency}}</td>
                 <td scope="row">{{fila.saldoPendiente | currency}}</td>
                 <td scope="row">{{fila.solicitante}}</td>

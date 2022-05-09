@@ -1,201 +1,274 @@
 import { Injectable } from '@angular/core';
 import { CatalogsData } from '../data/catalogs-data';
 import { UsoCfdi } from '../../models/catalogos/uso-cfdi';
-import { ClaveUnidad } from '../../models/catalogos/clave-unidad';
-import { Contribuyente } from '../../models/contribuyente';
 import { subtract, bignumber, multiply, format } from 'mathjs';
 import { CfdiService } from '../back-services/cfdi.service';
 import { Empresa } from '../../models/empresa';
 import { Concepto } from '../models/cfdi/concepto';
 import { Cfdi } from '../models/cfdi/cfdi';
+import { Traslado } from '../models/cfdi/traslado';
+import { Retencion } from '../models/cfdi/retencion';
+import { Impuesto } from '../models/cfdi/impuesto';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class CfdiValidatorService {
+    private metodoPagoCat: string[] = ['PUE', 'PPD'];
+    private formaPagoCat: string[] = [
+        '01',
+        '02',
+        '03',
+        '04',
+        '05',
+        '06',
+        '08',
+        '12',
+        '13',
+        '14',
+        '15',
+        '17',
+        '23',
+        '24',
+        '25',
+        '26',
+        '27',
+        '28',
+        '29',
+        '30',
+        '31',
+        '99',
+    ];
 
-  private metodoPagoCat: string[]  = ['PUE','PPD'];
-  private formaPagoCat: string[]  = ['01','02','03','04','05','06','08','12','13','14','15','17','23','24','25','26','27','28','29','30','31','99'];
+    private usoCfdiCat: string[] = [];
 
-  private unidadCat: string[]  = [];
-  private usoCfdiCat: string[] = [];
+    constructor(
+        private catService: CatalogsData,
+        private cfdiService: CfdiService
+    ) {
+        this.catService
+            .getAllUsoCfdis()
+            .then(
+                (cat: UsoCfdi[]) => (this.usoCfdiCat = cat.map((c) => c.clave))
+            );
+    }
 
-  constructor(
-    private catService: CatalogsData,
-    private cfdiService: CfdiService ) {
-    this.catService.getAllUsoCfdis().then((cat: UsoCfdi[]) =>this.usoCfdiCat = cat.map(c => c.clave));
-    this.catService.getClaveUnidadByName('').then((cat: ClaveUnidad[]) => this.unidadCat = cat.map(c => c.clave));
-  }
+    public buildConcepto(
+        concepto: Concepto,
+        iva: boolean,
+        retencion: boolean
+    ): Concepto {
+        concepto.importe = +format(
+            multiply(
+                bignumber(concepto.cantidad),
+                bignumber(concepto.valorUnitario)
+            )
+        );
+        const base = +format(
+            subtract(bignumber(concepto.importe), bignumber(concepto.descuento))
+        );
+        concepto.impuestos = [];
+        const impuesto = new Impuesto();
+        if (concepto.objetoImp != '01') {
+            const imp = +format(multiply(base, bignumber(0.16))); // TODO calcular impuestos dinamicamente no solo IVA
+            impuesto.traslados = [
+                new Traslado('002', 'Tasa', '0.160000', base, imp),
+            ];
+        } else {
+            impuesto.traslados = [new Traslado('000', 'Tasa', '0', 0, 0)];
+        }
+        if (retencion) {
+            const retencion = +format(multiply(base, bignumber(0.06))); // TODO calcular retencion dinamicamente
+            impuesto.retenciones = [
+                new Retencion('002', 'Tasa', '0.060000', base, retencion),
+            ];
+        }
+        concepto.impuestos.push(impuesto);
 
-  public buildConcepto(concepto: Concepto): Concepto {
-    
-    concepto.importe = +format(multiply(bignumber(concepto.cantidad), bignumber(concepto.valorUnitario)));
-    const base: number = +format(subtract(bignumber(concepto.importe), bignumber(concepto.descuento)));
-    alert('Rebuild build concepto logic')
-    /*
-    if (concepto.iva) {
-      const impuesto = +format(multiply(base, bignumber(0.16))); // TODO calcular impuestos dinamicamente no solo IVA
-      concepto.impuestos = [new Impuesto('002', '0.160000', base, impuesto)];
-    } else {
-      concepto.impuestos = [];
+        return concepto;
     }
-    if (concepto.retencionFlag) {
-      const retencion: number = +format(multiply(base, bignumber(0.06))); // TODO calcular retencion dinamicamente
-      concepto.retenciones = [new Impuesto('002', '0.060000', base, retencion)];
-    } else {
-      concepto.retenciones = [];
-    }*/
 
-    return concepto;
-  }
+    public validarConcepto(concepto: Concepto): string[] {
+        const messages: string[] = [];
+        if (concepto.cantidad <= 0) {
+            messages.push('La cantidad requerida debe ser mayor a 0');
+        }
+        if (
+            concepto.claveProdServ === undefined ||
+            concepto.claveProdServ === '*'
+        ) {
+            messages.push(
+                'La clave producto servicio del concepto es un valor requerido.'
+            );
+        }
+        if (
+            concepto.claveUnidad === undefined ||
+            concepto.claveUnidad === '*'
+        ) {
+            messages.push(
+                'La clave de unidad y la unidad son campos requeridos.'
+            );
+        }
+        if (
+            concepto.descripcion === undefined ||
+            concepto.descripcion.length < 1
+        ) {
+            messages.push('La descripción del concepto es un valor requerido.');
+        }
+        if (concepto.valorUnitario <= 0) {
+            messages.push(
+                'El valor unitario del  concepto no puede ser menor igual a 0 pesos.'
+            );
+        }
+        return messages;
+    }
 
-  public validarConcepto(concepto: Concepto): string[] {
-    const messages: string[] = [];
-    if (concepto.cantidad <= 0) {
-      messages.push('La cantidad requerida debe ser mayor a 0');
+    public calcularImportes(cfdi: Cfdi): Promise<Cfdi> {
+        return this.cfdiService.recalculateCfdi(cfdi).toPromise();
     }
-    if (concepto.claveProdServ === undefined || concepto.claveProdServ === '*') {
-      messages.push('La clave producto servicio del concepto es un valor requerido.');
-    }
-    if (concepto.claveUnidad === undefined || concepto.claveUnidad === '*') {
-      messages.push('La clave de unidad y la unidad son campos requeridos.');
-    } else if (this.unidadCat.find(e => e === concepto.claveUnidad) === undefined) {
-      messages.push(`La clave de unidad ${concepto.claveUnidad} no es valida.`);
-    }
-    if (concepto.descripcion === undefined || concepto.descripcion.length < 1) {
-      messages.push('La descripción del concepto es un valor requerido.');
-    }
-    if (concepto.valorUnitario <= 0) {
-      messages.push('El valor unitario del  concepto no puede ser menor igual a 0 pesos.');
-    }
-    return messages;
-  }
 
-  public calcularImportes(cfdi: Cfdi): Promise<Cfdi> {
+    public generateAddress(contribuyente: any) {
+        let address = `${contribuyente.calle}`.trim();
+        if (
+            contribuyente.noExterior !== undefined &&
+            contribuyente.noExterior !== null
+        ) {
+            address += ' ';
+            address += `${contribuyente.noExterior}`.trim();
+        }
+        if (
+            contribuyente.noInterior !== undefined &&
+            contribuyente.noInterior !== null
+        ) {
+            address += `,${contribuyente.noInterior}`.trim();
+        }
+        if (
+            contribuyente.localidad !== undefined &&
+            contribuyente.localidad !== null
+        ) {
+            address += `,${contribuyente.localidad}`.trim();
+        }
+        if (
+            contribuyente.municipio !== undefined &&
+            contribuyente.municipio != null
+        ) {
+            address += `,${contribuyente.municipio}`.trim();
+        }
+        if (
+            contribuyente.estado !== undefined &&
+            contribuyente.estado !== null
+        ) {
+            address += `,${contribuyente.estado}`.trim();
+        }
+        if (
+            contribuyente.estado !== undefined &&
+            contribuyente.estado !== null
+        ) {
+            address += `,C.P. ${contribuyente.cp}`.trim();
+        }
+        return address.toUpperCase().trim();
+    }
 
-    return this.cfdiService.calcularMontosCfdi(cfdi).toPromise();
+    public generateCompanyAddress(company: Empresa) {
+        let address = `${company.calle}`.trim();
+        if (company.noExterior !== undefined && company.noExterior !== null) {
+            address += ' ';
+            address += `${company.noExterior}`.trim();
+        }
+        if (company.noInterior !== undefined && company.noInterior !== null) {
+            address += `,${company.noInterior}`.trim();
+        }
+        if (company.colonia !== undefined && company.colonia !== null) {
+            address += `,${company.colonia}`.trim();
+        }
+        if (company.municipio !== undefined && company.municipio != null) {
+            address += `,${company.municipio}`.trim();
+        }
+        if (company.estado !== undefined && company.estado !== null) {
+            address += `,${company.estado}`.trim();
+        }
+        if (company.estado !== undefined && company.estado !== null) {
+            address += `,C.P. ${company.cp}`.trim();
+        }
+        return address.toUpperCase().trim();
+    }
 
+    public validarCfdi(cfdi: Cfdi): string[] {
+        const messages: string[] = [];
+        if (
+            cfdi.receptor === undefined ||
+            cfdi.receptor.rfc === undefined ||
+            cfdi.receptor.rfc.length < 11 ||
+            cfdi.receptor.nombre.length < 8
+        ) {
+            messages.push('La información del receptor es un valor solicitado');
+        }
+        if (
+            cfdi.emisor === undefined ||
+            cfdi.emisor.rfc === undefined ||
+            cfdi.emisor.rfc.length < 11 ||
+            cfdi.emisor.nombre.length < 8
+        ) {
+            messages.push('La información del emisor es un valor solicitado');
+        }
+        if (cfdi.emisor.rfc === cfdi.receptor.rfc) {
+            messages.push('El emisor y receptor son la misma entidad');
+        }
+        if (
+            cfdi.receptor.usoCfdi === undefined ||
+            cfdi.receptor.usoCfdi === '*'
+        ) {
+            messages.push('El uso del CFDI es un campo requerido.');
+        } else if (
+            this.usoCfdiCat.find((e) => e === cfdi.receptor.usoCfdi) ===
+            undefined
+        ) {
+            messages.push(
+                `El uso de cfdi ${cfdi.receptor.usoCfdi} no es valido.`
+            );
+        }
+        if (cfdi.moneda === undefined || cfdi.moneda === '*') {
+            messages.push('La moneda es un campo requerido.');
+        }
+        if (cfdi.formaPago === undefined || cfdi.formaPago === '*') {
+            messages.push('La forma de pago es un campo requerido.');
+        } else if (
+            this.formaPagoCat.find((e) => e === cfdi.formaPago) === undefined
+        ) {
+            messages.push(`La forma de pago ${cfdi.formaPago} no es valida.`);
+        }
+        if (cfdi.metodoPago === undefined || cfdi.metodoPago === '*') {
+            messages.push('El metodo de pago es un campo requerido.');
+        } else if (
+            this.metodoPagoCat.find((e) => e === cfdi.metodoPago) === undefined
+        ) {
+            messages.push(`El metodo de pago ${cfdi.metodoPago} no es valido.`);
+        }
+        if (cfdi.conceptos.length < 1) {
+            messages.push(
+                'La factura debe contener a menos 1 concepto a declarar.'
+            );
+        }
+        if (cfdi.total > 2000 && cfdi.formaPago === '01') {
+            messages.push(
+                'En pagos en efectivo el monto a facturar no debe de ser superior a 2000 pesos'
+            );
+        }
+        if (cfdi.moneda !== 'MXN' && cfdi.tipoCambio === 1.0) {
+            messages.push(
+                `El tipo de cambio para  ${cfdi.moneda} no puede ser igual a $1.00`
+            );
+        }
+        if (cfdi.moneda === 'MXN' && cfdi.tipoCambio !== 1.0) {
+            messages.push(
+                'Si la moneda seleccionada es MXN el tipo de cambio debe ser $1.00.'
+            );
+        }
+        return messages;
+    }
 
-    /* let total: number = 0.0;
-    let subtotal: number  = 0.0;
-    for (const concepto of cfdi.conceptos) {
-      let impuesto = bignumber(0.0);
-      let retencion = bignumber(0.0);
-      let base = bignumber(0.0);
-      for (const imp of concepto.retenciones) {
-        retencion =  add(bignumber(imp.importe), bignumber(retencion));
-      }
-      for (const imp of concepto.impuestos) {
-        impuesto = add(bignumber(imp.importe), bignumber(impuesto));
-      }
-      base = subtract(bignumber(concepto.importe), bignumber(concepto.descuento));
-
-      subtotal = add(subtotal, base);
-      total = add(total, add(subtract(base, retencion), impuesto));
+    public validRegExpAphaNumeric(input: string): boolean {
+        const regexp = new RegExp(`^([A-Za-z0-9ÁÉÍÓÚÑáéíóúñ.,'&\\-\\s]+)$`);
+        return regexp.test(input);
     }
-    cfdi.total = number(total);
-    cfdi.subtotal = number(subtotal);
-    return cfdi; */
-  }
-
-  public generateAddress(contribuyente: Contribuyente) {
-    let address = `${contribuyente.calle}`.trim();
-    if (contribuyente.noExterior !== undefined && contribuyente.noExterior !== null) {
-      address += ' ';
-      address += `${contribuyente.noExterior}`.trim();
-    }
-    if (contribuyente.noInterior !== undefined && contribuyente.noInterior !== null) {
-      address += `,${contribuyente.noInterior}`.trim();
-    }
-    if ( contribuyente.localidad !== undefined && contribuyente.localidad !== null ) {
-      address += `,${contribuyente.localidad}`.trim();
-    }
-    if ( contribuyente.municipio !== undefined && contribuyente.municipio != null ) {
-      address += `,${contribuyente.municipio}`.trim();
-    }
-    if ( contribuyente.estado !== undefined && contribuyente.estado !== null ) {
-      address += `,${contribuyente.estado}`.trim();
-    }
-    if ( contribuyente.estado !== undefined && contribuyente.estado !== null ) {
-      address += `,C.P. ${contribuyente.cp}`.trim();
-    }
-    return address.toUpperCase().trim();
-  }
-
-  public generateCompanyAddress(company: Empresa) {
-    let address = `${company.calle}`.trim();
-    if (company.noExterior !== undefined && company.noExterior !== null) {
-      address += ' ';
-      address += `${company.noExterior}`.trim();
-    }
-    if (company.noInterior !== undefined && company.noInterior !== null) {
-      address += `,${company.noInterior}`.trim();
-    }
-    if ( company.colonia !== undefined && company.colonia !== null ) {
-      address += `,${company.colonia}`.trim();
-    }
-    if ( company.municipio !== undefined && company.municipio != null ) {
-      address += `,${company.municipio}`.trim();
-    }
-    if ( company.estado !== undefined && company.estado !== null ) {
-      address += `,${company.estado}`.trim();
-    }
-    if ( company.estado !== undefined && company.estado !== null ) {
-      address += `,C.P. ${company.cp}`.trim();
-    }
-    return address.toUpperCase().trim();
-  }
-
-
-
-  public validarCfdi(cfdi: Cfdi): string[] {
-    const messages: string[] = [];
-    if (cfdi.receptor === undefined || cfdi.receptor.rfc === undefined
-        || cfdi.receptor.rfc.length < 11 || cfdi.receptor.nombre.length < 8) {
-      messages.push('La información del receptor es un valor solicitado');
-    }
-    if (cfdi.emisor === undefined  || cfdi.emisor.rfc === undefined
-        || cfdi.emisor.rfc.length < 11 || cfdi.emisor.nombre.length < 8) {
-      messages.push('La información del emisor es un valor solicitado');
-    }
-    if (cfdi.emisor.rfc === cfdi.receptor.rfc) {
-      messages.push('El emisor y receptor son la misma entidad');
-    }
-    if (cfdi.receptor.usoCfdi === undefined || cfdi.receptor.usoCfdi === '*') {
-      messages.push('El uso del CFDI es un campo requerido.');
-    }else if (this.usoCfdiCat.find(e => e === cfdi.receptor.usoCfdi) === undefined) {
-      messages.push(`El uso de cfdi ${cfdi.receptor.usoCfdi} no es valido.`);
-    }
-    if (cfdi.moneda === undefined || cfdi.moneda === '*') {
-      messages.push('La moneda es un campo requerido.');
-    }
-    if (cfdi.formaPago === undefined || cfdi.formaPago === '*' ) {
-      messages.push('La forma de pago es un campo requerido.');
-    }else if (this.formaPagoCat.find(e => e === cfdi.formaPago) === undefined) {
-      messages.push(`La forma de pago ${cfdi.formaPago} no es valida.`);
-    }
-    if (cfdi.metodoPago === undefined || cfdi.metodoPago === '*') {
-      messages.push('El metodo de pago es un campo requerido.');
-    }else if (this.metodoPagoCat.find(e => e === cfdi.metodoPago) === undefined) {
-      messages.push(`El metodo de pago ${cfdi.metodoPago} no es valido.`);
-    }
-    if (cfdi.conceptos.length < 1) {
-      messages.push('La factura debe contener a menos 1 concepto a declarar.');
-    }
-    if (cfdi.total > 2000 && cfdi.formaPago === '01') {
-      messages.push('En pagos en efectivo el monto a facturar no debe de ser superior a 2000 pesos');
-    }
-    if (cfdi.moneda !== 'MXN' && cfdi.tipoCambio === 1.0) {
-      messages.push(`El tipo de cambio para  ${cfdi.moneda} no puede ser igual a $1.00`);
-    }
-    if (cfdi.moneda === 'MXN' && cfdi.tipoCambio !== 1.0 ) {
-      messages.push('Si la moneda seleccionada es MXN el tipo de cambio debe ser $1.00.');
-    }
-    return messages;
-  }
-
-  public validRegExpAphaNumeric(input: string): boolean {
-    const regexp = new RegExp(`^([A-Za-z0-9ÁÉÍÓÚÑáéíóúñ.,'&\\-\\s]+)$`);
-    return regexp.test(input);
-  }
 }

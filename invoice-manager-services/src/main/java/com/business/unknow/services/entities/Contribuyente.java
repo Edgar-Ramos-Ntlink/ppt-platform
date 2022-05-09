@@ -60,6 +60,9 @@ public class Contribuyente implements Serializable {
   @Column(name = "RAZON_SOCIAL")
   private String razonSocial;
 
+  @Column(name = "REGIMEN_FISCAL")
+  private String regimenFiscal;
+
   @Column(name = "CALLE")
   private String calle;
 

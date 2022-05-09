@@ -17,16 +17,12 @@ public class CfdiValidator extends AbstractValidator {
     checkNotNull(cfdi.getEmisor().getRfc(), "RFC Emisor");
     checkNotNull(cfdi.getEmisor().getNombre(), "Razon social emisor");
     checkNotEmpty(cfdi.getEmisor().getNombre(), "Razon social emisor");
-    checkNotNull(cfdi.getEmisor().getDireccion(), "Dirección emisor");
-    checkNotEmpty(cfdi.getEmisor().getDireccion(), "Dirección emisor");
     checkNotNull(cfdi.getEmisor().getRegimenFiscal(), "Regimen fiscal emisor");
 
     checkNotNull(cfdi.getReceptor(), "Receptor info");
     checkNotNull(cfdi.getReceptor().getRfc(), "RFC receptor");
     checkNotNull(cfdi.getReceptor().getNombre(), "Razon social receptor");
     checkNotEmpty(cfdi.getReceptor().getNombre(), "Razon social receptor");
-    checkNotNull(cfdi.getReceptor().getDireccion(), "Dirección receptor");
-    checkNotEmpty(cfdi.getReceptor().getDireccion(), "Dirección receptor");
     checkNotNull(cfdi.getReceptor().getUsoCfdi(), "Uso CFDI receptor");
 
     checkNotEquals(cfdi.getReceptor().getUsoCfdi(), "*");

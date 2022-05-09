@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>11</java.version>
 		<lombok.version>1.18.20</lombok.version>
-		<ntlink-utils-version>2.2.9</ntlink-utils-version>
+		<ntlink-utils-version>2.2.10</ntlink-utils-version>
 	</properties>
 
 	<dependencies>

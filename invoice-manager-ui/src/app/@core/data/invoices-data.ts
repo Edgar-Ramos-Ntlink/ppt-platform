@@ -1,8 +1,8 @@
-import { Factura } from '../../models/factura';
 import { GenericPage } from '../../models/generic-page';
 import { Observable } from 'rxjs';
 import { ResourceFile } from '../../models/resource-file';
 import { Pago } from '../models/cfdi/pago';
+import { Factura } from '../models/factura';
 
 export abstract class InvoicesData {
     abstract getInvoices(filterParams: any): Observable<GenericPage<Factura>>;

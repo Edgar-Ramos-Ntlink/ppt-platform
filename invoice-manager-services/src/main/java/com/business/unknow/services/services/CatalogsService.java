@@ -134,9 +134,9 @@ public class CatalogsService {
         result.getTotalElements());
   }
 
-  public List<ClaveUnidadDto> getClaveUnidadByNombre(String nombre) {
+  public List<ClaveUnidadDto> getClaveUnidadCatalog() {
     List<ClaveUnidadDto> claveUnidadCat =
-        mapper.getClaveUnidadDtosFromEntities(unidadRepo.findByNombreContainingIgnoreCase(nombre));
+        mapper.getClaveUnidadDtosFromEntities(unidadRepo.findAll());
     claveUnidadCat.sort((a, b) -> a.getNombre().compareTo(b.getNombre()));
     return claveUnidadCat;
   }

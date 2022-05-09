@@ -8,6 +8,7 @@ import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { DonwloadFileService } from '../../@core/util-services/download-file-service';
 import { CommonsModule } from '../commons/commons.module';
 import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion-pagos.component';
+import { CoreModule } from '../../@core/core.module';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion
   imports: [
     PromotorRoutingModule,
     CommonsModule,
+    CoreModule,
   ],
   entryComponents: [
     AsignacionPagosComponent,

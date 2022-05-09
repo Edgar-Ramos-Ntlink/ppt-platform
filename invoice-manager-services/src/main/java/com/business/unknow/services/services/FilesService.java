@@ -19,6 +19,7 @@ import com.mx.ntlink.cfdi.modelos.Cfdi;
 import com.mx.ntlink.models.generated.Comprobante;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -180,6 +181,16 @@ public class FilesService {
     }
   }
 
+  public InputStream getS3InputStream(S3BucketsEnum bucket, String name) {
+    try {
+      return s3Utils.getFileInputStream(s3Bucket, bucket.name(), name);
+    } catch (NtlinkUtilException e) {
+      throw new ResponseStatusException(
+          HttpStatus.CONFLICT,
+          String.format("Error getting S3 file %s", name).concat(e.getMessage()));
+    }
+  }
+
   public FacturaFileDto getFacturaFileByFolioAndType(String folio, String type)
       throws InvoiceManagerException {
     try {
@@ -242,9 +253,7 @@ public class FilesService {
     byte[] bytes = null;
     if (resource.isPresent()) {
       headers.setContentType(MediaType.valueOf(resource.get().getFormato().replace(";", "")));
-      bytes =
-          getS3File(S3BucketsEnum.EMPRESAS, resource.get().getNombre())
-              .getBytes(StandardCharsets.UTF_8);
+      bytes = getS3InputStream(S3BucketsEnum.EMPRESAS, resource.get().getNombre()).readAllBytes();
     } else {
       headers.setContentType(MediaType.IMAGE_PNG);
       bytes = noAvailableImage.getInputStream().readAllBytes();

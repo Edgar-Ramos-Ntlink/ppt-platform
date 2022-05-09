@@ -8,30 +8,24 @@ import java.math.BigDecimal;
 public class ClienteValidator extends AbstractValidator {
 
   public void validatePostCliente(ClientDto dto) throws InvoiceManagerException {
-    checkNotNull(dto.getInformacionFiscal(), "Informacion fiscal");
-    checkNotNull(dto.getInformacionFiscal().getRazonSocial(), "Razon Social");
-    checkNotEmpty(dto.getInformacionFiscal().getRazonSocial(), "Razon Social");
-    checkValidString(dto.getInformacionFiscal().getRazonSocial());
-    checkNotNull(dto.getInformacionFiscal().getEstado(), "Estado");
-    checkNotEmpty(dto.getInformacionFiscal().getEstado(), "Estado");
-    checkNotNull(dto.getInformacionFiscal().getCalle(), "calle");
-    checkNotEmpty(dto.getInformacionFiscal().getCalle(), "calle");
-    checkNotNull(dto.getInformacionFiscal().getCp(), "Codigo postal");
-    checkNotEmpty(dto.getInformacionFiscal().getCp(), "Codigo postal");
-    checkNotNull(dto.getInformacionFiscal().getLocalidad(), "Localidad");
-    checkNotEmpty(dto.getInformacionFiscal().getLocalidad(), "Localidad");
-    checkNotNull(dto.getInformacionFiscal().getMunicipio(), "Municipio");
-    checkNotEmpty(dto.getInformacionFiscal().getMunicipio(), "Municipio");
-    checkNotNull(dto.getInformacionFiscal().getRfc(), "RFC");
-    checkNotEmpty(dto.getInformacionFiscal().getRfc(), "RFC");
-    checkNotNull(dto.getInformacionFiscal().getCorreo(), "Correo");
-    checkNotEmpty(dto.getInformacionFiscal().getCorreo(), "Correo");
-    if (dto.getNotas() == null || dto.getNotas().isEmpty()) {
-      throw new InvoiceManagerException(
-          "Debe tener nota o Archivo Fiscal.",
-          "Debe tener nota o Archivo Fiscal para poder ser creado.",
-          Constants.BAD_REQUEST);
-    }
+    checkNotNull(dto.getRazonSocial(), "Razon Social");
+    checkNotEmpty(dto.getRazonSocial(), "Razon Social");
+    checkValidString(dto.getRazonSocial());
+    checkNotNull(dto.getEstado(), "Estado");
+    checkNotEmpty(dto.getEstado(), "Estado");
+    checkNotNull(dto.getCalle(), "calle");
+    checkNotEmpty(dto.getCalle(), "calle");
+    checkNotNull(dto.getCp(), "Codigo postal");
+    checkNotEmpty(dto.getCp(), "Codigo postal");
+    checkNotNull(dto.getLocalidad(), "Localidad");
+    checkNotEmpty(dto.getLocalidad(), "Localidad");
+    checkNotNull(dto.getMunicipio(), "Municipio");
+    checkNotEmpty(dto.getMunicipio(), "Municipio");
+    checkNotNull(dto.getRfc(), "RFC");
+    checkNotEmpty(dto.getRfc(), "RFC");
+    checkNotNull(dto.getCorreo(), "Correo");
+    checkNotEmpty(dto.getCorreo(), "Correo");
+
     if (dto.getPorcentajeCliente().compareTo(BigDecimal.ZERO) < 0) {
       throw new InvoiceManagerException(
           "El porcentaje debe ser positivo",
@@ -60,13 +54,19 @@ public class ClienteValidator extends AbstractValidator {
               "El porcentaje %s debe ser positivo", dto.getPorcentajePromotor().toString()),
           Constants.BAD_REQUEST);
     }
-    if (dto.getInformacionFiscal().getCp().matches("[a-zA-Z]+")) {
+    if (!dto.getCp().matches("^[0-9]{5}(?:-[0-9]{4})?$")) {
       throw new InvoiceManagerException(
-          "El codigo postal esta incorrect", "No debe llevar letras", Constants.BAD_REQUEST);
+          "El codigo postal es incorrecto:No debe llevar letras", Constants.BAD_REQUEST);
     }
-    if (dto.getInformacionFiscal().getCorreo() != null
-        && !dto.getInformacionFiscal().getCorreo().isEmpty()) {
-      checkValidEmail(dto.getInformacionFiscal().getCorreo());
+    if (!dto.getRfc()
+        .matches(
+            "^[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]?$")) {
+      throw new InvoiceManagerException(
+          "RFC invalido, verifique que no contenga espacios o caracteres inválidos",
+          Constants.BAD_REQUEST);
+    }
+    if (dto.getCorreo() != null && !dto.getCorreo().isEmpty()) {
+      checkValidEmail(dto.getCorreo());
     }
   }
 }

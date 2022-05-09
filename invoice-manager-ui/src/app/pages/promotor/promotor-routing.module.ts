@@ -5,7 +5,7 @@ import { ClientesComponent } from '../commons/clientes/clientes.component';
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
-import { PagosFacturaComponent } from '../commons/pagos-factura/pagos-factura.component';
+import { PagosFacturaComponent } from '../commons/pagos-facturas/pagos-facturas.component';
 
 const routes: Routes = [{
   path: '',
