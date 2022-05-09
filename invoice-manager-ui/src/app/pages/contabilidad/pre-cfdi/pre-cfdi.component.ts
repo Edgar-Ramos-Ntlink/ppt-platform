@@ -2,30 +2,23 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NbDialogService, NbToastrService } from '@nebular/theme';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Empresa } from '../../../models/empresa';
-import { ClaveProductoServicio } from '../../../models/catalogos/producto-servicio';
-import { ClaveUnidad } from '../../../models/catalogos/clave-unidad';
-import { UsoCfdi } from '../../../models/catalogos/uso-cfdi';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { PagoBase } from '../../../models/pago-base';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
-import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { Client } from '../../../models/client';
-import { User } from '../../../@core/models/user';
 import { CfdiData } from '../../../@core/data/cfdi-data';
-import { Concepto } from '../../../@core/models/cfdi/concepto';
 import { Pago } from '../../../@core/models/cfdi/pago';
-import { Cfdi } from '../../../@core/models/cfdi/cfdi';
 import { Factura } from '../../../@core/models/factura';
 import { NtError } from '../../../@core/models/nt-error';
 import { AppState } from '../../../reducers';
-import { Store } from '@ngrx/store';
-import { updateInvoice } from '../../../@core/core.actions';
+import { select, Store } from '@ngrx/store';
+import { initInvoice, updateInvoice } from '../../../@core/core.actions';
+import { invoice } from '../../../@core/core.selectors';
+import { AppConstants } from '../../../models/app-constants';
 
 @Component({
     selector: 'ngx-pre-cfdi',
@@ -37,12 +30,7 @@ export class PreCfdiComponent implements OnInit {
     public emisoresCat: Empresa[] = [];
     public receptoresCat: Empresa[] = [];
     public clientsCat: Client[] = [];
-    public prodServCat: ClaveProductoServicio[] = [];
-    public claveUnidadCat: ClaveUnidad[] = [];
-    public usoCfdiCat: UsoCfdi[] = [];
-    public validationCat: Catalogo[] = [];
     public payCat: Catalogo[] = [];
-    public devolutionCat: Catalogo[] = [];
     public payTypeCat: Catalogo[] = [
         new Catalogo('01', 'Efectivo'),
         new Catalogo('02', 'Cheque nominativo'),
@@ -51,7 +39,7 @@ export class PreCfdiComponent implements OnInit {
     ];
 
     public complementPayTypeCat: Catalogo[] = [];
-    public newConcep: Concepto;
+
     public payment: Pago;
     public factura: Factura;
     public folioParam: string;
@@ -59,11 +47,6 @@ export class PreCfdiComponent implements OnInit {
     public folio: string;
 
     public complementos: Factura[] = [];
-
-    public successMessage: string;
-    public errorMessages: string[] = [];
-    public conceptoMessages: string[] = [];
-    public payErrorMessages: string[] = [];
 
     public formInfo = {
         emisorRfc: '*',
@@ -105,76 +88,53 @@ export class PreCfdiComponent implements OnInit {
     public companiesCat: Empresa[] = [];
 
     constructor(
-        private dialogService: NbDialogService,
         private catalogsService: CatalogsData,
         private companiesService: CompaniesData,
         private invoiceService: InvoicesData,
-        private filesService: FilesData,
+        private paymentsService: PaymentsData,
         private cfdiService: CfdiData,
         private cfdiValidator: CfdiValidatorService,
-        private paymentsService: PaymentsData,
         private toastrService: NbToastrService,
-        private downloadService: DonwloadFileService,
         private route: ActivatedRoute,
-        private router: Router,
+        private dialogService: NbDialogService,
         private store: Store<AppState>
     ) {}
 
+    ngOnDestroy() {
+        this.store.dispatch(initInvoice({ invoice: new Factura() }));
+    }
+
     ngOnInit() {
-        
-        this.initInvoice();
+        this.loading = true;
         this.paymentsService
             .getFormasPago()
             .subscribe((payTypes) => (this.complementPayTypeCat = payTypes));
         /* preloaded cats*/
         this.catalogsService.getStatusPago().then((cat) => (this.payCat = cat));
         this.catalogsService
-            .getStatusDevolucion()
-            .then((cat) => (this.devolutionCat = cat));
-        this.catalogsService
-            .getStatusValidacion()
-            .then((cat) => (this.validationCat = cat));
-        this.catalogsService
             .getFormasPago()
             .then((cat) => (this.payTypeCat = cat));
-        /* not pre-loaded cats*/
-        this.catalogsService
-            .getAllUsoCfdis()
-            .then((cat) => (this.usoCfdiCat = cat));
         this.catalogsService
             .getAllGiros()
             .then((cat) => (this.girosCat = cat))
             .then(() => {
                 this.route.paramMap.subscribe((route) => {
-                    this.folio = route.get('folio');
-                    if (this.folio !== '*') {
-                        this.getInvoiceByFolio(this.folio);
+                    const folio = route.get('folio');
+                    if (folio === '*') {
+                        this.store.dispatch(
+                            initInvoice({ invoice: new Factura() })
+                        );
+                        this.loading = false;
                     } else {
-                        this.initInvoice();
+                        this.getInvoiceByFolio(folio);
                     }
+                    this.folio = folio;
                 });
             });
-    }
 
-    ngOnDestroy() {
-        /** CLEAN VARIABLES **/
-        this.newConcep = new Concepto();
-        this.factura = new Factura();
-    }
-
-    public initInvoice() {
-        /** INIT VARIABLES **/
-        this.newConcep = new Concepto();
-        this.factura = new Factura();
-        this.errorMessages = [];
-        this.successMessage = undefined;
-        this.loading = false;
-        this.factura.cfdi.moneda = 'MXN';
-        this.factura.cfdi.metodoPago = '*';
-        this.payment = new Pago();
-        this.payment.formaPago = '*';
-        this.factura.cfdi.formaPago = '*';
-        this.factura.cfdi.receptor.usoCfdi = '*';
+        this.store
+            .pipe(select(invoice))
+            .subscribe((fact) => (this.factura = fact));
     }
 
     public getInvoiceByFolio(folio: string) {
@@ -197,10 +157,12 @@ export class PreCfdiComponent implements OnInit {
                         .findInvoicePaymentComplementsByFolio(folio)
                         .subscribe((pagos) => (this.pagosCfdi = pagos));
                 }
+                this.loading = false;
             },
             (error: NtError) => {
                 this.toastrService.danger(error.message);
-                this.initInvoice();
+                this.store.dispatch(initInvoice({ invoice: new Factura() }));
+                this.loading = false;
             }
         );
     }
@@ -217,10 +179,11 @@ export class PreCfdiComponent implements OnInit {
                 )
                 .subscribe(
                     (companies) => (this.emisoresCat = companies),
-                    (error: HttpErrorResponse) =>
-                        this.errorMessages.push(
-                            error.error.message ||
-                                `${error.statusText} : ${error.message}`
+                    (error: NtError) =>
+                        this.toastrService.danger(
+                            error?.message,
+                            'Error recuperando emisores',
+                            AppConstants.TOAST_CONFIG
                         )
                 );
         }
@@ -238,10 +201,11 @@ export class PreCfdiComponent implements OnInit {
                 )
                 .subscribe(
                     (companies) => (this.receptoresCat = companies),
-                    (error: HttpErrorResponse) =>
-                        this.errorMessages.push(
-                            error.error.message ||
-                                `${error.statusText} : ${error.message}`
+                    (error: NtError) => (error: NtError) =>
+                        this.toastrService.danger(
+                            error?.message,
+                            'Error recuperando receptores',
+                            AppConstants.TOAST_CONFIG
                         )
                 );
         }
@@ -305,95 +269,66 @@ export class PreCfdiComponent implements OnInit {
     }
 
     limpiarForma() {
-        this.initInvoice();
-        this.clientInfo = undefined;
-        this.companyInfo = undefined;
-        this.successMessage = undefined;
-        this.newConcep = new Concepto();
-        this.factura = new Factura();
-        this.factura.cfdi = new Cfdi();
-        this.factura.cfdi.conceptos = [];
-        this.errorMessages = [];
-    }
-
-    public downloadPdf(folio: string) {
-        this.filesService
-            .getFacturaFile(folio, 'PDF')
-            .subscribe((file) =>
-                this.downloadService.downloadFile(
-                    file.data,
-                    `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`,
-                    'application/pdf;'
-                )
-            );
-    }
-    public downloadXml(folio: string) {
-        this.filesService
-            .getFacturaFile(folio, 'XML')
-            .subscribe((file) =>
-                this.downloadService.downloadFile(
-                    file.data,
-                    `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`,
-                    'text/xml;charset=utf8;'
-                )
-            );
+        this.store.dispatch(initInvoice({ invoice: new Factura() }));
     }
 
     public solicitarCfdi() {
         this.loading = true;
-        this.errorMessages = [];
-        this.factura.solicitante = sessionStorage.getItem('email');
+        const fact = JSON.parse(JSON.stringify(this.factura));
+        let errorMessages: string[] = [];
+        fact.solicitante = sessionStorage.getItem('email');
         if (
             this.clientInfo === undefined ||
             this.clientInfo.rfc === undefined
         ) {
-            this.errorMessages.push(
+            errorMessages.push(
                 'La informacion del cliente es insuficiente o no esta presente.'
             );
         } else if (this.companyInfo === undefined) {
-            this.errorMessages.push(
+            errorMessages.push(
                 'La informacion de la empresa es insuficiente o no esta presente.'
             );
         } else {
-            this.factura.rfcEmisor = this.companyInfo.rfc;
-            this.factura.razonSocialEmisor = this.companyInfo.razonSocial;
-            this.factura.cfdi.emisor.regimenFiscal =
-                this.companyInfo.regimenFiscal;
-            this.factura.cfdi.emisor.rfc = this.companyInfo.rfc;
-            this.factura.cfdi.emisor.nombre = this.companyInfo.razonSocial;
-            this.factura.rfcEmisor = this.companyInfo.rfc;
-            this.factura.razonSocialEmisor = this.companyInfo.razonSocial;
+            fact.rfcEmisor = this.companyInfo.rfc;
+            fact.razonSocialEmisor = this.companyInfo.razonSocial;
+            fact.cfdi.emisor.regimenFiscal = this.companyInfo.regimenFiscal;
+            fact.cfdi.emisor.rfc = this.companyInfo.rfc;
+            fact.cfdi.emisor.nombre = this.companyInfo.razonSocial;
+            fact.rfcEmisor = this.companyInfo.rfc;
+            fact.razonSocialEmisor = this.companyInfo.razonSocial;
 
-            this.factura.rfcRemitente = this.clientInfo.rfc;
-            this.factura.razonSocialRemitente = this.clientInfo.razonSocial;
-            this.factura.cfdi.receptor.rfc = this.clientInfo.rfc;
-            this.factura.cfdi.receptor.nombre = this.clientInfo.razonSocial;
-            this.factura.direccionEmisor =
-                this.cfdiValidator.generateCompanyAddress(this.companyInfo);
-            this.factura.direccionReceptor =
-                this.cfdiValidator.generateCompanyAddress(this.clientInfo);
+            fact.rfcRemitente = this.clientInfo.rfc;
+            fact.razonSocialRemitente = this.clientInfo.razonSocial;
+            fact.cfdi.receptor.rfc = this.clientInfo.rfc;
+            fact.cfdi.receptor.nombre = this.clientInfo.razonSocial;
+            fact.direccionEmisor = this.cfdiValidator.generateCompanyAddress(
+                this.companyInfo
+            );
+            fact.direccionReceptor = this.cfdiValidator.generateCompanyAddress(
+                this.clientInfo
+            );
 
-            this.factura.lineaEmisor = this.formInfo.lineaEmisor || 'B';
-            this.factura.lineaRemitente = this.formInfo.lineaReceptor || 'A';
-            this.factura.metodoPago = this.factura.cfdi.metodoPago;
-            this.factura.statusFactura = '8'; // sets automatically to stamp directly
-            this.errorMessages = this.cfdiValidator.validarCfdi({
-                ...this.factura.cfdi,
+            fact.lineaEmisor = this.formInfo.lineaEmisor || 'B';
+            fact.lineaRemitente = this.formInfo.lineaReceptor || 'A';
+            fact.metodoPago = fact.cfdi.metodoPago;
+            fact.statusFactura = '8'; // sets automatically to stamp directly
+            errorMessages = this.cfdiValidator.validarCfdi({
+                ...fact.cfdi,
             });
         }
-        if (this.errorMessages.length === 0) {
+        if (errorMessages.length === 0) {
             this.invoiceService.insertNewInvoice(this.factura).subscribe(
                 (invoice: Factura) => {
                     this.factura.folio = invoice.folio;
                     this.getInvoiceByFolio(invoice.folio);
                     this.loading = false;
                 },
-                (error: HttpErrorResponse) => {
+                (error: NtError) => {
                     this.loading = false;
-                    this.errorMessages.push(
-                        error.error != null && error.error !== undefined
-                            ? error.error.message
-                            : `${error.statusText} : ${error.message}`
+                    this.toastrService.danger(
+                        error?.message,
+                        'Error',
+                        AppConstants.TOAST_CONFIG
                     );
                 }
             );
@@ -402,134 +337,129 @@ export class PreCfdiComponent implements OnInit {
         }
     }
 
-    public returnToSourceFact(idCfdi: number) {
-        this.successMessage = undefined;
-        this.router.navigate([`./pages/contabilidad/cfdi/${idCfdi}`]);
-    }
-
-    public goToRelacionado(idCfdi: number) {
-        this.successMessage = undefined;
-        this.router.navigate([`./pages/contabilidad/cfdi/${idCfdi}`]);
-    }
-
     public linkInvoice(factura: Factura) {
         this.loading = true;
-        this.errorMessages = [];
-        this.successMessage = undefined;
-        const fact = { ...factura };
-        fact.cfdi = null;
-        fact.statusFactura = this.validationCat.find(
-            (v) => v.nombre === fact.statusFactura
-        ).id;
-
+        const fact = { ...this.factura };
         this.invoiceService.generateReplacement(factura.folio, fact).subscribe(
-            (result) => {
-                this.successMessage =
-                    'El documento relacionado se ha generado exitosamente';
-                this.getInvoiceByFolio(this.folio);
+            (invoice) => {
+                this.toastrService.success(
+                    'El documento relacionado se ha generado exitosamente',
+                    'Documento relacionado',
+                    AppConstants.TOAST_CONFIG
+                );
+                this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
             },
-            (error: HttpErrorResponse) => {
-                this.errorMessages.push(
-                    error.error.message ||
-                        `${error.statusText} : ${error.message}`
+            (error: NtError) => {
+                this.toastrService.danger(
+                    error?.message,
+                    'Error en la sustitución',
+                    AppConstants.TOAST_CONFIG
                 );
                 this.loading = false;
             }
         );
     }
 
-    public rechazarFactura() {
+    public generateCreditNoteInvoice(factura: Factura) {
         this.loading = true;
-        this.successMessage = undefined;
-        this.errorMessages = [];
-        let fact = { ...this.factura };
-        fact.statusFactura = '9'; // update to recahzo contabilidad
-        this.invoiceService.updateInvoice(fact).subscribe(
-            (result) => {
-                this.getInvoiceByFolio(this.folio);
-                this.loading = false;
-            },
-            (error: HttpErrorResponse) => {
-                this.loading = false;
-                this.errorMessages.push(
-                    error.error != null && error.error !== undefined
-                        ? error.error.message
-                        : `${error.statusText} : ${error.message}`
-                );
-            }
-        );
-    }
-
-    public timbrarFactura(factura: Factura, dialog: TemplateRef<any>) {
-        this.loading = true;
-        this.successMessage = undefined;
-        this.errorMessages = [];
         const fact = { ...factura };
-        fact.cfdi = null;
-        fact.statusFactura = this.validationCat.find(
-            (v) => v.nombre === fact.statusFactura
-        ).id;
-        this.dialogService
-            .open(dialog, { context: fact })
-            .onClose.subscribe((invoice) => {
-                if (invoice !== undefined) {
-                    this.invoiceService
-                        .timbrarFactura(fact.folio, invoice)
-                        .subscribe(
-                            (result) => {
-                                this.loading = false;
-                                this.getInvoiceByFolio(this.folio);
-                            },
-                            (error: HttpErrorResponse) => {
-                                this.loading = false;
-                                this.errorMessages.push(
-                                    error.error != null &&
-                                        error.error !== undefined
-                                        ? error.error.message
-                                        : `${error.statusText} : ${error.message}`
+        this.invoiceService.generateCreditNote(factura.folio, fact).subscribe(
+            (invoice) => {
+                this.toastrService.success(
+                    'La nota de credito se ha generado exitosamente',
+                    'Nota credito creada',
+                    AppConstants.TOAST_CONFIG
+                );
+                this.store.dispatch(updateInvoice({ invoice }));
+                this.loading = false;
+            },
+            (error: NtError) => {
+                this.toastrService.danger(
+                    error?.message,
+                    'Error creando la nota de crédito',
+                    AppConstants.TOAST_CONFIG
+                );
+                this.loading = false;
+            }
+        );
+    }
+
+    public async rechazarFactura(factura: Factura, dialog: TemplateRef<any>) {
+        try {
+            const fact: Factura = JSON.parse(JSON.stringify(factura));
+            fact.statusDetail = 'Campos inválidos en el CFDI';
+            fact.notas = `Factura rechazada por operaciones : ${sessionStorage.getItem(
+                'email'
+            )}`;
+            this.dialogService
+                .open(dialog, { context: fact })
+                .onClose.subscribe((result) => {
+                    this.loading = true;
+                    if (result !== undefined) {
+                        result.statusFactura = '9'; // update to rechazo contabilidad
+                        this.invoiceService.updateInvoice(result).subscribe(
+                            (invoice) => {
+                                this.toastrService.success(
+                                    '',
+                                    'factura rechazada',
+                                    AppConstants.TOAST_CONFIG
                                 );
+                                this.store.dispatch(updateInvoice({ invoice }));
+                                this.loading = false;
+                            },
+                            (error: NtError) => {
+                                this.toastrService.danger(
+                                    error?.message,
+                                    'Error',
+                                    AppConstants.TOAST_CONFIG
+                                );
+                                this.loading = false;
                             }
                         );
-                } else {
-                    this.loading = false;
-                }
-            });
+                    } else {
+                        this.loading = false;
+                    }
+                });
+        } catch (error) {
+            this.toastrService.danger(
+                error?.message,
+                'Error',
+                AppConstants.TOAST_CONFIG
+            );
+            this.loading = false;
+        }
     }
-    public async cancelarFactura(factura: Factura, dialog: TemplateRef<any>) {
-        this.successMessage = undefined;
-        this.errorMessages = [];
-        console.log('Cancelando factura:', factura.preFolio);
+
+    public async timbrarFactura(factura: Factura, dialog: TemplateRef<any>) {
         try {
             const fact = { ...factura };
-            fact.motivo = '02';
-            fact.cfdi = null;
-            fact.statusFactura = this.validationCat.find(
-                (v) => v.nombre === fact.statusFactura
-            ).id;
-
             this.dialogService
                 .open(dialog, { context: fact })
                 .onClose.subscribe((invoice) => {
                     this.loading = true;
                     if (invoice !== undefined) {
                         this.invoiceService
-                            .cancelarFactura(fact.folio, fact)
+                            .timbrarFactura(fact.folio, invoice)
                             .subscribe(
-                                (success) => {
-                                    this.successMessage =
-                                        'Factura correctamente cancelada';
-                                    this.getInvoiceByFolio(this.folio);
-                                },
-                                (error: HttpErrorResponse) => {
-                                    this.errorMessages.push(
-                                        error.error != null &&
-                                            error.error != undefined
-                                            ? error.error.message
-                                            : `${error.statusText} : ${error.message}`
+                                (invoice) => {
+                                    this.toastrService.success(
+                                        '',
+                                        'factura timbrada',
+                                        AppConstants.TOAST_CONFIG
+                                    );
+                                    this.store.dispatch(
+                                        updateInvoice({ invoice })
                                     );
                                     this.loading = false;
-                                    console.error(this.errorMessages);
+                                },
+                                (error: NtError) => {
+                                    this.toastrService.danger(
+                                        error?.message,
+                                        'Error',
+                                        AppConstants.TOAST_CONFIG
+                                    );
+                                    this.loading = false;
                                 }
                             );
                     } else {
@@ -537,47 +467,123 @@ export class PreCfdiComponent implements OnInit {
                     }
                 });
         } catch (error) {
-            this.errorMessages.push(
-                error.error != null && error.error != undefined
-                    ? error.error.message
-                    : `${error.statusText} : ${error.message}`
+            this.toastrService.danger(
+                error?.message,
+                'Error',
+                AppConstants.TOAST_CONFIG
             );
+            this.loading = false;
         }
+    }
+
+    public async cancelarFactura(factura: Factura, dialog: TemplateRef<any>) {
+        try {
+            const fact = JSON.parse(JSON.stringify(factura));
+            fact.motivo = '02';
+            this.dialogService
+                .open(dialog, { context: fact })
+                .onClose.subscribe((result) => {
+                    this.loading = true;
+                    if (result !== undefined) {
+                        this.invoiceService
+                            .cancelarFactura(fact.folio, result)
+                            .subscribe(
+                                (invoice) => {
+                                    this.toastrService.success(
+                                        '',
+                                        'factura cancelada',
+                                        AppConstants.TOAST_CONFIG
+                                    );
+                                    this.store.dispatch(
+                                        updateInvoice({ invoice })
+                                    );
+                                    this.loading = false;
+                                },
+                                (error: NtError) => {
+                                    this.toastrService.danger(
+                                        error?.message,
+                                        'Error',
+                                        AppConstants.TOAST_CONFIG
+                                    );
+                                    this.loading = false;
+                                }
+                            );
+                    } else {
+                        this.loading = false;
+                    }
+                });
+        } catch (error) {
+            this.toastrService.danger(
+                error?.message,
+                'Error',
+                AppConstants.TOAST_CONFIG
+            );
+            this.loading = false;
+        }
+    }
+
+    public async revalidateInvoice() {
+        this.loading = true;
+        const fact: Factura = JSON.parse(JSON.stringify(this.factura));
+        fact.statusFactura = '8';
+        fact.validacionOper = false;
+        fact.total = this.factura.cfdi.total;
+        fact.metodoPago = this.factura.cfdi.metodoPago;
+        fact.saldoPendiente = this.factura.cfdi.total;
+        this.invoiceService.updateInvoice(fact).subscribe(
+            (invoice) => {
+                this.loading = false;
+                this.store.dispatch(updateInvoice({ invoice }));
+                this.toastrService.success(
+                    'acctualización exitosa',
+                    'CFDI Revalidado',
+                    AppConstants.TOAST_CONFIG
+                );
+            },
+            (error: NtError) => {
+                this.loading = false;
+                this.toastrService.danger(
+                    error?.message,
+                    'Error en la revalidacion del CFDI',
+                    AppConstants.TOAST_CONFIG
+                );
+            }
+        );
     }
 
     generateComplement() {
         this.loading = true;
-        this.errorMessages = [];
+        let errorMessages = [];
         if (this.payment.monto === undefined) {
-            this.errorMessages.push(
+            errorMessages.push(
                 'El monto del complemento es un valor requerido'
             );
         }
         if (this.payment.monto <= 0) {
-            this.errorMessages.push(
+            errorMessages.push(
                 'El monto del complemento no puede ser igual a 0'
             );
         }
         if (this.payment.monto + this.paymentSum > this.factura.cfdi.total) {
-            this.errorMessages.push(
+            errorMessages.push(
                 'El monto del complemento no puede ser superior al monto total de la factura'
             );
         }
         if (this.payment.moneda !== this.factura.cfdi.moneda) {
-            this.errorMessages.push(
+            errorMessages.push(
                 'El monto del complemento no puede ser superior al monto total de la factura'
             );
         }
         if (this.payment.formaPago === undefined) {
-            this.errorMessages.push('La forma de pago es requerida');
+            errorMessages.push('La forma de pago es requerida');
         }
         if (
             this.payment.fechaPago === undefined ||
             this.payment.fechaPago === null
         ) {
-            this.errorMessages.push('La fecha de pago es un valor requerido');
+            errorMessages.push('La fecha de pago es un valor requerido');
         }
-        if (this.errorMessages.length === 0) {
+        if (errorMessages.length === 0) {
             this.invoiceService
                 .generateInvoiceComplement(this.factura.folio, this.payment)
                 .subscribe(
@@ -585,49 +591,18 @@ export class PreCfdiComponent implements OnInit {
                         this.getInvoiceByFolio(this.folio);
                         /*   this.loadConceptos(); */
                     },
-                    (error: HttpErrorResponse) => {
-                        this.errorMessages.push(
-                            error.error != null && error.error !== undefined
-                                ? error.error.message
-                                : `${error.statusText} : ${error.message}`
-                        );
-                        /*   this.loadConceptos(); */
+                    (error: NtError) => {
                         this.loading = false;
+                        this.toastrService.danger(
+                            error?.message,
+                            'Error en la revalidacion del CFDI',
+                            AppConstants.TOAST_CONFIG
+                        );
                     }
                 );
         } else {
             this.loading = false;
         }
-    }
-
-    /* private loadConceptos() {
-    this.invoiceService.getInvoiceSaldo(this.folio).subscribe(a => this.payment.monto = a);
-          this.invoiceService.getComplementosInvoice(this.folio)
-          .pipe(
-            map((facturas: Factura[]) => {
-              return facturas.map(record => {
-                record.statusFactura = this.validationCat.find(v => v.id === record.statusFactura).nombre;
-                return record;
-              });
-            })).subscribe(complementos => {
-            this.factura.complementos = complementos;
-            this.calculatePaymentSum(complementos);
-            this.loading = false;
-          });
-  } */
-
-    calculatePaymentSum(complementos: Factura[]) {
-        if (complementos.length === 0) {
-            this.paymentSum = 0;
-        } else {
-            this.paymentSum = complementos
-                .map((c: Factura) => c.total)
-                .reduce((total, c) => total + c);
-        }
-    }
-
-    isValidCfdi(): boolean {
-        return this.cfdiValidator.validarCfdi(this.factura.cfdi).length === 0;
     }
 
     onGiroSelection(giroId: string) {
@@ -642,11 +617,14 @@ export class PreCfdiComponent implements OnInit {
                 )
                 .subscribe(
                     (companies) => (this.emisoresCat = companies),
-                    (error: HttpErrorResponse) =>
-                        this.errorMessages.push(
-                            error.error.message ||
-                                `${error.statusText} : ${error.message}`
-                        )
+                    (error: NtError) => {
+                        this.loading = false;
+                        this.toastrService.danger(
+                            error?.message,
+                            'Error en la revalidacion del CFDI',
+                            AppConstants.TOAST_CONFIG
+                        );
+                    }
                 );
         }
         console.log('giro ' + JSON.stringify(this.companiesCat));
@@ -671,5 +649,4 @@ export class PreCfdiComponent implements OnInit {
         this.factura.direccionEmisor =
             this.cfdiValidator.generateCompanyAddress(this.companyInfo);
     }
-    
 }

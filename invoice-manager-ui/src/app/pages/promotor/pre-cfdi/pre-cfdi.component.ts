@@ -38,13 +38,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
     public factura: Factura = new Factura();
 
-    public formInfo = {
-        clientName: '',
-        clientRfc: '*',
-        companyRfc: '',
-        giro: '*',
-        empresa: '*',
-    };
     public loading: boolean = false;
     public clientSearchMsg = '';
 
