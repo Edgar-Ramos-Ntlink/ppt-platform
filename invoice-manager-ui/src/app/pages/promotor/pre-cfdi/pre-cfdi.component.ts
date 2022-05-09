@@ -245,6 +245,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         fact.total = this.factura.cfdi.total;
         fact.metodoPago = this.factura.cfdi.metodoPago;
         fact.saldoPendiente = this.factura.cfdi.total;
+        
         this.invoiceService.updateInvoice(fact).subscribe(
             (invoice) => {
                 this.loading = false;

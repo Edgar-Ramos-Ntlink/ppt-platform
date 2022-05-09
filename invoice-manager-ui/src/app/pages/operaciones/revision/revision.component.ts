@@ -1,19 +1,10 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NbDialogService, NbToastrService } from '@nebular/theme';
-import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ClientsData } from '../../../@core/data/clients-data';
-import { CompaniesData } from '../../../@core/data/companies-data';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Contribuyente } from '../../../models/contribuyente';
-import { Empresa } from '../../../models/empresa';
 import { Client } from '../../../models/client';
 import { InvoicesData } from '../../../@core/data/invoices-data';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Catalogo } from '../../../models/catalogos/catalogo';
-import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { FilesData } from '../../../@core/data/files-data';
+import { ActivatedRoute } from '@angular/router';
 import { CfdiData } from '../../../@core/data/cfdi-data';
-import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { Pago } from '../../../@core/models/cfdi/pago';
 import { Factura } from '../../../@core/models/factura';
 import { select, Store } from '@ngrx/store';
@@ -21,6 +12,7 @@ import { AppState } from '../../../reducers';
 import { NtError } from '../../../@core/models/nt-error';
 import { initInvoice, updateInvoice } from '../../../@core/core.actions';
 import { invoice } from '../../../@core/core.selectors';
+import { AppConstants } from '../../../models/app-constants';
 
 @Component({
     selector: 'ngx-revision',
@@ -30,35 +22,15 @@ import { invoice } from '../../../@core/core.selectors';
 export class RevisionComponent implements OnInit {
     public folio: string;
     public pagosCfdi: Pago[] = [];
-    public girosCat: Catalogo[] = [];
-    public companiesCat: Empresa[] = [];
-    public validationCat: Catalogo[] = [];
-
-    public clientsCat: Client[] = [];
     public factura: Factura = new Factura();
     
     public soporte: boolean = false;
-    // TODO DELETE THIS FIELDS
-    public successMessage: string;
-    public errorMessages: string[] = [];
-    public formInfo = {
-        clientName: '',
-        clientRfc: '*',
-        companyRfc: '',
-        giro: '*',
-        empresa: '*',
-    };
-    public clientInfo: Contribuyente;
-    public companyInfo: Empresa;
-
     public loading: boolean = true;
 
     constructor(
-        private catalogsService: CatalogsData,
         private clientsService: ClientsData,
         private invoiceService: InvoicesData,
         private cfdiService: CfdiData,
-        private cfdiValidator: CfdiValidatorService,
         private toastrService: NbToastrService,
         private dialogService: NbDialogService,
         private route: ActivatedRoute,
@@ -72,10 +44,7 @@ export class RevisionComponent implements OnInit {
             this.getInvoiceByFolio(folio)
             this.folio = folio;
         });
-
         
-
-        this.catalogsService.getAllGiros().then((cat) => (this.girosCat = cat));
         this.store.pipe(select(invoice)).subscribe((fact) => (this.factura = fact));
     }
 
@@ -116,26 +85,15 @@ export class RevisionComponent implements OnInit {
 
     public linkInvoice(factura: Factura) {
         this.loading = true;
-        this.errorMessages = [];
-        this.successMessage = undefined;
-        const fact = { ...factura };
-        fact.cfdi = null;
-        fact.statusFactura = this.validationCat.find(
-            (v) => v.nombre === fact.statusFactura
-        ).id;
-
+        const fact = {...this.factura};
         this.invoiceService.generateReplacement(factura.folio, fact).subscribe(
-            (result) => {
-                this.successMessage =
-                    'El documento relacionado se ha generado exitosamente';
-                this.getInvoiceByFolio(this.folio);
+            (invoice) => {
+                this.toastrService.success('El documento relacionado se ha generado exitosamente','Documento relacionado',AppConstants.TOAST_CONFIG);
+                this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
             },
-            (error: HttpErrorResponse) => {
-                this.errorMessages.push(
-                    error.error.message ||
-                        `${error.statusText} : ${error.message}`
-                );
+            (error: NtError) => {
+                this.toastrService.danger(error?.message,'Error en la sustitución', AppConstants.TOAST_CONFIG);
                 this.loading = false;
             }
         );
@@ -143,86 +101,82 @@ export class RevisionComponent implements OnInit {
 
     public generateCreditNoteInvoice(factura: Factura) {
         this.loading = true;
-        this.errorMessages = [];
-        this.successMessage = undefined;
         const fact = { ...factura };
-        fact.cfdi = null;
-        fact.statusFactura = this.validationCat.find(
-            (v) => v.nombre === fact.statusFactura
-        ).id;
-
         this.invoiceService.generateCreditNote(factura.folio, fact).subscribe(
-            (result) => {
-                this.successMessage =
-                    'La nota de credito se ha generado exitosamente';
-                this.getInvoiceByFolio(this.folio);
+            (invoice) => {
+                this.toastrService.success('La nota de credito se ha generado exitosamente','Nota credito creada',AppConstants.TOAST_CONFIG);
+                this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
             },
-            (error: HttpErrorResponse) => {
-                this.errorMessages.push(
-                    error.error.message ||
-                        `${error.statusText} : ${error.message}`
-                );
+            (error: NtError) => {
+                this.toastrService.danger(error?.message,'Error creando la nota de crédito', AppConstants.TOAST_CONFIG);
                 this.loading = false;
             }
         );
     }
 
     public aceptarFactura() {
-        this.successMessage = undefined;
-        this.errorMessages = [];
-        const fact = { ...this.factura };
+        const fact = JSON.parse(JSON.stringify(this.factura));
         fact.validacionOper = true;
-        fact.statusFactura = '1';
+        if(fact.metodoPago === 'PUE'){
+            fact.statusFactura = '2';
+        }
+        if(fact.metodoPago === 'PPD'){
+            fact.statusFactura = '4';
+        }
         this.loading = true;
         this.invoiceService.updateInvoice(fact).subscribe(
-            (result) => {
+            (invoice) => {
+                this.toastrService.success('','factura aceptada',AppConstants.TOAST_CONFIG);
+                this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
-                this.getInvoiceByFolio(this.folio);
             },
-            (error: HttpErrorResponse) => {
+            (error: NtError) => {
+                this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
                 this.loading = false;
-                this.errorMessages.push(
-                    error.error != null && error.error !== undefined
-                        ? error.error.message
-                        : `${error.statusText} : ${error.message}`
-                );
             }
         );
     }
 
-    public rechazarFactura() {
-        this.loading = true;
-        this.successMessage = undefined;
-        this.errorMessages = [];
-        const fact = { ...this.factura };
-        fact.statusFactura = '6'; // update to rechazo operaciones
-        this.invoiceService.updateInvoice(fact).subscribe(
-            (result) => {
-                this.loading = false;
-                this.getInvoiceByFolio(this.folio);
-            },
-            (error: HttpErrorResponse) => {
-                this.loading = false;
-                this.errorMessages.push(
-                    error.error != null && error.error !== undefined
-                        ? error.error.message
-                        : `${error.statusText} : ${error.message}`
-                );
-            }
-        );
+    public async rechazarFactura(factura: Factura, dialog: TemplateRef<any>) {
+
+        try {
+            const fact : Factura = JSON.parse(JSON.stringify(factura));
+            fact.statusDetail = 'Campos inválidos en el CFDI';
+            fact.notas = `Factura rechazada por operaciones : ${sessionStorage.getItem('email')}`;
+            this.dialogService
+                .open(dialog, { context: fact })
+                .onClose.subscribe((result) => {
+                    this.loading = true;
+                    if (result !== undefined) {
+                        result.statusFactura = '6'; // update to rechazo operaciones
+                        this.invoiceService
+                            .updateInvoice(result)
+                            .subscribe(
+                                (invoice) => {
+                                    this.toastrService.success('','factura rechazada',AppConstants.TOAST_CONFIG);
+                                        this.store.dispatch(updateInvoice({ invoice }));
+                                        this.loading = false;
+                                },
+                                (error: NtError) => {
+                                    this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
+                                    this.loading = false;
+                                }
+                            );
+                    } else {
+                        this.loading = false;
+                    }
+                });
+        } catch (error) {
+            this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
+            this.loading = false;
+        }
     }
 
     public async timbrarFactura(factura: Factura, dialog: TemplateRef<any>) {
-        this.successMessage = undefined;
-        this.errorMessages = [];
         try {
             const fact = { ...factura };
-            fact.cfdi = null;
-            fact.statusFactura = this.validationCat.find(
-                (v) => v.nombre === fact.statusFactura
-            ).id;
-
+            
             let client: Client = await this.clientsService
                 .getClientsByPromotorAndRfc(
                     this.factura.solicitante,
@@ -239,18 +193,14 @@ export class RevisionComponent implements OnInit {
                             this.invoiceService
                                 .timbrarFactura(fact.folio, invoice)
                                 .subscribe(
-                                    (result) => {
+                                    (invoice) => {
+                                        this.toastrService.success('','factura timbrada',AppConstants.TOAST_CONFIG);
+                                        this.store.dispatch(updateInvoice({ invoice }));
                                         this.loading = false;
-                                        this.getInvoiceByFolio(this.folio);
                                     },
-                                    (error: HttpErrorResponse) => {
+                                    (error: NtError) => {
+                                        this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
                                         this.loading = false;
-                                        this.errorMessages.push(
-                                            error.error != null &&
-                                                error.error != undefined
-                                                ? error.error.message
-                                                : `${error.statusText} : ${error.message}`
-                                        );
                                     }
                                 );
                         } else {
@@ -258,54 +208,35 @@ export class RevisionComponent implements OnInit {
                         }
                     });
             } else {
+                this.toastrService.danger('El cliente que solicita la factura se encuentra inactivo','Cliente inactivo', AppConstants.TOAST_CONFIG);
                 this.loading = false;
-                this.errorMessages.push(
-                    'El cliente que solicita la factura se encuentra inactivo'
-                );
             }
         } catch (error) {
-            this.errorMessages.push(
-                error.error != null && error.error != undefined
-                    ? error.error.message
-                    : `${error.statusText} : ${error.message}`
-            );
+            this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
+            this.loading = false;
         }
     }
 
     public async cancelarFactura(factura: Factura, dialog: TemplateRef<any>) {
-        this.successMessage = undefined;
-        this.errorMessages = [];
-        console.log('Cancelando factura:', factura.preFolio);
         try {
-            const fact = { ...factura };
+            const fact = JSON.parse(JSON.stringify(factura));
             fact.motivo = '02';
-            fact.cfdi = null;
-            fact.statusFactura = this.validationCat.find(
-                (v) => v.nombre === fact.statusFactura
-            ).id;
-
             this.dialogService
                 .open(dialog, { context: fact })
-                .onClose.subscribe((invoice) => {
+                .onClose.subscribe((result) => {
                     this.loading = true;
-                    if (invoice !== undefined) {
+                    if (result !== undefined) {
                         this.invoiceService
-                            .cancelarFactura(fact.folio, fact)
+                            .cancelarFactura(fact.folio, result)
                             .subscribe(
-                                (success) => {
-                                    this.successMessage =
-                                        'Factura correctamente cancelada';
-                                    this.getInvoiceByFolio(this.folio);
+                                (invoice) => {
+                                    this.toastrService.success('','factura cancelada',AppConstants.TOAST_CONFIG);
+                                        this.store.dispatch(updateInvoice({ invoice }));
+                                        this.loading = false;
                                 },
-                                (error: HttpErrorResponse) => {
-                                    this.errorMessages.push(
-                                        error.error != null &&
-                                            error.error != undefined
-                                            ? error.error.message
-                                            : `${error.statusText} : ${error.message}`
-                                    );
+                                (error: NtError) => {
+                                    this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
                                     this.loading = false;
-                                    console.error(this.errorMessages);
                                 }
                             );
                     } else {
@@ -313,15 +244,33 @@ export class RevisionComponent implements OnInit {
                     }
                 });
         } catch (error) {
-            this.errorMessages.push(
-                error.error != null && error.error != undefined
-                    ? error.error.message
-                    : `${error.statusText} : ${error.message}`
-            );
+            this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
+            this.loading = false;
         }
     }
 
-    isValidCfdi(): boolean {
-        return this.cfdiValidator.validarCfdi(this.factura.cfdi).length === 0;
+    public async revalidateInvoice() {
+        this.loading = true;
+        const fact:Factura = JSON.parse(JSON.stringify(this.factura));
+        fact.statusFactura = '1';
+        fact.validacionOper = false;
+        fact.total = this.factura.cfdi.total;
+        fact.metodoPago = this.factura.cfdi.metodoPago;
+        fact.saldoPendiente = this.factura.cfdi.total;
+        this.invoiceService.updateInvoice(fact).subscribe(
+            (invoice) => {
+                this.loading = false;
+                this.store.dispatch(updateInvoice({ invoice }));
+                this.toastrService.success('acctualización exitosa','CFDI Revalidado', AppConstants.TOAST_CONFIG)
+            },
+            (error: NtError) => {
+                this.loading = false;
+                this.toastrService.danger(
+                    error?.message,
+                    'Error en la revalidacion del CFDI',
+                    AppConstants.TOAST_CONFIG
+                );
+            }
+        );
     }
 }

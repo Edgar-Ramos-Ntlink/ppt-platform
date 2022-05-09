@@ -17,9 +17,10 @@ import { bignumber, format } from "mathjs";
 import { InvoicesData } from "../../data/invoices-data";
 import { updateComplementosPago, updateInvoice } from "../../core.actions";
 import { CfdiData } from "../../data/cfdi-data";
+import { AppConstants } from "../../../models/app-constants";
 
 @Component({
-  selector: "ngx-pago-factura",
+  selector: "nt-pago-factura",
   templateUrl: "./pago-factura.component.html",
   styleUrls: ["./pago-factura.component.scss"],
 })
@@ -47,12 +48,14 @@ export class PagoFacturaComponent implements OnInit {
   ) {
     this.store.pipe(select(invoice)).subscribe((fact) => {
       this.factura = fact;
+      this.newPayment.monto = fact.saldoPendiente;
       if (fact?.folio) {
         this.paymentsService
           .getPaymentsByFolio(this.factura.folio)
           .subscribe((payments: PagoBase[]) => (this.invoicePayments = payments));
+        const user = JSON.parse(sessionStorage.getItem('user'));
         this.paymentsService
-          .getFormasPago()
+          .getFormasPago(user.roles)
           .subscribe((paymentForms) => (this.payTypeCat = paymentForms));
       }
     });
@@ -101,7 +104,7 @@ export class PagoFacturaComponent implements OnInit {
       if (file.size > 1000000) {
         this.toastService.warning(
           "El archivo demasiado grande, intenta con un archivo mas pequeño.",
-          "Archivo demasiado grande"
+          "Archivo demasiado grande", AppConstants.TOAST_CONFIG
         );
       } else {
         reader.readAsDataURL(file);
@@ -110,7 +113,7 @@ export class PagoFacturaComponent implements OnInit {
           this.newPayment.documento = reader.result.toString();
         };
         reader.onerror = (error) => {
-          this.toastService.danger("Error leyendo el archivo");
+          this.toastService.danger("Error leyendo el archivo", AppConstants.TOAST_CONFIG);
         };
       }
     }
@@ -125,21 +128,18 @@ export class PagoFacturaComponent implements OnInit {
       const factura: Factura = JSON.parse(JSON.stringify(this.factura));
       factura.saldoPendiente = +format(bignumber(factura.saldoPendiente).add(bignumber(payment.monto)));
       const invoice = await this.invoiceService.updateInvoice(factura).toPromise();
-      // TODO update factura with backend result
-      this.store.dispatch(updateInvoice({ invoice:factura }));
+      this.store.dispatch(updateInvoice({ invoice }));
       if (factura.metodoPago === "PPD" && factura.tipoDocumento === "Factura") {
         const complementos = await this.cfdiService.findInvoicePaymentComplementsByFolio(factura.folio).toPromise();
         this.store.dispatch(updateComplementosPago({ complementos }))
       }
     } catch (error) {
-      this.toastService.danger(error?.message, "Error en el borrado");
+      this.toastService.danger(error?.message, "Error en el borrado", AppConstants.TOAST_CONFIG);
     }
     this.loading = false;
   }
 
   public async sendPayment() {
-    this.newPayment.solicitante = sessionStorage.getItem("username");
-
     this.loading = true;
     try {
       const payment: PagoBase = JSON.parse(JSON.stringify(this.newPayment));
@@ -147,6 +147,7 @@ export class PagoFacturaComponent implements OnInit {
       payment.facturas[0].monto = payment.monto;
       payment.acredor = this.factura.razonSocialEmisor;
       payment.deudor = this.factura.razonSocialRemitente;
+      payment.solicitante = sessionStorage.getItem("email");
       const errors = this.paymentValidator.validatePago(payment, this.factura);
       if (errors.length === 0) {
         const result = await this.paymentsService.insertNewPayment(payment).toPromise();
@@ -157,13 +158,12 @@ export class PagoFacturaComponent implements OnInit {
         resourceFile.data = payment.documento;
         this.fileService
           .insertResourceFile(resourceFile)
-          .subscribe((response) => console.log(response));
+          .subscribe((response) => console.log(response),e => this.toastService.warning(e?.message, 'Error cargando imagen pago', AppConstants.TOAST_CONFIG));
         this.invoicePayments.push(result);
         const factura: Factura = JSON.parse(JSON.stringify(this.factura));
         factura.saldoPendiente = +format(bignumber(factura.saldoPendiente).minus(bignumber(payment.monto)));
         const invoice = await this.invoiceService.updateInvoice(factura).toPromise();
-        // TODO update factura with backend result
-        this.store.dispatch(updateInvoice({ invoice:factura }));
+        this.store.dispatch(updateInvoice({ invoice }));
         if (factura.metodoPago === "PPD" && factura.tipoDocumento === "Factura") {
           const complementos = await this.cfdiService.findInvoicePaymentComplementsByFolio(factura.folio).toPromise();
           this.store.dispatch(updateComplementosPago({ complementos }))
@@ -177,11 +177,11 @@ export class PagoFacturaComponent implements OnInit {
         }
       } else {
         errors.forEach((e) =>
-          this.toastService.warning(e, "Error de validacion")
+          this.toastService.warning(e, "Error de validacion", AppConstants.TOAST_CONFIG)
         );
       }
     } catch (error) {
-      this.toastService.danger(error?.message, "Error en el borrado");
+      this.toastService.danger(error?.message, "Error al crear el pago", AppConstants.TOAST_CONFIG);
     }
     this.loading = false;
   }

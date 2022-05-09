@@ -110,7 +110,8 @@ public class Pago implements Serializable {
   private Date fechaActualizacion;
 
   @OneToMany(mappedBy = "pago", cascade = CascadeType.PERSIST)
-  private List<PagoFactura> facturas;
+  @Builder.Default
+  private List<PagoFactura> facturas = new ArrayList<>();
 
   public Pago() {
     this.facturas = new ArrayList<>();

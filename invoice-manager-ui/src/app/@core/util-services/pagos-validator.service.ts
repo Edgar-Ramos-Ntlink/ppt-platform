@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PagoBase } from '../../models/pago-base';
-import { add, subtract, bignumber, unequal, number } from 'mathjs';
+import { add, bignumber, unequal } from 'mathjs';
 import { Factura } from '../models/factura';
 
 @Injectable({
@@ -47,6 +47,9 @@ export class PagosValidatorService {
         ) {
             messages.push('La imagen del documento de pago es requerida.');
         }
+        if(factura.saldoPendiente - pago.monto < 0){
+            messages.push('La suma de los pagos no puede ser mayor al total de la factura'); 
+        }
         /* Disable PUE payment rule
     if (factura.cfdi.metodoPago === 'PUE' && Math.abs(factura.cfdi.total - pago.monto) > 0.01) {
       messages.push('Para pagos en una unica exibicion,' +
@@ -78,8 +81,6 @@ export class PagosValidatorService {
                 );
             }
         }
-        console.log(factura.cfdi.moneda !== pago.moneda);
-        console.log(factura.saldoPendiente - pago.monto / pago.tipoDeCambio);
         if (
             factura.cfdi.moneda !== pago.moneda &&
             factura.saldoPendiente - pago.monto / pago.tipoDeCambio < -0.01

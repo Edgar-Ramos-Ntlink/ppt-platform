@@ -18,7 +18,7 @@
                         class="float-right ml-1 mr-1" [disabled]="loading" nbSpinnerStatus="success"
                         *ngIf="factura?.statusFactura == '6' || factura?.statusFactura == '5'" nbSpinnerSize="small"
                         nbSpinnerMessage="">
-                        revalidar Factura<i class="fa fa-check" style="margin-left: 10px"></i>
+                        Revalidar Factura<i class="fa fa-check" style="margin-left: 10px"></i>
                     </button>
                 </div>
             </nb-card-header>
@@ -109,11 +109,7 @@
                 </div>
                 <br />
 
-                <ngx-pago-factura *ngIf="
-            factura?.folio != undefined &&
-            factura?.statusFactura != '6' &&
-            factura?.statusFactura != '7'
-          "></ngx-pago-factura>
+                <nt-pago-factura *ngIf="factura?.folio != undefined && factura?.statusFactura != '6' && factura?.statusFactura != '7'"></nt-pago-factura>
             </nb-card-body>
         </nb-card>
     </div>
