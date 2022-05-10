@@ -1,6 +1,7 @@
 package com.business.unknow.model.dto.files;
 
-import com.business.unknow.Constants;
+import static com.business.unknow.Constants.JSON_DAY_FORMAT;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -36,7 +37,7 @@ public class ResourceFileDto implements Serializable {
   @Deprecated // dont use data, this field will be removed once S3 refactor will be completed
   private String data;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
   private Date fechaCreacion;
 
   public ResourceFileDto() {}

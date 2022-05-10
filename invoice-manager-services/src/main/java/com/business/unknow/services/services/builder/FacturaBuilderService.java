@@ -17,7 +17,6 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.entities.Empresa;
 import com.business.unknow.services.entities.cfdi.CfdiPago;
-import com.business.unknow.services.mapper.ContribuyenteMapper;
 import com.business.unknow.services.mapper.EmpresaMapper;
 import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.repositories.EmpresaRepository;
@@ -52,8 +51,6 @@ public class FacturaBuilderService {
   @Autowired private CfdiService cfdiService;
 
   @Autowired private EmpresaMapper empresaMapper;
-
-  @Autowired private ContribuyenteMapper contribuyenteMapper;
 
   @Autowired private FilesService filesService;
 
@@ -111,7 +108,6 @@ public class FacturaBuilderService {
 
   public Cfdi buildFacturaComplementoCreation(FacturaContext facturaContext) {
     return Cfdi.builder()
-        .version(ComplementoPpdDefaults.VERSION_CFDI)
         .lugarExpedicion(facturaContext.getEmpresaDto().getCp())
         .moneda(ComplementoPpdDefaults.MONEDA)
         .metodoPago(ComplementoPpdDefaults.METODO_PAGO)
@@ -120,8 +116,6 @@ public class FacturaBuilderService {
                 .getClave())
         .noCertificado(facturaContext.getEmpresaDto().getNoCertificado())
         .serie(ComplementoPpdDefaults.SERIE)
-        .subtotal(new BigDecimal(ComplementoPpdDefaults.SUB_TOTAL))
-        .total(new BigDecimal(ComplementoPpdDefaults.TOTAL))
         .complemento(ImmutableList.of(new ComplementoDto()))
         .tipoDeComprobante(ComplementoPpdDefaults.COMPROBANTE)
         .emisor(
@@ -136,7 +130,6 @@ public class FacturaBuilderService {
             Receptor.builder()
                 .rfc(facturaContext.getFacturaDto().getRfcRemitente())
                 .nombre(facturaContext.getFacturaDto().getRazonSocialRemitente())
-                .usoCfdi(ComplementoPpdDefaults.USO_CFDI)
                 .direccion(facturaContext.getFacturaDto().getCfdi().getReceptor().getDireccion())
                 .build())
         .conceptos(buildFacturaComplementoConceptos())
@@ -145,15 +138,7 @@ public class FacturaBuilderService {
 
   public List<Concepto> buildFacturaComplementoConceptos() {
     List<Concepto> conceptos = new ArrayList<Concepto>();
-    Concepto concepto =
-        Concepto.builder()
-            .cantidad(new BigDecimal(ComplementoPpdDefaults.CANTIDAD))
-            .claveProdServ(ComplementoPpdDefaults.CLAVE_PROD)
-            .claveUnidad(ComplementoPpdDefaults.CLAVE)
-            .descripcion(ComplementoPpdDefaults.DESCRIPCION)
-            .importe(new BigDecimal(ComplementoPpdDefaults.IMPORTE))
-            .valorUnitario(new BigDecimal(ComplementoPpdDefaults.VALOR_UNITARIO))
-            .build();
+    Concepto concepto = Concepto.builder().build();
     conceptos.add(concepto);
     return conceptos;
   }
@@ -197,7 +182,6 @@ public class FacturaBuilderService {
         }
         CfdiPagoDto cfdiComplementoPago =
             CfdiPagoDto.builder()
-                .version(ComplementoPpdDefaults.VERSION)
                 .fechaPago(pagoDto.getFechaPago())
                 .formaPago(FormaPagoEnum.findByPagoValue(pagoDto.getFormaPago()).getClave())
                 .moneda(pagoDto.getMoneda())
@@ -209,7 +193,6 @@ public class FacturaBuilderService {
                 .moneda(pagoDto.getMoneda())
                 .valido(true)
                 .metodoPago(ComplementoPpdDefaults.METODO_PAGO)
-                .serie(ComplementoPpdDefaults.SERIE_PAGO)
                 .numeroParcialidad(cfdipago.get().getNumeroParcialidad() + 1)
                 .importeSaldoAnterior(dto.getSaldoPendiente())
                 .tipoCambio(
@@ -255,7 +238,6 @@ public class FacturaBuilderService {
     return FacturaContext.builder()
         .facturaDto(facturaDto)
         .empresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))
-        .contribuyenteDto(contribuyenteMapper.getContribuyenteToFromEntity(contribuyente))
         .build();
   }
 
@@ -291,7 +273,6 @@ public class FacturaBuilderService {
         .facturaDto(facturaDto)
         .facturaFilesDto(archivos)
         .empresaDto(empresaMapper.getEmpresaDtoFromEntity(empresa))
-        .contribuyenteDto(contribuyenteMapper.getContribuyenteToFromEntity(contribuyente))
         .build();
   }
 }

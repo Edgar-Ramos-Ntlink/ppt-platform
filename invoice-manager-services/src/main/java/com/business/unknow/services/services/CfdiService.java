@@ -5,7 +5,7 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Reporte;
 import com.business.unknow.services.repositories.ReporteRepository;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
-import com.business.unknow.services.services.evaluations.CfdiValidator;
+import com.business.unknow.services.util.validators.CfdiValidator;
 import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.mappers.CfdiMapper;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
@@ -13,7 +13,6 @@ import com.mx.ntlink.models.generated.Comprobante;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,9 +31,7 @@ public class CfdiService {
 
   @Autowired private ReporteRepository reporteRepository;
 
-  @Autowired
-  @Qualifier("CfdiValidator")
-  private CfdiValidator validator;
+  @Autowired private CfdiValidator validator;
 
   public Cfdi getCfdiByFolio(String folio) throws NtlinkUtilException {
     return filesService.getCfdiFromS3(folio);
@@ -61,7 +58,7 @@ public class CfdiService {
   }
 
   public Cfdi insertNewCfdi(Cfdi cfdi) throws InvoiceManagerException {
-    validator.validateCfdi(cfdi);
+    validator.validate(cfdi);
     recalculateCfdiAmmounts(cfdi);
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(cfdi);
     filesService.sendXmlToS3(cfdi.getFolio(), comprobante);

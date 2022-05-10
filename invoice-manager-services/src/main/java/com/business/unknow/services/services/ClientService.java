@@ -30,8 +30,6 @@ public class ClientService {
 
   @Autowired private ClientMapper mapper;
 
-  private ClienteValidator clientValidator = new ClienteValidator();
-
   private ContactoHelper contactoHelper = new ContactoHelper();
 
   public Page<ClientDto> getClientsByParametros(
@@ -91,7 +89,7 @@ public class ClientService {
   }
 
   public ClientDto insertNewClient(ClientDto cliente) throws InvoiceManagerException {
-    clientValidator.validatePostCliente(cliente);
+    ClienteValidator.validate(cliente);
     cliente.setRfc(cliente.getRfc().trim());
     Optional<Contribuyente> entity = contribuyenteRepository.findByRfc(cliente.getRfc());
     Optional<Client> client =
@@ -116,7 +114,7 @@ public class ClientService {
   }
 
   public ClientDto updateClientInfo(ClientDto client, String rfc) throws InvoiceManagerException {
-    clientValidator.validatePostCliente(client);
+    ClienteValidator.validate(client);
     client.setCorreoContacto(
         contactoHelper.translateContacto(
             client.getRfc(), client.getCorreoPromotor(), client.getPorcentajeContacto()));

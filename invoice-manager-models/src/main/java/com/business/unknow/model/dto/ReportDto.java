@@ -1,7 +1,8 @@
 /** */
 package com.business.unknow.model.dto;
 
-import com.business.unknow.Constants;
+import static com.business.unknow.Constants.JSON_DAY_FORMAT;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,7 +24,7 @@ public class ReportDto implements Serializable {
   private String folio;
   private String folioFiscal;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
   private Date fechaEmision;
 
   private String rfcEmisor;
@@ -42,6 +43,6 @@ public class ReportDto implements Serializable {
   private String moneda;
   private String statusFactura;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
   private Date fechaCancelacion;
 }
