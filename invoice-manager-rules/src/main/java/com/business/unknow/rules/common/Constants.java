@@ -102,14 +102,4 @@ public class Constants {
         "Los status de la facura son incorrectos.";
   }
 
-  public static class DevolucionSuite {
-    private DevolucionSuite() {}
-
-    public static final String DEVOLUCION_SUITE = "DevolucionSuite";
-    public static final String CLIENT_VALIDATION = "ClientValidation";
-    public static final String FACTURA_VALIDATION = "FacturaValidation";
-    public static final String FACTURA_VALIDATION_RULE = "FacturaValidationRule";
-    public static final String FACTURA_VALIDATION_RULE_DESC =
-        "La factura debe estar timbrada para solicitar la devolucion.";
-  }
 }

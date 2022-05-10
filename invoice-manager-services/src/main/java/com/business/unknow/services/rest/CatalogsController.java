@@ -7,7 +7,7 @@ import com.business.unknow.model.dto.catalogs.ClaveUnidadDto;
 import com.business.unknow.model.dto.catalogs.CodigoPostalUiDto;
 import com.business.unknow.model.dto.catalogs.RegimenFiscalDto;
 import com.business.unknow.model.dto.catalogs.UsoCfdiDto;
-import com.business.unknow.services.services.CatalogsService;
+import com.business.unknow.services.services.CatalogService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,62 +24,91 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/catalogs")
 public class CatalogsController {
 
-  @Autowired private CatalogsService service;
+  @Autowired private CatalogService catalogService;
 
-  @GetMapping("/codigo-postal/{cp}")
-  public ResponseEntity<CodigoPostalUiDto> getCodigoPostalesByCode(@PathVariable String cp) {
-    return new ResponseEntity<>(service.getCodigosPostaleByCode(cp), HttpStatus.OK);
+  /**
+   * Gets Postal code by code
+   *
+   * @param code
+   * @return {@link CodigoPostalUiDto}
+   */
+  @GetMapping("/codigo-postal/{code}")
+  public ResponseEntity<CodigoPostalUiDto> getPostalCodeByCode(@PathVariable String code) {
+    return new ResponseEntity<>(catalogService.getPostalCodeByCode(code), HttpStatus.OK);
   }
 
+  /**
+   * Gets Product by description or code
+   *
+   * @param description
+   * @param clave
+   * @return {@link List<ClaveProductoServicioDto>}
+   */
   @GetMapping("/producto-servicios")
-  public ResponseEntity<List<ClaveProductoServicioDto>> getClaveProductoServicios(
+  public ResponseEntity<List<ClaveProductoServicioDto>> getServiceProduct(
       @RequestParam(name = "descripcion") Optional<String> description,
       @RequestParam(name = "clave") Optional<String> clave) {
-    return new ResponseEntity<>(service.getProductoServicio(description, clave), HttpStatus.OK);
+    return new ResponseEntity<>(
+        catalogService.getServiceProduct(description, clave), HttpStatus.OK);
   }
 
-  @GetMapping("/clave-unidad")
-  public ResponseEntity<List<ClaveUnidadDto>> getClaveUnidad() {
-    return new ResponseEntity<>(service.getClaveUnidadCatalog(), HttpStatus.OK);
+  /**
+   * Gets drive key by key
+   *
+   * @return {@link ClaveUnidadDto}
+   */
+  @GetMapping("/drive-keys")
+  public ResponseEntity<List<ClaveUnidadDto>> getDriveKeys() {
+    return new ResponseEntity<>(catalogService.getDriveKeys(), HttpStatus.OK);
   }
 
+  /**
+   * Gets all Cfdi uses in saved in cache
+   *
+   * @return {@link List<UsoCfdiDto>}
+   */
   @GetMapping("/uso-cdfi")
-  public ResponseEntity<List<UsoCfdiDto>> getAllUsoCdfi() {
-    return new ResponseEntity<>(service.getAllUsoCfdi(), HttpStatus.OK);
+  public ResponseEntity<List<UsoCfdiDto>> getCfdiUse() {
+    return new ResponseEntity<>(catalogService.getCfdiUse(), HttpStatus.OK);
   }
 
+  /**
+   * Gets all Regime taxes saved in cache
+   *
+   * @return {@link List<RegimenFiscalDto>}
+   */
   @GetMapping("/regimen-fiscal")
   public ResponseEntity<List<RegimenFiscalDto>> getRegimenFiscal() {
-    return new ResponseEntity<>(service.getAllRegimenFiscal(), HttpStatus.OK);
+    return new ResponseEntity<>(catalogService.getTaxRegimes(), HttpStatus.OK);
   }
 
-  @GetMapping("/giros")
-  public ResponseEntity<List<CatalogDto>> getGiros() {
-    return new ResponseEntity<>(service.getAllGiros(), HttpStatus.OK);
+  /**
+   * Gets all turns saved in cache
+   *
+   * @return {@link List<CatalogDto>}
+   */
+  @GetMapping("/turns")
+  public ResponseEntity<List<CatalogDto>> getTurns() {
+    return new ResponseEntity<>(catalogService.getTurns(), HttpStatus.OK);
   }
 
-  @GetMapping("/bancos")
-  public ResponseEntity<List<CatalogDto>> getBancos() {
-    return new ResponseEntity<>(service.getAllBancos(), HttpStatus.OK);
+  /**
+   * Gets Banks saved in cache
+   *
+   * @return {@link List<CatalogDto>}
+   */
+  @GetMapping("/banks")
+  public ResponseEntity<List<CatalogDto>> getBanks() {
+    return new ResponseEntity<>(catalogService.getBanks(), HttpStatus.OK);
   }
 
-  @GetMapping("/bancos/{banco}")
-  public ResponseEntity<CatalogDto> getBancoByName(@PathVariable String banco) {
-    return new ResponseEntity<>(service.getAllBancoByName(banco), HttpStatus.OK);
-  }
-
-  @GetMapping("/status-evento")
-  public ResponseEntity<List<CatalogDto>> getStatusEventos() {
-    return new ResponseEntity<>(service.getAllStatusEvento(), HttpStatus.OK);
-  }
-
-  @GetMapping("/status-pago")
-  public ResponseEntity<List<CatalogDto>> getStatusPago() {
-    return new ResponseEntity<>(service.getAllStatusPago(), HttpStatus.OK);
-  }
-
-  @GetMapping("/status-devolucion")
-  public ResponseEntity<List<CatalogDto>> getAllStatusDevoluicion() {
-    return new ResponseEntity<>(service.getAllStatusDevoluicion(), HttpStatus.OK);
+  /**
+   * Gets Status events saved in cache
+   *
+   * @return {@link List<CatalogDto>}
+   */
+  @GetMapping("/status-events")
+  public ResponseEntity<List<CatalogDto>> getStatusEvents() {
+    return new ResponseEntity<>(catalogService.getStatusEvents(), HttpStatus.OK);
   }
 }

@@ -3,10 +3,8 @@ package com.business.unknow.services.rest;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.files.ResourceFileDto;
-import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.services.DevolucionService;
 import com.business.unknow.services.services.FacturaService;
 import com.business.unknow.services.services.PagoService;
 import com.mx.ntlink.NtlinkUtilException;
@@ -34,8 +32,6 @@ public class FacturaController {
   @Autowired private FacturaService service;
 
   @Autowired private PagoService pagoService;
-
-  @Autowired private DevolucionService devolucionService;
 
   // FACTRURAS
   @GetMapping
@@ -102,15 +98,6 @@ public class FacturaController {
       @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(service.cancelarFactura(folio, facturaCustom), HttpStatus.OK);
-  }
-
-  // DEVOLUCIONES
-  @GetMapping("/{folio}/devoluciones/{tipoReceptor}")
-  public ResponseEntity<PagoDevolucionDto> getSolicitudDevolcuion(
-      @PathVariable String folio, @PathVariable String tipoReceptor) {
-    return new ResponseEntity<>(
-        devolucionService.findDevolucionesByfacturaAndTipoReceptor(folio, tipoReceptor),
-        HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/correos")
