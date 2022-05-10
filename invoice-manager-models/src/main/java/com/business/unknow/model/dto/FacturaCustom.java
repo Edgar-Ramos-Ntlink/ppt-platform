@@ -3,6 +3,7 @@ package com.business.unknow.model.dto;
 import static com.business.unknow.Constants.JSON_DAY_FORMAT;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
@@ -75,7 +76,6 @@ public class FacturaCustom implements Serializable {
 
   private String qr;
   private String cadenaOriginal;
-  // TODO:VALIDAR SI ES NECESARIA
   private String folioPadre;
   private String totalDesc;
   private String subTotalDesc;
@@ -87,7 +87,7 @@ public class FacturaCustom implements Serializable {
   private String direccionReceptor;
   private String tipoDeComprobanteDesc;
   private String logotipo;
-  private String xml;
+  @JsonIgnore private String xml;
   private Cfdi cfdi;
   private String montoTotalDesc;
   private String tipoRelacion;

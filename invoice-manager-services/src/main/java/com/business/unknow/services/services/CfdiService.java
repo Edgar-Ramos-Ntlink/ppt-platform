@@ -5,7 +5,7 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Reporte;
 import com.business.unknow.services.repositories.ReporteRepository;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
-import com.business.unknow.services.services.evaluations.CfdiValidator;
+import com.business.unknow.services.util.validators.CfdiValidator;
 import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.mappers.CfdiMapper;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
@@ -61,7 +61,7 @@ public class CfdiService {
   }
 
   public Cfdi insertNewCfdi(Cfdi cfdi) throws InvoiceManagerException {
-    validator.validateCfdi(cfdi);
+    validator.validate(cfdi);
     recalculateCfdiAmmounts(cfdi);
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(cfdi);
     filesService.sendXmlToS3(cfdi.getFolio(), comprobante);

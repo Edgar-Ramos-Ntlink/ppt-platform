@@ -1,6 +1,6 @@
 package com.business.unknow.services.config;
 
-import com.business.unknow.rules.suites.facturas.CancelacionSuite;
+import com.business.unknow.rules.cancelar.CancelStatusValidationRule;
 import com.business.unknow.rules.suites.facturas.FacturaSuite;
 import com.business.unknow.rules.suites.facturas.FacturaValidationSuite;
 import com.business.unknow.rules.suites.payments.DeletePagoSuite;
@@ -43,17 +43,19 @@ public class RulesConfig {
     return new FacturaValidationSuite();
   }
 
-  @Bean
-  public CancelacionSuite getCancelacionSuite() {
-    return new CancelacionSuite();
-  }
-
   @Bean("stampSuite")
   public Rules getStampSuite() {
     Rules rules = new Rules();
     rules.register(new FacturaStatusRule());
     rules.register(new FacturaDatosValidationRule());
     rules.register(new FacturaPagoValidationRule());
+    return rules;
+  }
+
+  @Bean("cancelSuite")
+  public Rules getCancelSuite() {
+    Rules rules = new Rules();
+    rules.register(new CancelStatusValidationRule());
     return rules;
   }
 

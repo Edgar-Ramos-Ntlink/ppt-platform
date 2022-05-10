@@ -1,6 +1,7 @@
 package com.business.unknow.services.services;
 
 import static com.business.unknow.Constants.PDF_COMPLEMENTO_TIMBRAR;
+import static com.business.unknow.Constants.PDF_FACTURA_SIN_TIMBRAR;
 import static com.business.unknow.Constants.PDF_FACTURA_TIMBRAR;
 import static com.business.unknow.enums.TipoArchivoEnum.PDF;
 import static com.business.unknow.enums.TipoArchivoEnum.TXT;
@@ -10,7 +11,6 @@ import static com.business.unknow.enums.TipoDocumentoEnum.FACTURA;
 import com.business.unknow.MailConstants;
 import com.business.unknow.enums.FacturaStatusEnum;
 import com.business.unknow.enums.MetodosPagoEnum;
-import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.S3BucketsEnum;
 import com.business.unknow.enums.TipoComprobanteEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
@@ -452,18 +452,17 @@ public class FacturaService {
     facturaCustom.setFechaActualizacion(save.getFechaActualizacion());
     filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
-    // TODO enable pdf generation
-    // FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
-    // facturaPdf.setCfdi(comprobante);
-    // byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
-    // filesService.sendFileToS3(facturaCustom.getFolio(), pdf, ".pdf");
+    FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
+    facturaPdf.setCfdi(comprobante);
+    byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
+    filesService.sendFileToS3(facturaCustom.getFolio(), pdf, ".pdf", S3BucketsEnum.CFDIS);
     return facturaCustom;
   }
 
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public FacturaCustom updateFacturaCustom(String folio, FacturaCustom facturaCustom)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     Factura factura =
         repository
             .findByFolio(folio)
@@ -482,12 +481,10 @@ public class FacturaService {
     repository.save(entityFromDto);
     filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
-
-    // TODO enable pdf generation
-    // FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
-    // facturaPdf.setCfdi(comprobante);
-    // byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
-    // filesService.sendFileToS3(facturaCustom.getFolio(), pdf, ".pdf");
+    FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
+    facturaPdf.setCfdi(comprobante);
+    byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
+    filesService.sendFileToS3(facturaCustom.getFolio(), pdf, ".pdf", S3BucketsEnum.CFDIS);
     return facturaCustom;
   }
 
@@ -689,35 +686,31 @@ public class FacturaService {
     }
   }
 
-  public FacturaCustom cancelarFactura(String folio, FacturaCustom facturaCustom)
-      throws InvoiceManagerException, NtlinkUtilException {
-    FacturaContext facturaContext =
-        timbradoBuilderService.buildFacturaContextCancelado(facturaCustom, folio);
-    if (facturaCustom.getTipoDocumento().equals("Factura")
-        || facturaCustom.getMetodoPago().equals("PPD")) {
-      for (CfdiPagoDto cfdiPagoDto : cfdiService.getCfdiPagosByFolio(facturaCustom.getFolio())) {
-        FacturaCustom complemento = getFacturaByFolio(cfdiPagoDto.getCfdi().getFolio());
-        if (complemento.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
-          cancelarFactura(complemento.getFolio(), complemento);
-        } else {
-          if (!complemento.getStatusFactura().equals(FacturaStatusEnum.CANCELADA.getValor())) {
-            complemento.setStatusFactura(FacturaStatusEnum.CANCELADA.getValor());
-            // updateFactura(complemento.getFolio(), complemento);
-          }
-        }
-      }
+  @Transactional(
+      rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
+  public FacturaCustom cancelInvoice(String folio, FacturaCustom facturaCustom)
+      throws InvoiceManagerException {
+    Factura factura =
+        repository
+            .findByFolio(folio)
+            .orElseThrow(
+                () ->
+                    new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("La factura con el folio %d no existe", folio)));
+    InvoiceValidator.validate(facturaCustom, folio);
+    timbradoServiceEvaluator.invoiceCancelValidation(facturaCustom);
+    if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())) {
+      facturaExecutorService.cancelInvoice(facturaCustom);
+      Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
+      entityFromDto.setId(factura.getId());
+      repository.save(entityFromDto);
+      filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
+    } else {
+      // TODO: IMPLEMENT CANCEL COMPLEMENT  LOGIC
+      throw new InvoiceManagerException(
+          "Cancelacion de complemento no implementada", HttpStatus.NOT_IMPLEMENTED.value());
     }
-
-    timbradoServiceEvaluator.facturaCancelacionValidation(facturaContext);
-    switch (PackFacturarionEnum.findByNombre(facturaContext.getFacturaDto().getPackFacturacion())) {
-      case NTLINK:
-        // ntinkExecutorService.cancelarFactura(facturaContext);
-        break;
-      default:
-        throw new InvoiceManagerException(
-            "Pack not supported yet", "Validate with programers", HttpStatus.BAD_REQUEST.value());
-    }
-    // timbradoExecutorService.updateCanceladoValues(facturaContext);
     return facturaCustom;
   }
 

@@ -6,7 +6,7 @@ import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.CfdiService;
 import com.business.unknow.services.services.FacturaService;
-import com.business.unknow.services.services.evaluations.CfdiValidator;
+import com.business.unknow.services.util.validators.CfdiValidator;
 import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.util.List;
@@ -37,18 +37,17 @@ public class CfdiController {
   @Qualifier("CfdiValidator")
   private CfdiValidator validator;
 
-  // CFDI
   @PostMapping("/validacion")
   public ResponseEntity<String> validateCfdi(@RequestBody @Valid Cfdi cfdi)
       throws InvoiceManagerException {
-    validator.validateCfdi(cfdi);
+    validator.validate(cfdi);
     return new ResponseEntity<>("VALIDA", HttpStatus.OK);
   }
 
   @PutMapping("/recalculate")
   public ResponseEntity<Cfdi> calculateMontosCfdi(@RequestBody @Valid Cfdi cfdi)
       throws InvoiceManagerException {
-    validator.validateCfdi(cfdi);
+    validator.validate(cfdi);
     return new ResponseEntity<>(cfdiService.recalculateCfdiAmmounts(cfdi), HttpStatus.OK);
   }
 
