@@ -13,7 +13,6 @@ import com.mx.ntlink.models.generated.Comprobante;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,9 +31,7 @@ public class CfdiService {
 
   @Autowired private ReporteRepository reporteRepository;
 
-  @Autowired
-  @Qualifier("CfdiValidator")
-  private CfdiValidator validator;
+  @Autowired private CfdiValidator validator;
 
   public Cfdi getCfdiByFolio(String folio) throws NtlinkUtilException {
     return filesService.getCfdiFromS3(folio);

@@ -34,44 +34,46 @@ export class CatalogsService {
             .toPromise();
     }
 
-    public getProductoServiciosByDescription(description: string): Promise<any> {
+    public getProductoServiciosByDescription(
+        description: string
+    ): Promise<any> {
         const params: HttpParams = new HttpParams().append(
-          "descripcion",
-          description
+            'descripcion',
+            description
         );
         return this.httpClient
-          .get<ClaveProductoServicio[]>("/api/catalogs/producto-servicios", {
-            params: params,
-          })
-          .pipe(
-            map((r) =>
-              r.map((c) => {
-                c.descripcion = `${c.clave} - ${c.descripcion}`;
-                return c;
-              })
+            .get<ClaveProductoServicio[]>('/api/catalogs/producto-servicios', {
+                params: params,
+            })
+            .pipe(
+                map((r) =>
+                    r.map((c) => {
+                        c.descripcion = `${c.clave} - ${c.descripcion}`;
+                        return c;
+                    })
+                )
             )
-          )
-          .toPromise();
-      }
-    
-      public getProductoServiciosByClave(clave: string): Promise<any> {
-        const params: HttpParams = new HttpParams().append("clave", clave);
+            .toPromise();
+    }
+
+    public getProductoServiciosByClave(clave: string): Promise<any> {
+        const params: HttpParams = new HttpParams().append('clave', clave);
         return this.httpClient
-          .get<ClaveProductoServicio[]>("/api/catalogs/producto-servicios", {
-            params: params,
-          })
-          .pipe(
-            map((r) =>
-              r.map((c) => {
-                c.descripcion = `${c.clave} - ${c.descripcion}`;
-                return c;
-              })
+            .get<ClaveProductoServicio[]>('/api/catalogs/producto-servicios', {
+                params: params,
+            })
+            .pipe(
+                map((r) =>
+                    r.map((c) => {
+                        c.descripcion = `${c.clave} - ${c.descripcion}`;
+                        return c;
+                    })
+                )
             )
-          )
-          .toPromise();
-      }
+            .toPromise();
+    }
     public getClaveUnidadCatalog(): Promise<any> {
-        return this.httpClient.get(`/api/catalogs/clave-unidad`).toPromise();
+        return this.httpClient.get(`/api/catalogs/drive-keys`).toPromise();
     }
     public getAllUsoCfdis(): Promise<any> {
         return new Promise((resolve) => {
@@ -106,7 +108,7 @@ export class CatalogsService {
             if (this.giros !== undefined) {
                 resolve(this.giros);
             } else {
-                this.httpClient.get('/api/catalogs/giros').subscribe((cat) => {
+                this.httpClient.get('/api/catalogs/turns').subscribe((cat) => {
                     this.giros = cat;
                     resolve(cat);
                 });
@@ -119,7 +121,7 @@ export class CatalogsService {
                 resolve(this.statusPago);
             } else {
                 this.httpClient
-                    .get('/api/catalogs/status-pago')
+                    .get('/api/catalogs/status-payments')
                     .subscribe((cat) => {
                         this.statusPago = cat;
                         resolve(cat);
@@ -133,7 +135,7 @@ export class CatalogsService {
                 resolve(this.statusValidacion);
             } else {
                 this.httpClient
-                    .get('/api/catalogs/status-evento')
+                    .get('/api/catalogs/status-events')
                     .subscribe((cat) => {
                         this.statusValidacion = cat;
                         resolve(cat);
@@ -141,7 +143,7 @@ export class CatalogsService {
             }
         });
     }
-    
+
     public getFormasPago(metodo?: string): Promise<any> {
         return new Promise((resolve) => {
             if (metodo === 'PUE') {
@@ -202,6 +204,6 @@ export class CatalogsService {
     }
 
     public getBancos(): Promise<any> {
-        return this.httpClient.get('/api/catalogs/bancos').toPromise();
+        return this.httpClient.get('/api/catalogs/banks').toPromise();
     }
 }

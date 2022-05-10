@@ -1,5 +1,8 @@
 package com.business.unknow;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 
 public class Constants {
@@ -8,18 +11,20 @@ public class Constants {
   public static final String JSON_DAY_FORMAT = "yyyy-MM-dd";
   public static final DateTimeFormatter LOCAL_DATE_TIME_FORMATTER =
       DateTimeFormatter.ofPattern(JSON_DATE_FORMAT);
-  public static final String DATE_STANDAR_FORMAT = "yyyy-MM-dd-hh:mm:ss";
+  public static final DateFormat DATE_TIME_FORMAT = new SimpleDateFormat(JSON_DATE_FORMAT);
+  public static final String JSON_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
   public static final String DATE_FOLIO_GENERIC_FORMAT = "yyyySSSMMhhssddmm";
   public static final String DATE_PRE_FOLIO_GENERIC_FORMAT = "MMyy";
 
   public static final String CSD_KEY = "CSD-KEY";
   public static final String CSD_CERT = "CSD-CERT";
 
-  public static final Integer INTERNAL_ERROR = 500;
   public static final Integer MILISECONDS = 1000;
   public static final Integer BAD_REQUEST = 400;
   public static final Long MILISECONDS_PER_DAY = 86400000L;
   public static final Integer SELLO_CFDI_SIZE = 8;
+  public static final Integer IVA_IMPUESTO_16 = 16;
+  public static final Integer IVA_BASE_16 = 116;
 
   public static final String PDF_FACTURA_SIN_TIMBRAR = "pdf-config/factura-sin-timbrar.xml";
   public static final String PDF_FACTURA_TIMBRAR = "pdf-config/factura-timbrada.xml";
@@ -27,7 +32,6 @@ public class Constants {
   public static final String PDF_COMPLEMENTO_SIN_TIMBRAR = "pdf-config/complemento-sin-timbrar.xml";
 
   public static class FacturaSustitucionConstants {
-    private FacturaSustitucionConstants() {}
 
     public static final String NOTA_CREDITO_USO_CFDI = "G02";
     public static final String NOTA_CREDITO_CLAVE_CONCEPTO = "84111506";
@@ -35,18 +39,7 @@ public class Constants {
     public static final String NOTA_CREDITO_DESC_CONCEPTO = "Devolucion";
   }
 
-  public static class FacturaConstants {
-    private FacturaConstants() {}
-
-    public static final String SYSTEM_CODIFICATION = "UTF-8";
-
-    public static final String CADENA_ORIGINAL =
-        "src/main/resources/factura-xslt/cadenaoriginal_3_3.xslt";
-  }
-
   public static class NtlinkModernaRequest {
-    private NtlinkModernaRequest() {}
-
     public static final String ISER = "iser";
     public static final String USER = "userName";
     public static final String PASS = "password";
@@ -59,7 +52,6 @@ public class Constants {
   }
 
   public static class FacturacionModernaRequest {
-    private FacturacionModernaRequest() {}
 
     public static final String USER_ID_PARAMETER = "UserID";
     public static final String TEXT_PARAMETER = "text2CFDI";
@@ -71,7 +63,6 @@ public class Constants {
   }
 
   public static class PagoPpdCreditoDefaults {
-    private PagoPpdCreditoDefaults() {}
 
     public static final String BANCO = "N/A";
     public static final String USER = "Sistema";
@@ -84,25 +75,20 @@ public class Constants {
   }
 
   public static class ComplementoPpdDefaults {
-    private ComplementoPpdDefaults() {}
 
-    public static final String VERSION = "1.0";
-    public static final String VERSION_CFDI = "3.3";
     public static final String MONEDA = "XXX";
-    public static final String TOTAL = "0";
-    public static final String SUB_TOTAL = "0";
     public static final String SERIE = "PFPC";
-    public static final String COMPROBANTE = "P";
-    public static final String USO_CFDI = "P01";
-
-    public static final int CANTIDAD = 1;
-    public static final String CLAVE_PROD = "84111506";
-    public static final String CLAVE = "ACT";
-    public static final String DESCRIPCION = "Pago";
-    public static final String IMPORTE = "0";
-    public static final String VALOR_UNITARIO = "0";
     public static final String METODO_PAGO = "PPD";
-    public static final String SERIE_PAGO = "PFP";
+    public static final String COMPROBANTE = "P";
+    public static final String EXPORTACION = "01";
+    public static final String PAGO_CLAVE = "84111506";
+    public static final String PAGO_UNIDAD = "ACT";
+    public static final String PAGO_IMPUESTOS = "01";
+    public static final String PAGO_DESC = "Pago";
+    public static final String TIPO_FACTOR = "Tasa";
+    public static final String IMPUESTO = "002";
+
+    public static final BigDecimal TASA_O_CUOTA = BigDecimal.valueOf(0.16);
   }
 
   public static class FacturaComplemento {

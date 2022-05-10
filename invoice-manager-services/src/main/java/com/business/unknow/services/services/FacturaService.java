@@ -97,11 +97,9 @@ public class FacturaService {
 
   @Autowired private CfdiService cfdiService;
 
-  @Autowired private CatalogsService catalogService;
+  @Autowired private CatalogService catalogService;
 
   @Autowired private FacturaExecutorService facturaExecutorService;
-
-  @Autowired private DevolucionService devolucionService;
 
   @Autowired private PagoService pagoService;
 

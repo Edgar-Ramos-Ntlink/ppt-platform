@@ -10,6 +10,7 @@ import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -93,4 +94,5 @@ public class FacturaCustom implements Serializable {
   private String tipoRelacion;
   private String relacion;
   private String selloSat;
+  private List<PagoComplemento> pagos;
 }

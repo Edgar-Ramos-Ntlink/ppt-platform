@@ -12,7 +12,6 @@ import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,9 +32,7 @@ public class CfdiController {
 
   @Autowired private CfdiService cfdiService;
 
-  @Autowired
-  @Qualifier("CfdiValidator")
-  private CfdiValidator validator;
+  @Autowired private CfdiValidator validator;
 
   @PostMapping("/validacion")
   public ResponseEntity<String> validateCfdi(@RequestBody @Valid Cfdi cfdi)

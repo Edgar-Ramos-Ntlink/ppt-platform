@@ -8,7 +8,7 @@ import com.business.unknow.model.dto.catalogs.CodigoPostalUiDto;
 import com.business.unknow.model.dto.catalogs.FormaPagoDto;
 import com.business.unknow.model.dto.catalogs.RegimenFiscalDto;
 import com.business.unknow.model.dto.catalogs.UsoCfdiDto;
-import com.business.unknow.services.entities.catalogs.ClaveProductoServicio;
+import com.business.unknow.services.entities.catalogs.Banco;
 import com.business.unknow.services.entities.catalogs.ClaveUnidad;
 import com.business.unknow.services.entities.catalogs.CodigoPostal;
 import com.business.unknow.services.entities.catalogs.FormaPago;
@@ -20,10 +20,8 @@ import com.business.unknow.services.repositories.catalogs.ClaveUnidadRepository;
 import com.business.unknow.services.repositories.catalogs.CodigoPostalRepository;
 import com.business.unknow.services.repositories.catalogs.FormaPagoRepository;
 import com.business.unknow.services.repositories.catalogs.GiroRepository;
-import com.business.unknow.services.repositories.catalogs.RegimenFiscalRepository;
-import com.business.unknow.services.repositories.catalogs.StatusDevolucionRepository;
+import com.business.unknow.services.repositories.catalogs.RegimanFiscalRepository;
 import com.business.unknow.services.repositories.catalogs.StatusEventoRepository;
-import com.business.unknow.services.repositories.catalogs.StatusPagoRepository;
 import com.business.unknow.services.repositories.catalogs.UsoCfdiRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +31,6 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -48,68 +43,126 @@ import org.springframework.web.server.ResponseStatusException;
 @EnableScheduling
 public class CatalogsService {
 
-  @Autowired private ClaveProductoServicioRepository productorServicioRepo;
-
-  @Autowired private ClaveUnidadRepository unidadRepo;
-
-  @Autowired private RegimenFiscalRepository regimenFiscalRepo;
-
-  @Autowired private UsoCfdiRepository usoCfdiRepo;
-
-  @Autowired private StatusEventoRepository statusEventoRepo;
-
-  @Autowired private StatusPagoRepository statusPagoRepo;
-
-  @Autowired private StatusDevolucionRepository statusDevoluicionRepo;
-
-  @Autowired private GiroRepository giroRepo;
-
-  @Autowired private CodigoPostalRepository codigoPostalRepository;
-
-  @Autowired private BancoRepository bancoRepository;
-
-  @Autowired private CatalogsMapper mapper;
-
-  @Autowired private FormaPagoRepository formaPagoRepository;
-
   private Map<String, UsoCfdiDto> cfdiUseMappings;
 
-  private Map<String, RegimenFiscalDto> taxRegimeMappings;
+  private Map<String, ClaveUnidadDto> driveKeyMappings;
 
   private Map<String, FormaPagoDto> paymentFormMappings;
 
-  public CodigoPostalUiDto getCodigosPostaleByCode(String codigo) {
-    List<CodigoPostal> codigos = codigoPostalRepository.findByCodigoPostal(codigo);
-    CodigoPostal codigPostal =
-        codigos.stream()
+  private Map<String, RegimenFiscalDto> taxRegimeMappings;
+
+  private Map<String, CatalogDto> turnMappings;
+
+  private Map<String, CatalogDto> bankMappings;
+
+  private Map<String, CatalogDto> statusEventMappings;
+
+  @Autowired private UsoCfdiRepository usoCfdiRepository;
+
+  @Autowired private FormaPagoRepository formaPagoRepository;
+
+  @Autowired private RegimanFiscalRepository regimanFiscalRepository;
+
+  @Autowired private ClaveUnidadRepository claveUnidadReppository;
+
+  @Autowired private BancoRepository bancoRepository;
+
+  @Autowired private CodigoPostalRepository codigoPostalRepository;
+
+  @Autowired private GiroRepository giroRepository;
+
+  @Autowired private ClaveProductoServicioRepository claveProductoServicioRepository;
+
+  @Autowired private StatusEventoRepository statusEventoRepository;
+
+  @Autowired private CatalogsMapper catalogsMapper;
+
+  /** load caches every day at 00:10 A.M */
+  @Scheduled(cron = "0 10 0 * * ?")
+  @PostConstruct
+  public void loadingCache() {
+    log.info("Loading mappings");
+    cfdiUseMappings =
+        usoCfdiRepository.findAll().stream()
+            .collect(Collectors.toMap(UsoCfdi::getClave, e -> catalogsMapper.getDtoFromEntity(e)));
+    log.info("Mappings cfdiUseMappings loaded {}", cfdiUseMappings.size());
+    paymentFormMappings =
+        formaPagoRepository.findAll().stream()
+            .collect(Collectors.toMap(FormaPago::getId, e -> catalogsMapper.getDtoFromEntity(e)));
+    log.info("Mappings paymentFormMappings loaded {}", paymentFormMappings.size());
+    taxRegimeMappings =
+        regimanFiscalRepository.findAll().stream()
+            .collect(
+                Collectors.toMap(
+                    a -> a.getClave().toString(), e -> catalogsMapper.getDtoFromEntity(e)));
+    log.info("Mappings taxRegimeMappings loaded {}", taxRegimeMappings.size());
+    driveKeyMappings =
+        claveUnidadReppository.findAll().stream()
+            .collect(
+                Collectors.toMap(ClaveUnidad::getClave, e -> catalogsMapper.getDtoFromEntity(e)));
+    log.info("Mappings driveKeyMappings loaded {}", driveKeyMappings.size());
+    turnMappings =
+        giroRepository.findAll().stream()
+            .collect(
+                Collectors.toMap(
+                    a -> a.getId().toString(), e -> catalogsMapper.getDtoFromEntity(e)));
+    log.info("Mappings giroMappings loaded {}", turnMappings.size());
+    bankMappings =
+        bancoRepository.findAll().stream()
+            .collect(Collectors.toMap(Banco::getId, e -> catalogsMapper.getDtoFromEntity(e)));
+    log.info("Mappings bankMappings loaded {}", bankMappings.size());
+    statusEventMappings =
+        statusEventoRepository.findAll().stream()
+            .collect(
+                Collectors.toMap(
+                    a -> a.getId().toString(), e -> catalogsMapper.getDtoFromEntity(e)));
+    log.info("Mappings statusEventMappings loaded {}", statusEventMappings.size());
+  }
+
+  /**
+   * Gets Postal code by code
+   *
+   * @param code
+   * @return {@link CodigoPostalUiDto}
+   */
+  public CodigoPostalUiDto getPostalCodeByCode(String code) {
+    List<CodigoPostal> postalCodes = codigoPostalRepository.findByCodigoPostal(code);
+    CodigoPostal codigoPostal =
+        postalCodes.stream()
             .findFirst()
             .orElseThrow(
                 () ->
                     new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "No se encontraron resultados del codigo postal"));
-    CodigoPostalUiDto dto =
-        CodigoPostalUiDto.builder()
-            .codigo_postal(codigo)
-            .municipio(codigPostal.getMunicipio())
-            .estado(codigPostal.getEstado())
-            .build();
-    for (CodigoPostal cod : codigos) {
-      dto.getColonias().add(cod.getColonia());
-    }
-    return dto;
+    return CodigoPostalUiDto.builder()
+        .codigo_postal(code)
+        .municipio(codigoPostal.getMunicipio())
+        .estado(codigoPostal.getEstado())
+        .colonias(postalCodes.stream().map(a -> a.getColonia()).collect(Collectors.toList()))
+        .build();
   }
 
-  public List<ClaveProductoServicioDto> getProductoServicio(
+  /**
+   * Gets Product by description or code
+   *
+   * @param description
+   * @param clave
+   * @return {@link List<ClaveProductoServicioDto>}
+   */
+  public List<ClaveProductoServicioDto> getServiceProduct(
       Optional<String> description, Optional<String> clave) {
+    // TODO: REFACTOR  ClaveProductoServicioDto TO CatalogDto
     List<ClaveProductoServicioDto> mappings = new ArrayList<>();
     if (description.isPresent()) {
       mappings =
-          mapper.getClaveProdServDtosFromEntities(
-              productorServicioRepo.findByDescripcionContainingIgnoreCase(description.get()));
+          catalogsMapper.getDtosFromEntities(
+              claveProductoServicioRepository.findByDescripcionContainingIgnoreCase(
+                  description.get()));
     }
     if (clave.isPresent()) {
       Integer codigo = Integer.valueOf(clave.get().trim());
-      mappings = mapper.getClaveProdServDtosFromEntities(productorServicioRepo.findByClave(codigo));
+      mappings =
+          catalogsMapper.getDtosFromEntities(claveProductoServicioRepository.findByClave(codigo));
     }
     if (mappings.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontraron resultados");
@@ -118,109 +171,39 @@ public class CatalogsService {
     }
   }
 
-  public Page<ClaveProductoServicioDto> getAllProductoServicioClaves(int page, int size) {
-    Page<ClaveProductoServicio> result = productorServicioRepo.findAll(PageRequest.of(page, size));
-    return new PageImpl<>(
-        mapper.getClaveProdServDtosFromEntities(result.getContent()),
-        result.getPageable(),
-        result.getTotalElements());
+  /**
+   * Gets drive key by key
+   *
+   * @param key
+   * @return {@link ClaveUnidadDto}
+   */
+  public ClaveUnidadDto getDriveKeyByKey(String key) {
+    // TODO: REFACTOR  ClaveUnidadDto TO CatalogDto
+    if (driveKeyMappings.containsKey(key)) {
+      return driveKeyMappings.get(key);
+    } else {
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND, String.format("Clave Unidad %s no existe", key));
+    }
   }
 
-  public Page<ClaveUnidadDto> getAllClaveUnidad(int page, int size) {
-    Page<ClaveUnidad> result = unidadRepo.findAll(PageRequest.of(page, size));
-    return new PageImpl<>(
-        mapper.getClaveUnidadDtosFromEntities(result.getContent()),
-        result.getPageable(),
-        result.getTotalElements());
+  /**
+   * Gets all drive keys
+   *
+   * @return {@link ClaveUnidadDto}
+   */
+  public List<ClaveUnidadDto> getDriveKeys() {
+    return driveKeyMappings.values().stream().collect(Collectors.toList());
   }
 
-  public List<ClaveUnidadDto> getClaveUnidadCatalog() {
-    List<ClaveUnidadDto> claveUnidadCat =
-        mapper.getClaveUnidadDtosFromEntities(unidadRepo.findAll());
-    claveUnidadCat.sort((a, b) -> a.getNombre().compareTo(b.getNombre()));
-    return claveUnidadCat;
-  }
-
-  public List<ClaveUnidadDto> getAllClaveUnidad() {
-    List<ClaveUnidadDto> claveUnidadCat =
-        mapper.getClaveUnidadDtosFromEntities(unidadRepo.findAll());
-    claveUnidadCat.sort((a, b) -> a.getNombre().compareTo(b.getNombre()));
-    return claveUnidadCat;
-  }
-
-  public List<RegimenFiscalDto> getAllRegimenFiscal() {
-    return mapper.getRegimenFiscalDtosFromEntities(regimenFiscalRepo.findAll());
-  }
-
-  public List<UsoCfdiDto> getAllUsoCfdi() {
-    return mapper.getUsoCfdiDtosFromEntities(usoCfdiRepo.findAll());
-  }
-
-  //	public List<StatusFacturaDto> getAllStatusFactura() {
-  //		return mapper.getStatusFacturaDtosFromEntities(statusFacturaRepo.findAll());
-  //	}
-
-  public List<CatalogDto> getAllGiros() {
-    List<CatalogDto> giros = mapper.getGirosDtoFromEntities(giroRepo.findAll());
-    giros.sort((a, b) -> a.getNombre().compareTo(b.getNombre()));
-    return giros;
-  }
-
-  public List<CatalogDto> getAllStatusEvento() {
-    return mapper.getStatusEventoDtosFromEntities(statusEventoRepo.findAll());
-  }
-
-  public List<CatalogDto> getAllStatusPago() {
-    return mapper.getStatusPagoDtosFromEntities(statusPagoRepo.findAll());
-  }
-
-  public List<CatalogDto> getAllStatusDevoluicion() {
-    return mapper.getStatusDevolucionDtosFromEntities(statusDevoluicionRepo.findAll());
-  }
-
-  //	public List<CatalogDto> getAllStatusRevision() {
-  //		return mapper.getStatusRevisionDtosFromEntities(statusRevisionRepo.findAll());
-  //	}
-
-  public List<CatalogDto> getAllBancos() {
-    List<CatalogDto> bancos = mapper.getBancoDtoFromEntities(bancoRepository.findAll());
-    bancos.sort((a, b) -> a.getNombre().compareTo(b.getNombre()));
-    return bancos;
-  }
-
-  public CatalogDto getAllBancoByName(String name) {
-    return mapper.getBancoDtoFromEntity(
-        bancoRepository
-            .findByNombre(name)
-            .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "No se encontraron resultados")));
-  }
-
-  /** load caches every day at 00:10 A.M */
-  @Scheduled(cron = "0 10 0 * * ?")
-  @PostConstruct
-  public void loadingCache() {
-    log.info("Loading mappings");
-    cfdiUseMappings =
-        usoCfdiRepo.findAll().stream()
-            .collect(Collectors.toMap(UsoCfdi::getClave, e -> mapper.getUsoCfdiDtoFromEntity(e)));
-    log.info("Mappings cfdiUseMappings loaded {}", cfdiUseMappings.size());
-    taxRegimeMappings =
-        regimenFiscalRepo.findAll().stream()
-            .collect(
-                Collectors.toMap(
-                    a -> a.getClave().toString(), e -> mapper.getRegimenFiscalDtoFromEntity(e)));
-    log.info("Mappings taxRegimeMappings loaded {}", taxRegimeMappings.size());
-
-    paymentFormMappings =
-        formaPagoRepository.findAll().stream()
-            .collect(Collectors.toMap(FormaPago::getId, e -> mapper.getFormaPagoDtoFromEntity(e)));
-    log.info("Mappings paymentFormMappings loaded {}", paymentFormMappings.size());
-  }
-
+  /**
+   * Gets Cfdi use by key
+   *
+   * @param key
+   * @return {@link UsoCfdiDto}
+   */
   public UsoCfdiDto getCfdiUseByKey(String key) {
+    // TODO: REFACTOR UsoCfdiDto  ClaveUnidadDto TO CatalogDto
     if (cfdiUseMappings.containsKey(key)) {
       return cfdiUseMappings.get(key);
     } else {
@@ -229,6 +212,36 @@ public class CatalogsService {
     }
   }
 
+  /**
+   * Gets all Cfdi uses in saved in cache
+   *
+   * @return {@link List<UsoCfdiDto>}
+   */
+  public List<UsoCfdiDto> getCfdiUse() {
+    return cfdiUseMappings.values().stream().collect(Collectors.toList());
+  }
+
+  /**
+   * Get all payment form by key
+   *
+   * @param key
+   * @return {@link FormaPagoDto}
+   */
+  public FormaPagoDto getPaymentFormByKey(String key) {
+    if (paymentFormMappings.containsKey(key)) {
+      return paymentFormMappings.get(key);
+    } else {
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND, String.format("Forma de pago  %s no existe", key));
+    }
+  }
+
+  /**
+   * Gets Tax Regime by key
+   *
+   * @param key
+   * @return {@link RegimenFiscalDto}
+   */
   public RegimenFiscalDto getTaxRegimeByKey(String key) {
     if (taxRegimeMappings.containsKey(key)) {
       return taxRegimeMappings.get(key);
@@ -238,12 +251,39 @@ public class CatalogsService {
     }
   }
 
-  public FormaPagoDto getPaymentFormByKey(String key) {
-    if (paymentFormMappings.containsKey(key)) {
-      return paymentFormMappings.get(key);
-    } else {
-      throw new ResponseStatusException(
-          HttpStatus.NOT_FOUND, String.format("Forma de pago  %s no existe", key));
-    }
+  /**
+   * Gets all Regime taxes saved in cache
+   *
+   * @return {@link List<RegimenFiscalDto>}
+   */
+  public List<RegimenFiscalDto> getTaxRegimes() {
+    return taxRegimeMappings.values().stream().collect(Collectors.toList());
+  }
+
+  /**
+   * Gets all turns saved in cache
+   *
+   * @return {@link List<CatalogDto>}
+   */
+  public List<CatalogDto> getTurns() {
+    return turnMappings.values().stream().collect(Collectors.toList());
+  }
+
+  /**
+   * Gets all Banks saved in cache
+   *
+   * @return {@link List<CatalogDto>}
+   */
+  public List<CatalogDto> getBanks() {
+    return bankMappings.values().stream().collect(Collectors.toList());
+  }
+
+  /**
+   * Gets all Status events saved in cache
+   *
+   * @return {@link List<CatalogDto>}
+   */
+  public List<CatalogDto> getStatusEvents() {
+    return statusEventMappings.values().stream().collect(Collectors.toList());
   }
 }

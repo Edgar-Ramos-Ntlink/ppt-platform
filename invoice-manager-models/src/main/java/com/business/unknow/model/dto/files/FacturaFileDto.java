@@ -1,7 +1,7 @@
 /** */
 package com.business.unknow.model.dto.files;
 
-import static com.business.unknow.Constants.JSON_DAY_FORMAT;
+import static com.business.unknow.Constants.JSON_DATETIME_FORMAT;
 
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -30,6 +30,6 @@ public class FacturaFileDto implements Serializable {
   private String data;
   private ByteArrayOutputStream outputStream;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
 }
