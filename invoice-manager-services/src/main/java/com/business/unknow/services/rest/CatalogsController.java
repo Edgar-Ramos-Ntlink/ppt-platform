@@ -111,4 +111,14 @@ public class CatalogsController {
   public ResponseEntity<List<CatalogDto>> getStatusEvents() {
     return new ResponseEntity<>(catalogService.getStatusEvents(), HttpStatus.OK);
   }
+
+  /**
+   * Gets Status payments saved in cache
+   *
+   * @return {@link List<CatalogDto>}
+   */
+  @GetMapping("/status-payments")
+  public ResponseEntity<List<CatalogDto>> getStatusPayments() {
+    return new ResponseEntity<>(catalogService.getStatusPayments(), HttpStatus.OK);
+  }
 }

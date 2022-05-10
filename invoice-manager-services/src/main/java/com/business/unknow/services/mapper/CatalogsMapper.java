@@ -7,6 +7,7 @@ import com.business.unknow.model.dto.catalogs.ClaveUnidadDto;
 import com.business.unknow.model.dto.catalogs.FormaPagoDto;
 import com.business.unknow.model.dto.catalogs.RegimenFiscalDto;
 import com.business.unknow.model.dto.catalogs.UsoCfdiDto;
+import com.business.unknow.services.entities.StatusPayment;
 import com.business.unknow.services.entities.catalogs.Banco;
 import com.business.unknow.services.entities.catalogs.ClaveProductoServicio;
 import com.business.unknow.services.entities.catalogs.ClaveUnidad;
@@ -22,6 +23,8 @@ import org.mapstruct.Mapper;
 public interface CatalogsMapper {
 
   CatalogDto getDtoFromEntity(Banco banco);
+
+  CatalogDto getDtoFromEntity(StatusPayment banco);
 
   CatalogDto getDtoFromEntity(StatusEvento statusEvento);
 
