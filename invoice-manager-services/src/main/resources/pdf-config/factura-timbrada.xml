@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <xsl:template match="/FacturaPdfModel">
+    <xsl:template match="/FacturaPdf">
         <root xmlns="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions">
             <layout-master-set>
                 <simple-page-master page-height="279mm" page-width="216mm" margin="10mm" master-name="letter">

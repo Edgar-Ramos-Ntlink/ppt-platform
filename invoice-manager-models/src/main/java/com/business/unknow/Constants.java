@@ -4,8 +4,8 @@ import java.time.format.DateTimeFormatter;
 
 public class Constants {
 
-  public static final String JSON_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-  public static final String JSON_DAY_FORMAT = "yyyy-MM-dd HH:mm:ss";
+  public static final String JSON_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+  public static final String JSON_DAY_FORMAT = "yyyy-MM-dd";
   public static final DateTimeFormatter LOCAL_DATE_TIME_FORMATTER =
       DateTimeFormatter.ofPattern(JSON_DATE_FORMAT);
   public static final String DATE_STANDAR_FORMAT = "yyyy-MM-dd-hh:mm:ss";
