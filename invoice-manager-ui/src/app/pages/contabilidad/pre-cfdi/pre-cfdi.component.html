@@ -20,14 +20,9 @@
             <nb-card-body>
                 <br />
 
-                <div *ngIf="factura?.folio !== undefined">
-                    <p class="font-weight-bold puff_center">
-                        Información Emisor y Receptor
-                    </p>
-                </div>
-
+            
                 <div *ngIf="folio === '*'">
-                    <p class="font-weight-bold">Información Emisor</p>
+                    <p class="font-weight-bold">Seleccion del Emisor</p>
                     <div class="row">
                         <div class="col-md-2">
                             <label for="inputGiro" class="label"
@@ -79,7 +74,7 @@
                                 id="inputEmpresa"
                                 class="form-control"
                                 (change)="
-                                    onEmnisorSelected($event.target.value)
+                                onEmisorSelected($event.target.value)
                                 "
                                 [(ngModel)]="formInfo.empresa"
                                 style="display: block"
@@ -88,14 +83,14 @@
                                 <option value="*">Seleccionar</option>
                                 <option
                                     *ngFor="let company of emisoresCat"
-                                    [(value)]="company.id"
+                                    [(value)]="company.rfc"
                                 >
                                     {{ company.rfc }}-{{ company.razonSocial }}
                                 </option>
                             </select>
                         </div>
                     </div>
-                    <p class="font-weight-bold slide_2">Información Receptor</p>
+                    <p class="font-weight-bold slide_2">Seleccion del Receptor</p>
                     <div class="row slide_2">
                         <div class="col-md-2">
                             <label for="inputGiro" class="label"
@@ -161,7 +156,7 @@
                                 <option value="*">Seleccionar</option>
                                 <option
                                     *ngFor="let company of receptoresCat"
-                                    [(value)]="company.id"
+                                    [(value)]="company.rfc"
                                 >
                                     {{ company.rfc }}-{{ company.razonSocial }}
                                 </option>
@@ -203,10 +198,10 @@
                                 <option value="*">Seleccionar</option>
                                 <option
                                     *ngFor="let client of clientsCat"
-                                    [(value)]="client.id"
+                                    [(value)]="client.rfc"
                                 >
-                                    {{ client.informacionFiscal.rfc }}-{{
-                                        client.informacionFiscal.razonSocial
+                                    {{ client.rfc }}-{{
+                                        client.razonSocial
                                     }}
                                 </option>
                             </select>
@@ -224,14 +219,13 @@
                     </nt-cfdi>
                 </div>
 
-    
                 <br />
 
-                <div class="form-inline" *ngIf="factura?.folio">
+                <div class="form-inline" *ngIf="!factura?.folio && factura?.cfdi.conceptos.length>0">
                     <button
                         nbButton
                         status="success"
-                        class="mr"
+                        class="mr-2 ml-2"
                         size="medium"
                         (click)="solicitarCfdi(factura, dialog)"
                         [nbSpinner]="loading"
@@ -244,8 +238,14 @@
                     </button>
                     <button
                         type="button"
-                        class="btn btn-info mr"
+                        class="btn btn-info mr-2 ml-2"
+                        size="medium"
                         (click)="limpiarForma()"
+                        [nbSpinner]="loading"
+                        [disabled]="loading"
+                        nbSpinnerStatus="success"
+                        nbSpinnerSize="small"
+                        nbSpinnerMessage=""
                     >
                         LIMPIAR
                     </button>

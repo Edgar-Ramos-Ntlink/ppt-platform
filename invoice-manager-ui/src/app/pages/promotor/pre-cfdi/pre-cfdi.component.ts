@@ -35,6 +35,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     public girosCat: Catalogo[] = [];
     public companiesCat: Empresa[] = [];
     public clientsCat: Client[] = [];
+    public formInfo:any = {giro:'*',empresa:'*'}
 
     public factura: Factura = new Factura();
 
@@ -48,8 +49,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         private invoiceService: InvoicesData,
         private cfdiService: CfdiData,
         private cfdiValidator: CfdiValidatorService,
-        private filesService: FilesData,
-        private downloadService: DonwloadFileService,
         private toastrService: NbToastrService,
         private route: ActivatedRoute,
         private router: Router,
@@ -264,26 +263,4 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
     }
 
-    public downloadPdf(folio: string) {
-        this.filesService
-            .getFacturaFile(folio, 'PDF')
-            .subscribe((file) =>
-                this.downloadService.downloadFile(
-                    file.data,
-                    `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.pdf`,
-                    'application/pdf;'
-                )
-            );
-    }
-    public downloadXml(folio: string) {
-        this.filesService
-            .getFacturaFile(folio, 'XML')
-            .subscribe((file) =>
-                this.downloadService.downloadFile(
-                    file.data,
-                    `${this.factura.folio}-${this.factura.rfcEmisor}-${this.factura.rfcRemitente}.xml`,
-                    'text/xml;charset=utf8;'
-                )
-            );
-    }
 }
