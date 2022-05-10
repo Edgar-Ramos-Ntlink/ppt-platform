@@ -1,6 +1,6 @@
 package com.business.unknow.model.dto.services;
 
-import static com.business.unknow.Constants.JSON_DAY_FORMAT;
+import static com.business.unknow.Constants.JSON_DATETIME_FORMAT;
 
 import com.business.unknow.Constants;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -65,7 +65,7 @@ public class EmpresaDto implements Serializable {
 
   private String cp;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATE_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DAY_FORMAT)
   private Date inicioActividades;
 
   private String registroPatronal;
@@ -94,10 +94,10 @@ public class EmpresaDto implements Serializable {
 
   private String noCertificado;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DAY_FORMAT)
   private Date expiracionCertificado;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DAY_FORMAT)
   private Date expiracionFiel;
 
   private String impuestoEstatal;
@@ -108,10 +108,10 @@ public class EmpresaDto implements Serializable {
 
   private String creador;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATETIME_FORMAT)
   private Date fechaActualizacion;
 
   private List<CuentaBancariaDto> cuentas;

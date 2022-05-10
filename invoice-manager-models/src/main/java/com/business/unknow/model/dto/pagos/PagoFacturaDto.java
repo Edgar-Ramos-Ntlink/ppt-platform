@@ -1,7 +1,7 @@
 /** */
 package com.business.unknow.model.dto.pagos;
 
-import static com.business.unknow.Constants.JSON_DAY_FORMAT;
+import static com.business.unknow.Constants.JSON_DATETIME_FORMAT;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -31,9 +31,9 @@ public class PagoFacturaDto implements Serializable {
   private String deudor;
   private String metodoPago;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATETIME_FORMAT)
   private Date fechaActualizacion;
 }
