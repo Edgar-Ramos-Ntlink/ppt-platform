@@ -14,7 +14,7 @@ public enum TipoArchivoEnum {
   private String format;
   private String byteArrayData;
 
-  private TipoArchivoEnum(String format, String byteArrayData) {
+  TipoArchivoEnum(String format, String byteArrayData) {
     this.format = format;
     this.byteArrayData = byteArrayData;
   }

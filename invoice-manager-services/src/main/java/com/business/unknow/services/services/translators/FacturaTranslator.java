@@ -1,7 +1,6 @@
 package com.business.unknow.services.services.translators;
 
 import com.business.unknow.Constants;
-import com.business.unknow.Constants.FacturaComplemento;
 import com.business.unknow.enums.S3BucketsEnum;
 import com.business.unknow.enums.TipoArchivoEnum;
 import com.business.unknow.model.context.FacturaContext;
@@ -10,10 +9,8 @@ import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.FilesService;
-import com.business.unknow.services.util.helpers.CdfiHelper;
 import com.business.unknow.services.util.helpers.DateHelper;
 import com.business.unknow.services.util.helpers.FacturaHelper;
-import com.business.unknow.services.util.helpers.SignHelper;
 import com.google.common.collect.ImmutableList;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import com.mx.ntlink.cfdi.modelos.CfdiRelacionado;
@@ -25,7 +22,6 @@ import com.mx.ntlink.cfdi.modelos.Traslado;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -37,13 +33,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class FacturaTranslator {
 
-  @Autowired private CdfiHelper cdfiHelper;
-
   @Autowired private FacturaHelper facturaHelper;
 
   @Autowired private DateHelper dateHelper;
-
-  @Autowired private SignHelper signHelper;
 
   @Autowired private FilesService fileService;
 
@@ -197,17 +189,6 @@ public class FacturaTranslator {
 
   public void complementoToXmlSigned(FacturaContext context)
       throws InvoiceCommonException, InvoiceManagerException {
-    String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
-    log.debug(context.getXml());
-    xml = xml.replace(FacturaComplemento.TOTAL, FacturaComplemento.TOTAL_FINAL);
-    xml = xml.replace(FacturaComplemento.SUB_TOTAL, FacturaComplemento.SUB_TOTAL_FINAL);
-    xml =
-        cdfiHelper.changeDate(
-            xml,
-            dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
-                ? context.getFacturaDto().getFechaActualizacion()
-                : new Date());
-    String cadenaOriginal = signHelper.getCadena(xml);
 
     String llavePrivada =
         fileService.getS3File(
@@ -217,10 +198,6 @@ public class FacturaTranslator {
                 context.getEmpresaDto().getRfc(),
                 Constants.CSD_KEY,
                 TipoArchivoEnum.KEY.getFormat()));
-
-    String sello =
-        signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getFiel(), llavePrivada);
-    context.setXml(cdfiHelper.putsSign(xml, sello));
     if (context.getFacturaDto().getCfdi().getComplemento() == null) {
       context.getFacturaDto().getCfdi().setComplemento(ImmutableList.of(new ComplementoDto()));
     }
@@ -228,14 +205,7 @@ public class FacturaTranslator {
 
   public void facturaToXmlSigned(FacturaContext context)
       throws InvoiceCommonException, InvoiceManagerException {
-    String xml = facturaHelper.facturaCfdiToXml(context.getCfdi());
-    xml =
-        cdfiHelper.changeDate(
-            xml,
-            dateHelper.isMyDateAfterDaysInPast(context.getFacturaDto().getFechaActualizacion(), 3)
-                ? context.getFacturaDto().getFechaActualizacion()
-                : new Date());
-    String cadenaOriginal = signHelper.getCadena(xml);
+
     String llavePrivada =
         fileService.getS3File(
             S3BucketsEnum.EMPRESAS,
@@ -244,9 +214,6 @@ public class FacturaTranslator {
                 context.getEmpresaDto().getRfc(),
                 Constants.CSD_KEY,
                 TipoArchivoEnum.KEY.getFormat()));
-    String sello =
-        signHelper.getSign(cadenaOriginal, context.getEmpresaDto().getFiel(), llavePrivada);
-    context.setXml(cdfiHelper.putsSign(xml, sello).replace("standalone=\"no\"", ""));
     context.getFacturaDto().getCfdi().setComplemento(ImmutableList.of(new ComplementoDto()));
   }
 

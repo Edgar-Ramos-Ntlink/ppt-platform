@@ -2,14 +2,14 @@ package com.business.unknow.services.services.evaluations;
 
 import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.util.validators.AbstractValidator;
+import com.business.unknow.services.util.validators.Validator;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import com.mx.ntlink.cfdi.modelos.Concepto;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service("CfdiValidator")
-public class CfdiValidator extends AbstractValidator {
+public class CfdiValidator extends Validator {
 
   public void validateCfdi(Cfdi cfdi) throws InvoiceManagerException {
 

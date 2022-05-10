@@ -52,8 +52,6 @@ public class DevolucionService {
 
   @Autowired private DevolucionExecutorService devolucionExecutorService;
 
-  private final DevolucionValidator devolucionValidator = new DevolucionValidator();
-
   public Page<DevolucionDto> getDevolucionesByParams(
       Optional<String> receptorType, Optional<String> idReceptor, int page, int size) {
     Page<Devolucion> result = null;
@@ -96,7 +94,7 @@ public class DevolucionService {
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public PagoDevolucionDto solicitudDevolucion(PagoDevolucionDto dto)
       throws InvoiceManagerException {
-    devolucionValidator.validatePostDevolucionPago(dto);
+    DevolucionValidator.validate(dto);
     Devolucion dev = repository.save(devolucionesBuilderService.buildPagoDevolucion(dto));
     dto.setIdDevolucion(dev.getId());
     return pagoDevolucionMapper.getPagoDevolucionDtoFromEntity(
@@ -107,7 +105,7 @@ public class DevolucionService {
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public PagoDevolucionDto solicitudDevolucionUpdate(PagoDevolucionDto dto, Integer id)
       throws InvoiceManagerException {
-    devolucionValidator.validatePostDevolucionPago(dto);
+    DevolucionValidator.validate(dto);
     Optional<PagoDevolucion> pagoDevolucion = pagoDevolucionRepository.findById(id);
     if (pagoDevolucion.isPresent()) {
       pagoDevolucion.get().setStatus(dto.getStatus());

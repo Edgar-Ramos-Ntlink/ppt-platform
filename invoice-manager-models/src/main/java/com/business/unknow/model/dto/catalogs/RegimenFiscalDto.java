@@ -1,6 +1,7 @@
 package com.business.unknow.model.dto.catalogs;
 
-import com.business.unknow.Constants;
+import static com.business.unknow.Constants.JSON_DAY_FORMAT;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -27,6 +28,6 @@ public class RegimenFiscalDto implements Serializable {
   private boolean pFisica;
   private boolean pMoral;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
   private Date inicioVigencia;
 }

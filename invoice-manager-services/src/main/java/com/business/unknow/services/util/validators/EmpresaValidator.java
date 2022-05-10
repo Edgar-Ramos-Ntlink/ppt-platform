@@ -6,7 +6,7 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import org.springframework.stereotype.Component;
 
 @Component("EmpresaValidator")
-public class EmpresaValidator extends AbstractValidator {
+public class EmpresaValidator extends Validator {
 
   /*
    *

@@ -1,7 +1,6 @@
 package com.business.unknow.services.rest;
 
 import com.business.unknow.enums.TipoDocumentoEnum;
-import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDevolucionDto;
@@ -85,25 +84,24 @@ public class FacturaController {
 
   @PutMapping("/{folio}")
   public ResponseEntity<FacturaCustom> updateFactura(
-      @PathVariable String folio, @RequestBody @Valid FacturaCustom factura)
-      throws InvoiceManagerException, NtlinkUtilException {
-    return new ResponseEntity<>(service.updateFacturaCustom(folio, factura), HttpStatus.OK);
+      @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaCustom)
+      throws InvoiceManagerException {
+    return new ResponseEntity<>(service.updateFacturaCustom(folio, facturaCustom), HttpStatus.OK);
   }
 
   // TIMBRADO
   @PostMapping("/{folio}/timbrar")
   public ResponseEntity<FacturaCustom> timbrarFactura(
-      @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaDto)
+      @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
-    return new ResponseEntity<>(
-        service.timbrarFactura(folio, facturaDto).getFacturaDto(), HttpStatus.OK);
+    return new ResponseEntity<>(service.stamp(folio, facturaCustom), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/cancelar")
-  public ResponseEntity<FacturaContext> cancelarFactura(
-      @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaDto)
+  public ResponseEntity<FacturaCustom> cancelarFactura(
+      @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
-    return new ResponseEntity<>(service.cancelarFactura(folio, facturaDto), HttpStatus.OK);
+    return new ResponseEntity<>(service.cancelarFactura(folio, facturaCustom), HttpStatus.OK);
   }
 
   // DEVOLUCIONES
@@ -116,32 +114,34 @@ public class FacturaController {
   }
 
   @PostMapping("/{folio}/correos")
-  public ResponseEntity<FacturaContext> renviarCorreos(
-      @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaDto)
+  public ResponseEntity<FacturaCustom> renviarCorreos(
+      @RequestBody @Valid FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
-    return new ResponseEntity<>(service.resendEmail(folio, facturaDto), HttpStatus.OK);
+    return new ResponseEntity<>(service.sendMail(facturaCustom), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/complementos")
   public ResponseEntity<FacturaCustom> getComplementos(
       @PathVariable String folio, @RequestBody @Valid PagoDto pago)
       throws InvoiceManagerException, NtlinkUtilException {
-    FacturaCustom facturaDto = service.createComplemento(folio, pago);
+    FacturaCustom facturaCustom = service.createComplemento(folio, pago);
     return new ResponseEntity<>(
-        service.timbrarFactura(facturaDto.getFolio(), facturaDto).getFacturaDto(), HttpStatus.OK);
+        service.stamp(facturaCustom.getFolio(), facturaCustom), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/sustitucion")
-  public ResponseEntity<FacturaCustom> postSustitucion(@RequestBody @Valid FacturaCustom facturaDto)
+  public ResponseEntity<FacturaCustom> postSustitucion(
+      @RequestBody @Valid FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(
-        service.postRelacion(facturaDto, TipoDocumentoEnum.FACTURA), HttpStatus.OK);
+        service.postRelacion(facturaCustom, TipoDocumentoEnum.FACTURA), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/nota-credito")
-  public ResponseEntity<FacturaCustom> postNotaCredito(@RequestBody @Valid FacturaCustom facturaDto)
+  public ResponseEntity<FacturaCustom> postNotaCredito(
+      @RequestBody @Valid FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(
-        service.postRelacion(facturaDto, TipoDocumentoEnum.NOTA_CREDITO), HttpStatus.OK);
+        service.postRelacion(facturaCustom, TipoDocumentoEnum.NOTA_CREDITO), HttpStatus.OK);
   }
 }

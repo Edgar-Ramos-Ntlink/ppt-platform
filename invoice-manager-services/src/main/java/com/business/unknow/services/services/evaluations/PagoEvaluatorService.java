@@ -7,7 +7,7 @@ import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.rules.suites.payments.DeletePagoSuite;
 import com.business.unknow.rules.suites.payments.PaymentCreationSuite;
 import com.business.unknow.rules.suites.payments.PaymentUpdateSuite;
-import com.business.unknow.services.util.validators.AbstractValidator;
+import com.business.unknow.services.util.validators.Validator;
 import java.util.ArrayList;
 import java.util.List;
 import org.jeasy.rules.api.Facts;
@@ -17,7 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service("PagoValidator")
-public class PagoEvaluatorService extends AbstractValidator {
+public class PagoEvaluatorService extends Validator {
 
   @Autowired protected RulesEngine rulesEngine;
 

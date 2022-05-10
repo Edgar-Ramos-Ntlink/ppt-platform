@@ -2,7 +2,6 @@ package com.business.unknow.services.services;
 
 import com.business.unknow.model.config.EmailConfig;
 import com.business.unknow.model.dto.services.NotificationDto;
-import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.config.properties.GlocalConfigs;
 import com.google.common.collect.ImmutableList;
@@ -39,11 +38,9 @@ public class NotificationHandlerService {
               .build();
       CompletableFuture.runAsync(
           () -> {
-            try {
-              mailService.sendEmail(emailConfig);
-            } catch (InvoiceCommonException e) {
-              log.info("Error sending notification email");
-            }
+            // TODO:REFACTOR THIS CODE
+            // mailService.sendEmail(emailConfig);
+
           });
     }
   }
