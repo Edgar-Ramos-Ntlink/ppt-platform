@@ -1,10 +1,8 @@
 package com.business.unknow.services.services.evaluations;
 
-import com.business.unknow.model.context.FacturaContext;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.rules.suites.facturas.CancelacionSuite;
 import com.business.unknow.services.util.ValidationRules;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,22 +14,25 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TimbradoEvaluatorService extends AbstractEvaluatorService {
-
-  @Autowired private CancelacionSuite cancelacionSuite;
+public class TimbradoEvaluatorService {
 
   @Autowired
   @Qualifier("stampSuite")
   private Rules stampSuite;
 
+  @Autowired
+  @Qualifier("cancelSuite")
+  private Rules cancelSuite;
+
   @Autowired private RulesEngine rulesEngine;
 
-  public void facturaCancelacionValidation(FacturaContext facturaContext)
-      throws InvoiceManagerException {
+  public void invoiceCancelValidation(FacturaCustom facturaCustom) throws InvoiceManagerException {
     Facts facts = new Facts();
-    facts.put("facturaContext", facturaContext);
-    rulesEngine.fire(cancelacionSuite.getSuite(), facts);
-    validateFacturaContext(facturaContext);
+    List<String> results = new ArrayList<>();
+    facts.put("facturaCustom", facturaCustom);
+    facts.put("results", results);
+    rulesEngine.fire(cancelSuite, facts);
+    ValidationRules.validateRulesResponse(results);
   }
 
   public void facturaTimbradoValidation(FacturaCustom facturaCustom, List<PagoDto> pagos)

@@ -27,7 +27,7 @@ public class CfdiService {
 
   @Autowired private FacturaService facturaService;
 
-  @Autowired private CatalogCacheService cacheCatalogsService;
+  @Autowired private CatalogService catalogService;
 
   @Autowired private ReporteRepository reporteRepository;
 

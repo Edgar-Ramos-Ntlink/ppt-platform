@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.services.services;
 
 import com.business.unknow.model.dto.catalogs.CatalogDto;
@@ -12,6 +11,7 @@ import com.business.unknow.services.entities.catalogs.Banco;
 import com.business.unknow.services.entities.catalogs.ClaveUnidad;
 import com.business.unknow.services.entities.catalogs.CodigoPostal;
 import com.business.unknow.services.entities.catalogs.FormaPago;
+import com.business.unknow.services.entities.catalogs.Giro;
 import com.business.unknow.services.entities.catalogs.UsoCfdi;
 import com.business.unknow.services.mapper.CatalogsMapper;
 import com.business.unknow.services.repositories.catalogs.BancoRepository;
@@ -22,6 +22,7 @@ import com.business.unknow.services.repositories.catalogs.FormaPagoRepository;
 import com.business.unknow.services.repositories.catalogs.GiroRepository;
 import com.business.unknow.services.repositories.catalogs.RegimanFiscalRepository;
 import com.business.unknow.services.repositories.catalogs.StatusEventoRepository;
+import com.business.unknow.services.repositories.catalogs.StatusPaymentRepository;
 import com.business.unknow.services.repositories.catalogs.UsoCfdiRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +38,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-/** @author ralfdemoledor */
 @Slf4j
 @Service
 @EnableScheduling
-public class CatalogsService {
+public class CatalogService {
 
   private Map<String, UsoCfdiDto> cfdiUseMappings;
 
@@ -56,6 +56,10 @@ public class CatalogsService {
   private Map<String, CatalogDto> bankMappings;
 
   private Map<String, CatalogDto> statusEventMappings;
+
+  private Map<String, CatalogDto> statusPaymentsMappings;
+
+  private Map<Integer, Giro> giroEmpresasMappings;
 
   @Autowired private UsoCfdiRepository usoCfdiRepository;
 
@@ -74,6 +78,8 @@ public class CatalogsService {
   @Autowired private ClaveProductoServicioRepository claveProductoServicioRepository;
 
   @Autowired private StatusEventoRepository statusEventoRepository;
+
+  @Autowired private StatusPaymentRepository statusPaymentRepository;
 
   @Autowired private CatalogsMapper catalogsMapper;
 
@@ -117,6 +123,12 @@ public class CatalogsService {
                 Collectors.toMap(
                     a -> a.getId().toString(), e -> catalogsMapper.getDtoFromEntity(e)));
     log.info("Mappings statusEventMappings loaded {}", statusEventMappings.size());
+    statusPaymentsMappings =
+        statusPaymentRepository.findAll().stream()
+            .collect(
+                Collectors.toMap(
+                    a -> a.getId().toString(), e -> catalogsMapper.getDtoFromEntity(e)));
+    log.info("Mappings statusPaymentsMappings loaded {}", statusPaymentsMappings.size());
   }
 
   /**
@@ -269,6 +281,14 @@ public class CatalogsService {
     return turnMappings.values().stream().collect(Collectors.toList());
   }
 
+  public CatalogDto getTurnsById(String key) {
+    if (turnMappings.containsKey(key)) {
+      return turnMappings.get(key);
+    } else {
+      return CatalogDto.builder().nombre("SIN GIRO").build();
+    }
+  }
+
   /**
    * Gets all Banks saved in cache
    *
@@ -285,5 +305,20 @@ public class CatalogsService {
    */
   public List<CatalogDto> getStatusEvents() {
     return statusEventMappings.values().stream().collect(Collectors.toList());
+  }
+
+  /**
+   * Gets all Status payments saved in cache
+   *
+   * @return {@link List<CatalogDto>}
+   */
+  public List<CatalogDto> getStatusPayments() {
+    return statusPaymentsMappings.values().stream().collect(Collectors.toList());
+  }
+
+  public Optional<String> getGiroEmpresa(Integer giroId) {
+    return giroEmpresasMappings.containsKey(giroId)
+        ? Optional.of(giroEmpresasMappings.get(giroId).getNombre())
+        : Optional.empty();
   }
 }

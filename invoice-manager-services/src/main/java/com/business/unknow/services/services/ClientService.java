@@ -7,7 +7,7 @@ import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.repositories.ClientRepository;
 import com.business.unknow.services.repositories.ContribuyenteRepository;
-import com.business.unknow.services.util.helpers.ContactoHelper;
+import com.business.unknow.services.util.ContactoHelper;
 import com.business.unknow.services.util.validators.ClienteValidator;
 import java.util.Date;
 import java.util.List;

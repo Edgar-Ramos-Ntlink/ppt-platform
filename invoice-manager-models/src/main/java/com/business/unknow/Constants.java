@@ -16,12 +16,12 @@ public class Constants {
   public static final String DATE_FOLIO_GENERIC_FORMAT = "yyyySSSMMhhssddmm";
   public static final String DATE_PRE_FOLIO_GENERIC_FORMAT = "MMyy";
 
+  public static final String CANCEL_ACK = "CANCEL_ACK";
   public static final String CSD_KEY = "CSD-KEY";
   public static final String CSD_CERT = "CSD-CERT";
 
   public static final Integer MILISECONDS = 1000;
   public static final Integer BAD_REQUEST = 400;
-  public static final Long MILISECONDS_PER_DAY = 86400000L;
   public static final Integer SELLO_CFDI_SIZE = 8;
   public static final Integer IVA_IMPUESTO_16 = 16;
   public static final Integer IVA_BASE_16 = 116;

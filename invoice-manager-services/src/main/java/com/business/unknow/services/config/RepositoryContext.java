@@ -12,7 +12,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-/** @author eej000f */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaAuditing
