@@ -81,7 +81,7 @@ public class FacturaController {
   @PutMapping("/{folio}")
   public ResponseEntity<FacturaCustom> updateFactura(
       @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaCustom)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(service.updateFacturaCustom(folio, facturaCustom), HttpStatus.OK);
   }
 
@@ -94,10 +94,10 @@ public class FacturaController {
   }
 
   @PostMapping("/{folio}/cancelar")
-  public ResponseEntity<FacturaCustom> cancelarFactura(
+  public ResponseEntity<FacturaCustom> cancelInvoice(
       @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
-    return new ResponseEntity<>(service.cancelarFactura(folio, facturaCustom), HttpStatus.OK);
+    return new ResponseEntity<>(service.cancelInvoice(folio, facturaCustom), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/correos")

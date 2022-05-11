@@ -6,7 +6,6 @@ import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.FilesService;
-import com.business.unknow.services.util.helpers.StringHelper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
@@ -28,8 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class FilesController {
 
   @Autowired private FilesService service;
-
-  @Autowired private StringHelper stringHelper;
 
   @GetMapping("/facturas/{folio}/files/{fileType}")
   public ResponseEntity<FacturaFileDto> getFacturaFiles(

@@ -9,8 +9,6 @@ import com.business.unknow.model.dto.cfdi.ComplementoDto;
 import com.business.unknow.model.error.InvoiceCommonException;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.FilesService;
-import com.business.unknow.services.util.helpers.DateHelper;
-import com.business.unknow.services.util.helpers.FacturaHelper;
 import com.google.common.collect.ImmutableList;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import com.mx.ntlink.cfdi.modelos.CfdiRelacionado;
@@ -32,10 +30,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class FacturaTranslator {
-
-  @Autowired private FacturaHelper facturaHelper;
-
-  @Autowired private DateHelper dateHelper;
 
   @Autowired private FilesService fileService;
 
