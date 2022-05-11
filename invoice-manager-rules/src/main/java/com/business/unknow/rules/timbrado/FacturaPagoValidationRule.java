@@ -5,39 +5,52 @@ import com.business.unknow.enums.MetodosPagoEnum;
 import com.business.unknow.enums.RevisionPagosEnum;
 import com.business.unknow.enums.TipoDocumentoEnum;
 import com.business.unknow.model.context.FacturaContext;
+import com.business.unknow.model.dto.FacturaCustom;
+import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.rules.common.Constants.Timbrado;
 import java.math.BigDecimal;
+import java.util.List;
+
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
+import static com.business.unknow.enums.MetodosPagoEnum.PPD;
+import static com.business.unknow.enums.MetodosPagoEnum.PUE;
+import static com.business.unknow.enums.RevisionPagosEnum.ACEPTADO;
+import static com.business.unknow.enums.TipoDocumentoEnum.FACTURA;
+import static com.business.unknow.rules.common.Constants.Timbrado.TIMBRADO_PAGO_VALIDATION;
+import static com.business.unknow.rules.common.Constants.Timbrado.TIMBRADO_PAGO_VALIDATION_RULE;
+import static com.business.unknow.rules.common.Constants.Timbrado.TIMBRADO_PAGO_VALIDATION_RULE_DES;
+import static com.business.unknow.rules.common.Constants.Timbrado.TIMBRADO_SUITE;
+
 @Rule(
-    name = Timbrado.TIMBRADO_PAGO_VALIDATION,
-    description = Timbrado.TIMBRADO_PAGO_VALIDATION_RULE)
+    name = TIMBRADO_PAGO_VALIDATION,
+    description = TIMBRADO_PAGO_VALIDATION_RULE)
 public class FacturaPagoValidationRule {
 
   @Condition
-  public boolean condition(@Fact("facturaContext") FacturaContext fc) {
+  public boolean condition(@Fact("facturaCustom") FacturaCustom facturaCustom, List<PagoDto> pagos) {
 
-    if (!fc.getFacturaDto().getLineaEmisor().equals(LineaEmpresaEnum.A.name())) {
+    if (!facturaCustom.getLineaEmisor().equals(LineaEmpresaEnum.A.name())) {
       return false;
-    } else if (TipoDocumentoEnum.FACTURA
+    } else if (FACTURA
         .getDescripcion()
-        .equals(fc.getFacturaDto().getTipoDocumento())) {
-      if (fc.getPagos() == null && fc.getPagos().isEmpty()) {
-        return !MetodosPagoEnum.PPD.getClave().equals(fc.getFacturaDto().getMetodoPago());
+        .equals(facturaCustom.getTipoDocumento())) {
+      if (pagos == null && pagos.isEmpty()) {
+        return !PPD.getClave().equals(facturaCustom.getMetodoPago());
         // PPD never has payments and PUE always should have payments
       } else {
-        if (MetodosPagoEnum.PUE.getClave().equals(fc.getFacturaDto().getMetodoPago())) {
+        if (PUE.getClave().equals(facturaCustom.getMetodoPago())) {
           BigDecimal paymentsAmmount =
-              fc.getPagos().stream()
-                  .filter(p -> RevisionPagosEnum.ACEPTADO.name().equals(p.getStatusPago()))
+              pagos.stream()
+                  .filter(p -> ACEPTADO.name().equals(p.getStatusPago()))
                   .flatMap(p -> p.getFacturas().stream())
-                  .filter(f -> f.getFolio().equals(fc.getFacturaDto().getFolio()))
+                  .filter(f -> f.getFolio().equals(facturaCustom.getFolio()))
                   .map(p -> p.getMonto())
                   .reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2));
-          BigDecimal totalfactura = fc.getFacturaDto().getCfdi().getTotal();
+          BigDecimal totalfactura = facturaCustom.getCfdi().getTotal();
           return paymentsAmmount.compareTo(totalfactura) != 0;
         }
       }
@@ -46,9 +59,12 @@ public class FacturaPagoValidationRule {
   }
 
   @Action
-  public void execute(@Fact("facturaContext") FacturaContext fc) {
-    fc.setRuleErrorDesc(Timbrado.TIMBRADO_PAGO_VALIDATION_RULE_DES);
-    fc.setSuiteError(String.format("Error durante : %s", Timbrado.TIMBRADO_SUITE));
-    fc.setValid(false);
+  public void execute(@Fact("results") List<String> results) {
+    results.add(
+            String.format(
+                    String.format(
+                            "Error durante : %s con el error: %s",
+                            TIMBRADO_SUITE,
+                            TIMBRADO_PAGO_VALIDATION_RULE_DES)));
   }
 }

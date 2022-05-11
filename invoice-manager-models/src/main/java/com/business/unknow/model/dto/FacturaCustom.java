@@ -1,6 +1,7 @@
 package com.business.unknow.model.dto;
 
-import com.business.unknow.Constants;
+import static com.business.unknow.Constants.JSON_DAY_FORMAT;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -8,6 +9,7 @@ import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,13 +50,13 @@ public class FacturaCustom implements Serializable {
   private BigDecimal impuestosRetenidos;
   private BigDecimal impuestosTrasladados;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
   private Date fechaCreacion;
 
   private String statusCancelacion;
   private Date fechaCancelacion;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
   private Date fechaActualizacion;
 
   private Date fechaTimbrado;
@@ -92,4 +94,5 @@ public class FacturaCustom implements Serializable {
   private String tipoRelacion;
   private String relacion;
   private String selloSat;
+  private List<PagoComplemento> pagos;
 }

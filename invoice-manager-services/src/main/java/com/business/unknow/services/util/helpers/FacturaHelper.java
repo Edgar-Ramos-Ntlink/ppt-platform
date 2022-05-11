@@ -12,7 +12,7 @@ import javax.xml.bind.Unmarshaller;
 
 public class FacturaHelper {
 
-  public String facturaCfdiToXml(Cfdi cfdi) throws InvoiceCommonException {
+  public String facturaCfdiToXml(Cfdi cfdi, String a) throws InvoiceCommonException {
     try {
       JAXBContext jaxbContext = JAXBContext.newInstance(Cfdi.class);
       Marshaller jaxbMarshaller = jaxbContext.createMarshaller();

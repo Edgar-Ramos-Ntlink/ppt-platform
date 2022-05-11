@@ -1,11 +1,14 @@
 package com.business.unknow.services.services;
 
-import com.business.unknow.enums.TipoArchivoEnum;
-import com.business.unknow.model.config.EmailConfig;
-import com.business.unknow.model.config.FileConfig;
-import com.business.unknow.model.error.InvoiceCommonException;
+import com.business.unknow.model.config.MailContent;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import javax.activation.DataHandler;
+import javax.mail.Authenticator;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -19,69 +22,99 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
 import javax.mail.util.ByteArrayDataSource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@Slf4j
 public class MailService {
 
-  public void sendEmail(EmailConfig emailConfig) throws InvoiceCommonException {
+  @Value("${invoce.email-host}")
+  private String host;
 
+  @Value("${invoce.email-port}")
+  private String port;
+
+  @Value("${invoce.email}")
+  private String email;
+
+  @Value("${invoce.email-pw}")
+  private String password;
+
+  private Session getMailSession() {
     Properties props = System.getProperties();
-    props.put("mail.smtp.host", emailConfig.getDominio());
+    props.put("mail.smtp.host", host);
     props.put("mail.smtp.auth", "true");
-    props.put("mail.smtp.ssl.trust", emailConfig.getDominio());
+    props.put("mail.smtp.ssl.trust", host);
     props.put("mail.smtp.starttls.enable", "true");
-    props.put("mail.smtp.port", "587");
+    props.put("mail.smtp.port", port);
 
-    Session session =
-        Session.getInstance(
-            props,
-            new javax.mail.Authenticator() {
-              protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(
-                    emailConfig.getEmisor(), emailConfig.getPwEmisor());
-              }
-            });
+    return Session.getInstance(
+        props,
+        new Authenticator() {
+          protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(email, password);
+          }
+        });
+  }
+
+  public void sendEmail(List<String> recipients, MailContent content) {
+    Session session = getMailSession();
     MimeMessage message = new MimeMessage(session);
-
     try {
-      message.setFrom(new InternetAddress(emailConfig.getEmisor()));
-      for (String receptor : emailConfig.getReceptor()) {
-        message.addRecipient(Message.RecipientType.TO, new InternetAddress(receptor));
+      message.setFrom(new InternetAddress(email));
+      for (String recipient : recipients) {
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
       }
-      message.addRecipient(Message.RecipientType.TO, new InternetAddress("inv-manager@ovjme.com"));
-      message.setSubject(emailConfig.getAsunto());
-      message.setText(emailConfig.getCuerpo());
-      if (emailConfig.getArchivos() != null) {
-        Multipart multipart = new MimeMultipart();
-        BodyPart text = new MimeBodyPart();
-        text.setContent(emailConfig.getCuerpo(), TipoArchivoEnum.TXT.getByteArrayData());
-        multipart.addBodyPart(text);
-        for (FileConfig file : emailConfig.getArchivos()) {
+      message.setSubject(content.getSubject());
+
+      // Create message part
+      Multipart multipart = new MimeMultipart();
+      BodyPart messageBodyPart = new MimeBodyPart();
+      // Mail body text
+      String htmlText = "<img src=\"cid:image\" width=\"500\"><br/><br/>" + content.getBodyText();
+      messageBodyPart.setContent(htmlText, "text/html; charset=UTF-8");
+      multipart.addBodyPart(messageBodyPart);
+
+      InputStream is =
+          Thread.currentThread()
+              .getContextClassLoader()
+              .getResourceAsStream("images/ntlink-logo.png");
+      log.info("Loading header image from {} ", "images/ntlink-logo.png");
+      MimeBodyPart imageBody = new MimeBodyPart();
+      imageBody.setDataHandler(new DataHandler(new ByteArrayDataSource(is, "img/png")));
+      imageBody.setFileName("ntlink-logo.png");
+      imageBody.setHeader("Content-ID", "<image>");
+      multipart.addBodyPart(imageBody);
+
+      if (!Objects.isNull(content.getAttachments())) {
+        for (Map.Entry<String, MailContent.MailFile> attachment :
+            content.getAttachments().entrySet()) {
           BodyPart fileBodyPart = new PreencodedMimeBodyPart("base64");
-          fileBodyPart.setText(file.getTipoArchivo().name());
+          fileBodyPart.setText(attachment.getKey());
           ByteArrayDataSource rawData =
               new ByteArrayDataSource(
-                  file.getBase64Content().getBytes(), file.getTipoArchivo().getByteArrayData());
-          fileBodyPart.setFileName(file.getNombre().concat(file.getTipoArchivo().getFormat()));
+                  attachment.getValue().getData().getBytes(), attachment.getValue().getType());
+          fileBodyPart.setFileName(attachment.getKey());
           fileBodyPart.setDataHandler(new DataHandler(rawData));
           multipart.addBodyPart(fileBodyPart);
         }
-        message.setContent(multipart);
       }
+      // Send the complete message parts
+      message.setContent(multipart);
 
       Transport transport = session.getTransport("smtp");
-      transport.connect(
-          emailConfig.getDominio(), emailConfig.getEmisor(), emailConfig.getPwEmisor());
+      transport.connect(host, email, password);
       transport.sendMessage(message, message.getAllRecipients());
       transport.close();
-    } catch (MessagingException me) {
-      me.printStackTrace();
-      throw new InvoiceCommonException(
-          String.format(
-              "Error mandando Email de %s para %s",
-              emailConfig.getEmisor(), emailConfig.getReceptor()),
-          me.getMessage());
+    } catch (MessagingException | IOException e) {
+      log.error("Error sending mail", e);
+      throw new ResponseStatusException(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          String.format("Disculpa el inconveniente, error enviando el correo a [%s]", recipients));
     }
   }
 }

@@ -1,7 +1,8 @@
 /** */
 package com.business.unknow.model.dto.services;
 
-import com.business.unknow.Constants;
+import static com.business.unknow.Constants.JSON_DATETIME_FORMAT;
+
 import com.business.unknow.model.menu.MenuItem;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -25,6 +26,8 @@ import lombok.extern.jackson.Jacksonized;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto implements Serializable {
 
+  private static final long serialVersionUID = -4269713581531174125L;
+
   private Integer id;
 
   private String email;
@@ -41,11 +44,9 @@ public class UserDto implements Serializable {
 
   private List<MenuItem> menu;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATETIME_FORMAT)
   private Date fechaCreacion;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.JSON_DATETIME_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATETIME_FORMAT)
   private Date fechaActualizacion;
-
-  private static final long serialVersionUID = -4269713581531174125L;
 }

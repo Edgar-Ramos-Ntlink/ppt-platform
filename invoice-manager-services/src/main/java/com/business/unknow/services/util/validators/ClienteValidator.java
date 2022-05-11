@@ -5,9 +5,9 @@ import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import java.math.BigDecimal;
 
-public class ClienteValidator extends AbstractValidator {
+public class ClienteValidator extends Validator {
 
-  public void validatePostCliente(ClientDto dto) throws InvoiceManagerException {
+  public static void validate(ClientDto dto) throws InvoiceManagerException {
     checkNotNull(dto.getRazonSocial(), "Razon Social");
     checkNotEmpty(dto.getRazonSocial(), "Razon Social");
     checkValidString(dto.getRazonSocial());
