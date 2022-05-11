@@ -20,7 +20,6 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PagoComplemento {
 
-
   private String idDocumento;
   private String folioOrigen;
   private String equivalenciaDR;
