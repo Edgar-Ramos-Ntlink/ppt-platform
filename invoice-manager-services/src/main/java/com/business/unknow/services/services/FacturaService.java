@@ -1,6 +1,6 @@
 package com.business.unknow.services.services;
 
-import static com.business.unknow.Constants.CANCEL_FILE;
+import static com.business.unknow.Constants.CANCEL_ACK;
 import static com.business.unknow.Constants.PDF_COMPLEMENTO_TIMBRAR;
 import static com.business.unknow.Constants.PDF_FACTURA_SIN_TIMBRAR;
 import static com.business.unknow.Constants.PDF_FACTURA_TIMBRAR;
@@ -705,7 +705,7 @@ public class FacturaService {
       entityFromDto.setId(factura.getId());
       repository.save(entityFromDto);
       filesService.sendFileToS3(
-          facturaCustom.getFolio().concat(CANCEL_FILE),
+          facturaCustom.getFolio().concat(CANCEL_ACK),
           facturaCustom.getAcuse().getBytes(),
           XML.getFormat(),
           S3BucketsEnum.CFDIS);
