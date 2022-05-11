@@ -43,7 +43,7 @@ public class EmpresaService {
 
   @Autowired private EmpresaMapper mapper;
 
-  @Autowired private CatalogCacheService cacheService;
+  @Autowired private CatalogService catalogService;
 
   @Autowired private NotificationHandlerService notificationHandlerService;
 
@@ -180,7 +180,7 @@ public class EmpresaService {
                       e.getCp()));
               row.put("LINEA", e.getTipo());
               row.put("ACTIVA", e.getActivo() ? "SI" : "NO");
-              row.put("GIRO", cacheService.getGiroEmpresa(e.getGiro()).orElse("SIN GIRO"));
+              row.put("GIRO", catalogService.getGiroEmpresa(e.getGiro()).orElse("SIN GIRO"));
               row.put("REGIMEN_FISCAL", e.getRegimenFiscal());
               row.put("PAGINA_WEB", e.getWeb());
               row.put("CORREO_ELECTRONICO", e.getCorreo());
