@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import static com.business.unknow.Constants.CANCEL_FILE;
 import static com.business.unknow.Constants.PDF_COMPLEMENTO_TIMBRAR;
 import static com.business.unknow.Constants.PDF_FACTURA_SIN_TIMBRAR;
 import static com.business.unknow.Constants.PDF_FACTURA_TIMBRAR;
@@ -699,10 +700,15 @@ public class FacturaService {
     InvoiceValidator.validate(facturaCustom, folio);
     timbradoServiceEvaluator.invoiceCancelValidation(facturaCustom);
     if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())) {
-      facturaExecutorService.cancelInvoice(facturaCustom);
+      facturaCustom = facturaExecutorService.cancelInvoice(facturaCustom);
       Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
       entityFromDto.setId(factura.getId());
       repository.save(entityFromDto);
+      filesService.sendFileToS3(
+          facturaCustom.getFolio().concat(CANCEL_FILE),
+          facturaCustom.getAcuse().getBytes(),
+          XML.getFormat(),
+          S3BucketsEnum.CFDIS);
       filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
     } else {
       // TODO: IMPLEMENT CANCEL COMPLEMENT  LOGIC

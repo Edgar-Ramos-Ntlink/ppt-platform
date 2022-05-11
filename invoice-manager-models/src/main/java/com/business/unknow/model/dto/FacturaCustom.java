@@ -89,6 +89,7 @@ public class FacturaCustom implements Serializable {
   private String tipoDeComprobanteDesc;
   private String logotipo;
   @JsonIgnore private String xml;
+  @JsonIgnore private String acuse;
   private Cfdi cfdi;
   private String montoTotalDesc;
   private String tipoRelacion;
