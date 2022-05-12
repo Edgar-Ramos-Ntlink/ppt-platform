@@ -1,4 +1,4 @@
-package com.business.unknow.services.entities.cfdi;
+package com.business.unknow.services.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

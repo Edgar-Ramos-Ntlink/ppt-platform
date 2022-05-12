@@ -16,19 +16,19 @@ import org.springframework.stereotype.Repository;
 public interface CuentaBancariaRepository
     extends JpaRepository<CuentaBancaria, Integer>, JpaSpecificationExecutor<CuentaBancaria> {
 
-  public List<CuentaBancaria> findAll();
+  List<CuentaBancaria> findAll();
 
-  public List<CuentaBancaria> findByRfc(String rfc);
+  List<CuentaBancaria> findByRfc(String rfc);
 
-  public Optional<CuentaBancaria> findByClabe(String clabe);
+  Optional<CuentaBancaria> findByClabe(String clabe);
 
-  public Optional<CuentaBancaria> findByRfcAndCuenta(String rfc, String cuenta);
+  Optional<CuentaBancaria> findByRfcAndCuenta(String rfc, String cuenta);
 
-  public List<CuentaBancaria> findById(String id);
+  List<CuentaBancaria> findById(String id);
 
   @Query(
       "select c from CuentaBancaria c where c.banco like upper(:banco) and c.empresa like upper(:empresa) and c.clabe like upper(:clabe) and c.cuenta like upper(:cuenta) and c.fechaCreacion between :since and :to")
-  public Page<CuentaBancaria> findCuentasByFilterParams(
+  Page<CuentaBancaria> findCuentasByFilterParams(
       @Param("banco") String banco,
       @Param("empresa") String empresa,
       @Param("clabe") String clabe,

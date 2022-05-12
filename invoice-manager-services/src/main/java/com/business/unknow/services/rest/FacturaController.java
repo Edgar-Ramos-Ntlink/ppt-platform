@@ -1,6 +1,6 @@
 package com.business.unknow.services.rest;
 
-import com.business.unknow.enums.TipoDocumentoEnum;
+import com.business.unknow.enums.TipoDocumento;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
@@ -121,7 +121,7 @@ public class FacturaController {
       @RequestBody @Valid FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(
-        service.postRelacion(facturaCustom, TipoDocumentoEnum.FACTURA), HttpStatus.OK);
+        service.postRelacion(facturaCustom, TipoDocumento.FACTURA), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/nota-credito")
@@ -129,6 +129,6 @@ public class FacturaController {
       @RequestBody @Valid FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(
-        service.postRelacion(facturaCustom, TipoDocumentoEnum.NOTA_CREDITO), HttpStatus.OK);
+        service.postRelacion(facturaCustom, TipoDocumento.NOTA_CREDITO), HttpStatus.OK);
   }
 }

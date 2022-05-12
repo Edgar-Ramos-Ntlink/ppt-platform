@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.model.dto.services;
 
 import static com.business.unknow.Constants.JSON_DATETIME_FORMAT;
@@ -16,7 +15,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
-/** @author eej000f */
 @Jacksonized
 @Builder
 @Getter

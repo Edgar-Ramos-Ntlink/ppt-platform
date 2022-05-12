@@ -1,6 +1,6 @@
 package com.business.unknow.enums;
 
-public enum FormaPagoEnum {
+public enum FormaPago {
   CHEQUE_NORMATIVO(1, "Cheque nominativo", "CHEQUE", "02"),
   TRANSFERENCIA_ELECTRONICA(2, "Transferencia electrónica de fondos", "TRANSFERENCIA", "03"),
   EFECTIVO(3, "Efectivo", "EFECTIVO", "01"),
@@ -13,15 +13,15 @@ public enum FormaPagoEnum {
   private String pagoValue;
   private String clave;
 
-  private FormaPagoEnum(Integer valor, String descripcion, String pagoValue, String clave) {
+  FormaPago(Integer valor, String descripcion, String pagoValue, String clave) {
     this.valor = valor;
     this.descripcion = descripcion;
     this.pagoValue = pagoValue;
     this.clave = clave;
   }
 
-  public static FormaPagoEnum findByDesc(String descripcion) {
-    for (FormaPagoEnum v : values()) {
+  public static FormaPago findByDesc(String descripcion) {
+    for (FormaPago v : values()) {
       if (v.getDescripcion().equals(descripcion)) {
         return v;
       }
@@ -29,8 +29,8 @@ public enum FormaPagoEnum {
     return NOT_VALID;
   }
 
-  public static FormaPagoEnum findByPagoValue(String pagoValue) {
-    for (FormaPagoEnum v : values()) {
+  public static FormaPago findByPagoValue(String pagoValue) {
+    for (FormaPago v : values()) {
       if (v.getPagoValue().equals(pagoValue)) {
         return v;
       }
@@ -38,8 +38,8 @@ public enum FormaPagoEnum {
     return NOT_VALID;
   }
 
-  public static FormaPagoEnum findByPagoClave(String clave) {
-    for (FormaPagoEnum v : values()) {
+  public static FormaPago findByPagoClave(String clave) {
+    for (FormaPago v : values()) {
       if (v.getClave().equals(clave)) {
         return v;
       }

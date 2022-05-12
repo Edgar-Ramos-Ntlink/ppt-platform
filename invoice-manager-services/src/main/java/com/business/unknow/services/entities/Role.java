@@ -1,6 +1,5 @@
 package com.business.unknow.services.entities;
 
-import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,9 +25,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "ROLES")
-public class Role implements Serializable {
-
-  private static final long serialVersionUID = -2562827192729375750L;
+public class Role {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

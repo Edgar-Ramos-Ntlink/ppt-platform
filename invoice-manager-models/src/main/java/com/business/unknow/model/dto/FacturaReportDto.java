@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.model.dto;
 
 import java.io.Serializable;
@@ -8,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-/** @author ralfdemoledor */
 @SuperBuilder
 @Getter
 @Setter

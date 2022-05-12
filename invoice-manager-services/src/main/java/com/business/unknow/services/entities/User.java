@@ -1,6 +1,5 @@
 package com.business.unknow.services.entities;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -33,9 +32,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "USERS")
-public class User implements Serializable {
-
-  private static final long serialVersionUID = 5310702474972292849L;
+public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

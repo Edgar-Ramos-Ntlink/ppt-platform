@@ -1,7 +1,7 @@
 package com.business.unknow.rules.payments;
 
 import com.business.unknow.model.dto.pagos.PagoDto;
-import com.business.unknow.rules.common.Constants.PaymentsSuite;
+import com.business.unknow.rules.Constants.PaymentsSuite;
 import java.util.List;
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;

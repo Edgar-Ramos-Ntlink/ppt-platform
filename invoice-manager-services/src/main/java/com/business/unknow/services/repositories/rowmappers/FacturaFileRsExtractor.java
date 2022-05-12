@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.services.repositories.rowmappers;
 
 import com.business.unknow.model.dto.files.FacturaFileDto;
@@ -10,7 +9,6 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.jdbc.support.lob.LobHandler;
 
-/** @author ralfdemoledor */
 public class FacturaFileRsExtractor implements ResultSetExtractor<Optional<FacturaFileDto>> {
 
   @Override

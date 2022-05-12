@@ -1,10 +1,10 @@
 package com.business.unknow.services.services.translators;
 
 import com.business.unknow.Constants.FacturaSustitucionConstants;
-import com.business.unknow.enums.FacturaStatusEnum;
-import com.business.unknow.enums.LineaEmpresaEnum;
-import com.business.unknow.enums.MetodosPagoEnum;
-import com.business.unknow.enums.TipoDocumentoEnum;
+import com.business.unknow.enums.FacturaStatus;
+import com.business.unknow.enums.LineaEmpresa;
+import com.business.unknow.enums.MetodosPago;
+import com.business.unknow.enums.TipoDocumento;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.google.common.collect.ImmutableList;
 import com.mx.ntlink.cfdi.modelos.CfdiRelacionado;
@@ -20,7 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class RelacionadosTranslator {
 
   public FacturaCustom sustitucionComplemento(FacturaCustom facturaDto) {
-    if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
+    if (!facturaDto.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())) {
       throw new ResponseStatusException(
           HttpStatus.NOT_FOUND,
           String.format(
@@ -33,7 +33,7 @@ public class RelacionadosTranslator {
   }
 
   public FacturaCustom sustitucionFactura(FacturaCustom facturaDto) {
-    if (!facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
+    if (!facturaDto.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
           String.format(
@@ -53,15 +53,15 @@ public class RelacionadosTranslator {
     facturaDto.setNotas("");
     facturaDto.setPreFolio("");
     facturaDto.setSelloCfd(null);
-    if (facturaDto.getLineaEmisor().equals(LineaEmpresaEnum.A.name())) {
-      if (facturaDto.getMetodoPago().equals(MetodosPagoEnum.PPD.name())) {
-        facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_OPERACIONES.getValor());
+    if (facturaDto.getLineaEmisor().equals(LineaEmpresa.A.name())) {
+      if (facturaDto.getMetodoPago().equals(MetodosPago.PPD.name())) {
+        facturaDto.setStatusFactura(FacturaStatus.VALIDACION_OPERACIONES.getValor());
       } else {
-        facturaDto.setStatusFactura(FacturaStatusEnum.VALIDACION_TESORERIA.getValor());
+        facturaDto.setStatusFactura(FacturaStatus.VALIDACION_TESORERIA.getValor());
       }
 
     } else {
-      facturaDto.setStatusFactura(FacturaStatusEnum.POR_TIMBRAR_CONTABILIDAD.getValor());
+      facturaDto.setStatusFactura(FacturaStatus.POR_TIMBRAR_CONTABILIDAD.getValor());
     }
     facturaDto.setId(0);
     if (facturaDto.getCfdi() != null) {
@@ -84,7 +84,7 @@ public class RelacionadosTranslator {
   }
 
   public FacturaCustom notaCreditoFactura(FacturaCustom facturaDto) {
-    if (facturaDto.getStatusFactura().equals(FacturaStatusEnum.TIMBRADA.getValor())) {
+    if (facturaDto.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())) {
       updateBaseInfoNotaCredito(facturaDto);
       return facturaDto;
     } else {
@@ -100,7 +100,7 @@ public class RelacionadosTranslator {
     facturaDto.setCadenaOriginalTimbrado(null);
     facturaDto.setFechaTimbrado(null);
     facturaDto.setFolio(null);
-    facturaDto.setTipoDocumento(TipoDocumentoEnum.NOTA_CREDITO.getDescripcion());
+    facturaDto.setTipoDocumento(TipoDocumento.NOTA_CREDITO.getDescripcion());
     facturaDto.setTotal(BigDecimal.ZERO);
     facturaDto.setSaldoPendiente(BigDecimal.ZERO);
     facturaDto.setValidacionOper(false);

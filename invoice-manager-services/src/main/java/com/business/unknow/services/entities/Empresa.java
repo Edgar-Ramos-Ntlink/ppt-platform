@@ -36,8 +36,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "EMPRESAS")
 public class Empresa implements Serializable {
 
-  private static final long serialVersionUID = 8251482734357985993L;
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "ID_EMPRESA")

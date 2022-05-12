@@ -1,6 +1,5 @@
 package com.business.unknow.services.entities.catalogs;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -21,9 +20,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "CAT_CLAVE_UNIDAD")
-public class ClaveUnidad implements Serializable {
-
-  private static final long serialVersionUID = 1578386921742161974L;
+public class ClaveUnidad {
 
   @Id
   @Column(name = "CLAVE")

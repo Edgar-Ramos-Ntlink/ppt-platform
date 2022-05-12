@@ -1,19 +1,17 @@
-/** */
 package com.business.unknow.rules.payments;
 
-import com.business.unknow.enums.FacturaStatusEnum;
-import com.business.unknow.enums.MetodosPagoEnum;
-import com.business.unknow.enums.RevisionPagosEnum;
+import com.business.unknow.enums.FacturaStatus;
+import com.business.unknow.enums.MetodosPago;
+import com.business.unknow.enums.RevisionPagos;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.pagos.PagoDto;
-import com.business.unknow.rules.common.Constants.PaymentsSuite;
+import com.business.unknow.rules.Constants.PaymentsSuite;
 import java.util.List;
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
-/** @author ralfdemoledor */
 @Rule(
     name = PaymentsSuite.INVOICE_STATUS_PAYMENT_UPADTE_VALIDATION_RULE,
     description = PaymentsSuite.INVOICE_STATUS_PAYMENT_UPADTE_VALIDATION_RULE_DESC)
@@ -25,11 +23,11 @@ public class PaymentInvoiceStatusRule {
       @Fact("results") List<String> results,
       @Fact("payment") PagoDto currentPayment) {
     for (FacturaCustom factura : facturas) {
-      if (MetodosPagoEnum.PPD.getClave().equals(factura.getMetodoPago())) {
-        if (!RevisionPagosEnum.RECHAZADO.name().equals(currentPayment.getStatusPago())
-            && (FacturaStatusEnum.CANCELADA.getValor().equals(factura.getStatusFactura())
-                || FacturaStatusEnum.POR_TIMBRAR.getValor().equals(factura.getStatusFactura())
-                || FacturaStatusEnum.RECHAZO_OPERACIONES
+      if (MetodosPago.PPD.getClave().equals(factura.getMetodoPago())) {
+        if (!RevisionPagos.RECHAZADO.name().equals(currentPayment.getStatusPago())
+            && (FacturaStatus.CANCELADA.getValor().equals(factura.getStatusFactura())
+                || FacturaStatus.POR_TIMBRAR.getValor().equals(factura.getStatusFactura())
+                || FacturaStatus.RECHAZO_OPERACIONES
                     .getValor()
                     .equals(factura.getStatusFactura()))) {
           results.add(
@@ -38,10 +36,10 @@ public class PaymentInvoiceStatusRule {
         }
       }
 
-      if (MetodosPagoEnum.PUE.getClave().equals(factura.getMetodoPago())) {
-        if (!RevisionPagosEnum.RECHAZADO.name().equals(currentPayment.getStatusPago())
-            && (FacturaStatusEnum.CANCELADA.getValor().equals(factura.getStatusFactura())
-                || FacturaStatusEnum.RECHAZO_OPERACIONES
+      if (MetodosPago.PUE.getClave().equals(factura.getMetodoPago())) {
+        if (!RevisionPagos.RECHAZADO.name().equals(currentPayment.getStatusPago())
+            && (FacturaStatus.CANCELADA.getValor().equals(factura.getStatusFactura())
+                || FacturaStatus.RECHAZO_OPERACIONES
                     .getValor()
                     .equals(factura.getStatusFactura()))) {
           results.add(

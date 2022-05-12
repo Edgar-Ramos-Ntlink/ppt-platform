@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.model.dto.pdf;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -6,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.List;
 
-/** @author ralfdemoledor */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FacturaPdfDto implements Serializable {

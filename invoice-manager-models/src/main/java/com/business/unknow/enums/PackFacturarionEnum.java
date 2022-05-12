@@ -6,7 +6,7 @@ public enum PackFacturarionEnum {
   NTLINK,
   NOT_VALID;
 
-  private PackFacturarionEnum() {}
+  PackFacturarionEnum() {}
 
   public static PackFacturarionEnum findByNombre(String nombre) {
     for (PackFacturarionEnum v : values()) {

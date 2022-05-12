@@ -13,15 +13,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
 
-  public List<User> findAll();
+  List<User> findAll();
 
-  public Page<User> findAll(Pageable pageable);
+  Page<User> findAll(Pageable pageable);
 
-  public Optional<User> findByEmail(String email);
+  Optional<User> findByEmail(String email);
 
   @Query(
       "select u from User u where u.activo like upper(:status) and upper(u.email) like upper(:email) and upper(u.alias) like upper(:alias)")
-  public Page<User> findAllByParams(
+  Page<User> findAllByParams(
       @Param("status") String status,
       @Param("email") String email,
       @Param("alias") String alias,

@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.services.mapper;
 
 import com.business.unknow.model.dto.pagos.PagoDto;
@@ -19,11 +18,9 @@ public interface PagoMapper {
   @Mapping(target = "facturas", ignore = true)
   Pago getEntityFromPagoDto(PagoDto pago);
 
-  public PagoFacturaDto getPagoFacturaDtoFromEntity(PagoFactura pago);
+  PagoFacturaDto getPagoFacturaDtoFromEntity(PagoFactura pago);
 
-  public List<PagoFacturaDto> getPagosFacturaDtoFromEntities(List<PagoFactura> pagos);
+  List<PagoFacturaDto> getPagosFacturaDtoFromEntities(List<PagoFactura> pagos);
 
-  public PagoFactura getEntityFromPagoFacturaDto(PagoFacturaDto pago);
-
-  public List<PagoFactura> getEntitiesFromPagosFacturaDtos(List<PagoFacturaDto> pagos);
+  PagoFactura getEntityFromPagoFacturaDto(PagoFacturaDto pago);
 }

@@ -3,7 +3,6 @@ package com.business.unknow.model.rest;
 import lombok.Getter;
 import lombok.Setter;
 
-/** @author eej000f */
 @Getter
 @Setter
 public class MessageResponse {

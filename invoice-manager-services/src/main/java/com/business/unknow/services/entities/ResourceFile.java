@@ -1,6 +1,5 @@
 package com.business.unknow.services.entities;
 
-import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,7 +30,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "RESOURCE_FILES")
-public class ResourceFile implements Serializable {
+public class ResourceFile {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

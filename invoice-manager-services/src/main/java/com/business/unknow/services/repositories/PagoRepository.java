@@ -14,18 +14,18 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PagoRepository extends JpaRepository<Pago, Integer> {
 
-  public Page<Pago> findAll(Pageable pageable);
+  Page<Pago> findAll(Pageable pageable);
 
-  public Optional<Pago> findById(Integer id);
+  Optional<Pago> findById(Integer id);
 
   @Query("select p from Pago p join p.facturas f where f.folio = :folio")
-  public List<Pago> findPagosByFolio(@Param("folio") String folio);
+  List<Pago> findPagosByFolio(@Param("folio") String folio);
 
-  public Page<Pago> findBySolicitanteIgnoreCaseContaining(String folio, Pageable pageable);
+  Page<Pago> findBySolicitanteIgnoreCaseContaining(String folio, Pageable pageable);
 
   @Query(
       "select p from Pago p where upper(p.acredor) like upper(:acredor) and p.statusPago like upper(:status) and p.formaPago like upper(:formaPago) and p.banco like upper(:banco) and p.fechaCreacion between :since and :to")
-  public Page<Pago> findPagosAcredorFilteredByParams(
+  Page<Pago> findPagosAcredorFilteredByParams(
       @Param("acredor") String acredor,
       @Param("status") String status,
       @Param("formaPago") String formaPago,
@@ -36,7 +36,7 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
 
   @Query(
       "select p from Pago p where upper(p.deudor) like upper(:deudor) and p.statusPago like upper(:status) and p.formaPago like upper(:formaPago) and p.banco like upper(:banco) and p.fechaCreacion between :since and :to")
-  public Page<Pago> findPagosDeudorFilteredByParams(
+  Page<Pago> findPagosDeudorFilteredByParams(
       @Param("deudor") String deudor,
       @Param("status") String status,
       @Param("formaPago") String formaPago,
@@ -47,7 +47,7 @@ public interface PagoRepository extends JpaRepository<Pago, Integer> {
 
   @Query(
       "select p from Pago p where p.statusPago like upper(:status) and p.formaPago like upper(:formaPago) and p.banco like upper(:banco) and p.fechaCreacion between :since and :to")
-  public Page<Pago> findPagosFilteredByParams(
+  Page<Pago> findPagosFilteredByParams(
       @Param("status") String status,
       @Param("formaPago") String formaPago,
       @Param("banco") String banco,

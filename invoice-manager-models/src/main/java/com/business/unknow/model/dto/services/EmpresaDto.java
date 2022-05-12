@@ -17,7 +17,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
-/** @author ralfdemoledor */
 @Jacksonized
 @Builder
 @NoArgsConstructor

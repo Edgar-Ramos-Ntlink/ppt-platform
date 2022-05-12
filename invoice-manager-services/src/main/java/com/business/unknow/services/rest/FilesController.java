@@ -1,7 +1,7 @@
 package com.business.unknow.services.rest;
 
-import com.business.unknow.enums.S3BucketsEnum;
-import com.business.unknow.enums.TipoArchivoEnum;
+import com.business.unknow.enums.S3Buckets;
+import com.business.unknow.enums.TipoArchivo;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -41,8 +41,7 @@ public class FilesController {
       @PathVariable(name = "recurso") String recurso,
       @PathVariable(name = "referencia") String referencia) {
     return new ResponseEntity<>(
-        service.findResourcesByResourceType(S3BucketsEnum.valueOf(recurso), referencia),
-        HttpStatus.OK);
+        service.findResourcesByResourceType(S3Buckets.valueOf(recurso), referencia), HttpStatus.OK);
   }
 
   @GetMapping("/recursos/{recurso}/referencias/{referencia}/files/{fileType}")
@@ -53,7 +52,7 @@ public class FilesController {
       throws InvoiceManagerException {
     return new ResponseEntity<>(
         service.getResourceFileByResourceReferenceAndType(
-            S3BucketsEnum.findByValor(recurso), referencia, fileType),
+            S3Buckets.findByValor(recurso), referencia, fileType),
         HttpStatus.OK);
   }
 
@@ -64,8 +63,8 @@ public class FilesController {
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
       bos.write(Base64.getDecoder().decode(facturaFile.getData()));
       service.upsertFacturaFile(
-          S3BucketsEnum.CFDIS,
-          TipoArchivoEnum.valueOf(facturaFile.getTipoArchivo()).getFormat(),
+          S3Buckets.CFDIS,
+          TipoArchivo.valueOf(facturaFile.getTipoArchivo()).getFormat(),
           facturaFile.getFolio(),
           bos);
       return new ResponseEntity<>(HttpStatus.CREATED);

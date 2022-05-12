@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.model.dto;
 
 import static com.business.unknow.Constants.JSON_DAY_FORMAT;
@@ -12,7 +11,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-/** @author ralfdemoledor */
 @SuperBuilder
 @Getter
 @Setter

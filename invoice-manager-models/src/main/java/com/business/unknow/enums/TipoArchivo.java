@@ -1,6 +1,6 @@
 package com.business.unknow.enums;
 
-public enum TipoArchivoEnum {
+public enum TipoArchivo {
   XML(".xml", "text/plain"),
   QR(".png", "N/A"),
   PDF(".pdf", "application/pdf"),
@@ -14,7 +14,7 @@ public enum TipoArchivoEnum {
   private String format;
   private String byteArrayData;
 
-  TipoArchivoEnum(String format, String byteArrayData) {
+  TipoArchivo(String format, String byteArrayData) {
     this.format = format;
     this.byteArrayData = byteArrayData;
   }

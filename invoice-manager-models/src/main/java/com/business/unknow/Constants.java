@@ -39,29 +39,6 @@ public class Constants {
     public static final String NOTA_CREDITO_DESC_CONCEPTO = "Devolucion";
   }
 
-  public static class NtlinkModernaRequest {
-    public static final String ISER = "iser";
-    public static final String USER = "userName";
-    public static final String PASS = "password";
-    public static final String COMPROBANTE = "comprobante";
-    public static final String RFC_EMISOR = "rfc";
-    public static final String EXPRESION = "expresion";
-    public static final String RFC_RECEPTOR = "rfcReceptor";
-    public static final String UUID = "uuid";
-    public static final String MOTIVO = "motivo";
-  }
-
-  public static class FacturacionModernaRequest {
-
-    public static final String USER_ID_PARAMETER = "UserID";
-    public static final String TEXT_PARAMETER = "text2CFDI";
-    public static final String TYPE_PARAMETER = "xsi:type";
-
-    public static final String REQUEST = "request";
-    public static final String NS1 = "ns1";
-    public static final String XSI = "xsi";
-  }
-
   public static class PagoPpdCreditoDefaults {
 
     public static final String BANCO = "N/A";

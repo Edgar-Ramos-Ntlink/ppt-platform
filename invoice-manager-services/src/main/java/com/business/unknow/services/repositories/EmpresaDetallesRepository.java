@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmpresaDetallesRepository extends JpaRepository<EmpresaDetalles, Integer> {
-  public List<EmpresaDetalles> findByRfcAndTipo(String rfc, String tipo);
+  List<EmpresaDetalles> findByRfcAndTipo(String rfc, String tipo);
 }
