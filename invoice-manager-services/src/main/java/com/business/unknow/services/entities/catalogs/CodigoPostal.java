@@ -1,6 +1,5 @@
 package com.business.unknow.services.entities.catalogs;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,9 +22,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "CAT_CODIGO_POSTAL")
-public class CodigoPostal implements Serializable {
-
-  private static final long serialVersionUID = 3999575917505652397L;
+public class CodigoPostal {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

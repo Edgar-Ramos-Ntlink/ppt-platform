@@ -13,11 +13,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Integer> {
 
-  public Page<Client> findAll(Pageable pageable);
+  Page<Client> findAll(Pageable pageable);
 
   @Query(
       "select c from Client c where c.activo like upper(:status) and upper(c.informacionFiscal.rfc) like upper(:rfc) and upper(c.informacionFiscal.razonSocial) like upper(:razonSocial)")
-  public Page<Client> findClientsByParms(
+  Page<Client> findClientsByParms(
       @Param("status") String status,
       @Param("rfc") String rfc,
       @Param("razonSocial") String razonSocial,
@@ -25,7 +25,7 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
 
   @Query(
       "select c from Client c where c.correoPromotor = :promotor and c.activo like upper(:status) and upper(c.informacionFiscal.rfc) like upper(:rfc) and upper(c.informacionFiscal.razonSocial) like upper(:razonSocial)")
-  public Page<Client> findClientsFromPromotorByParms(
+  Page<Client> findClientsFromPromotorByParms(
       @Param("promotor") String promotor,
       @Param("status") String status,
       @Param("rfc") String rfc,
@@ -33,16 +33,12 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
       Pageable pageable);
 
   @Query("select c from Client c where lower(c.informacionFiscal.rfc) = lower(:rfc)")
-  public Optional<Client> findByRfc(@Param("rfc") String rfc);
+  Optional<Client> findByRfc(@Param("rfc") String rfc);
 
-  @Query(
-      "select c from Client c where lower(c.informacionFiscal.razonSocial) = lower(:razonSocial)")
-  public Optional<Client> findByRazonSocial(@Param("razonSocial") String razonSocial);
-
-  public List<Client> findByCorreoPromotor(String promotor);
+  List<Client> findByCorreoPromotor(String promotor);
 
   @Query(
       "select c from Client c where lower(c.informacionFiscal.rfc) = lower(:rfc) and c.correoPromotor = :promotor")
-  public Optional<Client> findByCorreoPromotorAndClient(
+  Optional<Client> findByCorreoPromotorAndClient(
       @Param("promotor") String promotor, @Param("rfc") String rfc);
 }

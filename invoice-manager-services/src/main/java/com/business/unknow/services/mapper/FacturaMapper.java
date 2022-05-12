@@ -1,9 +1,8 @@
-package com.business.unknow.services.mapper.factura;
+package com.business.unknow.services.mapper;
 
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.FacturaPdf;
-import com.business.unknow.services.entities.factura.Factura;
-import com.business.unknow.services.mapper.IgnoreUnmappedMapperConfig;
+import com.business.unknow.services.entities.Factura;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

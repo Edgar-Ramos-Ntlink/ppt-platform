@@ -4,28 +4,33 @@ import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.rules.suites.payments.DeletePagoSuite;
-import com.business.unknow.rules.suites.payments.PaymentCreationSuite;
-import com.business.unknow.rules.suites.payments.PaymentUpdateSuite;
 import com.business.unknow.services.util.validators.Validator;
 import java.util.ArrayList;
 import java.util.List;
 import org.jeasy.rules.api.Facts;
+import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.api.RulesEngine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service("PagoValidator")
 public class PagoEvaluatorService extends Validator {
 
+  @Autowired
+  @Qualifier("creationSuite")
+  public Rules creationSuite;
+
+  @Autowired
+  @Qualifier("deletePagoSuite")
+  public Rules deletePagoSuite;
+
+  @Autowired
+  @Qualifier("paymentUpdateSuite")
+  public Rules paymentUpdateSuite;
+
   @Autowired protected RulesEngine rulesEngine;
-
-  @Autowired private PaymentCreationSuite creationSuite;
-
-  @Autowired private DeletePagoSuite deletePagoSuite;
-
-  @Autowired private PaymentUpdateSuite updateSuite;
 
   public void deletepaymentValidation(PagoDto payment, List<FacturaCustom> facturas)
       throws InvoiceManagerException {
@@ -35,7 +40,7 @@ public class PagoEvaluatorService extends Validator {
     facts.put("facturas", facturas);
     facts.put("results", results);
 
-    rulesEngine.fire(deletePagoSuite.getSuite(), facts);
+    rulesEngine.fire(deletePagoSuite, facts);
     if (!results.isEmpty()) {
       throw new InvoiceManagerException(
           results.toString(),
@@ -52,7 +57,7 @@ public class PagoEvaluatorService extends Validator {
     facts.put("facturas", facturas);
     facts.put("results", results);
 
-    rulesEngine.fire(creationSuite.getSuite(), facts);
+    rulesEngine.fire(creationSuite, facts);
     if (!results.isEmpty()) {
       throw new InvoiceManagerException(
           results.toString(),
@@ -71,7 +76,7 @@ public class PagoEvaluatorService extends Validator {
     facts.put("facturas", facturas);
     facts.put("results", results);
 
-    rulesEngine.fire(updateSuite.getSuite(), facts);
+    rulesEngine.fire(paymentUpdateSuite, facts);
     if (!results.isEmpty()) {
       throw new InvoiceManagerException(
           results.toString(),

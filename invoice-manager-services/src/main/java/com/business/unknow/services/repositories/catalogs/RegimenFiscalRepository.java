@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RegimenFiscalRepository extends JpaRepository<RegimenFiscal, Integer> {
 
-  public List<RegimenFiscal> findAll();
+  List<RegimenFiscal> findAll();
 }

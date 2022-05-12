@@ -1,10 +1,10 @@
 package com.business.unknow.rules.payments;
 
-import com.business.unknow.enums.FacturaStatusEnum;
-import com.business.unknow.enums.MetodosPagoEnum;
+import com.business.unknow.enums.FacturaStatus;
+import com.business.unknow.enums.MetodosPago;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.pagos.PagoDto;
-import com.business.unknow.rules.common.Constants.DeletePagoSuite;
+import com.business.unknow.rules.Constants.DeletePagoSuite;
 import java.util.List;
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
@@ -21,9 +21,9 @@ public class StatusDeletePaymentRule {
       @Fact("payment") PagoDto payment, @Fact("facturas") List<FacturaCustom> facturas) {
 
     for (FacturaCustom invoice : facturas) {
-      if (MetodosPagoEnum.PUE.getClave().equals(invoice.getMetodoPago())
-          && (FacturaStatusEnum.TIMBRADA.getValor().equals(invoice.getStatusFactura())
-              || FacturaStatusEnum.CANCELADA.getValor().equals(invoice.getStatusFactura()))) {
+      if (MetodosPago.PUE.getClave().equals(invoice.getMetodoPago())
+          && (FacturaStatus.TIMBRADA.getValor().equals(invoice.getStatusFactura())
+              || FacturaStatus.CANCELADA.getValor().equals(invoice.getStatusFactura()))) {
         return true;
       }
     }

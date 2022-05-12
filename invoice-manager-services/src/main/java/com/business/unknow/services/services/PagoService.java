@@ -1,11 +1,11 @@
 package com.business.unknow.services.services;
 
-import com.business.unknow.enums.FacturaStatusEnum;
-import com.business.unknow.enums.FormaPagoEnum;
-import com.business.unknow.enums.MetodosPagoEnum;
-import com.business.unknow.enums.RevisionPagosEnum;
-import com.business.unknow.enums.TipoArchivoEnum;
-import com.business.unknow.enums.TipoDocumentoEnum;
+import com.business.unknow.enums.FacturaStatus;
+import com.business.unknow.enums.FormaPago;
+import com.business.unknow.enums.MetodosPago;
+import com.business.unknow.enums.RevisionPagos;
+import com.business.unknow.enums.TipoArchivo;
+import com.business.unknow.enums.TipoDocumento;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
@@ -246,7 +246,7 @@ public class PagoService {
       pagoFact.setDeudor(factura.getRazonSocialRemitente());
       pagoFact.setTotalFactura(factura.getTotal());
       pagoFact.setMetodoPago(factura.getMetodoPago());
-      if (MetodosPagoEnum.PUE.name().equals(factura.getMetodoPago())) {
+      if (MetodosPago.PUE.name().equals(factura.getMetodoPago())) {
         pagoFact.setIdCfdi(factura.getIdCfdi());
       }
     }
@@ -254,12 +254,12 @@ public class PagoService {
 
     List<FacturaCustom> factPpd =
         facturas.stream()
-            .filter(f -> MetodosPagoEnum.PPD.name().equals(f.getMetodoPago()))
+            .filter(f -> MetodosPago.PPD.name().equals(f.getMetodoPago()))
             .collect(Collectors.toList());
 
     List<FacturaCustom> factPue =
         facturas.stream()
-            .filter(f -> MetodosPagoEnum.PUE.name().equals(f.getMetodoPago()))
+            .filter(f -> MetodosPago.PUE.name().equals(f.getMetodoPago()))
             .collect(Collectors.toList());
 
     if (!factPpd.isEmpty()) {
@@ -291,9 +291,9 @@ public class PagoService {
           });
     }
     for (FacturaCustom dto : facturas) {
-      if (!FormaPagoEnum.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())
-          && dto.getTipoDocumento().equals(TipoDocumentoEnum.FACTURA.getDescripcion())
-          && dto.getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
+      if (!FormaPago.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())
+          && dto.getTipoDocumento().equals(TipoDocumento.FACTURA.getDescripcion())
+          && dto.getMetodoPago().equals(MetodosPago.PUE.name())) {
         log.info("Updating saldo pendiente factura {}", dto.getFolio());
         Optional<PagoFacturaDto> pagoFact =
             pagoDto.getFacturas().stream()
@@ -305,11 +305,10 @@ public class PagoService {
         }
       }
     }
-    if (FormaPagoEnum.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())
-        && facturas.size() == 1) {
+    if (FormaPago.CREDITO.getPagoValue().equals(pagoDto.getFormaPago()) && facturas.size() == 1) {
       Optional<FacturaCustom> currentFactura = facturas.stream().findFirst();
       if (currentFactura.isPresent()
-          && currentFactura.get().getMetodoPago().equals(MetodosPagoEnum.PUE.name())) {
+          && currentFactura.get().getMetodoPago().equals(MetodosPago.PUE.name())) {
         currentFactura.get().setValidacionTeso(true);
         facturaService.updateFacturaCustom(currentFactura.get().getFolio(), currentFactura.get());
         pagoDto.setStatusPago("ACEPTADO");
@@ -359,18 +358,18 @@ public class PagoService {
     }
     pagoEvaluatorService.validatePaymentUpdate(pago, mapper.getPagoDtoFromEntity(entity), facturas);
 
-    if (pago.getStatusPago().equals(RevisionPagosEnum.RECHAZADO.name())) {
-      pagoDto.setStatusPago(RevisionPagosEnum.RECHAZADO.name());
+    if (pago.getStatusPago().equals(RevisionPagos.RECHAZADO.name())) {
+      pagoDto.setStatusPago(RevisionPagos.RECHAZADO.name());
       pagoDto.setComentarioPago(pago.getComentarioPago());
       for (FacturaCustom factura : facturas) {
-        if (MetodosPagoEnum.PUE.getClave().equals(factura.getMetodoPago())) {
-          factura.setStatusFactura(FacturaStatusEnum.RECHAZO_TESORERIA.getValor());
+        if (MetodosPago.PUE.getClave().equals(factura.getMetodoPago())) {
+          factura.setStatusFactura(FacturaStatus.RECHAZO_TESORERIA.getValor());
           factura.setStatusDetail(pago.getComentarioPago());
           facturaService.updateFacturaCustom(factura.getFolio(), factura);
         }
       }
     } else if (entity.getRevision1() && pago.getRevision2()) {
-      pagoDto.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
+      pagoDto.setStatusPago(RevisionPagos.ACEPTADO.name());
 
       List<String> folioFacts =
           pago.getFacturas().stream()
@@ -432,15 +431,14 @@ public class PagoService {
             .distinct()
             .collect(Collectors.toList())) {
       FacturaCustom fact = facturaService.getFacturaBaseByFolio(folioCfdi);
-      if (TipoDocumentoEnum.COMPLEMENTO.equals(
-          TipoDocumentoEnum.findByDesc(fact.getTipoDocumento()))) {
+      if (TipoDocumento.COMPLEMENTO.equals(TipoDocumento.findByDesc(fact.getTipoDocumento()))) {
         facturaService.deleteFactura(fact.getFolio());
         filesService.deleteFacturaFile(fact.getFolio(), "PDF");
       }
     }
 
     filesService.deleteResourceFileByResourceReferenceAndType(
-        "PAGOS", idPago.toString(), TipoArchivoEnum.IMAGEN.name());
+        "PAGOS", idPago.toString(), TipoArchivo.IMAGEN.name());
     repository.delete(mapper.getEntityFromPagoDto(payment));
   }
 

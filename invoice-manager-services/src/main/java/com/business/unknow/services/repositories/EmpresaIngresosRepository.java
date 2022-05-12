@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmpresaIngresosRepository extends JpaRepository<EmpresaIngresos, Integer> {
-
   List<EmpresaIngresos> findByRfc(String rfc);
 }

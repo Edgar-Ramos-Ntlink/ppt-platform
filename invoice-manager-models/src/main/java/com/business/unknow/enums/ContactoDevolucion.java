@@ -1,10 +1,10 @@
 package com.business.unknow.enums;
 
-public enum ContactoDevolucionEnum {
+public enum ContactoDevolucion {
   CONTACTO,
   CLIENTE,
   PROMOTOR,
   DESPACHO;
 
-  private ContactoDevolucionEnum() {}
+  private ContactoDevolucion() {}
 }

@@ -1,9 +1,7 @@
 package com.business.unknow.enums;
 
-public enum RevisionPagosEnum {
+public enum RevisionPagos {
   VALIDACION,
   ACEPTADO,
   RECHAZADO;
-
-  private RevisionPagosEnum() {}
 }

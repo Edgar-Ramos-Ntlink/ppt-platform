@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.model.menu;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-/** @author ralfdemoledor */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Setter

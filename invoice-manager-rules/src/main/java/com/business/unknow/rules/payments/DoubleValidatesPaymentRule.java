@@ -1,8 +1,8 @@
 package com.business.unknow.rules.payments;
 
-import com.business.unknow.enums.RevisionPagosEnum;
+import com.business.unknow.enums.RevisionPagos;
 import com.business.unknow.model.dto.pagos.PagoDto;
-import com.business.unknow.rules.common.Constants.PaymentsSuite;
+import com.business.unknow.rules.Constants.PaymentsSuite;
 import java.util.List;
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
@@ -21,8 +21,8 @@ public class DoubleValidatesPaymentRule {
     if (dbPayment.getRevision1()
         && currentPayment.getRevision1()
         && currentPayment.getRevision2()
-        && !RevisionPagosEnum.RECHAZADO.name().equals(currentPayment.getStatusPago())) {
-      currentPayment.setStatusPago(RevisionPagosEnum.ACEPTADO.name());
+        && !RevisionPagos.RECHAZADO.name().equals(currentPayment.getStatusPago())) {
+      currentPayment.setStatusPago(RevisionPagos.ACEPTADO.name());
       return false;
     } else {
       return !dbPayment.getRevision1() && currentPayment.getRevision2();

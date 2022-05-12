@@ -20,7 +20,7 @@ import com.business.unknow.services.repositories.catalogs.ClaveUnidadRepository;
 import com.business.unknow.services.repositories.catalogs.CodigoPostalRepository;
 import com.business.unknow.services.repositories.catalogs.FormaPagoRepository;
 import com.business.unknow.services.repositories.catalogs.GiroRepository;
-import com.business.unknow.services.repositories.catalogs.RegimanFiscalRepository;
+import com.business.unknow.services.repositories.catalogs.RegimenFiscalRepository;
 import com.business.unknow.services.repositories.catalogs.StatusEventoRepository;
 import com.business.unknow.services.repositories.catalogs.StatusPaymentRepository;
 import com.business.unknow.services.repositories.catalogs.UsoCfdiRepository;
@@ -65,7 +65,7 @@ public class CatalogService {
 
   @Autowired private FormaPagoRepository formaPagoRepository;
 
-  @Autowired private RegimanFiscalRepository regimanFiscalRepository;
+  @Autowired private RegimenFiscalRepository regimanFiscalRepository;
 
   @Autowired private ClaveUnidadRepository claveUnidadReppository;
 
@@ -129,6 +129,13 @@ public class CatalogService {
                 Collectors.toMap(
                     a -> a.getId().toString(), e -> catalogsMapper.getDtoFromEntity(e)));
     log.info("Mappings statusPaymentsMappings loaded {}", statusPaymentsMappings.size());
+    giroEmpresasMappings =
+            giroRepository.findAll().stream()
+                    .collect(
+                            Collectors.toMap(
+                                    a -> a.getId(), e->e));
+    log.info("Mappings giroEmpresasMappings loaded {}", giroEmpresasMappings.size());
+
   }
 
   /**

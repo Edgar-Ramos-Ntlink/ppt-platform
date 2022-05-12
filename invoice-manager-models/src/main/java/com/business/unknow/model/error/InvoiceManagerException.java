@@ -1,6 +1,5 @@
 package com.business.unknow.model.error;
 
-/** @author eej000f */
 public class InvoiceManagerException extends Exception {
 
   private final transient ErrorMessage errorMessage;

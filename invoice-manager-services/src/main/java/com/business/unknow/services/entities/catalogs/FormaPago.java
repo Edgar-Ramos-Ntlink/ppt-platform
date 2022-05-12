@@ -1,6 +1,5 @@
 package com.business.unknow.services.entities.catalogs;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,9 +22,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "CAT_FORMA_PAGO")
-public class FormaPago implements Serializable {
-
-  private static final long serialVersionUID = 8508424746268290927L;
+public class FormaPago {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

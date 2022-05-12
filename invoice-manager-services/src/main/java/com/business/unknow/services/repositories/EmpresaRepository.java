@@ -15,24 +15,16 @@ import org.springframework.stereotype.Repository;
 public interface EmpresaRepository
     extends JpaRepository<Empresa, Integer>, JpaSpecificationExecutor<Empresa> {
 
-  public Page<Empresa> findAll(Pageable pageable);
-
-  @Query("select e from Empresa e where upper(e.tipo) like upper(:linea)")
-  public Page<Empresa> findAllWithLinea(@Param("linea") String linea, Pageable pageable);
-
-  @Query(
-      "select e from Empresa e where upper(e.tipo) like upper(:linea) and upper(e.rfc) like upper(:rfc)")
-  public Page<Empresa> findByRfcIgnoreCaseContaining(
-      @Param("rfc") String rfc, @Param("linea") String linea, Pageable pageable);
+  Page<Empresa> findAll(Pageable pageable);
 
   @Query(
       "select e from Empresa e where upper(e.tipo) like upper(:linea) and upper(e.razonSocial) like upper(:razonSocial)")
-  public Page<Empresa> findByRazonSocialIgnoreCaseContaining(
+  Page<Empresa> findByRazonSocialIgnoreCaseContaining(
       @Param("razonSocial") String razonSocial, @Param("linea") String linea, Pageable pageable);
 
   @Query("select e from Empresa e where e.rfc = :rfc")
-  public Optional<Empresa> findByRfc(@Param("rfc") String rfc);
+  Optional<Empresa> findByRfc(@Param("rfc") String rfc);
 
   @Query("select e from Empresa e where e.tipo = :tipo and e.giro = :giro and e.operativa =true")
-  public List<Empresa> findByTipoAndGiro(@Param("tipo") String tipo, @Param("giro") Integer giro);
+  List<Empresa> findByTipoAndGiro(@Param("tipo") String tipo, @Param("giro") Integer giro);
 }

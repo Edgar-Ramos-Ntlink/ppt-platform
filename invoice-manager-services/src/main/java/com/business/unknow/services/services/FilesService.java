@@ -1,15 +1,15 @@
 package com.business.unknow.services.services;
 
 import com.amazonaws.util.Base64;
-import com.business.unknow.enums.S3BucketsEnum;
-import com.business.unknow.enums.TipoArchivoEnum;
+import com.business.unknow.enums.S3Buckets;
+import com.business.unknow.enums.TipoArchivo;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.files.FacturaFileDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.ResourceFile;
 import com.business.unknow.services.mapper.ResourceFileMapper;
-import com.business.unknow.services.repositories.files.ResourceFileRepository;
+import com.business.unknow.services.repositories.ResourceFileRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mx.ntlink.NtlinkUtilException;
@@ -73,7 +73,7 @@ public class FilesService {
       ByteArrayOutputStream xmlStream = new ByteArrayOutputStream();
       marshallerObj.marshal(comprobante, xmlStream);
       s3Utils.upsertFile(
-          s3Bucket, S3BucketsEnum.CFDIS.name(), name.concat(".xml"), xmlStream.toByteArray());
+          s3Bucket, S3Buckets.CFDIS.name(), name.concat(".xml"), xmlStream.toByteArray());
     } catch (JAXBException | NtlinkUtilException e) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
@@ -91,7 +91,7 @@ public class FilesService {
     try {
       ObjectMapper objectMapper = new ObjectMapper();
       byte[] json = objectMapper.writeValueAsBytes(facturaCustom);
-      s3Utils.upsertFile(s3Bucket, S3BucketsEnum.CFDIS.name(), name.concat(".json"), json);
+      s3Utils.upsertFile(s3Bucket, S3Buckets.CFDIS.name(), name.concat(".json"), json);
     } catch (JsonProcessingException | NtlinkUtilException e) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
@@ -104,7 +104,7 @@ public class FilesService {
    * @param name
    * @param {@link FacturaCustom}
    */
-  public void sendFileToS3(String name, byte[] file, String format, S3BucketsEnum bucket) {
+  public void sendFileToS3(String name, byte[] file, String format, S3Buckets bucket) {
     log.info("Saving {} file {} to S3", name, format);
     try {
       s3Utils.upsertFile(s3Bucket, bucket.name(), name.concat(format), file);
@@ -121,7 +121,7 @@ public class FilesService {
    * @param name
    * @param file
    */
-  public void upsertS3File(S3BucketsEnum bucket, String name, ByteArrayOutputStream file)
+  public void upsertS3File(S3Buckets bucket, String name, ByteArrayOutputStream file)
       throws InvoiceManagerException {
     try {
       s3Utils.upsertFile(s3Bucket, bucket.name(), name, file.toByteArray());
@@ -146,7 +146,7 @@ public class FilesService {
               new String(
                   org.apache.commons.ssl.Base64.decodeBase64(
                       s3Utils
-                          .getFile(s3Bucket, S3BucketsEnum.CFDIS.name(), folio.concat(".xml"))
+                          .getFile(s3Bucket, S3Buckets.CFDIS.name(), folio.concat(".xml"))
                           .getBytes(StandardCharsets.UTF_8))));
       Comprobante comprobante = (Comprobante) unmarshaller.unmarshal(decodedString);
       return cfdiMapper.comprobanteToCfdi(comprobante);
@@ -157,10 +157,10 @@ public class FilesService {
   }
 
   public void deleteCfdiFromS3(String folio) throws NtlinkUtilException {
-    s3Utils.deleteFile(s3Bucket, S3BucketsEnum.CFDIS.name(), folio.concat(".xml"));
+    s3Utils.deleteFile(s3Bucket, S3Buckets.CFDIS.name(), folio.concat(".xml"));
   }
 
-  public void deleteS3File(S3BucketsEnum bucket, String name) {
+  public void deleteS3File(S3Buckets bucket, String name) {
     try {
       s3Utils.deleteFile(s3Bucket, bucket.name(), name);
 
@@ -171,7 +171,7 @@ public class FilesService {
     }
   }
 
-  public String getS3File(S3BucketsEnum bucket, String name) {
+  public String getS3File(S3Buckets bucket, String name) {
     try {
       return s3Utils.getFile(s3Bucket, bucket.name(), name);
     } catch (NtlinkUtilException e) {
@@ -181,7 +181,7 @@ public class FilesService {
     }
   }
 
-  public InputStream getS3InputStream(S3BucketsEnum bucket, String name) {
+  public InputStream getS3InputStream(S3Buckets bucket, String name) {
     try {
       return s3Utils.getFileInputStream(s3Bucket, bucket.name(), name);
     } catch (NtlinkUtilException e) {
@@ -194,8 +194,7 @@ public class FilesService {
   public FacturaFileDto getFacturaFileByFolioAndType(String folio, String type)
       throws InvoiceManagerException {
     try {
-      String data =
-          getS3File(S3BucketsEnum.CFDIS, folio.concat(TipoArchivoEnum.valueOf(type).getFormat()));
+      String data = getS3File(S3Buckets.CFDIS, folio.concat(TipoArchivo.valueOf(type).getFormat()));
 
       FacturaFileDto fileDto = new FacturaFileDto();
       fileDto.setFolio(folio);
@@ -208,14 +207,14 @@ public class FilesService {
   }
 
   public List<ResourceFileDto> findResourcesByResourceType(
-      S3BucketsEnum resourceType, String referencia) {
+      S3Buckets resourceType, String referencia) {
     List<ResourceFile> recursos =
         resourceFileRepository.findByTipoRecursoAndReferencia(resourceType.name(), referencia);
     return resourceFileMapper.getDtosFromEntities(recursos);
   }
 
   public ResourceFileDto getResourceFileByResourceReferenceAndType(
-      S3BucketsEnum resource, String reference, String type) throws InvoiceManagerException {
+      S3Buckets resource, String reference, String type) throws InvoiceManagerException {
     try {
       ResourceFileDto resourceFileDto = null;
       Optional<ResourceFile> entity =
@@ -246,14 +245,14 @@ public class FilesService {
 
     Optional<ResourceFile> resource =
         resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(
-            S3BucketsEnum.EMPRESAS.name(), rfc, "LOGO");
+            S3Buckets.EMPRESAS.name(), rfc, "LOGO");
 
     HttpHeaders headers = new HttpHeaders();
     headers.setCacheControl(CacheControl.noCache().getHeaderValue());
     byte[] bytes = null;
     if (resource.isPresent()) {
       headers.setContentType(MediaType.valueOf(resource.get().getFormato().replace(";", "")));
-      bytes = getS3InputStream(S3BucketsEnum.EMPRESAS, resource.get().getNombre()).readAllBytes();
+      bytes = getS3InputStream(S3Buckets.EMPRESAS, resource.get().getNombre()).readAllBytes();
     } else {
       headers.setContentType(MediaType.IMAGE_PNG);
       bytes = noAvailableImage.getInputStream().readAllBytes();
@@ -263,7 +262,7 @@ public class FilesService {
   }
 
   public void upsertFacturaFile(
-      S3BucketsEnum bucket, String fileFormat, String name, ByteArrayOutputStream file)
+      S3Buckets bucket, String fileFormat, String name, ByteArrayOutputStream file)
       throws InvoiceManagerException {
     upsertS3File(bucket, name.concat(fileFormat), file);
   }
@@ -291,7 +290,7 @@ public class FilesService {
       byte[] decodedBytes = Base64.decode(fileInfo[1]);
       ByteArrayOutputStream baos = new ByteArrayOutputStream(decodedBytes.length);
       baos.write(decodedBytes, 0, decodedBytes.length);
-      upsertS3File(S3BucketsEnum.findByValor(resourceFile.getTipoRecurso()), fileName, baos);
+      upsertS3File(S3Buckets.findByValor(resourceFile.getTipoRecurso()), fileName, baos);
 
       resourceFileRepository.save(resourceFileMapper.getEntityFromDto(resourceFile));
     } else {
@@ -301,7 +300,7 @@ public class FilesService {
   }
 
   public void deleteFacturaFile(String folio, String type) throws InvoiceManagerException {
-    deleteS3File(S3BucketsEnum.CFDIS, folio.concat(TipoArchivoEnum.valueOf(type).getFormat()));
+    deleteS3File(S3Buckets.CFDIS, folio.concat(TipoArchivo.valueOf(type).getFormat()));
   }
 
   public void deleteResourceFileByResourceReferenceAndType(
@@ -311,7 +310,7 @@ public class FilesService {
             resource, referencia, tipoArchivo);
     if (resourceFile.isPresent()) {
       ResourceFile file = resourceFile.get();
-      deleteS3File(S3BucketsEnum.findByValor(file.getTipoRecurso()), file.getNombre());
+      deleteS3File(S3Buckets.findByValor(file.getTipoRecurso()), file.getNombre());
       resourceFileRepository.delete(file);
     }
   }
@@ -320,7 +319,7 @@ public class FilesService {
     Optional<ResourceFile> resourceFile = resourceFileRepository.findById(id);
     if (resourceFile.isPresent()) {
       ResourceFile file = resourceFile.get();
-      deleteS3File(S3BucketsEnum.findByValor(file.getTipoRecurso()), file.getNombre());
+      deleteS3File(S3Buckets.findByValor(file.getTipoRecurso()), file.getNombre());
       resourceFileRepository.delete(file);
     }
   }

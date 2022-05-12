@@ -9,7 +9,7 @@ public enum TipoEmail {
   private String email;
   private String pw;
 
-  private TipoEmail(String host, String port, String email, String pw) {
+  TipoEmail(String host, String port, String email, String pw) {
     this.host = host;
     this.port = port;
     this.email = email;

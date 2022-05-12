@@ -1,6 +1,6 @@
 package com.business.unknow.enums;
 
-public enum PagoStatusEnum {
+public enum PagoStatus {
   SIN_PAGAR(1, "Sin pagar"),
   PAGADA(2, "Pagada"),
   PARCIALMENTE_PAGADA(3, "Parcialmente pagada");
@@ -8,7 +8,7 @@ public enum PagoStatusEnum {
   private Integer valor;
   private String descripcion;
 
-  private PagoStatusEnum(Integer valor, String descripcion) {
+  PagoStatus(Integer valor, String descripcion) {
     this.valor = valor;
     this.descripcion = descripcion;
   }
