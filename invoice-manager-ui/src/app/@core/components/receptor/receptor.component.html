@@ -22,7 +22,7 @@
         class="form-control"
         fullWidth
         placeholder="Nombre"
-        disabled
+        [disabled]="!allowEdit"
       />
     </div>
     <div class="col-sm-2">
@@ -34,7 +34,7 @@
         class="form-control"
         fullWidth
         placeholder="Codigo postal domicilio fical"
-        disabled
+        [disabled]="!allowEdit"
       />
     </div>
     <div class="col-md-2">

@@ -4,10 +4,11 @@ import { CompaniesData } from '../../../@core/data/companies-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { Empresa } from '../../../models/empresa';
-import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { Cfdi } from '../../../@core/models/cfdi/cfdi';
 import { Concepto } from '../../../@core/models/cfdi/concepto';
 import { Factura } from '../../../@core/models/factura';
+import { NbToastrService } from '@nebular/theme';
+import { AppConstants } from '../../../models/app-constants';
 
 @Component({
     selector: 'ngx-carga-masiva',
@@ -25,14 +26,14 @@ export class CargaMasivaComponent implements OnInit {
         filename: '',
         dataValid: false,
     };
-    public errorMessages: string[] = [];
+
     private companies: any = {};
 
     constructor(
         private companyService: CompaniesData,
         private cfdiValidator: CfdiValidatorService,
         private invoiceService: InvoicesData,
-        private catalogsData: CatalogsData
+        private toastrService: NbToastrService,
     ) {}
 
     ngOnInit() {
@@ -43,7 +44,6 @@ export class CargaMasivaComponent implements OnInit {
             dataValid: false,
         };
         this.companies = {};
-        this.errorMessages = [];
     }
 
     onFileChange(files) {
@@ -87,19 +87,17 @@ export class CargaMasivaComponent implements OnInit {
         this.companies = {};
         this.params.dataValid = false;
         this.params.filename = '';
-        this.errorMessages = [];
         this.fileInput.nativeElement.value = '';
-        this.params.successMessage = undefined;
     }
 
     public async validarInformacion() {
         this.loading = true;
-        this.params.successMessage = undefined;
         this.params.dataValid = true;
-        this.errorMessages = [];
         if (this.invoices !== undefined && this.invoices.length > 0) {
             for (const transfer of this.invoices) {
                 transfer.observaciones = [];
+
+                // VALIDACIONES EMISOR
                 if (this.companies[transfer.RFC_EMISOR] === undefined) {
                     transfer.observaciones.push(
                         `${transfer.RFC_EMISOR} no esta dada de alta en el sistema`
@@ -115,7 +113,13 @@ export class CargaMasivaComponent implements OnInit {
                     transfer.observaciones.push(
                         `${transfer.RFC_EMISOR} no se encuentra activa`
                     );
+                } else if(this.companies[transfer.RFC_EMISOR].regimenFiscal === undefined || this.companies[transfer.RFC_EMISOR].regimenFiscal === '*') {
+                    transfer.observaciones.push(
+                        `${transfer.RFC_EMISOR} no cuenta con regimen fiscal`
+                    );
                 }
+
+                // VALIDACIONES RECEPTOR
                 if (this.companies[transfer.RFC_RECEPTOR] === undefined) {
                     transfer.observaciones.push(
                         `${transfer.RFC_RECEPTOR} no esta dada de alta en el sistema`
@@ -127,17 +131,31 @@ export class CargaMasivaComponent implements OnInit {
                     transfer.observaciones.push(
                         `${transfer.RFC_RECEPTOR} no es de tipo ${this.params.lineaRetiro}`
                     );
-                } else if (!this.companies[transfer.RFC_EMISOR].activo) {
+                } else if (!this.companies[transfer.RFC_RECEPTOR].activo) {
                     transfer.observaciones.push(
                         `${transfer.RFC_RECEPTOR} no se encuentra activa`
                     );
+                } else if(this.companies[transfer.RFC_RECEPTOR].regimenFiscal === undefined || this.companies[transfer.RFC_RECEPTOR].regimenFiscal === '*') {
+                    transfer.observaciones.push(
+                        `${transfer.RFC_RECEPTOR} no cuenta con regimen fiscal`
+                    );
                 }
+
+                if(isNaN(transfer.CLAVE_PROD_SERVICIO)){
+                    transfer.observaciones.push(
+                        `La clave producto servicio ${transfer.CLAVE_PROD_SERVICIO} es invalida`);
+                }
+
+
                 if (transfer.observaciones.length === 0) {
                     const fact = await this.buildFacturaFromTransfer(
                         transfer,
                         this.companies[transfer.RFC_EMISOR],
                         this.companies[transfer.RFC_RECEPTOR]
                     );
+                    if(fact.notas!== undefined && fact.notas.length>0){
+                        transfer.observaciones.push(fact.notas);
+                    }
                     transfer.observaciones.push(
                         ...this.cfdiValidator.validarConcepto(
                             fact.cfdi.conceptos[0]
@@ -147,58 +165,40 @@ export class CargaMasivaComponent implements OnInit {
                         ...this.cfdiValidator.validarCfdi(fact.cfdi)
                     );
                 }
-                if (transfer.observaciones.length === 0) {
-                    transfer.observaciones = 'VALIDO';
-                } else {
+                if (transfer.observaciones.length > 0) {
                     this.params.dataValid = false;
-                }
+                } 
             }
+            if(this.params.dataValid){this.toastrService.success('Se han validado correctamente todas las facturas',"Facturas Validas",AppConstants.TOAST_CONFIG);}
         } else {
             this.params.dataValid = false;
-            this.errorMessages.push(
-                'No se encontro informacion cargada o valida'
-            );
+            this.toastrService.warning('No se encontro informacion cargada o valida',"No hay datos",AppConstants.TOAST_CONFIG);
         }
         this.loading = false;
     }
 
     cargarFacturas() {
         this.loading = true;
-        this.params.successMessage = undefined;
-        this.errorMessages = [];
         this.loadfactura(this.invoices);
     }
 
     private async loadfactura(invoices: any) {
         for (const invoice of invoices) {
+            invoice.observaciones = [];
             const factura = await this.buildFacturaFromTransfer(
                 invoice,
                 this.companies[invoice.RFC_EMISOR],
                 this.companies[invoice.RFC_RECEPTOR]
             );
-            const claveProdServ = +invoice.CLAVE_PROD_SERVICIO;
-            if (!isNaN(claveProdServ)) {
                 try {
-                    const claves =
-                        await this.catalogsData.getProductoServiciosByClave(
-                            claveProdServ.toString()
-                        );
-                    factura.cfdi.conceptos[0].claveProdServ =
-                        claveProdServ.toString();
                     // TODO evaluate if descripcionCUPS is required
                     //factura.cfdi.conceptos[0].descripcionCUPS = claves[0].descripcion;
                     await this.invoiceService
                         .insertNewInvoice(factura)
                         .toPromise();
-                    invoice.observaciones = 'CARGADA';
                 } catch (error) {
-                    invoice.observaciones =
-                        error.error.message || 'Error desconocido';
+                    invoice.observaciones.push(error?.message || 'Error desconocido');
                 }
-            } else {
-                invoice.observaciones =
-                    'La clave producto servicio es invalida.';
-            }
         }
         this.loading = false;
     }
@@ -233,6 +233,8 @@ export class CargaMasivaComponent implements OnInit {
         receptorCompany: Empresa
     ): Promise<Factura> {
         const factura = new Factura();
+        try{
+        
         factura.rfcEmisor = transfer.RFC_EMISOR;
         factura.razonSocialEmisor = emisorCompany.razonSocial;
         factura.lineaEmisor = this.params.lineaDeposito;
@@ -245,6 +247,8 @@ export class CargaMasivaComponent implements OnInit {
         const cfdi = new Cfdi();
         cfdi.receptor.nombre = receptorCompany.razonSocial;
         cfdi.receptor.rfc = transfer.RFC_RECEPTOR;
+        cfdi.receptor.domicilioFiscalReceptor = receptorCompany.cp;
+        cfdi.receptor.regimenFiscalReceptor = receptorCompany.regimenFiscal;
         cfdi.receptor.usoCfdi = 'P01';
         factura.direccionEmisor =
             this.cfdiValidator.generateCompanyAddress(receptorCompany);
@@ -259,6 +263,7 @@ export class CargaMasivaComponent implements OnInit {
         cfdi.total = transfer.TOTAL;
         cfdi.subtotal = transfer.IMPORTE;
         cfdi.metodoPago = transfer.METODO_PAGO.toString();
+        cfdi.lugarExpedicion = emisorCompany.cp;
         const concepto = new Concepto();
         concepto.cantidad = transfer.CANTIDAD;
         concepto.claveProdServ = transfer.CLAVE_PROD_SERVICIO;
@@ -274,5 +279,9 @@ export class CargaMasivaComponent implements OnInit {
         );
         factura.cfdi = await this.cfdiValidator.calcularImportes(cfdi);
         return factura;
+        }catch(error){
+            this.toastrService.danger(error?.message,"Error en la validacion del CFDI",AppConstants.TOAST_CONFIG);
+            factura.notas = `Error en la construccion de la factura de ${transfer.RFC_EMISOR} para  ${transfer.RFC_RECEPTOR} : ${error.message}`;
+        }
     }
 }
