@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CodigoPostalRepository extends JpaRepository<CodigoPostal, String> {
-
-  public List<CodigoPostal> findByCodigoPostal(String codigoPostal);
+  List<CodigoPostal> findByCodigoPostal(String codigoPostal);
 }

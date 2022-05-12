@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.model.dto.catalogs;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,7 +10,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
-/** @author ralfdemoledor */
 @Jacksonized
 @Builder
 @Getter

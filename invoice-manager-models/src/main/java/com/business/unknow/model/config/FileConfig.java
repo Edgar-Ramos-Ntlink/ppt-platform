@@ -1,6 +1,6 @@
 package com.business.unknow.model.config;
 
-import com.business.unknow.enums.TipoArchivoEnum;
+import com.business.unknow.enums.TipoArchivo;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter
 public class FileConfig {
 
-  private TipoArchivoEnum tipoArchivo;
+  private TipoArchivo tipoArchivo;
   private String nombre;
   private String base64Content;
 }

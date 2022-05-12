@@ -10,10 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClaveProductoServicioRepository
     extends JpaRepository<ClaveProductoServicio, Integer> {
+  Page<ClaveProductoServicio> findAll(Pageable pageable);
 
-  public Page<ClaveProductoServicio> findAll(Pageable pageable);
+  List<ClaveProductoServicio> findByDescripcionContainingIgnoreCase(String description);
 
-  public List<ClaveProductoServicio> findByDescripcionContainingIgnoreCase(String description);
-
-  public List<ClaveProductoServicio> findByClave(Integer clave);
+  List<ClaveProductoServicio> findByClave(Integer clave);
 }

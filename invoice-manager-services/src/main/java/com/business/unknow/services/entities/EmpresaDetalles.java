@@ -1,6 +1,5 @@
 package com.business.unknow.services.entities;
 
-import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -34,7 +33,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "EMPRESA_DETALLES")
-public class EmpresaDetalles implements Serializable {
+public class EmpresaDetalles {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

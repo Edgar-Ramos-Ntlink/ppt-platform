@@ -2,10 +2,9 @@ package com.business.unknow.rules.payments;
 
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
-import com.business.unknow.rules.common.Constants.PaymentsSuite;
+import com.business.unknow.rules.Constants.PaymentsSuite;
 import java.math.BigDecimal;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
@@ -17,7 +16,6 @@ import org.jeasy.rules.annotation.Rule;
     description = PaymentsSuite.ZERO_AMMOUNT_VALIDATION_RULE_DESC)
 @Slf4j
 public class ZeroAmmountValidationRule {
-
 
   @Condition
   public boolean condition(@Fact("payment") PagoDto currentPayment) {

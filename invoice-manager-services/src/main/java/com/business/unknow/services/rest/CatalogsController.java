@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.services.rest;
 
 import com.business.unknow.model.dto.catalogs.CatalogDto;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** @author ralfdemoledor */
 @RestController
 @RequestMapping("/api/catalogs")
 public class CatalogsController {

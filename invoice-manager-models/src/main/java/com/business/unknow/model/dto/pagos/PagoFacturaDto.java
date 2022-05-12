@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.model.dto.pagos;
 
 import static com.business.unknow.Constants.JSON_DATETIME_FORMAT;
@@ -13,7 +12,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-/** @author ralfdemoledor */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter

@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.services.repositories.rowmappers;
 
 import com.business.unknow.model.dto.PagoReportDto;
@@ -8,7 +7,6 @@ import java.util.Optional;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-/** @author ralfdemoledor */
 public class PagoReportDtoRsExtractor implements ResultSetExtractor<Optional<PagoReportDto>> {
 
   @Override

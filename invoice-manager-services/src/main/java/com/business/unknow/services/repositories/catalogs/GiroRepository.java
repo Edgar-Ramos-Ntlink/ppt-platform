@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GiroRepository extends CrudRepository<Giro, Integer> {
-
-  public List<Giro> findAll();
+  List<Giro> findAll();
 }

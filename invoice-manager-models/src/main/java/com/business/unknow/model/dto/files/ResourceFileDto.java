@@ -12,12 +12,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * @author ralfdemoledor
- *     <p>ResourceFileDto is a class created to saves metadata information related to S3 bucket
- *     files, where tipoArchivo stores the file type(ex: CERT,KEY,LOGO,IMAGEN), tipoRecurso describe
- *     the origin of the resource (ex: EMPRESA,PAGO, FACTURA, DOC, etc), referencia links the
- *     resource with an unique identifier of other tables(ex: 3_AME1RASE20200420093307PUE,
- *     AME140512D80)
+ * ResourceFileDto is a class created to saves metadata information related to S3 bucket files,
+ * where tipoArchivo stores the file type(ex: CERT,KEY,LOGO,IMAGEN), tipoRecurso describe the origin
+ * of the resource (ex: EMPRESA,PAGO, FACTURA, DOC, etc), referencia links the resource with an
+ * unique identifier of other tables(ex: 3_AME1RASE20200420093307PUE, AME140512D80)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)

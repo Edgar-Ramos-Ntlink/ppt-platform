@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import lombok.ToString;
 
-/** @author eej000f */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ToString
 public class ErrorMessage implements Serializable {

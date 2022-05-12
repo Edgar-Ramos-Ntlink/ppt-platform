@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ContribuyenteRepository extends CrudRepository<Contribuyente, Integer> {
-
-  public Optional<Contribuyente> findByRfc(String rfc);
+  Optional<Contribuyente> findByRfc(String rfc);
 }

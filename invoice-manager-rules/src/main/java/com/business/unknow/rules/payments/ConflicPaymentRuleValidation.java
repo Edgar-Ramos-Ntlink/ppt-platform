@@ -1,17 +1,14 @@
-/** */
 package com.business.unknow.rules.payments;
 
 import com.business.unknow.model.dto.pagos.PagoDto;
-import com.business.unknow.rules.common.Constants.PaymentsSuite;
+import com.business.unknow.rules.Constants.PaymentsSuite;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.annotation.Action;
 import org.jeasy.rules.annotation.Condition;
 import org.jeasy.rules.annotation.Fact;
 import org.jeasy.rules.annotation.Rule;
 
-/** @author ralfdemoledor */
 @Rule(
     name = PaymentsSuite.CONFLICT_PAYMENT_VALIDATION_RULE,
     description = PaymentsSuite.CONFLICT_PAYMENT_VALIDATION_RULE_DESC)

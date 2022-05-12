@@ -7,7 +7,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-/** @author eej000f */
 @Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface ClientMapper {
 

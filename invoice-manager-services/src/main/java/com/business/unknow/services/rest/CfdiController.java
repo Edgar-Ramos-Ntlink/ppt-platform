@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.services.rest;
 
 import com.business.unknow.model.dto.FacturaCustom;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** @author ralfdemoledor */
 @RestController
 @RequestMapping("/api/cfdis")
 public class CfdiController {

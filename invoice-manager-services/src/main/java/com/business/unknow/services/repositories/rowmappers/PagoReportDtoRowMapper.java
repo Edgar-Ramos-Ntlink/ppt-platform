@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.services.repositories.rowmappers;
 
 import com.business.unknow.model.dto.PagoReportDto;
@@ -6,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
-/** @author ralfdemoledor */
 public class PagoReportDtoRowMapper implements RowMapper<PagoReportDto> {
 
   @Override

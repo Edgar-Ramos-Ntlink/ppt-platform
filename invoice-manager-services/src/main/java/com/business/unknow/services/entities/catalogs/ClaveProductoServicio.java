@@ -1,4 +1,3 @@
-/** */
 package com.business.unknow.services.entities.catalogs;
 
 import java.util.Date;

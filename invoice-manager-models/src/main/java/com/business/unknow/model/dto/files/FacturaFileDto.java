@@ -1,9 +1,8 @@
-/** */
 package com.business.unknow.model.dto.files;
 
 import static com.business.unknow.Constants.JSON_DATETIME_FORMAT;
 
-import com.business.unknow.enums.TipoArchivoEnum;
+import com.business.unknow.enums.TipoArchivo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,7 +13,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-/** @author ralfdemoledor */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
@@ -25,7 +23,7 @@ public class FacturaFileDto implements Serializable {
   private static final long serialVersionUID = -5350228749080896941L;
   private Integer id;
   private String tipoArchivo;
-  private TipoArchivoEnum fileFormat;
+  private TipoArchivo fileFormat;
   private String folio;
   private String data;
   private ByteArrayOutputStream outputStream;

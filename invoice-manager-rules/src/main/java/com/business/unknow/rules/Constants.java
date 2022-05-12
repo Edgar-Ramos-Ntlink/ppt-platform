@@ -1,11 +1,8 @@
-package com.business.unknow.rules.common;
+package com.business.unknow.rules;
 
 public class Constants {
-  private Constants() {}
 
   public static class FacturaSuite {
-    private FacturaSuite() {}
-
     public static final String FACTURA_SUITE = "FacturaSuite";
     public static final String EMISOR_VALIDATION = "EmisorValidation";
     public static final String EMISOR_VALIDATION_RULE = "EmisorValidationRule";
@@ -14,8 +11,6 @@ public class Constants {
   }
 
   public static class DeletePagoSuite {
-    private DeletePagoSuite() {}
-
     public static final String DELETE_PAYMENT = "DeletePayment";
     public static final String DELETE_STATUS_PAYMENT_RULE_DESC =
         "No se permite borrar el pago por motivos de seguridad";
@@ -23,8 +18,6 @@ public class Constants {
   }
 
   public static class FacturaValidationSuite {
-    private FacturaValidationSuite() {}
-
     public static final String FACTURA_VALIDATION_PUE_RULE = "ValidacionFacturaPueRule";
     public static final String FACTURA_VALIDATION_PUE_RULE_DESC =
         "Validar estado de la factura PUE";
@@ -39,8 +32,6 @@ public class Constants {
   }
 
   public static class PaymentsSuite {
-    private PaymentsSuite() {}
-
     public static final String MONTO_PAGO_VALIDATION = "MontoPagoValidation";
     public static final String MONTO_PAGO_VALIDATION_RULE = "MontoPagoValidationRule";
     public static final String MONTO_PAGO_VALIDATION_RULE_DESC =
@@ -67,14 +58,10 @@ public class Constants {
   }
 
   public static class Prevalidations {
-    private Prevalidations() {}
-
     public static final String FACTURA_PADRE_STATUS = "FacturaPadrePagos";
   }
 
   public static class Timbrado {
-    private Timbrado() {}
-
     public static final String TIMBRADO_SUITE = "FacturarSuite";
     public static final String TIMBRADO_STATUS = "FacturaStatus";
     public static final String TIMBRADO_STATUS_RULE = "FacturaStatusRule";
@@ -93,13 +80,10 @@ public class Constants {
   }
 
   public static class CancelacionSuite {
-    private CancelacionSuite() {}
-
     public static final String CANCELAR_SUITE = "CancelarSuite";
     public static final String CANCELAR_STATUS_VALIDATION = "StatusCancelarValidation";
     public static final String CANCELAR_STATUS_VALIDATION_RULE = "StatusCancelarValidationRule";
     public static final String CANCELAR_STATUS_VALIDATION_RULE_DESC =
         "Los status de la facura son incorrectos.";
   }
-
 }
