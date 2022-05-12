@@ -51,15 +51,13 @@ public class CatalogService {
 
   private Map<String, RegimenFiscalDto> taxRegimeMappings;
 
-  private Map<String, CatalogDto> turnMappings;
+  private Map<String, CatalogDto> businessTypeMappings;
 
   private Map<String, CatalogDto> bankMappings;
 
   private Map<String, CatalogDto> statusEventMappings;
 
   private Map<String, CatalogDto> statusPaymentsMappings;
-
-  private Map<Integer, Giro> giroEmpresasMappings;
 
   @Autowired private UsoCfdiRepository usoCfdiRepository;
 
@@ -107,12 +105,12 @@ public class CatalogService {
             .collect(
                 Collectors.toMap(ClaveUnidad::getClave, e -> catalogsMapper.getDtoFromEntity(e)));
     log.info("Mappings driveKeyMappings loaded {}", driveKeyMappings.size());
-    turnMappings =
+    businessTypeMappings =
         giroRepository.findAll().stream()
             .collect(
                 Collectors.toMap(
                     a -> a.getId().toString(), e -> catalogsMapper.getDtoFromEntity(e)));
-    log.info("Mappings giroMappings loaded {}", turnMappings.size());
+    log.info("Mappings giroMappings loaded {}", businessTypeMappings.size());
     bankMappings =
         bancoRepository.findAll().stream()
             .collect(Collectors.toMap(Banco::getId, e -> catalogsMapper.getDtoFromEntity(e)));
@@ -278,12 +276,12 @@ public class CatalogService {
    * @return {@link List<CatalogDto>}
    */
   public List<CatalogDto> getTurns() {
-    return turnMappings.values().stream().collect(Collectors.toList());
+    return businessTypeMappings.values().stream().collect(Collectors.toList());
   }
 
   public CatalogDto getTurnsById(String key) {
-    if (turnMappings.containsKey(key)) {
-      return turnMappings.get(key);
+    if (businessTypeMappings.containsKey(key)) {
+      return businessTypeMappings.get(key);
     } else {
       return CatalogDto.builder().nombre("SIN GIRO").build();
     }
@@ -317,8 +315,8 @@ public class CatalogService {
   }
 
   public Optional<String> getGiroEmpresa(Integer giroId) {
-    return giroEmpresasMappings.containsKey(giroId)
-        ? Optional.of(giroEmpresasMappings.get(giroId).getNombre())
+    return businessTypeMappings.containsKey(giroId)
+        ? Optional.of(businessTypeMappings.get(giroId).getNombre())
         : Optional.empty();
   }
 }
