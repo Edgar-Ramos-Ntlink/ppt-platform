@@ -249,11 +249,6 @@ export class CfdiValidatorService {
                 'La factura debe contener a menos 1 concepto a declarar.'
             );
         }
-        if (cfdi.total > 2000 && cfdi.formaPago === '01') {
-            messages.push(
-                'En pagos en efectivo el monto a facturar no debe de ser superior a 2000 pesos'
-            );
-        }
         if (cfdi.moneda !== 'MXN' && cfdi.tipoCambio === 1.0) {
             messages.push(
                 `El tipo de cambio para  ${cfdi.moneda} no puede ser igual a $1.00`

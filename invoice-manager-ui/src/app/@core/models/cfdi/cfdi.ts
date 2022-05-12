@@ -42,6 +42,8 @@ export class Cfdi {
         this.conceptos = [];
         this.impuestos = [];
         this.complemento = [];
+        this.receptor = new Receptor();
+        this.emisor = new Emisor();
         this.total = 0;
         this.subtotal = 0;
         this.descuento = 0;

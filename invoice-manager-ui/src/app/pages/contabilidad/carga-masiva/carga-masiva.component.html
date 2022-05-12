@@ -49,14 +49,6 @@
           </a>
         </small>
         
-        <div class="row d-flex justify-content-center">
-          <div class="alert alert-success" *ngIf="params.successMessage != undefined" role="alert">
-            {{params.successMessage}}
-          </div>
-        </div>
-        <div class="alert alert-warning" *ngIf="errorMessages.length > 0" role="alert">
-          <p *ngFor="let message of errorMessages">{{message}}</p>
-        </div>
         <br>
         <div *ngIf="loading" class="loader"></div>
         <br>
@@ -65,7 +57,7 @@
           <table class="table table-striped table-sm">
             <thead class="thead-dark">
               <tr>
-                <th scope="col" class="text-center">Observaciones</th>
+                <th scope="col" class="text-center" style="width: 200px;">Observaciones</th>
                 <th scope="col" class="text-center">Emisor</th>
                 <th scope="col" class="text-center">RFC</th>
                 <th scope="col" class="text-center">Cliente</th>
@@ -87,7 +79,12 @@
             </thead>
             <tbody>
               <tr *ngFor="let fila of invoices">
-                <td scope="row" class="text-center">{{fila.observaciones}}</td>
+                <td scope="row" class="text-center">
+                  <ul *ngIf="fila.observaciones && fila.observaciones.length > 0">
+                    <li *ngFor="let obs of fila.observaciones" class="text-danger"> <i class="fa fa-exclamation-triangle"></i>-{{obs}}</li>
+                  </ul>
+                  <strong class="text-success" *ngIf="fila.observaciones && fila.observaciones.length == 0"><i class="fa fa-check fa-2x"></i> VALIDA</strong>
+                </td>
                 <td scope="row" class="text-center">{{fila.EMISORA}}</td>
                 <td scope="row" class="text-right">{{fila.RFC_EMISOR}}</td>
                 <td scope="row" class="text-center">{{fila.CLIENTE}}</td>

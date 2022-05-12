@@ -130,12 +130,8 @@ public class CatalogService {
                     a -> a.getId().toString(), e -> catalogsMapper.getDtoFromEntity(e)));
     log.info("Mappings statusPaymentsMappings loaded {}", statusPaymentsMappings.size());
     giroEmpresasMappings =
-            giroRepository.findAll().stream()
-                    .collect(
-                            Collectors.toMap(
-                                    a -> a.getId(), e->e));
+        giroRepository.findAll().stream().collect(Collectors.toMap(a -> a.getId(), e -> e));
     log.info("Mappings giroEmpresasMappings loaded {}", giroEmpresasMappings.size());
-
   }
 
   /**
