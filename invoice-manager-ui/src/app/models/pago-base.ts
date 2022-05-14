@@ -18,7 +18,7 @@ export class PagoBase {
     public solicitante: string;
     public revisor1: string;
     public revisor2: string;
-    public fechaPago: Date;
+    public fechaPago: any;
     public fechaCreacion: Date;
     public fechaActualizacion: Date;
     public facturas: PagoFactura[];
@@ -33,5 +33,7 @@ export class PagoBase {
         this.revision1 = false;
         this.revision2 = false;
         this.facturas = [];
+        this.banco = 'N/A';
+        this.cuenta = 'N/A';
     }
 }

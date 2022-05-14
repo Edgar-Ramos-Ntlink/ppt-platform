@@ -7,9 +7,6 @@ import { Client } from '../../../models/client';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
-import { map } from 'rxjs/operators';
-import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
-import { FilesData } from '../../../@core/data/files-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { NbToastrService } from '@nebular/theme';
@@ -38,9 +35,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     public formInfo:any = {giro:'*',empresa:'*'}
 
     public factura: Factura = new Factura();
-
     public loading: boolean = false;
-    public clientSearchMsg = '';
 
     constructor(
         private catalogsService: CatalogsData,
@@ -187,9 +182,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         this.store.dispatch(initInvoice({ invoice: new Factura() }));
     }
 
-    isValidCfdi(): boolean {
-        return this.cfdiValidator.validarCfdi(this.factura.cfdi).length === 0;
-    }
 
     public async solicitarCfdi() {
         this.loading = true;

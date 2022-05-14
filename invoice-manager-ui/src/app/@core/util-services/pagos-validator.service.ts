@@ -19,9 +19,14 @@ export class PagosValidatorService {
                 'Las facturas PPD no pueden agregar pagos hasta que  no se encuentre timbrada la factura.'
             );
         }
-        if (pago.banco === undefined || pago.banco === '*') {
-            messages.push('El banco es un valor requerido');
+        if(pago.formaPago === undefined || pago.formaPago === '*'){
+            messages.push('La forma de pago es requerida'); 
+        } else if(pago.formaPago === 'DEPOSITO' || pago.formaPago === 'TRANSFERENCIA') {
+            if (pago.banco === undefined || pago.banco === '*') {
+                messages.push('El banco es un valor requerido');
+            }
         }
+    
         if (pago.fechaPago === undefined) {
             messages.push('La fecha de pago es un valor requerido');
         }
