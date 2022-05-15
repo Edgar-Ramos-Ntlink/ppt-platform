@@ -39,8 +39,8 @@ export class PaymentsService {
     new Catalogo('CHEQUE', 'Cheque nominativo'),
     new Catalogo('TRANSFERENCIA', 'Transferencia electrónica de fondos'),
     new Catalogo('DEPOSITO', 'Deposito bancario')];
-
-    if (roles !== undefined && roles.length > 0 && roles.some(r => r.role === 'OPERADOR')) {
+    // custom rule to allow set credito despacho on invoices
+    if (roles !== undefined && roles.length > 0 && roles.some(r => (r.role.indexOf('OPERADOR')==0))) {
       payTypeCat.push(new Catalogo('CREDITO', 'Credito despacho'));
     }
     return of(payTypeCat);

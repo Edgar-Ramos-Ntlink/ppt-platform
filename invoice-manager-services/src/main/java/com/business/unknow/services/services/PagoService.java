@@ -309,8 +309,9 @@ public class PagoService {
       Optional<FacturaCustom> currentFactura = facturas.stream().findFirst();
       if (currentFactura.isPresent()
           && currentFactura.get().getMetodoPago().equals(MetodosPago.PUE.name())) {
-        currentFactura.get().setValidacionTeso(true);
-        facturaService.updateFacturaCustom(currentFactura.get().getFolio(), currentFactura.get());
+        FacturaCustom fact = facturaService.getFacturaByFolio(currentFactura.get().getFolio());
+        fact.setValidacionTeso(Boolean.TRUE);
+        facturaService.updateFacturaCustom(currentFactura.get().getFolio(), fact);
         pagoDto.setStatusPago("ACEPTADO");
         pagoDto.setRevision1(true);
         pagoDto.setRevision2(true);
