@@ -4,6 +4,7 @@ public enum TipoArchivo {
   XML(".xml", "text/plain"),
   QR(".png", "N/A"),
   PDF(".pdf", "application/pdf"),
+  ACUSE_CANCELACION("CANCEL_ACK.xml", "text/plain"),
   TXT(".txt", "text/plain"),
   CERT(".cer", "N/A"),
   KEY(".key", "N/A"),

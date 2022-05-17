@@ -44,7 +44,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-/** @author ralfdemoledor */
 @Service
 @Slf4j
 public class PagoService {
@@ -343,13 +342,13 @@ public class PagoService {
                         HttpStatus.NOT_FOUND,
                         String.format("El pago con el id %d no existe", idPago)));
 
-    PagoDto pagoDto = mapper.getPagoDtoFromEntity(entity); // payment only update revision
-    pagoDto.toBuilder()
-        .revision1(pago.getRevision1())
-        .revision2(pago.getRevision2())
-        .revisor1(pago.getRevisor1())
-        .revisor2(pago.getRevisor2())
-        .build();
+    PagoDto pagoDto =
+        mapper.getPagoDtoFromEntity(entity).toBuilder()
+            .revision1(pago.getRevision1())
+            .revision2(pago.getRevision2())
+            .revisor1(pago.getRevisor1())
+            .revisor2(pago.getRevisor2())
+            .build(); // payment only update revision
     pagoEvaluatorService.validatePayment(pago);
 
     List<FacturaCustom> facturas = new ArrayList<>();
