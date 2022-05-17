@@ -1,10 +1,13 @@
 import { Observable } from 'rxjs';
 import { GenericPage } from '../../models/generic-page';
 import { Client } from '../../models/client';
+import { ResourceFile } from '../../models/resource-file';
 
 export abstract class ClientsData {
 
     abstract getClients(filterParams: any): Observable<GenericPage<Client>>;
+
+    abstract getClientsReport(filterParams: any): Observable<ResourceFile>;
     
     abstract getClientsByPromotor(promotor: string): Observable<Client[]>;
 

@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { GenericPage } from '../../../models/generic-page';
 import { Router, ActivatedRoute } from '@angular/router';
-import { UsersData } from '../../../@core/data/users-data';
-import { User } from '../../../@core/models/user';
 import { UtilsService } from '../../../@core/util-services/utils.service';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 
 @Component({
     selector: 'ngx-clientes',
@@ -12,7 +11,7 @@ import { UtilsService } from '../../../@core/util-services/utils.service';
     styleUrls: ['./clientes.component.scss'],
 })
 export class ClientesComponent implements OnInit {
-    public user: User;
+    public loading: boolean= false;
     public page: GenericPage<any> = new GenericPage();
 
     public module: string = 'promotor';
@@ -26,7 +25,7 @@ export class ClientesComponent implements OnInit {
     };
 
     constructor(
-        private userService: UsersData,
+        private downloadService: DonwloadFileService,
         private clientService: ClientsData,
         private route: ActivatedRoute,
         private utilsService: UtilsService,
@@ -35,7 +34,7 @@ export class ClientesComponent implements OnInit {
 
     ngOnInit() {
         this.module = this.router.url.split('/')[2];
-
+        
         this.route.queryParams.subscribe((params) => {
             if (!this.utilsService.compareParams(params, this.filterParams)) {
                 this.filterParams = { ...this.filterParams, ...params };
@@ -73,6 +72,7 @@ export class ClientesComponent implements OnInit {
     }
 
     public updateDataTable(currentPage?: number, pageSize?: number) {
+        this.loading = true;
         const params: any = this.utilsService.parseFilterParms(
             this.filterParams
         );
@@ -105,24 +105,31 @@ export class ClientesComponent implements OnInit {
 
         this.clientService
             .getClients(params)
-            .subscribe((result: GenericPage<any>) => (this.page = result));
+            .subscribe((result: GenericPage<any>) => {this.page = result; this.loading = false;},
+            error=>{ console.log(error); this.loading = false;});
     }
 
     public onChangePageSize(pageSize: number) {
         this.updateDataTable(this.page.number, pageSize);
     }
 
-    public downloadHandler() {
-        const params: any = this.utilsService.parseFilterParms(
-            this.filterParams
-        );
+    
+
+    public async downloadHandler() {
+        const params: any = { ... this.filterParams };
         params.page = 0;
-        params.size = 10000;
-        alert('Descarga no implementada');
-        /*this.clientService.getClients(params).subscribe((result: GenericPage<Client>) => {
-      this.donwloadService.exportCsv(result.content.map(r => r.informacionFiscal), 'Clientes');
-    });*/
-    }
+        params.size = 2000;
+        this.loading = true;
+        try {
+          const result = await this.clientService.getClientsReport(params).toPromise();
+          this.downloadService.downloadFile(result.data, 'ReporteClientes.xlsx', 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,');
+        } catch (error) {
+          console.error(error);
+        } 
+        this.loading = false;
+    
+      }
+    
 
     public redirectToCliente(rfc: string, promotor: string) {
         this.router.navigate([

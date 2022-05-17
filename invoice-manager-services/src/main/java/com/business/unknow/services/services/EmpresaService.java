@@ -55,7 +55,7 @@ public class EmpresaService {
 
   private Specification<Empresa> buildSearchFilters(Map<String, String> parameters) {
 
-    log.info("Finding facturas by {}", parameters);
+    log.info("Finding empresas by {}", parameters);
 
     return new Specification<Empresa>() {
 
