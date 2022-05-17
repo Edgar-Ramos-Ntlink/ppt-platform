@@ -603,7 +603,6 @@ export class PreCfdiComponent implements OnInit {
         fact.validacionOper = false;
         fact.total = this.factura.cfdi.total;
         fact.metodoPago = this.factura.cfdi.metodoPago;
-        fact.saldoPendiente = this.factura.saldoPendiente;
         this.invoiceService.updateInvoice(fact).subscribe(
             (invoice) => {
                 this.loading = false;
