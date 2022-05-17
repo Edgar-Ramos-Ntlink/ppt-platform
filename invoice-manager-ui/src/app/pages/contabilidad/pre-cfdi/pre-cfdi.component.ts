@@ -100,7 +100,7 @@ export class PreCfdiComponent implements OnInit {
         private invoiceService: InvoicesData,
         private paymentsService: PaymentsData,
         private cfdiService: CfdiData,
-        private clientsService : ClientsData,
+        private clientsService: ClientsData,
         private cfdiValidator: CfdiValidatorService,
         private toastrService: NbToastrService,
         private route: ActivatedRoute,
@@ -277,21 +277,25 @@ export class PreCfdiComponent implements OnInit {
         this.store.dispatch(updateReceptorAddress({ address }));
     }
 
-    public onClientSelected(rfc:string) {
-        const client = this.clientsCat.find(c=>rfc ===c.rfc)
+    public onClientSelected(rfc: string) {
+        const client = this.clientsCat.find((c) => rfc === c.rfc);
 
         if (!client.activo) {
             this.toastrService.warning(
                 `El cliente ${client.razonSocial} no se encuentra activo,notifique al supervisor para activarlo`,
-                "Cliente inactivo"
+                'Cliente inactivo'
             );
             return;
         }
 
-        if (client.regimenFiscal == undefined || client.regimenFiscal == null || client.regimenFiscal === '*') {
+        if (
+            client.regimenFiscal == undefined ||
+            client.regimenFiscal == null ||
+            client.regimenFiscal === '*'
+        ) {
             this.toastrService.warning(
                 `El cliente ${client.razonSocial} no cuenta con regimen fiscal, delo de alta antes de continuar`,
-                "Informacion faltante"
+                'Informacion faltante'
             );
             return;
         }
@@ -306,24 +310,28 @@ export class PreCfdiComponent implements OnInit {
         this.store.dispatch(updateReceptorAddress({ address }));
     }
 
-    buscarClientInfo( razonSocial: string) {
-        if ( razonSocial !== undefined && razonSocial.length > 5) {
-          this.clientsService.getClients({ razonSocial: razonSocial, page: '0', size: '20'  })
-              .pipe(map((page: GenericPage<Client>) => page.content))
-              .subscribe(clients => {
-                this.clientsCat = clients;
-              }, (error: NtError) => {
-                this.loading = false;
-            this.toastrService.danger(
-                error?.message,
-                'Error',
-                AppConstants.TOAST_CONFIG
+    buscarClientInfo(razonSocial: string) {
+        if (razonSocial !== undefined && razonSocial.length > 5) {
+            this.clientsService
+                .getClients({ razonSocial: razonSocial, page: '0', size: '20' })
+                .pipe(map((page: GenericPage<Client>) => page.content))
+                .subscribe(
+                    (clients) => {
+                        this.clientsCat = clients;
+                    },
+                    (error: NtError) => {
+                        this.loading = false;
+                        this.toastrService.danger(
+                            error?.message,
+                            'Error',
+                            AppConstants.TOAST_CONFIG
+                        );
+                    }
                 );
-              });
-        }else {
-          this.clientsCat = [];
+        } else {
+            this.clientsCat = [];
         }
-      }
+    }
 
     onPayMethodSelected(clave: string) {
         if (clave === 'PPD') {
@@ -595,7 +603,6 @@ export class PreCfdiComponent implements OnInit {
         fact.validacionOper = false;
         fact.total = this.factura.cfdi.total;
         fact.metodoPago = this.factura.cfdi.metodoPago;
-        fact.saldoPendiente = this.factura.cfdi.total;
         this.invoiceService.updateInvoice(fact).subscribe(
             (invoice) => {
                 this.loading = false;

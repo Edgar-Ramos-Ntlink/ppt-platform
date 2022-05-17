@@ -385,14 +385,14 @@ public class FacturaService {
 
   public FacturaCustom getFacturaByFolio(String folio) {
     try {
-          mapper.getFacturaDtoFromEntity(
-              repository
-                  .findByFolio(folio)
-                  .orElseThrow(
-                      () ->
-                          new ResponseStatusException(
-                              HttpStatus.NOT_FOUND,
-                              String.format("La factura con el folio %s no existe", folio))));
+      mapper.getFacturaDtoFromEntity(
+          repository
+              .findByFolio(folio)
+              .orElseThrow(
+                  () ->
+                      new ResponseStatusException(
+                          HttpStatus.NOT_FOUND,
+                          String.format("La factura con el folio %s no existe", folio))));
 
       InputStream is =
           filesService.getS3InputStream(S3Buckets.CFDIS, String.format("%s.json", folio));

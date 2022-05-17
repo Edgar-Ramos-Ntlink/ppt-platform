@@ -283,6 +283,29 @@ export class InvoiceReportsComponent implements OnInit {
             }
         );
     }
+
+    public downloadAcuseCancelacion(
+        emisor: string,
+        receptor: string,
+        folio: string
+    ) {
+        this.loading = true;
+        this.filesService.getFacturaFile(folio, 'ACUSE_CANCELACION').subscribe(
+            (file) => {
+                this.downloadService.downloadFile(
+                    file.data,
+                    `${emisor}_${receptor}_${folio}.xml`,
+                    'text/xml;charset=utf8;'
+                );
+                this.loading = false;
+            },
+            (error) => {
+                console.error('Error recovering XML file', error);
+                this.loading = false;
+            }
+        );
+    }
+
     public downloadXml(emisor: string, receptor: string, folio: string) {
         this.loading = true;
         this.filesService.getFacturaFile(folio, 'XML').subscribe(
