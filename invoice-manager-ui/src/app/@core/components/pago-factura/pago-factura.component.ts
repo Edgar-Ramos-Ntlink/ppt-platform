@@ -50,20 +50,23 @@ export class PagoFacturaComponent implements OnInit {
     ) {
         this.store.pipe(select(invoice)).subscribe((fact) => {
             this.factura = fact;
-            this.newPayment.monto = fact.saldoPendiente;
             if (fact?.folio) {
-                this.paymentsService
-                    .getPaymentsByFolio(this.factura.folio)
-                    .subscribe(
-                        (payments: PagoBase[]) =>
-                            (this.invoicePayments = payments)
-                    );
                 const user = JSON.parse(sessionStorage.getItem('user'));
                 this.paymentsService
                     .getFormasPago(user.roles)
                     .subscribe(
                         (paymentForms) => (this.payTypeCat = paymentForms)
                     );
+
+                if(Math.abs(fact.saldoPendiente-this.newPayment.monto)>0.01){
+                    this.newPayment.monto = fact.saldoPendiente;
+                    this.paymentsService
+                    .getPaymentsByFolio(this.factura.folio)
+                    .subscribe(
+                        (payments: PagoBase[]) =>
+                            (this.invoicePayments = payments)
+                    );
+                }
             }
         });
         this.newPayment.moneda = 'MXN';

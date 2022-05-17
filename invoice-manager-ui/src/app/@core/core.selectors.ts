@@ -1,5 +1,4 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
-import { compare } from "mathjs";
 import { CoreState } from "./reducers";
 
 export const selectCoreState = createFeatureSelector<CoreState>("core");
@@ -10,6 +9,8 @@ export const emisorDireccion = createSelector(
 );
 
 export const invoice = createSelector(selectCoreState, (core) => core.invoice);
+
+export const folio = createSelector(selectCoreState, (core) => core?.invoice.folio);
 
 export const cfdi = createSelector(
   selectCoreState,

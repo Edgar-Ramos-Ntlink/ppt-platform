@@ -60,7 +60,7 @@ export const coreReducer = createReducer(
     };
   }),
 
-  on(CoreActions.addEmisor, (state, action) => {
+  on(CoreActions.updateEmisor, (state, action) => {
     const cfdi = { ...state.invoice.cfdi, emisor: action.emisor };
     return {
       invoice: {
@@ -71,7 +71,7 @@ export const coreReducer = createReducer(
     };
   }),
 
-  on(CoreActions.addReceptor, (state, action) => {
+  on(CoreActions.updateReceptor, (state, action) => {
     const cfdi = { ...state.invoice.cfdi, receptor: action.receptor };
     return {
       invoice: {

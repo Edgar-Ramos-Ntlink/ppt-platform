@@ -14,7 +14,7 @@ import { Pago } from '../../../@core/models/cfdi/pago';
 import { Factura } from '../../../@core/models/factura';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../reducers';
-import { addReceptor, initInvoice, updateInvoice, updateReceptorAddress } from '../../../@core/core.actions';
+import { initInvoice, updateInvoice, updateReceptor, updateReceptorAddress } from '../../../@core/core.actions';
 import { NtError } from '../../../@core/models/nt-error';
 import { AppConstants } from '../../../models/app-constants';
 import { Receptor } from '../../../@core/models/cfdi/receptor';
@@ -174,7 +174,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         receptor.regimenFiscalReceptor = client.regimenFiscal;
 
         let address = this.cfdiValidator.generateAddress(client);
-        this.store.dispatch(addReceptor({ receptor }));
+        this.store.dispatch(updateReceptor({ receptor }));
         this.store.dispatch(updateReceptorAddress({ address }));
     }
 

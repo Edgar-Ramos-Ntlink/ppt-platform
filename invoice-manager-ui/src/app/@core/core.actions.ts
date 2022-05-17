@@ -17,13 +17,13 @@ export const updateInvoice = createAction(
 
 export const cleanInvoice = createAction("[INVOICE - clean] clean invoice");
 
-export const addReceptor = createAction(
-  "[CFDI - receptor] adding receptor",
+export const updateReceptor = createAction(
+  "[CFDI - receptor] update receptor",
   props<{ receptor: Receptor }>()
 );
 
-export const addEmisor = createAction(
-  "[CFDI - emisor] adding emisor",
+export const updateEmisor = createAction(
+  "[CFDI - emisor] update emisor",
   props<{ emisor: Emisor }>()
 );
 
