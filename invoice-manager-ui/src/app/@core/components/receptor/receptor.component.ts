@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { Store } from "@ngrx/store";
+import { RegimenFiscal } from "../../../models/catalogos/regimen-fiscal";
 import { UsoCfdi } from "../../../models/catalogos/uso-cfdi";
 import { AppState } from "../../../reducers";
-import { updateReceptorAddress } from "../../core.actions";
+import { updateReceptor, updateReceptorAddress } from "../../core.actions";
 import { CatalogsData } from "../../data/catalogs-data";
 import { Receptor } from "../../models/cfdi/receptor";
 
@@ -18,6 +19,7 @@ export class ReceptorComponent implements OnInit {
 
   // catalogs
   public usoCfdiCat: UsoCfdi[] = [];
+  public regimenes: RegimenFiscal[] = [];
 
   constructor(private catalogsService: CatalogsData,
     private store: Store<AppState>) {}
@@ -26,10 +28,26 @@ export class ReceptorComponent implements OnInit {
     this.catalogsService
       .getAllUsoCfdis()
       .then((cat) => (this.usoCfdiCat = cat));
+    this.catalogsService.getAllRegimenFiscal().then(reg => this.regimenes = reg);
   }
 
   public addressChange(address){
     this.store.dispatch(updateReceptorAddress({address}));
+  }
+
+  public updateRegimenFiscal(value:string){
+    const receptor = {...this.receptor,regimenFiscalReceptor:value};
+    this.store.dispatch(updateReceptor({receptor}))
+  }
+
+  public updateUsoCfdi(value:string){
+    const receptor = {...this.receptor,usoCfdi:value}
+    this.store.dispatch(updateReceptor({receptor}))
+  }
+
+  public updateDomicilioFiscal(cp:string){
+    const receptor = {...this.receptor,domicilioFiscalReceptor:cp}
+    this.store.dispatch(updateReceptor({receptor}))
   }
 
 

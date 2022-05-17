@@ -17,9 +17,9 @@ import { NtError } from '../../../@core/models/nt-error';
 import { AppState } from '../../../reducers';
 import { select, Store } from '@ngrx/store';
 import {
-    addReceptor,
     initInvoice,
     updateInvoice,
+    updateReceptor,
     updateReceptorAddress,
 } from '../../../@core/core.actions';
 import { invoice } from '../../../@core/core.selectors';
@@ -273,7 +273,7 @@ export class PreCfdiComponent implements OnInit {
         receptor.regimenFiscalReceptor = clientInfo.regimenFiscal;
 
         let address = this.cfdiValidator.generateAddress(clientInfo);
-        this.store.dispatch(addReceptor({ receptor }));
+        this.store.dispatch(updateReceptor({ receptor }));
         this.store.dispatch(updateReceptorAddress({ address }));
     }
 
@@ -302,7 +302,7 @@ export class PreCfdiComponent implements OnInit {
         receptor.regimenFiscalReceptor = client.regimenFiscal;
 
         let address = this.cfdiValidator.generateAddress(client);
-        this.store.dispatch(addReceptor({ receptor }));
+        this.store.dispatch(updateReceptor({ receptor }));
         this.store.dispatch(updateReceptorAddress({ address }));
     }
 
