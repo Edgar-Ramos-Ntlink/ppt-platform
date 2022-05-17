@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReporteRepository extends JpaRepository<Reporte, Integer> {
   List<Reporte> findByFolio(String folio);
+
+  void deleteByFolio(String folio);
 }
