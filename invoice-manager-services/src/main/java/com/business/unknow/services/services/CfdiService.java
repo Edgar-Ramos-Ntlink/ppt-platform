@@ -2,8 +2,7 @@ package com.business.unknow.services.services;
 
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.entities.Reporte;
-import com.business.unknow.services.repositories.ReporteRepository;
+import com.business.unknow.services.mapper.CfdiPagoMapper;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.util.validators.CfdiValidator;
 import com.mx.ntlink.NtlinkUtilException;
@@ -19,103 +18,61 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CfdiService {
 
-  @Autowired private CfdiPagoRepository cfdiPagoRepository;
-
-  @Autowired private CfdiMapper cfdiMapper;
-
   @Autowired private FilesService filesService;
 
   @Autowired private FacturaService facturaService;
 
   @Autowired private CatalogService catalogService;
 
-  @Autowired private ReporteRepository reporteRepository;
+  @Autowired private ReportDataService reportDataService;
 
-  @Autowired private CfdiValidator validator;
+  @Autowired private CfdiMapper cfdiMapper;
+
+  @Autowired private CfdiPagoMapper cfdiPagoMapper;
+
+  @Autowired private CfdiPagoRepository cfdiPagoRepository;
 
   public Cfdi getCfdiByFolio(String folio) throws NtlinkUtilException {
     return filesService.getCfdiFromS3(folio);
   }
 
-  public List<CfdiPagoDto> getCfdiPagosByFolio(String folio) {
-    // TODO validate Complemento Pago
-    return null;
+  /**
+   * Recalculates CFDI amounts based on SAT rounding rules, do not move or update this method
+   * without carefully review.
+   *
+   * @param {@link Cfdi}
+   */
+  public Cfdi updateCfdi(Cfdi cfdi) throws InvoiceManagerException {
+    CfdiValidator.validate(cfdi);
+    Cfdi newCfdi = recalculateCfdi(cfdi);
+    return newCfdi;
   }
 
-  public List<CfdiPagoDto> getPagosPPD(Integer id) {
-
-    /*Cfdi cfdi =
-        repository
-            .findById(id)
-            .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("El cfdi con folio %d no fue encontrado", id)));
-    return mapper.getCfdiPagosDtoFromEntities(cfdiPagoRepository.findByFolio(cfdi.getFolio()));
-     */
-    return null;
-  }
-
-  public Cfdi insertNewCfdi(Cfdi cfdi) throws InvoiceManagerException {
-    validator.validate(cfdi);
-    recalculateCfdiAmmounts(cfdi);
+  /**
+   * Recalculate invoice amounts
+   *
+   * @param {@link Cfdi}
+   * @return {@link Cfdi}
+   * @throws {@link InvoiceManagerException}
+   */
+  public Cfdi recalculateCfdi(Cfdi cfdi) throws InvoiceManagerException {
+    CfdiValidator.validate(cfdi);
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(cfdi);
-    filesService.sendXmlToS3(cfdi.getFolio(), comprobante);
-    createReportData(cfdi);
-    // TODO ADD CREATE PDF
     return cfdiMapper.comprobanteToCfdi(comprobante);
   }
 
-  public Cfdi updateCfdiBody(String folio, Cfdi cfdi) throws InvoiceManagerException {
-    deleteReportData(cfdi);
-    // TODO ADD CREATE PDF
-    return insertNewCfdi(cfdi);
-  }
-
-  public void deleteCfdi(String folio) throws NtlinkUtilException {
-    filesService.deleteCfdiFromS3(folio);
+  /**
+   * Gets payments by folio
+   *
+   * @param {@link List<CfdiPagoDto>}
+   * @return
+   */
+  public List<CfdiPagoDto> getPaymentsByFolio(String folio) {
+    return cfdiPagoMapper.getDtosFromEntities(cfdiPagoRepository.findByFolio(folio));
   }
 
   public Cfdi recalculateCfdiAmmounts(Cfdi cfdi) {
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(cfdi);
     return cfdiMapper.comprobanteToCfdi(comprobante);
-  }
-
-  private void createReportData(Cfdi cfdi) {
-    cfdi.getConceptos().stream()
-        .forEach(
-            concepto -> {
-              reporteRepository.save(
-                  Reporte.builder()
-                      .folio(cfdi.getFolio())
-                      .tipoDeComprobante(cfdi.getTipoDeComprobante())
-                      .impuestosTrasladados(
-                          cfdi.getImpuestos().stream()
-                              .findFirst()
-                              .get()
-                              .getTotalImpuestosTrasladados())
-                      .impuestosRetenidos(
-                          cfdi.getImpuestos().stream()
-                              .findFirst()
-                              .get()
-                              .getTotalImpuestosRetenidos())
-                      .subtotal(cfdi.getSubtotal())
-                      .total(cfdi.getTotal())
-                      .metodoPago(cfdi.getMetodoPago())
-                      .formaPago(cfdi.getFormaPago())
-                      .moneda(cfdi.getMoneda())
-                      .cantidad(concepto.getCantidad())
-                      .claveUnidad(concepto.getClaveUnidad())
-                      .descripcion(concepto.getDescripcion())
-                      .valorUnitario(concepto.getValorUnitario())
-                      .importe(concepto.getImporte())
-                      .build());
-            });
-  }
-
-  private void deleteReportData(Cfdi cfdi) {
-    List<Reporte> reportes = reporteRepository.findByFolio(cfdi.getFolio());
-    reportes.stream().forEach(reporte -> reporteRepository.delete(reporte));
   }
 }

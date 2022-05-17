@@ -58,14 +58,16 @@ export class PagoFacturaComponent implements OnInit {
                         (paymentForms) => (this.payTypeCat = paymentForms)
                     );
 
-                if(Math.abs(fact.saldoPendiente-this.newPayment.monto)>0.01){
+                if (
+                    Math.abs(fact.saldoPendiente - this.newPayment.monto) > 0.01
+                ) {
                     this.newPayment.monto = fact.saldoPendiente;
                     this.paymentsService
-                    .getPaymentsByFolio(this.factura.folio)
-                    .subscribe(
-                        (payments: PagoBase[]) =>
-                            (this.invoicePayments = payments)
-                    );
+                        .getPaymentsByFolio(this.factura.folio)
+                        .subscribe(
+                            (payments: PagoBase[]) =>
+                                (this.invoicePayments = payments)
+                        );
                 }
             }
         });
@@ -197,9 +199,16 @@ export class PagoFacturaComponent implements OnInit {
                 ) {
                     const resourceFile = new ResourceFile();
                     resourceFile.tipoArchivo = 'IMAGEN';
-                    resourceFile.tipoRecurso = 'PAGO';
+                    resourceFile.tipoRecurso = 'PAGOS';
+
+                    resourceFile.extension =
+                        this.paymentForm.filename.substring(
+                            this.paymentForm.filename.indexOf('.'),
+                            this.paymentForm.filename.length
+                        );
                     resourceFile.referencia = `${result.id}`;
                     resourceFile.data = payment.documento;
+
                     this.fileService.insertResourceFile(resourceFile).subscribe(
                         (response) => console.log(response),
                         (e) =>
@@ -213,9 +222,9 @@ export class PagoFacturaComponent implements OnInit {
 
                 this.invoicePayments.push(result);
                 const factura: Factura = JSON.parse(
-                  JSON.stringify(this.factura));
+                    JSON.stringify(this.factura)
+                );
                 if (payment.formaPago !== 'CREDITO') {
-                    
                     factura.saldoPendiente = +format(
                         bignumber(factura.saldoPendiente).minus(
                             bignumber(payment.monto)
@@ -227,16 +236,16 @@ export class PagoFacturaComponent implements OnInit {
                     this.store.dispatch(updateInvoice({ invoice }));
                 }
                 if (
-                  factura.metodoPago === 'PPD' &&
-                  factura.tipoDocumento === 'Factura'
-              ) {
-                  const complementos = await this.cfdiService
-                      .findInvoicePaymentComplementsByFolio(factura.folio)
-                      .toPromise();
-                  this.store.dispatch(
-                      updateComplementosPago({ complementos })
-                  );
-              }
+                    factura.metodoPago === 'PPD' &&
+                    factura.tipoDocumento === 'Factura'
+                ) {
+                    const complementos = await this.cfdiService
+                        .findInvoicePaymentComplementsByFolio(factura.folio)
+                        .toPromise();
+                    this.store.dispatch(
+                        updateComplementosPago({ complementos })
+                    );
+                }
 
                 this.newPayment = new PagoBase();
                 this.newPayment.moneda = 'MXN';

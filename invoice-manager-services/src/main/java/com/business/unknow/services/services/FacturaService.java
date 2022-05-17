@@ -80,6 +80,8 @@ public class FacturaService {
 
   @Autowired private ClientService clientService;
 
+  @Autowired private ReportDataService reportDataService;
+
   @Autowired private MailService mailService;
 
   @Autowired private FilesService filesService;
@@ -383,7 +385,6 @@ public class FacturaService {
 
   public FacturaCustom getFacturaByFolio(String folio) {
     try {
-      FacturaCustom factura =
           mapper.getFacturaDtoFromEntity(
               repository
                   .findByFolio(folio)
@@ -443,6 +444,7 @@ public class FacturaService {
     facturaPdf.setCfdi(comprobante);
     byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
     filesService.sendFileToS3(facturaCustom.getFolio(), pdf, ".pdf", S3Buckets.CFDIS);
+    reportDataService.upsertReportData(facturaCustom.getCfdi());
     return facturaCustom;
   }
 
@@ -459,8 +461,7 @@ public class FacturaService {
                         HttpStatus.NOT_FOUND,
                         String.format("La factura con el folio %d no existe", folio)));
     facturaServiceEvaluator.facturaStatusValidation(facturaCustom);
-    facturaCustom.setCfdi(
-        cfdiService.updateCfdiBody(facturaCustom.getFolio(), facturaCustom.getCfdi()));
+    facturaCustom.setCfdi(cfdiService.updateCfdi(facturaCustom.getCfdi()));
     InvoiceValidator.validate(facturaCustom, facturaCustom.getFolio());
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
     Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
@@ -472,6 +473,7 @@ public class FacturaService {
     facturaPdf.setCfdi(comprobante);
     byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
     filesService.sendFileToS3(facturaCustom.getFolio(), pdf, ".pdf", S3Buckets.CFDIS);
+    reportDataService.upsertReportData(facturaCustom.getCfdi());
     return facturaCustom;
   }
 
@@ -582,7 +584,7 @@ public class FacturaService {
                         HttpStatus.NOT_FOUND,
                         String.format("La factura con el folio %s no existe", folio)));
     repository.delete(fact);
-    cfdiService.deleteCfdi(fact.getFolio());
+    reportDataService.deleteReportData(fact.getFolio());
   }
 
   public FacturaCustom createComplemento(String folio, PagoDto pagoDto)

@@ -1,94 +1,101 @@
 <div *ngIf="receptor">
-  <p class="font-weight-bold">Información del receptor</p>
-  <div class="row">
-    <div class="col-sm-2">
-      <label for="rfcReceptor" class="label">RFC Receptor</label>
-      <input
-        id="rfcReceptor"
-        type="text"
-        [ngModel]="receptor.rfc"
-        class="form-control"
-        fullWidth
-        placeholder="Rfc"
-        disabled
-      />
-    </div>
-    <div class="col-sm-6">
-      <label for="nombreReceptor" class="label">Nombre Receptor</label>
-      <input
-        id="nombreReceptor"
-        type="text"
-        [ngModel]="receptor.nombre"
-        class="form-control"
-        fullWidth
-        placeholder="Nombre"
-        [disabled]="!allowEdit"
-      />
-    </div>
-    <div class="col-sm-2">
-      <label for="cpReceptor" class="label">Domicilio Fiscal Receptor</label>
-      <input
-        id="cpReceptor"
-        type="text"
-        [ngModel]="receptor.domicilioFiscalReceptor"
-        class="form-control"
-        fullWidth
-        (ngModelChange)="updateDomicilioFiscal($event)"
-        placeholder="Codigo postal domicilio fical"
-        [disabled]="!allowEdit"
-      />
-    </div>
-    <div class="col-sm-2">
-      <label for="inputRegimen" class="label">Regimen Fiscal</label>
-            <select
-              id="inputRegimen"
-              style="display: block"
-              class="form-control"
-              [disabled]="!allowEdit"
-              [ngModel]="receptor.regimenFiscalReceptor"
-              (change)="updateRegimenFiscal($event.target.value)"
+    <p class="font-weight-bold">Información del receptor</p>
+    <div class="row">
+        <div class="col-sm-2">
+            <label for="rfcReceptor" class="label">RFC Receptor</label>
+            <input
+                id="rfcReceptor"
+                type="text"
+                [ngModel]="receptor.rfc"
+                class="form-control"
+                fullWidth
+                placeholder="Rfc"
+                disabled
+            />
+        </div>
+        <div class="col-sm-6">
+            <label for="nombreReceptor" class="label">Nombre Receptor</label>
+            <input
+                id="nombreReceptor"
+                type="text"
+                [ngModel]="receptor.nombre"
+                class="form-control"
+                fullWidth
+                placeholder="Nombre"
+                (ngModelChange)="updateRazonSocial($event)"
+                [disabled]="!allowEdit"
+            />
+        </div>
+        <div class="col-sm-2">
+            <label for="cpReceptor" class="label"
+                >Domicilio Fiscal Receptor</label
             >
-              <option value="*">Seleccionar</option>
-              <option
-                *ngFor="let regimen of regimenes"
-                [(value)]="regimen.clave"
-              >
-                {{ regimen.descripcion }}
-              </option>
-      </select>
+            <input
+                id="cpReceptor"
+                type="text"
+                [ngModel]="receptor.domicilioFiscalReceptor"
+                class="form-control"
+                fullWidth
+                (ngModelChange)="updateRazonSocial($event)"
+                placeholder="Codigo postal domicilio fical"
+                [disabled]="!allowEdit"
+            />
+        </div>
+        <div class="col-sm-2">
+            <label for="inputRegimen" class="label">Regimen Fiscal</label>
+            <select
+                id="inputRegimen"
+                style="display: block"
+                class="form-control"
+                [disabled]="!allowEdit"
+                [ngModel]="receptor.regimenFiscalReceptor"
+                (change)="updateRegimenFiscal($event.target.value)"
+            >
+                <option value="*">Seleccionar</option>
+                <option
+                    *ngFor="let regimen of regimenes"
+                    [(value)]="regimen.clave"
+                >
+                    {{ regimen.descripcion }}
+                </option>
+            </select>
+        </div>
     </div>
-    
-  </div>
-  <div class="row">
-    <div class="col-sm-10">
-      <label for="direccioneReceptor" class="label">Direccion Receptor</label>
-      <textarea
-        id="direccioneReceptor"
-        type="text"
-        (ngModelChange)="addressChange($event)"
-        style="margin-top: 0px; margin-bottom: 0px; height: 38px"
-        [(ngModel)]="direccion"
-        [disabled]="!allowEdit"
-        placeholder="Direccion Receptor"
-        class="form-control"
-      ></textarea>
+    <div class="row">
+        <div class="col-sm-10">
+            <label for="direccioneReceptor" class="label"
+                >Direccion Receptor</label
+            >
+            <textarea
+                id="direccioneReceptor"
+                type="text"
+                (ngModelChange)="addressChange($event)"
+                style="margin-top: 0px; margin-bottom: 0px; height: 38px"
+                [(ngModel)]="direccion"
+                [disabled]="!allowEdit"
+                placeholder="Direccion Receptor"
+                class="form-control"
+            ></textarea>
+        </div>
+        <div class="col-sm-2">
+            <label for="inputCfdiUsage" class="label">Uso CFDI</label>
+            <select
+                selected="1"
+                id="inputCfdiUsage"
+                style="display: block"
+                class="form-control"
+                [disabled]="!allowEdit"
+                [ngModel]="receptor.usoCfdi"
+                (change)="updateUsoCfdi($event.target.value)"
+            >
+                <option value="*">Seleccionar</option>
+                <option
+                    *ngFor="let clave of usoCfdiCat"
+                    [(value)]="clave.clave"
+                >
+                    {{ clave.clave }}-{{ clave.descripcion }}
+                </option>
+            </select>
+        </div>
     </div>
-    <div class="col-sm-2">
-      <label for="inputCfdiUsage" class="label">Uso CFDI</label>
-      <select
-        selected="1"
-        id="inputCfdiUsage"
-        style="display: block"
-        class="form-control"
-        [disabled]="!allowEdit"
-        [ngModel]="receptor.usoCfdi"
-        (change)="updateUsoCfdi($event.target.value)"
-      >
-        <option value="*">Seleccionar</option>
-        <option *ngFor="let clave of usoCfdiCat" [(value)]="clave.clave">
-          {{ clave.clave }}-{{ clave.descripcion }}
-        </option>
-      </select>
-    </div>
-  </div>
 </div>

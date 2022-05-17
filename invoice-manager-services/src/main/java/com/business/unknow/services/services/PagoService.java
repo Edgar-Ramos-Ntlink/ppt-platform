@@ -354,7 +354,7 @@ public class PagoService {
 
     List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : pago.getFacturas()) {
-      FacturaCustom factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
+      FacturaCustom factura = facturaService.getFacturaByFolio(pagoFact.getFolio());
       facturas.add(factura);
     }
     pagoEvaluatorService.validatePaymentUpdate(pago, mapper.getPagoDtoFromEntity(entity), facturas);
@@ -379,7 +379,7 @@ public class PagoService {
               .collect(Collectors.toList());
 
       for (String folioCfdi : folioFacts) {
-        FacturaCustom fact = facturaService.getFacturaBaseByFolio(folioCfdi);
+        FacturaCustom fact = facturaService.getFacturaByFolio(folioCfdi);
         fact.setValidacionTeso(true);
         facturaService.updateFacturaCustom(folioCfdi, fact);
       }
