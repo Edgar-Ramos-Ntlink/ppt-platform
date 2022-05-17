@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Client;
@@ -9,9 +10,15 @@ import com.business.unknow.services.repositories.ClientRepository;
 import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.util.ContactoHelper;
 import com.business.unknow.services.util.validators.ClienteValidator;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+@Slf4j
 @Service
 public class ClientService {
 
@@ -30,37 +38,91 @@ public class ClientService {
 
   @Autowired private ClientMapper mapper;
 
+  @Autowired private DownloaderService downloaderService;
   private ContactoHelper contactoHelper = new ContactoHelper();
 
-  public Page<ClientDto> getClientsByParametros(
-      Optional<String> promotor,
-      String status,
-      String rfc,
-      String razonSocial,
-      int page,
-      int size) {
-    Page<Client> result;
+  private Page<Client> findClientByParams(Map<String, String> parameters) {
 
-    if (promotor.isPresent()) {
-      result =
-          repository.findClientsFromPromotorByParms(
-              promotor.get(),
-              String.format("%%%s%%", status),
-              String.format("%%%s%%", rfc),
-              String.format("%%%s%%", razonSocial),
-              PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+    int page =
+        (parameters.get("page") == null) || parameters.get("page").equals("")
+            ? 0
+            : Integer.valueOf(parameters.get("page"));
+    int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
+
+    if (parameters.containsKey("promotor")) {
+      return repository.findClientsFromPromotorByParms(
+          parameters.get("promotor"),
+          String.format("%%%s%%", parameters.containsKey("status") ? parameters.get("status") : ""),
+          String.format("%%%s%%", parameters.containsKey("rfc") ? parameters.get("rfc") : ""),
+          String.format(
+              "%%%s%%", parameters.containsKey("razonSocial") ? parameters.get("razonSocial") : ""),
+          PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
     } else {
-      result =
-          repository.findClientsByParms(
-              String.format("%%%s%%", status),
-              String.format("%%%s%%", rfc),
-              String.format("%%%s%%", razonSocial),
-              PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+      return repository.findClientsByParms(
+          String.format("%%%s%%", parameters.containsKey("status") ? parameters.get("status") : ""),
+          String.format("%%%s%%", parameters.containsKey("rfc") ? parameters.get("rfc") : ""),
+          String.format(
+              "%%%s%%", parameters.containsKey("razonSocial") ? parameters.get("razonSocial") : ""),
+          PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
     }
+  }
+
+  public Page<ClientDto> getClientsByParametros(Map<String, String> parameters) {
+    Page<Client> result = findClientByParams(parameters);
     return new PageImpl<>(
         mapper.getClientDtosFromEntities(result.getContent()),
         result.getPageable(),
         result.getTotalElements());
+  }
+
+  public ResourceFileDto getClientsByParametrosReport(Map<String, String> parameters)
+      throws IOException {
+    parameters.put("page", "0");
+    parameters.put("size", "10000");
+
+    List<String> headers =
+        Arrays.asList(
+            "RFC",
+            "RAZON_SOCIAL",
+            "REGIMEN_FISCAL",
+            "RESIDENCIA_FISCAL",
+            "ACTIVO",
+            "PROMOTOR",
+            "EMAIL_CLIENTE",
+            "DOMICILIO");
+
+    List<Map<String, Object>> data =
+        findClientByParams(parameters).stream()
+            .map(
+                c -> {
+                  Map<String, Object> row = new HashMap<>();
+                  Contribuyente contribuyente = c.getInformacionFiscal();
+                  row.put("RFC", contribuyente.getRfc());
+                  row.put("RAZON_SOCIAL", contribuyente.getRazonSocial());
+                  row.put("REGIMEN_FISCAL", contribuyente.getRegimenFiscal());
+                  row.put("RESIDENCIA_FISCAL", contribuyente.getCp());
+                  row.put("ACTIVO", c.getActivo() ? "ACTIVO" : "INACTIVO");
+                  row.put("PROMOTOR", c.getCorreoPromotor());
+                  row.put("EMAIL_CLIENTE", c.getCorreoContacto());
+
+                  row.put(
+                      "DOMICILIO",
+                      String.format(
+                          "%s EXT:%s INT:%s,%s,%s,%s,%s C.P. %s",
+                          contribuyente.getCalle(),
+                          contribuyente.getNoExterior(),
+                          contribuyente.getNoInterior(),
+                          contribuyente.getLocalidad(),
+                          contribuyente.getMunicipio(),
+                          contribuyente.getEstado(),
+                          contribuyente.getPais(),
+                          contribuyente.getCp()));
+
+                  return row;
+                })
+            .collect(Collectors.toList());
+
+    return downloaderService.generateBase64Report("Reporte Empresas", data, headers);
   }
 
   public ClientDto getClientByRFC(String rfc) {

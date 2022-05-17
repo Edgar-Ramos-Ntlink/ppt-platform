@@ -28,6 +28,10 @@ export class ClientsService {
     return this.httpClient.get('../api/clientes', {params: this.getHttpParams(filterParams)});
   }
 
+  public getClientsReport(filterParams: any): Observable<Object> {
+    return this.httpClient.get('../api/clientes/report', {params: this.getHttpParams(filterParams)});
+  }
+
   public getClientsByPromotor(promotor: string): Observable<any> {
     return this.httpClient.get(`../api/promotores/${promotor}/clientes`);
   }

@@ -1,10 +1,12 @@
 package com.business.unknow.services.rest;
 
+import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.ClientService;
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,15 +30,14 @@ public class ClientController {
 
   @GetMapping("/clientes")
   public ResponseEntity<Page<ClientDto>> getClientsByParameters(
-      @RequestParam(name = "promotor") Optional<String> promotor,
-      @RequestParam(name = "status", defaultValue = "") String status,
-      @RequestParam(name = "razonSocial", defaultValue = "") String razonSocial,
-      @RequestParam(name = "rfc", defaultValue = "") String rfc,
-      @RequestParam(name = "page", defaultValue = "0") int page,
-      @RequestParam(name = "size", defaultValue = "10") int size) {
-    return new ResponseEntity<>(
-        service.getClientsByParametros(promotor, status, rfc, razonSocial, page, size),
-        HttpStatus.OK);
+      @RequestParam Map<String, String> parameters) {
+    return new ResponseEntity<>(service.getClientsByParametros(parameters), HttpStatus.OK);
+  }
+
+  @GetMapping("/clientes/report")
+  public ResponseEntity<ResourceFileDto> getClientsByParametersReport(
+      @RequestParam Map<String, String> parameters) throws IOException {
+    return new ResponseEntity<>(service.getClientsByParametrosReport(parameters), HttpStatus.OK);
   }
 
   @GetMapping("/clientes/{rfc}")
