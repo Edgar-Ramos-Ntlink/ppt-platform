@@ -44,6 +44,7 @@
               id="inputRegimen"
               style="display: block"
               class="form-control"
+              [disabled]="!allowEdit"
               [ngModel]="receptor.regimenFiscalReceptor"
               (change)="updateRegimenFiscal($event.target.value)"
             >
