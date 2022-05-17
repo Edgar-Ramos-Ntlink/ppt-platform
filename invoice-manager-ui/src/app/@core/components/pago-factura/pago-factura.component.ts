@@ -58,14 +58,16 @@ export class PagoFacturaComponent implements OnInit {
                         (paymentForms) => (this.payTypeCat = paymentForms)
                     );
 
-                if(Math.abs(fact.saldoPendiente-this.newPayment.monto)>0.01){
+                if (
+                    Math.abs(fact.saldoPendiente - this.newPayment.monto) > 0.01
+                ) {
                     this.newPayment.monto = fact.saldoPendiente;
                     this.paymentsService
-                    .getPaymentsByFolio(this.factura.folio)
-                    .subscribe(
-                        (payments: PagoBase[]) =>
-                            (this.invoicePayments = payments)
-                    );
+                        .getPaymentsByFolio(this.factura.folio)
+                        .subscribe(
+                            (payments: PagoBase[]) =>
+                                (this.invoicePayments = payments)
+                        );
                 }
             }
         });
@@ -204,8 +206,6 @@ export class PagoFacturaComponent implements OnInit {
                             this.paymentForm.filename.indexOf('.'),
                             this.paymentForm.filename.length
                         );
-                    console.log(this.paymentForm.filename);
-                    console.log(resourceFile.extension);
                     resourceFile.referencia = `${result.id}`;
                     resourceFile.data = payment.documento;
 

@@ -385,7 +385,6 @@ public class FacturaService {
 
   public FacturaCustom getFacturaByFolio(String folio) {
     try {
-      FacturaCustom factura =
           mapper.getFacturaDtoFromEntity(
               repository
                   .findByFolio(folio)
