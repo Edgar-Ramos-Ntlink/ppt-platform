@@ -10,7 +10,6 @@ import { ResourceFile } from '../../../models/resource-file';
 import { FilesData } from '../../../@core/data/files-data';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { NtError } from '../../../@core/models/nt-error';
-import { re } from 'mathjs';
 
 @Component({
   selector: 'ngx-cliente',
