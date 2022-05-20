@@ -1,6 +1,7 @@
 package com.business.unknow.services.services;
 
 import static com.business.unknow.Constants.CANCEL_ACK;
+import static com.business.unknow.Constants.PDF_COMPLEMENTO_SIN_TIMBRAR;
 import static com.business.unknow.Constants.PDF_COMPLEMENTO_TIMBRAR;
 import static com.business.unknow.Constants.PDF_FACTURA_SIN_TIMBRAR;
 import static com.business.unknow.Constants.PDF_FACTURA_TIMBRAR;
@@ -11,16 +12,13 @@ import static com.business.unknow.enums.TipoDocumento.FACTURA;
 
 import com.business.unknow.MailConstants;
 import com.business.unknow.enums.FacturaStatus;
-import com.business.unknow.enums.MetodosPago;
 import com.business.unknow.enums.S3Buckets;
-import com.business.unknow.enums.TipoComprobante;
 import com.business.unknow.enums.TipoDocumento;
 import com.business.unknow.model.config.MailContent;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.FacturaPdf;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
-import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.CfdiPago;
@@ -40,9 +38,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.mappers.CfdiMapper;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
-import com.mx.ntlink.cfdi.modelos.Impuesto;
 import com.mx.ntlink.models.generated.Comprobante;
-import com.mx.ntlink.util.NumberTranslatorUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -95,6 +91,8 @@ public class FacturaService {
   @Autowired private FacturaExecutorService facturaExecutorService;
 
   @Autowired private PagoService pagoService;
+
+  @Autowired private InvoiceBuilderService invoiceBuilderService;
 
   @Autowired private RelacionadosTranslator sustitucionTranslator;
 
@@ -385,15 +383,7 @@ public class FacturaService {
 
   public FacturaCustom getFacturaByFolio(String folio) {
     try {
-      mapper.getFacturaDtoFromEntity(
-          repository
-              .findByFolio(folio)
-              .orElseThrow(
-                  () ->
-                      new ResponseStatusException(
-                          HttpStatus.NOT_FOUND,
-                          String.format("La factura con el folio %s no existe", folio))));
-
+      getBaseFacturaByFolio(folio);
       InputStream is =
           filesService.getS3InputStream(S3Buckets.CFDIS, String.format("%s.json", folio));
 
@@ -431,7 +421,7 @@ public class FacturaService {
   public FacturaCustom createFacturaCustom(FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
     facturaCustom =
-        assignFacturaData(
+        invoiceBuilderService.assignFacturaData(
             facturaCustom, facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
     InvoiceValidator.validate(facturaCustom, facturaCustom.getFolio());
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
@@ -443,7 +433,7 @@ public class FacturaService {
     FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
     facturaPdf.setCfdi(comprobante);
     byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
-    filesService.sendFileToS3(facturaCustom.getFolio(), pdf, ".pdf", S3Buckets.CFDIS);
+    filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
     reportDataService.upsertReportData(facturaCustom.getCfdi());
     return facturaCustom;
   }
@@ -472,7 +462,7 @@ public class FacturaService {
     FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
     facturaPdf.setCfdi(comprobante);
     byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
-    filesService.sendFileToS3(facturaCustom.getFolio(), pdf, ".pdf", S3Buckets.CFDIS);
+    filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
     reportDataService.upsertReportData(facturaCustom.getCfdi());
     return facturaCustom;
   }
@@ -480,18 +470,11 @@ public class FacturaService {
   public FacturaCustom updateTotalAndSaldoFactura(
       String folioCfdi, Optional<BigDecimal> newTotal, Optional<BigDecimal> pago)
       throws InvoiceManagerException, NtlinkUtilException {
-    Factura factura =
-        repository
-            .findByFolio(folioCfdi)
-            .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("La factura con el folio %dsno existe", folioCfdi)));
+    FacturaCustom facturaCustom = getFacturaByFolio(folioCfdi);
     Cfdi cfdi = cfdiService.getCfdiByFolio(folioCfdi);
-    BigDecimal total = newTotal.isPresent() ? newTotal.get() : factura.getTotal();
+    BigDecimal total = newTotal.isPresent() ? newTotal.get() : facturaCustom.getTotal();
     BigDecimal montoPagado =
-        pagoService.findPagosByFolio(factura.getFolio()).stream()
+        pagoService.findPagosByFolio(facturaCustom.getFolio()).stream()
             .filter(p -> !"CREDITO".equals(p.getFormaPago()))
             .map(
                 p ->
@@ -505,71 +488,9 @@ public class FacturaService {
     }
     BigDecimal saldo = total.subtract(montoPagado);
     InvoiceValidator.checkNotNegative(saldo, "Saldo pendiente");
-    factura.setTotal(total);
-    factura.setSaldoPendiente(saldo);
-    return mapper.getFacturaDtoFromEntity(repository.save(factura));
-  }
-
-  public FacturaCustom updateTotalAndSaldoFacturaComplemento(
-      String folio, Optional<BigDecimal> newTotal, Optional<BigDecimal> deuda)
-      throws InvoiceManagerException {
-    Factura factura =
-        repository
-            .findByFolio(folio)
-            .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("La factura con el folio %s no existe", folio)));
-    if (newTotal.isPresent()) {
-      factura.setTotal(newTotal.get());
-    }
-    if (deuda.isPresent()) {
-      InvoiceValidator.checkNotNegative(deuda.get(), "Saldo pendiente");
-      factura.setSaldoPendiente(deuda.get());
-    }
-    return mapper.getFacturaDtoFromEntity(repository.save(factura));
-  }
-
-  public FacturaCustom updateTotalAndSaldoComplemento(
-      String folio, Optional<BigDecimal> newTotal, Optional<BigDecimal> pago)
-      throws InvoiceManagerException {
-    Factura factura =
-        repository
-            .findByFolio(folio)
-            .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("La factura con el folio %s no existe", folio)));
-    BigDecimal total = newTotal.isPresent() ? newTotal.get() : factura.getTotal();
-    BigDecimal montoPagado =
-        pagoService.findPagosByFolio(factura.getFolio()).stream()
-            .filter(p -> !"CREDITO".equals(p.getFormaPago()))
-            .map(p -> p.getMonto())
-            .reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2));
-
-    if (pago.isPresent()) {
-      montoPagado = montoPagado.add(pago.get());
-    }
-    BigDecimal saldo = total.subtract(montoPagado);
-    InvoiceValidator.checkNotNegative(saldo, "Saldo pendiente");
-    factura.setTotal(total);
-    factura.setSaldoPendiente(saldo);
-    return mapper.getFacturaDtoFromEntity(repository.save(factura));
-  }
-
-  public FacturaCustom updateFacturaStatus(String folio, FacturaStatus status) {
-    Factura factura =
-        repository
-            .findByFolio(folio)
-            .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("La factura con el pre-folio %s no existe", folio)));
-    factura.setStatusFactura(status.getValor());
-    return mapper.getFacturaDtoFromEntity(repository.save(factura));
+    facturaCustom.setTotal(total);
+    facturaCustom.setSaldoPendiente(saldo);
+    return updateFacturaCustom(facturaCustom.getFolio(), facturaCustom);
   }
 
   @Transactional(
@@ -585,22 +506,6 @@ public class FacturaService {
                         String.format("La factura con el folio %s no existe", folio)));
     repository.delete(fact);
     reportDataService.deleteReportData(fact.getFolio());
-  }
-
-  public FacturaCustom createComplemento(String folio, PagoDto pagoDto)
-      throws InvoiceManagerException, NtlinkUtilException {
-    pagoDto.setMonto(pagoDto.getMonto().setScale(2));
-    FacturaCustom facturaDto = getBaseFacturaByFolio(folio);
-    List<FacturaCustom> facturas = new ArrayList<>();
-    List<PagoFacturaDto> facturaPagos = new ArrayList<>();
-    PagoFacturaDto facturaPagoDto = new PagoFacturaDto();
-    facturaPagoDto.setMonto(pagoDto.getMonto());
-    facturaPagoDto.setFolio(folio);
-    facturaPagos.add(facturaPagoDto);
-    facturas.add(facturaDto);
-    pagoDto.setFacturas(facturaPagos);
-    // return generateComplemento(facturas, pagoDto);
-    return null;
   }
 
   @Transactional(
@@ -709,58 +614,38 @@ public class FacturaService {
 
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
-  public FacturaCustom generateComplemento(List<FacturaCustom> facturas, PagoDto pagoPpd) {
-    return null;
-  }
-  /* throws InvoiceManagerException, NtlinkUtilException {
-  if (facturas.stream()
-      .anyMatch(a -> !a.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor()))) {
-    throw new InvoiceManagerException(
-        "Una factura no esta timbrada",
-        "Una factura no esta timbrada",
-        HttpStatus.BAD_REQUEST.value());
-  }
-  Optional<FacturaCustom> primerfactura = facturas.stream().findFirst();
-  if (primerfactura.isPresent()) {
-    FacturaCustom factura = getFacturaByFolio(primerfactura.get().getFolio());
-    factura.setPackFacturacion(primerfactura.get().getPackFacturacion());
-    FacturaContext factContext =
-        facturaBuilderService.buildFacturaContextPagoPpdCreation(
-            pagoPpd, factura, factura.getFolio());
-    Cfdi cfdi = facturaBuilderService.buildFacturaComplementoCreation(factContext);
-    FacturaCustom complemento =
-        facturaBuilderService.buildFacturaDtoPagoPpdCreation(factura, pagoPpd);
-    List<CfdiPagoDto> cfdiPagos =
-        facturaBuilderService.buildFacturaComplementoPagos(factura, pagoPpd, facturas);
-    cfdi.setComplemento(ImmutableList.of(new ComplementoDto()));
-    // TODO validate Complementos
-    // cfdi.getComplemento().setPagos(cfdiPagos);
-    complemento.setCfdi(cfdi);
-    /*facturaDefaultValues.assignaDefaultsComplemento(
-        complemento, facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
-    Cfdi createdCfdi = cfdiService.insertNewCfdi(complemento.getCfdi());
-    Factura fact = mapper.getEntityFromFacturaCustom(complemento);
-    fact.setFolio(createdCfdi.getFolio());*/
-  // TODO VALIDAR PAGOS
-  /*for (FacturaDto dto : facturas) {
-        Optional<CfdiPagoDto> cfdiPago =
-            complemento.getCfdi().getComplemento().getPagos().stream()
-                .filter(a -> a.getFolio().equals(dto.getFolio()))
-                .findFirst();
-        updateTotalAndSaldoFacturaComplemento(
-            dto.getIdCfdi(),
-            Optional.of(dto.getTotal()),
-            Optional.of(cfdiPago.get().getImporteSaldoInsoluto()));
-      }
-      return null;
-      // return mapper.getFacturaDtoFromEntity(repository.save(fact));
+  public FacturaCustom generateComplemento(List<FacturaCustom> invoices, PagoDto pagoDto)
+      throws InvoiceManagerException, NtlinkUtilException {
+    // TODO :MOVE THIS VALIDATION TO A RULE
+    if (invoices.stream()
+        .anyMatch(a -> !a.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor()))) {
+      throw new InvoiceManagerException(
+          "Una factura no esta timbrada", HttpStatus.BAD_REQUEST.value());
+    }
+    Optional<FacturaCustom> referenceInvoice = invoices.stream().findFirst();
+
+    if (referenceInvoice.isPresent()) {
+      FacturaCustom facturaCustom =
+          invoiceBuilderService.assignComplementData(
+              referenceInvoice.get(),
+              invoices,
+              pagoDto,
+              facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
+      Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
+      Factura save = repository.save(mapper.getEntityFromFacturaCustom(facturaCustom));
+      facturaCustom.setFechaCreacion(save.getFechaCreacion());
+      facturaCustom.setFechaActualizacion(save.getFechaActualizacion());
+      invoices.forEach(a -> filesService.sendFacturaCustomToS3(a.getFolio(), a));
+      filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
+      filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
+      byte[] pdf = getPdfFromFactura(facturaCustom, PDF_COMPLEMENTO_SIN_TIMBRAR);
+      filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
+      return facturaCustom;
     } else {
       throw new InvoiceManagerException(
-          "Debe tener por lo menos un pago",
-          "No asigno el pago a una factura",
-          HttpStatus.BAD_REQUEST.value());
+          "Debe tener por lo menos un pago", HttpStatus.BAD_REQUEST.value());
     }
-  }*/
+  }
 
   public FacturaCustom postRelacion(FacturaCustom dto, TipoDocumento tipoDocumento)
       throws InvoiceManagerException, NtlinkUtilException {
@@ -790,68 +675,6 @@ public class FacturaService {
           "El tipo de documento en la relacion no es de tipo factura",
           HttpStatus.BAD_REQUEST.value());
     }
-  }
-
-  private FacturaCustom assignFacturaData(FacturaCustom facturaCustom, int amount)
-      throws NtlinkUtilException, InvoiceManagerException {
-    String folio =
-        facturaCustom.getFolio() == null ? FacturaUtils.generateFolio() : facturaCustom.getFolio();
-    Cfdi cfdi = cfdiService.recalculateCfdiAmmounts(facturaCustom.getCfdi());
-    cfdi.setFolio(folio);
-    return facturaCustom.toBuilder()
-        .cfdi(cfdi)
-        .total(facturaCustom.getCfdi().getTotal())
-        .saldoPendiente(facturaCustom.getCfdi().getTotal())
-        .totalDesc(
-            NumberTranslatorUtil.getStringNumber(
-                facturaCustom.getCfdi().getTotal(), facturaCustom.getCfdi().getMoneda()))
-        .subTotalDesc(
-            NumberTranslatorUtil.getStringNumber(
-                facturaCustom.getCfdi().getSubtotal(), facturaCustom.getCfdi().getMoneda()))
-        .usoCfdiDesc(
-            catalogService
-                .getCfdiUseByKey(facturaCustom.getCfdi().getReceptor().getUsoCfdi())
-                .getDescripcion())
-        .regimenFiscalDesc(
-            catalogService
-                .getTaxRegimeByKey(facturaCustom.getCfdi().getEmisor().getRegimenFiscal())
-                .getDescripcion())
-        .formaPagoDesc(
-            catalogService
-                .getPaymentFormByKey(facturaCustom.getCfdi().getFormaPago())
-                .getDescripcion())
-        .metodoPagoDesc(
-            MetodosPago.findByValor(facturaCustom.getCfdi().getMetodoPago()).getDescripcion())
-        .tipoDeComprobanteDesc(
-            TipoComprobante.findByValor(facturaCustom.getCfdi().getTipoDeComprobante())
-                .getDescripcion())
-        .logotipo(
-            facturaCustom.getLogotipo() == null
-                ? filesService
-                    .getResourceFileByResourceReferenceAndType(
-                        S3Buckets.EMPRESAS, facturaCustom.getRfcEmisor(), "LOGO")
-                    .getData()
-                : facturaCustom.getLogotipo())
-        .impuestosTrasladados(
-            facturaCustom.getCfdi().getImpuestos().stream()
-                .collect(
-                    Collectors.reducing(
-                        BigDecimal.ZERO, Impuesto::getTotalImpuestosTrasladados, BigDecimal::add)))
-        .impuestosRetenidos(
-            facturaCustom.getCfdi().getImpuestos().stream()
-                .collect(
-                    Collectors.reducing(
-                        BigDecimal.ZERO, Impuesto::getTotalImpuestosRetenidos, BigDecimal::add)))
-        .folio(folio)
-        .preFolio(
-            facturaCustom.getPreFolio() == null
-                ? FacturaUtils.generatePreFolio(amount)
-                : facturaCustom.getPreFolio())
-        .statusFactura(
-            facturaCustom.getStatusFactura() == null
-                ? FacturaStatus.VALIDACION_OPERACIONES.getValor()
-                : facturaCustom.getStatusFactura())
-        .build();
   }
 
   private byte[] getPdfFromFactura(FacturaCustom facturaCustom, String template)

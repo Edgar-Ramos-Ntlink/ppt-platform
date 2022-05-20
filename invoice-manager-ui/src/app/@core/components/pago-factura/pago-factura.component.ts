@@ -230,10 +230,7 @@ export class PagoFacturaComponent implements OnInit {
                             bignumber(payment.monto)
                         )
                     );
-                    const invoice = await this.invoiceService
-                        .updateInvoice(factura)
-                        .toPromise();
-                    this.store.dispatch(updateInvoice({ invoice }));
+                    this.store.dispatch(updateInvoice({ invoice: factura }));
                 }
                 if (
                     factura.metodoPago === 'PPD' &&

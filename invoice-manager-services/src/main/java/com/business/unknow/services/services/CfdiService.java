@@ -20,12 +20,6 @@ public class CfdiService {
 
   @Autowired private FilesService filesService;
 
-  @Autowired private FacturaService facturaService;
-
-  @Autowired private CatalogService catalogService;
-
-  @Autowired private ReportDataService reportDataService;
-
   @Autowired private CfdiMapper cfdiMapper;
 
   @Autowired private CfdiPagoMapper cfdiPagoMapper;
@@ -42,7 +36,7 @@ public class CfdiService {
    *
    * @param {@link Cfdi}
    */
-  public Cfdi updateCfdi(Cfdi cfdi) throws InvoiceManagerException {
+  public Cfdi updateCfdi(Cfdi cfdi) throws InvoiceManagerException, NtlinkUtilException {
     CfdiValidator.validate(cfdi);
     Cfdi newCfdi = recalculateCfdi(cfdi);
     return newCfdi;
@@ -55,7 +49,7 @@ public class CfdiService {
    * @return {@link Cfdi}
    * @throws {@link InvoiceManagerException}
    */
-  public Cfdi recalculateCfdi(Cfdi cfdi) throws InvoiceManagerException {
+  public Cfdi recalculateCfdi(Cfdi cfdi) throws InvoiceManagerException, NtlinkUtilException {
     CfdiValidator.validate(cfdi);
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(cfdi);
     return cfdiMapper.comprobanteToCfdi(comprobante);
@@ -71,7 +65,7 @@ public class CfdiService {
     return cfdiPagoMapper.getDtosFromEntities(cfdiPagoRepository.findByFolio(folio));
   }
 
-  public Cfdi recalculateCfdiAmmounts(Cfdi cfdi) {
+  public Cfdi recalculateCfdiAmmounts(Cfdi cfdi) throws NtlinkUtilException {
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(cfdi);
     return cfdiMapper.comprobanteToCfdi(comprobante);
   }

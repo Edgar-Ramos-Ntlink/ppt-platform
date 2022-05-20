@@ -3,6 +3,7 @@ package com.business.unknow.services.rest;
 import com.business.unknow.model.dto.cfdi.CfdiPagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.CfdiService;
+import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.util.List;
 import javax.validation.Valid;
@@ -30,7 +31,7 @@ public class CfdiController {
    */
   @PutMapping("/recalculate")
   public ResponseEntity<Cfdi> recalculateCfdi(@RequestBody @Valid Cfdi cfdi)
-      throws InvoiceManagerException {
+      throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(cfdiService.recalculateCfdi(cfdi), HttpStatus.OK);
   }
 

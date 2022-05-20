@@ -11,22 +11,22 @@ export class PagosValidatorService {
 
     public validatePago(pago: PagoBase, factura: Factura): string[] {
         const messages = [];
-        if (
-            factura.metodoPago === 'PPD' &&
-            factura.statusFactura !== 'Timbrada'
-        ) {
+        if (factura.metodoPago === 'PPD' && factura.statusFactura != '3') {
             messages.push(
                 'Las facturas PPD no pueden agregar pagos hasta que  no se encuentre timbrada la factura.'
             );
         }
-        if(pago.formaPago === undefined || pago.formaPago === '*'){
-            messages.push('La forma de pago es requerida'); 
-        } else if(pago.formaPago === 'DEPOSITO' || pago.formaPago === 'TRANSFERENCIA') {
+        if (pago.formaPago === undefined || pago.formaPago === '*') {
+            messages.push('La forma de pago es requerida');
+        } else if (
+            pago.formaPago === 'DEPOSITO' ||
+            pago.formaPago === 'TRANSFERENCIA'
+        ) {
             if (pago.banco === undefined || pago.banco === '*') {
                 messages.push('El banco es un valor requerido');
             }
         }
-    
+
         if (pago.fechaPago === undefined) {
             messages.push('La fecha de pago es un valor requerido');
         }
@@ -52,8 +52,10 @@ export class PagosValidatorService {
         ) {
             messages.push('La imagen del documento de pago es requerida.');
         }
-        if(factura.saldoPendiente - pago.monto < 0){
-            messages.push('La suma de los pagos no puede ser mayor al total de la factura'); 
+        if (factura.saldoPendiente - pago.monto < 0) {
+            messages.push(
+                'La suma de los pagos no puede ser mayor al total de la factura'
+            );
         }
         /* Disable PUE payment rule
     if (factura.cfdi.metodoPago === 'PUE' && Math.abs(factura.cfdi.total - pago.monto) > 0.01) {

@@ -62,7 +62,7 @@ public class Constants {
     public static final String PAGO_UNIDAD = "ACT";
     public static final String PAGO_IMPUESTOS = "01";
     public static final String PAGO_DESC = "Pago";
-    public static final String TIPO_FACTOR = "Tasa";
+    public static final String TIPO_FACTOR = "TASA";
     public static final String IMPUESTO = "002";
 
     public static final BigDecimal TASA_O_CUOTA = BigDecimal.valueOf(0.16);

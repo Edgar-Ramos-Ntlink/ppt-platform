@@ -7,6 +7,7 @@ import static com.business.unknow.enums.FacturaStatus.TIMBRADA;
 
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.services.util.FacturaUtils;
+import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.mappers.CfdiMapper;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import com.mx.ntlink.client.NtLinkClient;
@@ -44,7 +45,7 @@ public class FacturaExecutorService {
   @Value("${ntlink.host}")
   private String host;
 
-  public FacturaCustom stampInvoice(FacturaCustom facturaCustom) {
+  public FacturaCustom stampInvoice(FacturaCustom facturaCustom) throws NtlinkUtilException {
     try {
       // TODO: USE UTC
       facturaCustom
