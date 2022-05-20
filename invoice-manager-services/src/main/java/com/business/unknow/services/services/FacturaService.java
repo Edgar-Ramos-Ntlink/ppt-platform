@@ -457,12 +457,15 @@ public class FacturaService {
     Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
     entityFromDto.setId(factura.getId());
     repository.save(entityFromDto);
-    filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
-    FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
-    facturaPdf.setCfdi(comprobante);
-    byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
-    filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
+    if (!(factura.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())
+        || factura.getStatusFactura().equals(FacturaStatus.CANCELADA.getValor()))) {
+      filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
+      FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
+      facturaPdf.setCfdi(comprobante);
+      byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
+      filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
+    }
     reportDataService.upsertReportData(facturaCustom.getCfdi());
     return facturaCustom;
   }
@@ -635,7 +638,9 @@ public class FacturaService {
       Factura save = repository.save(mapper.getEntityFromFacturaCustom(facturaCustom));
       facturaCustom.setFechaCreacion(save.getFechaCreacion());
       facturaCustom.setFechaActualizacion(save.getFechaActualizacion());
-      invoices.forEach(a -> filesService.sendFacturaCustomToS3(a.getFolio(), a));
+      for (FacturaCustom fc : invoices) {
+        updateFacturaCustom(fc.getFolio(), fc);
+      }
       filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
       filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
       byte[] pdf = getPdfFromFactura(facturaCustom, PDF_COMPLEMENTO_SIN_TIMBRAR);
