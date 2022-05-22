@@ -123,7 +123,7 @@ public class InvoiceBuilderService {
     String folio = FacturaUtils.generateFolio();
     Cfdi cfdi = buildCfdiComplement(facturaCustom);
     cfdi.setFolio(folio);
-    Pagos pagos = assignComplementPaymentData(facturaCustom, facturaCustoms, pagoDto);
+    Pagos pagos = assignComplementPaymentData(facturaCustom, facturaCustoms, pagoDto, folio);
     cfdi.setComplemento(ImmutableList.of(pagos));
     return FacturaCustom.builder()
         .folio(folio)
@@ -148,7 +148,10 @@ public class InvoiceBuilderService {
   }
 
   private Pagos assignComplementPaymentData(
-      FacturaCustom facturaCustom, List<FacturaCustom> facturaCustoms, PagoDto pagoDto)
+      FacturaCustom facturaCustom,
+      List<FacturaCustom> facturaCustoms,
+      PagoDto pagoDto,
+      String folio)
       throws InvoiceManagerException {
     Cfdi cfdi = facturaCustom.getCfdi();
     cfdi.setComplemento(ImmutableList.of());
@@ -253,6 +256,7 @@ public class InvoiceBuilderService {
       PagoComplemento pagoComplemento =
           PagoComplemento.builder()
               .folioOrigen(facturaCustomIterate.getFolio())
+              .folio(folio)
               .idDocumento(facturaCustomIterate.getUuid())
               .equivalenciaDR(documentoRelacionado.getEquivalenciaDR().toString())
               .monedaDr(documentoRelacionado.getMonedaDR())

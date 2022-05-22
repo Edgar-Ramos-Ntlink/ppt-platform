@@ -46,6 +46,9 @@ public class PagoFactura {
   @Column(name = "FOLIO")
   private String folio;
 
+  @Column(name = "FOLIO_REFERENCIA")
+  private String folioReferencia;
+
   @Column(name = "MONTO")
   private BigDecimal monto;
 

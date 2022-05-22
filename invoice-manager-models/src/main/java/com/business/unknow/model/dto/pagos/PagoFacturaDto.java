@@ -23,6 +23,7 @@ public class PagoFacturaDto implements Serializable {
   private Integer id;
   private Integer idCfdi;
   private String folio;
+  private String folioReferencia;
   private BigDecimal monto;
   private BigDecimal totalFactura;
   private String acredor;

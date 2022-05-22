@@ -56,6 +56,7 @@ public class FacturaExecutorService {
       timbraCfdiQrSinSello.setUserName(user);
       timbraCfdiQrSinSello.setPassword(password);
       timbraCfdiQrSinSello.setComprobante(CfdiTransformer.cfdiMoldelToString(comprobante));
+      log.info(timbraCfdiQrSinSello.getComprobante());
       TimbraCfdiQrSinSelloResult response =
           ntLinkClient.timbrarSinSelloConQr(timbraCfdiQrSinSello).getTimbraCfdiQrSinSelloResult();
       Comprobante comprobanteResponse = CfdiTransformer.xmlToCfdiModel(response.getCfdi());

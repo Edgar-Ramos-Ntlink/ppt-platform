@@ -262,9 +262,14 @@ public class PagoService {
       log.info(
           "Generando complemento para : {}",
           factPpd.stream().map(f -> f.getFolio()).collect(Collectors.toList()));
-      facturaService.generateComplemento(facturas, pagoDto);
+      FacturaCustom facturaCustomComeplemento =
+          facturaService.generateComplemento(facturas, pagoDto);
+      pagoDto
+          .getFacturas()
+          .forEach(a -> a.setFolioReferencia(facturaCustomComeplemento.getFolio()));
     }
     if (!factPue.isEmpty()) {
+      pagoDto.getFacturas().forEach(a -> a.setFolioReferencia(a.getFolio()));
       factPue.forEach(
           f -> {
             Optional<PagoFacturaDto> pagoFact =
@@ -312,10 +317,6 @@ public class PagoService {
     return mapper.getPagoDtoFromEntity(payment);
   }
 
-  public List<PagoFacturaDto> getPAgoFacturaByIdCfdi(int idCfdi) {
-    return mapper.getPagosFacturaDtoFromEntities(facturaPagosRepository.findByIdCfdi(idCfdi));
-  }
-
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public PagoDto updatePago(Integer idPago, PagoDto pago)
@@ -360,7 +361,7 @@ public class PagoService {
 
       List<String> folioFacts =
           pago.getFacturas().stream()
-              .map(f -> f.getFolio())
+              .map(f -> f.getFolioReferencia())
               .distinct()
               .collect(Collectors.toList());
 

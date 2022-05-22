@@ -1,6 +1,7 @@
 package com.business.unknow.services.util.validators;
 
 import com.business.unknow.enums.MetodosPago;
+import com.business.unknow.enums.TipoComprobante;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import com.mx.ntlink.cfdi.modelos.Concepto;
@@ -23,14 +24,16 @@ public class CfdiValidator extends Validator {
     checkNotNull(cfdi.getReceptor().getUsoCfdi(), "Uso CFDI receptor");
 
     checkNotEquals(cfdi.getReceptor().getUsoCfdi(), "*");
-    checkNotEquals(cfdi.getFormaPago(), "*");
 
-    if (!cfdi.getMetodoPago().equals(MetodosPago.PPD.name())
-        && !cfdi.getMetodoPago().equals(MetodosPago.PUE.name())) {
-      throw new InvoiceManagerException(
-          "El metodo de pago de la factura solo puede ser PUE o PPD",
-          "Metodo de pago invalido",
-          HttpStatus.CONFLICT.value());
+    if (TipoComprobante.INGRESO.getValor().equals(cfdi.getTipoDeComprobante())) {
+      checkNotEquals(cfdi.getFormaPago(), "*");
+      if (!cfdi.getMetodoPago().equals(MetodosPago.PPD.name())
+          && !cfdi.getMetodoPago().equals(MetodosPago.PUE.name())) {
+        throw new InvoiceManagerException(
+            "El metodo de pago de la factura solo puede ser PUE o PPD",
+            "Metodo de pago invalido",
+            HttpStatus.CONFLICT.value());
+      }
     }
 
     if (cfdi.getConceptos().isEmpty()) {
