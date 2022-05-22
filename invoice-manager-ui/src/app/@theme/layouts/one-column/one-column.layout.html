@@ -14,16 +14,18 @@
           <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
         </nb-select-->
             <button class="btn btn-warning float-right" (click)="logout()">
-                Salir
+                SALIR
             </button>
-            <nb-actions size="small" class="float-right">
+            <nb-actions size="medium" class="float-right">
+                <nb-action class="control-item" icon="alert-triangle-outline" badgeText="7" badgePosition="bottom right" badgeStatus="warning"
+                [nbPopover]="alerts" nbPopoverPlacement="bottom"></nb-action>
                 <nb-action class="user-action">
                     <nb-user shape="rectangle" [name]="user?.name" [picture]="user?.urlPicture" title="Usuario">
                     </nb-user>
                 </nb-action>
             </nb-actions>
             
-            <button nbButton status="warning" [nbPopover]="alerts" nbPopoverPlacement="bottom">Alerts</button>
+           
             
         </div>
     </nb-layout-header>
@@ -46,26 +48,22 @@
     </nb-layout-footer>
 </nb-layout>
 
-<div class="row">
-    <div class="col-lg-6">
-        <ng-template #alerts>
-            <div class="p-4">
-                <form>
-                  <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Recipients">
-                  </div>
-                  <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Subject">
-                  </div>
-                  <div class="form-group">
-                    <textarea class="form-control" placeholder="Message"></textarea>
-                  </div>
-                  <button type="submit" class="btn btn-primary w-100">Send</button>
-                </form>
-              </div>
-        </ng-template>
-    </div>
-</div>
+
+<ng-template #alerts>
+    <nb-card class="popover-card">
+      <nb-card-body>
+        
+            <p class="text-danger"> <i class="fa fa-exclamation-triangle"></i> Error en cargando cpente</p>
+            <p class="text-danger"> <i class="fa fa-exclamation-triangle"></i> TEST Error</p>
+            <p class="text-warning"> <i class="fa fa-exclamation-triangle"></i> Error2 en cargando cpente</p>
+            <p class="text-danger"> <i class="fa fa-exclamation-triangle"></i> Error3 en cargando cpente</p>
+            <p class="text-success"> <i class="fa fa-check"></i> Error4 en cargando cpente</p>
+            <p class="text-danger"> <i class="fa fa-exclamation-triangle"></i> Error5 en cargando cpente</p>
+            <p class="text-danger"> <i class="fa fa-exclamation-triangle"></i> Error6 en cargando cpente</p>
+          
+      </nb-card-body>
+    </nb-card>
+</ng-template>
 
 
 
