@@ -79,7 +79,7 @@ export class ConceptoComponent implements OnInit {
         }
       }
     } catch (error) {
-      this.toastrService.danger("Error", error?.message);
+      this.toastrService.warning(error?.message);
     }
   }
 
@@ -108,6 +108,7 @@ export class ConceptoComponent implements OnInit {
     const errors = this.cfdiValidator.validarConcepto(concepto);
     if (errors.length > 0) {
       errors.forEach((e) => this.toastrService.warning("Datos faltantes", e));
+      return;
     } else {
       this.ref.close(concepto);
     }

@@ -7,7 +7,7 @@ import { InvoicesData } from '../../../@core/data/invoices-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { ActivatedRoute } from '@angular/router';
 import { Client } from '../../../models/client';
-import { NbDialogService, NbToastrService } from '@nebular/theme';
+import { NbDialogService } from '@nebular/theme';
 import { CfdiData } from '../../../@core/data/cfdi-data';
 import { Pago } from '../../../@core/models/cfdi/pago';
 import { Factura } from '../../../@core/models/factura';
@@ -16,10 +16,10 @@ import { AppState } from '../../../reducers';
 import { initInvoice, updateInvoice, updateReceptor, updateReceptorAddress } from '../../../@core/core.actions';
 import { NtError } from '../../../@core/models/nt-error';
 import { Receptor } from '../../../@core/models/cfdi/receptor';
-import { AppConstants } from '../../../models/app-constants';
 import { Emisor } from '../../../@core/models/cfdi/emisor';
 import { invoice } from '../../../@core/core.selectors';
 import { ClientsData } from '../../../@core/data/clients-data';
+import { NotificationsService } from '../../../@core/util-services/notifications.service';
 
 @Component({
     selector: 'ngx-linea-x',
@@ -48,7 +48,7 @@ export class LineaXComponent implements OnInit {
         private invoiceService: InvoicesData,
         private cfdiService: CfdiData,
         private cfdiValidator: CfdiValidatorService,
-        private toastrService: NbToastrService,
+        private notificationService: NotificationsService,
         private dialogService: NbDialogService,
         private route: ActivatedRoute,
         private store: Store<AppState>
@@ -70,9 +70,6 @@ export class LineaXComponent implements OnInit {
             }
             this.folio = folio;
         });
-
-        
-
         this.catalogsService.getAllGiros().then((cat) => (this.girosCat = cat));
         this.store.pipe(select(invoice)).subscribe((fact) => (this.factura = fact));
     }
@@ -104,7 +101,7 @@ export class LineaXComponent implements OnInit {
                 }
             },
             (error: NtError) => {
-                this.toastrService.danger(error.message);
+                this.notificationService.sendNotification('danger', error?.message,'Error');
                 this.store.dispatch(initInvoice({ invoice: new Factura() }));
                 this.loading = false;
             }
@@ -122,11 +119,7 @@ export class LineaXComponent implements OnInit {
                     .toPromise();
             }
         } catch (error) {
-            this.toastrService.danger(
-                error?.message,
-                'Error recuperando giros',
-                AppConstants.TOAST_CONFIG
-            );
+            this.notificationService.sendNotification('danger', error?.message,'Error');
         }
     }
 
@@ -158,7 +151,7 @@ export class LineaXComponent implements OnInit {
 
     public onClientSelected(client: Client) {
         if (!client.activo) {
-            this.toastrService.warning(
+            this.notificationService.sendNotification('warning',
                 `El cliente ${client.razonSocial} no se encuentra activo,notifique al supervisor para activarlo`,
                 "Cliente inactivo"
             );
@@ -166,7 +159,7 @@ export class LineaXComponent implements OnInit {
         }
 
         if (client.regimenFiscal == undefined || client.regimenFiscal == null || client.regimenFiscal === '*') {
-            this.toastrService.warning(
+            this.notificationService.sendNotification('warning',
                 `El cliente ${client.razonSocial} no cuenta con regimen fiscal, delo de alta antes de continuar`,
                 "Informacion faltante"
             );
@@ -210,19 +203,16 @@ export class LineaXComponent implements OnInit {
                     .insertNewInvoice(invoice)
                     .toPromise();
                 this.loading = false;
-                this.toastrService.success(
-                    "Solicitud de factura enviada correctamente"
-                );
+                this.notificationService.sendNotification('success',"Solicitud de factura enviada correctamente");
                 this.store.dispatch(updateInvoice({ invoice }));
             } else {
                 errors.forEach((e) =>
-                    this.toastrService.warning("Información incompleta", e, AppConstants.TOAST_CONFIG)
-                );
+                this.notificationService.sendNotification('warning',e,"Información incompleta"));
                 this.loading = false;
             }
         } catch (error) {
             this.loading = false;
-            this.toastrService.danger(error?.message, "Error", AppConstants.TOAST_CONFIG);
+            this.notificationService.sendNotification('danger', error?.message,'Error');
         }
     }
 
@@ -231,12 +221,12 @@ export class LineaXComponent implements OnInit {
         const fact = {...this.factura};
         this.invoiceService.generateReplacement(factura.folio, fact).subscribe(
             (invoice) => {
-                this.toastrService.success('El documento relacionado se ha generado exitosamente','Documento relacionado',AppConstants.TOAST_CONFIG);
+                this.notificationService.sendNotification('success','El documento relacionado se ha generado exitosamente','Documento relacionado');
                 this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
             },
             (error: NtError) => {
-                this.toastrService.danger(error?.message,'Error en la sustitución', AppConstants.TOAST_CONFIG);
+                this.notificationService.sendNotification('danger', error?.message,'Error en la sustitucion');
                 this.loading = false;
             }
         );
@@ -247,12 +237,12 @@ export class LineaXComponent implements OnInit {
         const fact = { ...factura };
         this.invoiceService.generateCreditNote(factura.folio, fact).subscribe(
             (invoice) => {
-                this.toastrService.success('La nota de credito se ha generado exitosamente','Nota credito creada',AppConstants.TOAST_CONFIG);
+                this.notificationService.sendNotification('success','La nota de credito se ha generado exitosamente','Nota credito creada');
                 this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
             },
             (error: NtError) => {
-                this.toastrService.danger(error?.message,'Error creando la nota de crédito', AppConstants.TOAST_CONFIG);
+                this.notificationService.sendNotification('danger', error?.message,'Error creando nota de credito');
                 this.loading = false;
             }
         );
@@ -267,12 +257,12 @@ export class LineaXComponent implements OnInit {
         this.loading = true;
         this.invoiceService.updateInvoice(fact).subscribe(
             (invoice) => {
-                this.toastrService.success('','factura aceptada',AppConstants.TOAST_CONFIG);
+                this.notificationService.sendNotification('success','factura aceptada');
                 this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
             },
             (error: NtError) => {
-                this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
+                this.notificationService.sendNotification('danger',error?.message,'Error');
                 this.loading = false;
             }
         );
@@ -294,12 +284,12 @@ export class LineaXComponent implements OnInit {
                             .updateInvoice(result)
                             .subscribe(
                                 (invoice) => {
-                                    this.toastrService.success('','factura rechazada',AppConstants.TOAST_CONFIG);
+                                    this.notificationService.sendNotification('success','factura rechazada');
                                         this.store.dispatch(updateInvoice({ invoice }));
                                         this.loading = false;
                                 },
                                 (error: NtError) => {
-                                    this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
+                                    this.notificationService.sendNotification('danger',error?.message,'Error');
                                     this.loading = false;
                                 }
                             );
@@ -308,7 +298,7 @@ export class LineaXComponent implements OnInit {
                     }
                 });
         } catch (error) {
-            this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
+            this.notificationService.sendNotification('danger',error?.message,'Error');
             this.loading = false;
         }
     }
@@ -334,12 +324,12 @@ export class LineaXComponent implements OnInit {
                                 .timbrarFactura(fact.folio, invoice)
                                 .subscribe(
                                     (invoice) => {
-                                        this.toastrService.success('','factura timbrada',AppConstants.TOAST_CONFIG);
+                                        this.notificationService.sendNotification('success','factura timbrada');
                                         this.store.dispatch(updateInvoice({ invoice }));
                                         this.loading = false;
                                     },
                                     (error: NtError) => {
-                                        this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
+                                        this.notificationService.sendNotification('danger',error?.message,'Error');
                                         this.loading = false;
                                     }
                                 );
@@ -348,11 +338,11 @@ export class LineaXComponent implements OnInit {
                         }
                     });
             } else {
-                this.toastrService.danger('El cliente que solicita la factura se encuentra inactivo','Cliente inactivo', AppConstants.TOAST_CONFIG);
+                this.notificationService.sendNotification('danger','El cliente que solicita la factura se encuentra inactivo','Cliente inactivo');
                 this.loading = false;
             }
         } catch (error) {
-            this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
+            this.notificationService.sendNotification('danger',error?.message,'Error');
             this.loading = false;
         }
     }
@@ -370,12 +360,12 @@ export class LineaXComponent implements OnInit {
                             .cancelarFactura(fact.folio, result)
                             .subscribe(
                                 (invoice) => {
-                                    this.toastrService.success('','factura cancelada',AppConstants.TOAST_CONFIG);
+                                    this.notificationService.sendNotification('success','factura cancelada');
                                         this.store.dispatch(updateInvoice({ invoice }));
                                         this.loading = false;
                                 },
                                 (error: NtError) => {
-                                    this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
+                                    this.notificationService.sendNotification('danger',error?.message,'Error');
                                     this.loading = false;
                                 }
                             );
@@ -384,7 +374,7 @@ export class LineaXComponent implements OnInit {
                     }
                 });
         } catch (error) {
-            this.toastrService.danger(error?.message,'Error', AppConstants.TOAST_CONFIG);
+            this.notificationService.sendNotification('danger',error?.message,'Error');
             this.loading = false;
         }
     }
@@ -401,15 +391,11 @@ export class LineaXComponent implements OnInit {
             (invoice) => {
                 this.loading = false;
                 this.store.dispatch(updateInvoice({ invoice }));
-                this.toastrService.success('acctualización exitosa','CFDI Revalidado', AppConstants.TOAST_CONFIG)
+                this.notificationService.sendNotification('success','actualización exitosa','CFDI Revalidado')
             },
             (error: NtError) => {
                 this.loading = false;
-                this.toastrService.danger(
-                    error?.message,
-                    'Error en la revalidacion del CFDI',
-                    AppConstants.TOAST_CONFIG
-                );
+                this.notificationService.sendNotification('danger',error?.message,'Error en la ravalidacion');
             }
         );
     }

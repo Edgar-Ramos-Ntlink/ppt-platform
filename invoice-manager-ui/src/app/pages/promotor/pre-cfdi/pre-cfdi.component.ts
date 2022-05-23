@@ -9,17 +9,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { CfdiData } from '../../../@core/data/cfdi-data';
-import { NbToastrService } from '@nebular/theme';
 import { Pago } from '../../../@core/models/cfdi/pago';
 import { Factura } from '../../../@core/models/factura';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../reducers';
 import { initInvoice, updateInvoice, updateReceptor, updateReceptorAddress } from '../../../@core/core.actions';
 import { NtError } from '../../../@core/models/nt-error';
-import { AppConstants } from '../../../models/app-constants';
 import { Receptor } from '../../../@core/models/cfdi/receptor';
 import { invoice } from '../../../@core/core.selectors';
 import { Emisor } from '../../../@core/models/cfdi/emisor';
+import { NotificationsService } from '../../../@core/util-services/notifications.service';
 
 @Component({
     selector: 'nt-pre-cfdi',
@@ -44,7 +43,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         private invoiceService: InvoicesData,
         private cfdiService: CfdiData,
         private cfdiValidator: CfdiValidatorService,
-        private toastrService: NbToastrService,
+        private notificationService : NotificationsService,
         private route: ActivatedRoute,
         private router: Router,
         private store: Store<AppState>
@@ -99,7 +98,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                 }
             },
             (error: NtError) => {
-                this.toastrService.danger(error.message);
+                this.notificationService.sendNotification('danger',error?.message,'Error recuperando informacion CFDI');
                 this.store.dispatch(initInvoice({ invoice: new Factura() }));
                 this.loading = false;
             }
@@ -117,11 +116,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                     .toPromise();
             }
         } catch (error) {
-            this.toastrService.danger(
-                error?.message,
-                'Error recuperando giros',
-                AppConstants.TOAST_CONFIG
-            );
+            this.notificationService.sendNotification('danger',error?.message,'Error giro empresas');
         }
     }
 
@@ -153,18 +148,14 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
     public onClientSelected(client: Client) {
         if (!client.activo) {
-            this.toastrService.warning(
-                `El cliente ${client.razonSocial} no se encuentra activo,notifique al supervisor para activarlo`,
-                "Cliente inactivo"
-            );
+            this.notificationService.sendNotification('warning',`El cliente ${client.razonSocial} no se encuentra activo, solicite su activación al equipo de operaciones`,
+            "Cliente inactivo");
             return;
         }
 
         if (client.regimenFiscal == undefined || client.regimenFiscal == null || client.regimenFiscal === '*') {
-            this.toastrService.warning(
-                `El cliente ${client.razonSocial} no cuenta con regimen fiscal, delo de alta antes de continuar`,
-                "Informacion faltante"
-            );
+            this.notificationService.sendNotification('warning',`El cliente ${client.razonSocial} no cuenta con regimen fiscal, delo de alta antes de continuar`,
+            "Informacion faltante");
             return;
         }
         let receptor = new Receptor();
@@ -200,24 +191,20 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
             
             let errors: string[] = this.cfdiValidator.validarCfdi(invoice.cfdi);
             if (errors.length === 0) {
-                console.log("Sending invoice", invoice);
                 invoice = await this.invoiceService
                     .insertNewInvoice(invoice)
                     .toPromise();
                 this.loading = false;
-                this.toastrService.success(
-                    "Solicitud de factura enviada correctamente"
-                );
+                this.notificationService.sendNotification('success','Solicitud de factura enviada correctamente');
                 this.store.dispatch(updateInvoice({ invoice }));
             } else {
                 errors.forEach((e) =>
-                    this.toastrService.warning("Información incompleta", e, AppConstants.TOAST_CONFIG)
-                );
+                    this.notificationService.sendNotification('warning',e,'Información incompleta'));
                 this.loading = false;
             }
         } catch (error) {
             this.loading = false;
-            this.toastrService.danger(error?.message, "Error", AppConstants.TOAST_CONFIG);
+            this.notificationService.sendNotification('danger',error?.message,'Error');
         }
     }
 
@@ -234,15 +221,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
             (invoice) => {
                 this.loading = false;
                 this.store.dispatch(updateInvoice({ invoice }));
-                this.toastrService.success('acctualización exitosa','CFDI Revalidado', AppConstants.TOAST_CONFIG)
+                this.notificationService.sendNotification('success','CFDI revalidado correctamente');
             },
             (error: NtError) => {
                 this.loading = false;
-                this.toastrService.danger(
-                    error?.message,
-                    'Error en la revalidacion del CFDI',
-                    AppConstants.TOAST_CONFIG
-                );
+                this.notificationService.sendNotification('danger',error?.message,'Error en revalidacion');
             }
         );
     }

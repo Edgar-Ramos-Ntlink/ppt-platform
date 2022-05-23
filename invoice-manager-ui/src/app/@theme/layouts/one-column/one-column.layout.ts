@@ -11,6 +11,10 @@ import { map, takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { User } from "../../../@core/models/user";
 import { AuthService } from "../../../auth/auth.service";
+import { select, Store } from "@ngrx/store";
+import { AppState } from "../../../reducers";
+import { notifications } from "../../theme.selectors";
+import { AppNotification } from "../../../@core/models/app-notification";
 
 @Component({
   selector: "ngx-one-column-layout",
@@ -21,6 +25,7 @@ export class OneColumnLayoutComponent implements OnInit, OnDestroy {
   @Input() user: User;
 
   private destroy$: Subject<void> = new Subject<void>();
+  public notifications: AppNotification[]=[];
   userPictureOnly: boolean = false;
 
   themes = [
@@ -50,7 +55,8 @@ export class OneColumnLayoutComponent implements OnInit, OnDestroy {
     private themeService: NbThemeService,
     private layoutService: LayoutService,
     private breakpointService: NbMediaBreakpointsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit() {
@@ -74,6 +80,8 @@ export class OneColumnLayoutComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe((themeName) => (this.currentTheme = themeName));
+
+      this.store.pipe(select(notifications)).subscribe((notifications) => this.notifications = notifications);
   }
 
   ngOnDestroy() {
