@@ -248,7 +248,7 @@ export class CargaMasivaComponent implements OnInit {
         cfdi.receptor.rfc = transfer.RFC_RECEPTOR;
         cfdi.receptor.domicilioFiscalReceptor = receptorCompany.cp;
         cfdi.receptor.regimenFiscalReceptor = receptorCompany.regimenFiscal;
-        cfdi.receptor.usoCfdi = 'P01';
+        cfdi.receptor.usoCfdi = 'G03';
         factura.direccionEmisor =
             this.cfdiValidator.generateCompanyAddress(receptorCompany);
         cfdi.emisor.nombre = emisorCompany.razonSocial;

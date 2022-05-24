@@ -63,7 +63,7 @@ export class ClienteComponent implements OnInit {
       const data: ZipCodeInfo = await this.catalogsService.getZipCodeInfo(this.clientInfo.cp);
       this.colonias = data.colonias;
       let index = 0;
-      this.formInfo.coloniaId = '*';
+      this.formInfo.coloniaId = 'other';
       data.colonias.forEach(element => {
         if (data.colonias[index] === this.clientInfo.localidad) {
           this.formInfo.coloniaId = index;
