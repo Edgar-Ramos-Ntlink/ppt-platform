@@ -8,6 +8,7 @@ export class Receptor {
   public usoCfdi: string;
 
   constructor() {
-    this.usoCfdi = "P01";
+    this.usoCfdi = "*";
+    this.regimenFiscalReceptor = "*"
   }
 }

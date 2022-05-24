@@ -37,6 +37,7 @@ export class EmpresaComponent implements OnInit {
         doctType: '*',
         showCiec: false,
         showFiel: false,
+        showEmailPass: false,
     };
     public coloniaId: number = 0;
     public colonias = [];
@@ -212,6 +213,10 @@ export class EmpresaComponent implements OnInit {
 
     public toogleFiel() {
         this.formInfo.showFiel = !this.formInfo.showFiel;
+    }
+
+    public toogleEmailPass() {
+        this.formInfo.showEmailPass = !this.formInfo.showEmailPass;
     }
 
     public zipCodeInfo(zipcode: String) {

@@ -48,47 +48,47 @@
       <div class="row">
         <div class="col-md-2">
           <label for="inputDocType" class="label">Tipo Documento</label>
-          <select id="inputDocType" style="display: block" class="form-control" disabled
+          <select id="inputDocType" style="display: block" class="form-control text-uppercase" disabled
             [(ngModel)]="cfdi.tipoDeComprobante">
-            <option value="*">Seleccionar</option>
-            <option value="I">Factura Ingreso</option>
-            <option value="E">Factura Egreso(Nota credito)</option>
-            <option value="P">Complemento(pago)</option>
+            <option value="*">SELECCIONAR</option>
+            <option value="I" class="text-uppercase">Factura Ingreso</option>
+            <option value="E" class="text-uppercase">Factura Egreso(Nota credito)</option>
+            <option value="P" class="text-uppercase">Complemento(pago)</option>
           </select>
         </div>
         <div class="col-md-3">
           <label for="inputPayMethod" class="label">Metodo de Pago</label>
-          <select id="inputPayMethod" style="display: block" class="form-control" [ngModel]="cfdi.metodoPago"
+          <select id="inputPayMethod" style="display: block" class="form-control text-uppercase" [ngModel]="cfdi.metodoPago"
             [disabled]="!allowEdit" (change)="onPayMethodChange($event.target.value)">
             <option value="*">Seleccionar</option>
-            <option value="PUE">Factura pagada (PUE)</option>
-            <option value="PPD">Factura pago por definir(PPD)</option>
+            <option value="PUE" class="text-uppercase">Factura pagada (PUE)</option>
+            <option value="PPD" class="text-uppercase">Factura pago por definir(PPD)</option>
           </select>
         </div>
         <div class="col-md-3">
           <label for="inputPaytype" class="label">Forma de Pago</label>
-          <select selected="1" id="inputPaytype" style="display: block" class="form-control"
+          <select selected="1" id="inputPaytype" style="display: block" class="form-control text-uppercase"
             [disabled]="cfdi.metodoPago === '*' || !allowEdit" [ngModel]="cfdi.formaPago"
             (change)="onPayWayChange($event.target.value)">
             <option value="*">Seleccionar</option>
-            <option *ngFor="let payType of payTypeCat" [(value)]="payType.id">
+            <option *ngFor="let payType of payTypeCat" [(value)]="payType.id" class="text-uppercase">
               {{ payType.nombre }}
             </option>
           </select>
         </div>
         <div class="col-md-2">
           <label for="inputCoin" class="label">Moneda</label>
-          <select id="inputCoin" style="display: block" class="form-control" [disabled]="!allowEdit"
+          <select id="inputCoin" style="display: block" class="form-control text-uppercase" [disabled]="!allowEdit"
             [ngModel]="cfdi.moneda" (change)="onCoinChange($event.target.value)">
             <option value="*">Seleccionar</option>
-            <option value="XXX">N/A</option>
-            <option value="MXN">Peso MX</option>
-            <option value="USD">Dolar US</option>
+            <option value="XXX" class="text-uppercase">N/A</option>
+            <option value="MXN" class="text-uppercase">Peso MX</option>
+            <option value="USD" class="text-uppercase">Dolar US</option>
           </select>
         </div>
         <div class="col-md-2" *ngIf="cfdi.moneda === 'USD'">
           <label for="payChangeType" class="label">Tipo de Cambio</label>
-          <input id="inputChangeType" class="form-control" type="number" [(ngModel)]="cfdi.tipoCambio" />
+          <input id="inputChangeType" class="form-control text-uppercase" type="number" [(ngModel)]="cfdi.tipoCambio" />
         </div>
       </div>
       <br />
