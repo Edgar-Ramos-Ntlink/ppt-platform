@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CatalogsData } from '../../data/catalogs-data';
 import { Catalogo } from '../../../models/catalogos/catalogo';
-import { NbToastrService } from '@nebular/theme';
 import { DonwloadFileService } from '../../util-services/download-file-service';
 import { FilesData } from '../../data/files-data';
 import { Router } from '@angular/router';
@@ -13,6 +12,7 @@ import { Cfdi } from '../../models/cfdi/cfdi';
 import { updateCfdi, updateInvoice } from '../../core.actions';
 import { Factura } from '../../models/factura';
 import { NtError } from '../../models/nt-error';
+import { NotificationsService } from '../../util-services/notifications.service';
 
 @Component({
     selector: 'nt-cfdi',
@@ -34,7 +34,7 @@ export class CfdiComponent implements OnInit {
         private filesService: FilesData,
         private downloadService: DonwloadFileService,
         private invoiceService: InvoicesData,
-        private toastrService: NbToastrService,
+        private notificationService: NotificationsService,
         private router: Router,
         private store: Store<AppState>
     ) {}
@@ -92,14 +92,12 @@ export class CfdiComponent implements OnInit {
             (invoice) => {
                 this.loading = false;
                 this.store.dispatch(updateInvoice({ invoice }));
-                this.toastrService.success('actualización exitosa','CFDI actualizado')
+                this.notificationService.sendNotification('success','actualización exitosa','CFDI actualizado');
+                
             },
             (error: NtError) => {
                 this.loading = false;
-                this.toastrService.danger(
-                    error?.message,
-                    'Error en la actualizacion'
-                );
+                this.notificationService.sendNotification('danger',error?.message,'Error en la actualizacion');
             }
         );
     }

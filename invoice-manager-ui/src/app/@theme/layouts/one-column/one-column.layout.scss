@@ -3,6 +3,20 @@
 @import '~@nebular/theme/styles/global/breakpoints';
 
 @include nb-install-component() {
+
+  nb-card-body {
+    margin: 0 -0.5rem;
+  
+    button,
+    p {
+      margin: 0.5rem 0.5rem 0;
+    }
+  }
+  
+  .popover-card {
+    margin: 0;
+    max-width: 40rem;
+  }
   
   .menu-sidebar ::ng-deep .scrollable {
     padding-top: nb-theme(layout-padding-top);

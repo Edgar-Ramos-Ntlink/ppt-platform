@@ -11,6 +11,8 @@ import {
   NbSelectModule,
   NbIconModule,
   NbThemeModule,
+  NbPopoverModule,
+  NbCardModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 
@@ -29,6 +31,8 @@ import { DEFAULT_THEME } from './styles/theme.default';
 import { COSMIC_THEME } from './styles/theme.cosmic';
 import { CORPORATE_THEME } from './styles/theme.corporate';
 import { DARK_THEME } from './styles/theme.dark';
+import { StoreModule } from '@ngrx/store';
+import * as fromTheme from './reducers';
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -41,6 +45,8 @@ const NB_MODULES = [
   NbSelectModule,
   NbIconModule,
   NbEvaIconsModule,
+  NbPopoverModule,
+  NbCardModule,
 ];
 const COMPONENTS = [
   OneColumnLayoutComponent,
@@ -54,7 +60,7 @@ const PIPES = [
 ];
 
 @NgModule({
-  imports: [CommonModule, ...NB_MODULES],
+  imports: [CommonModule, ...NB_MODULES, StoreModule.forFeature(fromTheme.THEME_FEATURE_KEY, fromTheme.themeReducer)],
   exports: [CommonModule, ...PIPES, ...COMPONENTS],
   declarations: [...COMPONENTS, ...PIPES],
 })

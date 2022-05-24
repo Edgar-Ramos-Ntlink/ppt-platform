@@ -1,11 +1,12 @@
-import { Component, OnInit, Input, SecurityContext } from '@angular/core';
-import { NbComponentStatus, NbDialogRef, NbGlobalPhysicalPosition, NbToastrService } from '@nebular/theme';
+import { Component, OnInit, Input } from '@angular/core';
+import { NbDialogRef } from '@nebular/theme';
 import { PagoBase } from '../../../../models/pago-base';
 import { FilesData } from '../../../../@core/data/files-data';
-import { DomSanitizer, SafeUrl, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { DonwloadFileService } from '../../../../@core/util-services/download-file-service';
 import { Router } from '@angular/router';
 import { ResourceFile } from '../../../../models/resource-file';
+import { NotificationsService } from '../../../../@core/util-services/notifications.service';
 @Component({
   selector: 'ngx-validacion-pago',
   templateUrl: './validacion-pago.component.html',
@@ -23,7 +24,7 @@ export class ValidacionPagoComponent implements OnInit {
   public file: ResourceFile;
 
   constructor(protected ref: NbDialogRef<ValidacionPagoComponent>,
-    private toastrService: NbToastrService,
+    private notificationService: NotificationsService,
     private filesService: FilesData,
     private router: Router,
     private downloadService: DonwloadFileService,
@@ -50,8 +51,7 @@ export class ValidacionPagoComponent implements OnInit {
         this.comprobanteUrl = this.sanitizer.bypassSecurityTrustUrl(url);
       }
     }catch(error){
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-      this.showToast('danger', 'Error', msg, true);
+      this.notificationService.sendNotification('danger',error?.message, 'Error');
     }
     this.loading = false;
   }
@@ -62,11 +62,11 @@ export class ValidacionPagoComponent implements OnInit {
   onRecahzarPago() {
     
     if (this.updatedPayment.comentarioPago == undefined) {
-      this.showToast('warning', 'Falta información', 'Es necesaria una razon de rechazo.', true);
+      this.notificationService.sendNotification('warning','Es necesaria una razon de rechazo.', 'Falta información');
       return;
     }
     if (this.updatedPayment.comentarioPago.length < 6) {
-      this.showToast('warning', 'Falta información', 'La descripcion de rechazo debe ser mas detallada.', true);
+      this.notificationService.sendNotification('warning', 'La descripcion de rechazo debe ser mas detallada.', 'Falta información');
       return;
     }
     this.updatedPayment.statusPago = 'RECHAZADO';
@@ -78,26 +78,8 @@ export class ValidacionPagoComponent implements OnInit {
     this.ref.close(this.updatedPayment);
   }
 
-  //TODO talvez mover a servicio de descarga de imagenes
   onDownload() {
-    const data = `data:${this.file.formato}base64,${this.file.data}`;
     this.downloadService.downloadFile(this.file.data,`${this.pago.banco}-${this.pago.acredor}${this.file.extension}`,this.file.formato);
   }
 
-  private showToast(type: NbComponentStatus, title: string, body: string, clickdestroy?: boolean) {
-    const config = {
-      status: type,
-      destroyByClick: clickdestroy || false,
-      duration: 10000,
-      hasIcon: true,
-      position: NbGlobalPhysicalPosition.TOP_RIGHT,
-      preventDuplicates: true,
-    };
-    const titleContent = title ? `${title}` : 'xxxx';
-
-    this.toastrService.show(
-      body,
-      titleContent,
-      config);
-  }
 }

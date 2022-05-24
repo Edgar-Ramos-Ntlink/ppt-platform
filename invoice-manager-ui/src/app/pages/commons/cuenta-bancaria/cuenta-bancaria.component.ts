@@ -6,10 +6,10 @@ import { Empresa } from '../../../models/empresa';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CompaniesData } from '../../../@core/data/companies-data';
 import { CatalogsData } from '../../../@core/data/catalogs-data';
-import { NbComponentStatus, NbGlobalPhysicalPosition, NbToastrService } from '@nebular/theme';
 import { ResourceFile } from '../../../models/resource-file';
 import { FilesData } from '../../../@core/data/files-data';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
+import { NotificationsService } from '../../../@core/util-services/notifications.service';
 
 
 @Component({
@@ -52,7 +52,7 @@ export class CuentaBancariaComponent implements OnInit {
     private companiesService: CompaniesData,
     private catalogsService: CatalogsData,
     private resourcesService: FilesData,
-    private toastrService: NbToastrService,
+    private notificationService: NotificationsService,
   ) { }
 
   ngOnInit() {
@@ -82,10 +82,9 @@ export class CuentaBancariaComponent implements OnInit {
 
     try{
       this.cuenta = await this.accountsService.updateCuenta(this.cuenta).toPromise();
-      this.showToast('info', 'Exito!', 'Se actualizado la cuenta satisfactoriamente.');
-    } catch( error){
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-        this.showToast('danger', 'Error', msg, true);
+      this.notificationService.sendNotification('info','Se actualizado la cuenta satisfactoriamente.');
+    } catch(error){
+        this.notificationService.sendNotification('danger', error?.message,'Error');
     }
   }
 
@@ -100,8 +99,7 @@ export class CuentaBancariaComponent implements OnInit {
         this.cuenta.rfc = rfc;
       }
     } catch( error){
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-        this.showToast('danger', 'Error', msg, true);
+      this.notificationService.sendNotification('danger', error?.message,'Error');
     }
     this.loading = false;
   }
@@ -109,20 +107,18 @@ export class CuentaBancariaComponent implements OnInit {
   public async registry() {
     try{
       this.cuenta = await this.accountsService.insertCuenta(this.cuenta).toPromise();
-      this.showToast('info', 'Exito!', 'La cuenta ha sido creada satisfactoriamente.');
+      this.notificationService.sendNotification('info','La cuenta ha sido creada satisfactoriamente.');
     } catch( error){
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-        this.showToast('danger', 'Error', msg, true);
+      this.notificationService.sendNotification('danger', error?.message,'Error');
     }
   }
 
   public async delete() {
     try{
       await this.accountsService.deleteCuenta(this.cuenta.id).toPromise();
-      this.showToast('info', 'Exito!', 'La cuenta fue borrada exitosamente');
+      this.notificationService.sendNotification('info', 'La cuenta fue borrada exitosamente');
     } catch( error){
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-        this.showToast('danger', 'Error', msg, true);
+      this.notificationService.sendNotification('danger', error?.message,'Error');
     }
   }
 
@@ -135,8 +131,7 @@ export class CuentaBancariaComponent implements OnInit {
       try{
         this.empresas = await this.companiesService.getCompaniesByLineaAndGiro(this.formInfo.linea, Number(giroId)).toPromise();
       } catch( error){
-        let msg = error.error.message || `${error.statusText} : ${error.message}`;
-          this.showToast('danger', 'Error', msg, true);
+        this.notificationService.sendNotification('danger', error?.message,'Error');
       }
     }
   }
@@ -150,8 +145,7 @@ export class CuentaBancariaComponent implements OnInit {
     try{
       this.empresas = await this.companiesService.getCompaniesByLineaAndGiro(this.formInfo.linea, Number(this.formInfo.giro)).toPromise();
     } catch( error){
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-        this.showToast('danger', 'Error', msg, true);
+      this.notificationService.sendNotification('danger', error?.message,'Error');
     }
     }
   }
@@ -172,7 +166,7 @@ export class CuentaBancariaComponent implements OnInit {
         this.dataFile.extension= file.name.substring(file.name.lastIndexOf('.'),file.name.length);
         this.dataFile.data = reader.result.toString();
       };
-      reader.onerror = (error) => { this.showToast('danger', 'Error', 'Error cargando el archivo', true); };
+      reader.onerror = (error) => { this.notificationService.sendNotification('warning', 'Error cargando el archivo'); };
     }
   }
 
@@ -196,13 +190,12 @@ export class CuentaBancariaComponent implements OnInit {
       this.formInfo.doctType = '*';
       await this.sleep(1);
       this.accountDocs =  await this.resourcesService.getResourcesByTypeAndReference('CUENTAS_BANCARIAS', this.cuenta.id.toString()).toPromise();
-      this.showToast('info', 'Exito!', 'El archivo se cargo correctamente');
+      this.notificationService.sendNotification('info', 'El archivo se cargo correctamente');
     } catch(error){
       console.error(error);
       this.formInfo.fileDataName = '';
       this.formInfo.doctType = '*';
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-      this.showToast('danger', 'Error', msg, true);
+      this.notificationService.sendNotification('danger', error?.message,'Error');
     }
     this.loading = false;
   }
@@ -215,23 +208,4 @@ export class CuentaBancariaComponent implements OnInit {
     const path: string =  `/recursos/${file.tipoRecurso}/referencias/${file.referencia}/files/${file.tipoArchivo}`;
     this.downloadService.dowloadResourceFile(path,`${file.referencia}_${file.tipoArchivo}`);
   }
-
-  private showToast(type: NbComponentStatus, title: string, body: string, clickdestroy?: boolean) {
-    const config = {
-      status: type,
-      destroyByClick: clickdestroy || false,
-      duration: 8000,
-      hasIcon: true,
-      position: NbGlobalPhysicalPosition.TOP_RIGHT,
-      preventDuplicates: true,
-    };
-    const titleContent = title ? `${title}` : 'xxxx';
-
-    this.toastrService.show(
-      body,
-      titleContent,
-      config);
-  }
-
-
 }
