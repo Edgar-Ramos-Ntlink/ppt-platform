@@ -1,12 +1,81 @@
 # invoice manager
 
-How to run :
+<!-- ABOUT THE PROJECT -->
+## Acerca del proyecto
 
-1.- mvn clean install
+El invoice manager es un sistema que administra en un portal web las facturas generadas por una empresa, por medio de diferentes roles, los cuales tienen diferentes permisos para crear, aprobar y timbrar facturas.
 
-2.- java -jar invoice-manager-services/target/invoice-manager-services-3.2.0.jar
 
-VERSION 3.2.0
+Los roles principales son:
+* Promotor : Genera cotizaciones,carga pagos y da de alta a los clientes.
+* Operaciones: Valida que la cotizacón se halla realizado correctamente validando requerimientso fiscales,si todo es correcto se procede a timbrar la cotizacion convirtiendola en una factura.
+* Tesoreria: Valida pagos y asegura que las entradas y salidas de flujo de capital sean correctas
+* Contabilidad: Valida, extrae y verifica todos los temas relacionados a contabilidad y declaraciones fiscales
+* Legal: Se encarga de dar de alta a las empresas, y administrar los datos referentes a las empresas
+* Administrador: Puede realizar todas acciones de los anteriores, aparate de permitir el alta/desactivacion/ cambio de password de usuarios, revision de historico de pagos, alta de empresas, etc.
+
+
+
+### Construido con
+
+El poryecto fue realizado pricnipalmente con Java 11 y Angular 8
+* [java 11](https://www.oracle.com/mx/java/technologies/javase-jdk11-downloads.html)
+* [Angular 12](https://angular.io)
+
+
+
+<!-- GETTING STARTED -->
+## Para iniciar
+
+* Construye el proyecto desde el folder raíz evitando creacion de imagen de docker
+  ```sh
+  mvn clean package install
+  ```
+
+* Inicializa los servicios de backend, desde la carpeta de <code>invoice-manager-services</code>
+  ```sh
+  mvn spring-boot:run
+  ```
+  
+* Inicializa el front de angular desde <code>ntlink-manager-ui</code>
+  ```
+  npm start
+  ```
+
+* Ingresa en tu navegador
+  ```sh
+  http://localhost:4200
+  ```
+
+## Construccion del proyecto
+
+* PASO 1 Compilar interfaz grafica
+  ``` sh
+  npm run build:prod
+  ```
+* Compila los modulos del proyecto (package copia los archivos estaticos creados por angular)
+  ```sh
+  mvn clean package install
+  ```
+
+* Corre el proyecto completo desde el fat jar
+ ```sh
+  java -jar ./invoice-manager-services/tarjet/invoice-manager-services-3.x.x.jar
+  ```
+* Ingresa en tu navegador
+  ```sh
+  http://localhost:8080
+  ```
+
+
+### Prerequisites
+
+Para desarrollar este proyecto es necesario
+
+* java 11
+* node js 12
+* maven 3.5 o mayor
+* angular 12
 
 <!-- ROADMAP -->
 ## Roadmap
