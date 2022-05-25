@@ -51,8 +51,10 @@ public class FacturaExecutorService {
       TimbraCfdiQrSinSello timbraCfdiQrSinSello = new TimbraCfdiQrSinSello();
       timbraCfdiQrSinSello.setUserName(user);
       timbraCfdiQrSinSello.setPassword(password);
-      timbraCfdiQrSinSello.setComprobante(xml.replace(
-              CFDI_DATE_PATTERN, LOCAL_DATE_TIME_FORMATTER.format(LocalDateTime.now().minusHours(6))));
+      timbraCfdiQrSinSello.setComprobante(
+          xml.replace(
+              CFDI_DATE_PATTERN,
+              LOCAL_DATE_TIME_FORMATTER.format(LocalDateTime.now().minusHours(6))));
       log.info(timbraCfdiQrSinSello.getComprobante());
       TimbraCfdiQrSinSelloResult response =
           ntLinkClient.timbrarSinSelloConQr(timbraCfdiQrSinSello).getTimbraCfdiQrSinSelloResult();
