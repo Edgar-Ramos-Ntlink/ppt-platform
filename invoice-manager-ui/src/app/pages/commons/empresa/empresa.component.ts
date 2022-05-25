@@ -11,18 +11,14 @@ import { CompaniesValidatorService } from '../../../@core/util-services/companie
 import { FilesData } from '../../../@core/data/files-data';
 import { CuentasData } from '../../../@core/data/cuentas-data';
 import { Cuenta } from '../../../models/cuenta';
-import {
-    NbComponentStatus,
-    NbDialogService,
-    NbGlobalPhysicalPosition,
-    NbToastrService,
-} from '@nebular/theme';
-import { UsersData } from '../../../@core/data/users-data';
 import { ResourceFile } from '../../../models/resource-file';
 import { DetalleEmpresa } from '../../../models/detalle-empresa';
 import { User } from '../../../@core/models/user';
 import { IngresoEmpresa } from '../../../models/ingreso-empresa';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
+import { NotificationsService } from '../../../@core/util-services/notifications.service';
+import { NtError } from '../../../@core/models/nt-error';
+import { NbDialogService } from '@nebular/theme';
 
 @Component({
     selector: 'ngx-empresa',
@@ -41,6 +37,7 @@ export class EmpresaComponent implements OnInit {
         doctType: '*',
         showCiec: false,
         showFiel: false,
+        showEmailPass: false,
     };
     public coloniaId: number = 0;
     public colonias = [];
@@ -80,7 +77,7 @@ export class EmpresaComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         private sanitizer: DomSanitizer,
-        private toastrService: NbToastrService,
+        private notificationService: NotificationsService,
         private downloadService: DonwloadFileService,
         private catalogsService: CatalogsData,
         private empresaService: CompaniesData,
@@ -107,11 +104,8 @@ export class EmpresaComponent implements OnInit {
             .getAllGiros()
             .then(
                 (giros: Catalogo[]) => (this.girosCat = giros),
-                (error: HttpErrorResponse) => {
-                    let msg =
-                        error.error.message ||
-                        `${error.statusText} : ${error.message}`;
-                    this.showToast('danger', 'Error', msg, true);
+                (error: NtError) => {
+                    this.notificationService.sendNotification('danger', error.message, 'Error');
                 }
             )
             .then(() =>
@@ -175,7 +169,7 @@ export class EmpresaComponent implements OnInit {
         } catch (error) {
             let msg =
                 error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.notificationService.sendNotification('danger', msg, 'Error');
         }
         this.loading = false;
     }
@@ -201,11 +195,8 @@ export class EmpresaComponent implements OnInit {
                 .getResourceFile(rfc, 'EMPRESAS', 'LOGO')
                 .subscribe(
                     (logo) => (this.logo = logo),
-                    (error) => {
-                        let msg =
-                            error.error.message ||
-                            `${error.statusText} : ${error.message}`;
-                        this.showToast('danger', 'Error', msg, true);
+                    (error:NtError) => {
+                        this.notificationService.sendNotification('danger', error.message, 'Error');
                     }
                 );
         }
@@ -222,6 +213,10 @@ export class EmpresaComponent implements OnInit {
 
     public toogleFiel() {
         this.formInfo.showFiel = !this.formInfo.showFiel;
+    }
+
+    public toogleEmailPass() {
+        this.formInfo.showEmailPass = !this.formInfo.showEmailPass;
     }
 
     public zipCodeInfo(zipcode: String) {
@@ -267,11 +262,10 @@ export class EmpresaComponent implements OnInit {
         if (event.target.files && event.target.files.length > 0) {
             const file = event.target.files[0];
             if (file.size > 200000) {
-                this.showToast(
+                this.notificationService.sendNotification(
                     'warning',
-                    'Error',
                     'La imagen del logo es demasiado grande',
-                    true
+                    'Imagen invalida'
                 );
             } else {
                 reader.readAsDataURL(file);
@@ -291,31 +285,24 @@ export class EmpresaComponent implements OnInit {
                         .insertResourceFile(this.logo)
                         .subscribe(
                             () => {
-                                this.showToast(
+                                this.notificationService.sendNotification(
                                     'info',
-                                    'Exito!',
                                     'El logo se cargo correctamente'
                                 );
                                 this.loading = false;
                                 this.loadCompanyInfo(this.companyInfo.rfc);
                             },
-                            (error) => {
-                                console.error(error);
-                                this.loading = false;
-                                let msg =
-                                    error.error.message ||
-                                    `${error.statusText} : ${error.message}`;
-                                this.showToast('danger', 'Error', msg, true);
+                            (error:NtError) => {
+                                this.notificationService.sendNotification('danger',error.message, 'Error');
                             }
                         );
                 };
                 reader.onerror = (error) => {
                     this.loading = false;
-                    this.showToast(
+                    this.notificationService.sendNotification(
                         'danger',
-                        'Error',
-                        'Error parsing image file',
-                        true
+                        'Error cargando archivo',
+                        'Error'
                     );
                     console.error(error);
                 };
@@ -338,18 +325,15 @@ export class EmpresaComponent implements OnInit {
             this.formInfo.fileDataName = '';
             this.formInfo.doctType = '*';
             this.dataFile = new ResourceFile();
-            this.showToast(
+            this.notificationService.sendNotification(
                 'info',
-                'Exito!',
                 'El archivo se cargo correctamente'
             );
         } catch (error) {
             console.error(error);
             this.formInfo.fileDataName = '';
             this.formInfo.doctType = '*';
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.notificationService.sendNotification('danger',error?.message, 'Error');
         }
     }
 
@@ -369,10 +353,7 @@ export class EmpresaComponent implements OnInit {
 
             this.sleep(1).then(() => this.loadDocuments(rfc));
         } catch (error) {
-            console.error(error);
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.notificationService.sendNotification('danger',error?.message, 'Error');
         }
         this.loading = false;
     }
@@ -392,12 +373,7 @@ export class EmpresaComponent implements OnInit {
                 this.dataFile.data = reader.result.toString();
             };
             reader.onerror = (error) => {
-                this.showToast(
-                    'danger',
-                    'Error',
-                    'Error cargando el archivo',
-                    true
-                );
+                this.notificationService.sendNotification('danger','Error al cargar el archivo', 'Error');
             };
         }
     }
@@ -412,21 +388,16 @@ export class EmpresaComponent implements OnInit {
                 this.companyInfo = await this.empresaService
                     .insertNewCompany(this.companyInfo)
                     .toPromise();
-                this.showToast(
-                    'info',
-                    'Exito!',
-                    'La empresa ha sido creada correctamente'
+                this.notificationService.sendNotification(
+                    'info','La empresa ha sido creada correctamente'
                 );
             } else {
                 for (const msg of errorMessages) {
-                    this.showToast('warning', 'Falta información', msg, true);
+                    this.notificationService.sendNotification('warning',msg, 'Falta información');
                 }
             }
         } catch (error) {
-            console.error(error);
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.notificationService.sendNotification('danger',error?.message, 'Error');
         }
     }
 
@@ -435,15 +406,12 @@ export class EmpresaComponent implements OnInit {
             await this.empresaService
                 .updateCompany(this.companyInfo.rfc, this.companyInfo)
                 .toPromise();
-            this.showToast(
+            this.notificationService.sendNotification(
                 'info',
-                'Exito!',
                 'La empresa ha sido actualizada correctamente'
             );
         } catch (error) {
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.notificationService.sendNotification('danger',error?.message, 'Error');
         }
     }
 
@@ -456,15 +424,12 @@ export class EmpresaComponent implements OnInit {
             this.companyInfo = await this.empresaService
                 .updateCompany(this.companyInfo.rfc, company)
                 .toPromise();
-            this.showToast(
+            this.notificationService.sendNotification(
                 'info',
-                'Exito!',
                 'La empresa ha sido desactivada satisfactoriamente'
             );
         } catch (error) {
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.notificationService.sendNotification('danger',error?.message, 'Error');
         }
         this.loading = false;
     }
@@ -483,28 +448,25 @@ export class EmpresaComponent implements OnInit {
             );
 
             if (cert == undefined) {
-                this.showToast(
+                this.notificationService.sendNotification(
                     'warning',
                     'Falta certificado',
-                    'Es necesario la carga del certificado para activar la empresa',
-                    true
+                    'Es necesario la carga del certificado para activar la empresa'
                 );
             }
             if (key == undefined) {
-                this.showToast(
+                this.notificationService.sendNotification(
                     'warning',
                     'Falta llave',
-                    'Es necesario la carga de la llave para activar la empresa',
-                    true
+                    'Es necesario la carga de la llave para activar la empresa'
                 );
             }
 
             if (logo == undefined) {
-                this.showToast(
+                this.notificationService.sendNotification(
                     'warning',
                     'Falta logo empresa',
                     'Es necesario la carga del logo para activar la empresa',
-                    true
                 );
             }
 
@@ -512,11 +474,10 @@ export class EmpresaComponent implements OnInit {
                 this.companyInfo.noCertificado == undefined ||
                 this.companyInfo.noCertificado.length == 0
             ) {
-                this.showToast(
+                this.notificationService.sendNotification(
                     'warning',
                     'Falta no Certificado',
-                    'Es necesario dar de alta el no de certificado para activar la empresa',
-                    true
+                    'Es necesario dar de alta el no de certificado para activar la empresa'
                 );
             }
 
@@ -527,16 +488,13 @@ export class EmpresaComponent implements OnInit {
                 this.companyInfo = await this.empresaService
                     .updateCompany(this.companyInfo.rfc, company)
                     .toPromise();
-                this.showToast(
+                this.notificationService.sendNotification(
                     'info',
-                    'Exito!',
                     'La empresa ha sido activada satisfactoriamente'
                 );
             }
         } catch (error) {
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.notificationService.sendNotification('danger',error?.message, 'Error');
         }
         this.loading = false;
     }
@@ -566,7 +524,7 @@ export class EmpresaComponent implements OnInit {
                 await this.empresaService
                     .insertCompanyIncome(result)
                     .toPromise();
-                this.showToast(
+                this.notificationService.sendNotification(
                     'info',
                     'Dato anual creado!',
                     `El dato se cargo exitosamente`
@@ -574,9 +532,7 @@ export class EmpresaComponent implements OnInit {
                 this.loadCompanyInfo(this.companyInfo.rfc);
             }
         } catch (error) {
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.notificationService.sendNotification('danger',error?.message, 'Error');
         }
         this.loading = false;
     }
@@ -587,16 +543,14 @@ export class EmpresaComponent implements OnInit {
             await this.empresaService
                 .deleteCompanyIncome(this.companyInfo.rfc, id)
                 .toPromise();
-            this.showToast(
+            this.notificationService.sendNotification(
                 'info',
                 'Dato borrado!',
                 `El dato se ha borrado exitosamente`
             );
             this.loadCompanyInfo(this.companyInfo.rfc);
         } catch (error) {
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.notificationService.sendNotification('danger',error?.message, 'Error');
         }
         this.loading = false;
     }
@@ -611,16 +565,14 @@ export class EmpresaComponent implements OnInit {
         this.loading = true;
         try {
             await this.accountsService.deleteCuenta(id.toString()).toPromise();
-            this.showToast(
+            this.notificationService.sendNotification(
                 'info',
                 'Cuenta borrada',
                 'La cuenta se ha borrado exitosamente'
             );
             this.loadCompanyInfo(this.companyInfo.rfc);
         } catch (error) {
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.notificationService.sendNotification('danger',error?.message, 'Error');
         }
         this.loading = false;
     }
@@ -661,9 +613,8 @@ export class EmpresaComponent implements OnInit {
                             `${this.companyInfo.rfc}-${detail.tipo}-${detail.id}`
                         );
                     }
-                    this.showToast(
+                    this.notificationService.sendNotification(
                         'info',
-                        'Detalle actualizado',
                         `${detail.tipo} correctamente actualizado`
                     );
                     this.loadCompanyInfo(this.companyInfo.rfc);
@@ -678,18 +629,15 @@ export class EmpresaComponent implements OnInit {
                             `${this.companyInfo.rfc}-${detail.tipo}-${detail.id}`
                         );
                     }
-                    this.showToast(
+                    this.notificationService.sendNotification(
                         'info',
-                        'Detalle creado',
                         `${detail.tipo} correctamente creado`
                     );
                     this.loadCompanyInfo(this.companyInfo.rfc);
                 }
             }
         } catch (error) {
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.notificationService.sendNotification('danger',error?.message, 'Error');
         }
         this.loading = false;
     }
@@ -698,16 +646,13 @@ export class EmpresaComponent implements OnInit {
         this.loading = true;
         try {
             await this.empresaService.deleteCompanyDetail(id).toPromise();
-            this.showToast(
+            this.notificationService.sendNotification(
                 'info',
-                'Detalle borrado',
                 'El detalle se ha borrado exitosamente'
             );
             this.loadCompanyInfo(this.companyInfo.rfc);
         } catch (error) {
-            let msg =
-                error.error.message || `${error.statusText} : ${error.message}`;
-            this.showToast('danger', 'Error', msg, true);
+            this.notificationService.sendNotification('danger',error?.message, 'Error');
         }
         this.loading = false;
     }
@@ -740,22 +685,4 @@ export class EmpresaComponent implements OnInit {
         }
     }
 
-    private showToast(
-        type: NbComponentStatus,
-        title: string,
-        body: string,
-        clickdestroy?: boolean
-    ) {
-        const config = {
-            status: type,
-            destroyByClick: clickdestroy || false,
-            duration: 8000,
-            hasIcon: true,
-            position: NbGlobalPhysicalPosition.TOP_RIGHT,
-            preventDuplicates: true,
-        };
-        const titleContent = title ? `${title}` : 'xxxx';
-
-        this.toastrService.show(body, titleContent, config);
-    }
 }

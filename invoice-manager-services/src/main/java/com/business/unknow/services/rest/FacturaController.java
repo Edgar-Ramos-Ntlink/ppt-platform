@@ -58,14 +58,6 @@ public class FacturaController {
     return new ResponseEntity<>(service.getFacturaByFolio(folio), HttpStatus.OK);
   }
 
-  @GetMapping("/complementos/{folio}")
-  public ResponseEntity<FacturaCustom> getComplementoByIdCfdiAnParcialidad(
-      @PathVariable String folio,
-      @RequestParam(name = "parcialidad", defaultValue = "1") Integer parcialidad) {
-    return new ResponseEntity<>(
-        service.getComplementoByIdCfdiAnParcialidad(folio, parcialidad), HttpStatus.OK);
-  }
-
   @GetMapping("/{folio}/pagos")
   public ResponseEntity<List<PagoDto>> getPagosBy(@PathVariable String folio) {
     return new ResponseEntity<>(pagoService.findPagosByFolio(folio), HttpStatus.OK);

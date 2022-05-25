@@ -5,12 +5,11 @@ import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ZipCodeInfo } from '../../../models/zip-code-info';
 import { ClientsValidatorService } from '../../../@core/util-services/clients-validator.service';
-import { NbComponentStatus, NbGlobalPhysicalPosition, NbToastrService } from '@nebular/theme';
 import { ResourceFile } from '../../../models/resource-file';
 import { FilesData } from '../../../@core/data/files-data';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { NtError } from '../../../@core/models/nt-error';
-import { re } from 'mathjs';
+import { NotificationsService } from '../../../@core/util-services/notifications.service';
 
 @Component({
   selector: 'ngx-cliente',
@@ -30,11 +29,12 @@ export class ClienteComponent implements OnInit {
   private dataFile: ResourceFile;
 
 
-  constructor(private toastrService: NbToastrService,
+  constructor(
     private resourcesService: FilesData,
     private downloadService: DonwloadFileService,
     private clientService: ClientsData,
     private clientValidatorService: ClientsValidatorService,
+    private notificationService: NotificationsService,
     private catalogsService: CatalogsData,
     private route: ActivatedRoute,
     private router: Router) { }
@@ -63,7 +63,7 @@ export class ClienteComponent implements OnInit {
       const data: ZipCodeInfo = await this.catalogsService.getZipCodeInfo(this.clientInfo.cp);
       this.colonias = data.colonias;
       let index = 0;
-      this.formInfo.coloniaId = '*';
+      this.formInfo.coloniaId = 'other';
       data.colonias.forEach(element => {
         if (data.colonias[index] === this.clientInfo.localidad) {
           this.formInfo.coloniaId = index;
@@ -71,8 +71,7 @@ export class ClienteComponent implements OnInit {
         index++;
       });
     } catch (error) {
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-      this.showToast('danger', 'Error', msg, true);
+      this.notificationService.sendNotification('danger',error?.message, 'Error');
     }
     this.loading = false;
     this.dataFile = await this.resourcesService.getResourceFile(this.clientInfo.id.toString(),'CLIENTES','DOCUMENTO').toPromise();
@@ -84,16 +83,15 @@ export class ClienteComponent implements OnInit {
       const errors: string[] = this.clientValidatorService.validarCliente(this.clientInfo);
       if (errors.length > 0) {
         for (const err of errors) {
-          this.showToast('warning', 'Falta información', err);
+          this.notificationService.sendNotification('warning',err, 'Falta información');
         }
         this.loading = false;
         return;
       }
       this.clientInfo = await this.clientService.updateClient(this.clientInfo).toPromise();
-      this.showToast('info', 'Exito!', 'La información del cliente fue actualizada satisfactoriamente');
+      this.notificationService.sendNotification('info', 'La información del cliente fue actualizada satisfactoriamente');
     } catch (error) {
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-      this.showToast('danger', 'Error', msg, true);
+      this.notificationService.sendNotification('danger',error?.message, 'Error');
     }
     this.loading = false;
   }
@@ -105,7 +103,7 @@ export class ClienteComponent implements OnInit {
       const errors: string[] = this.clientValidatorService.validarCliente(client);
       if (errors.length > 0) {
         for (const err of errors) {
-          this.showToast('warning', 'Falta información', err);
+          this.notificationService.sendNotification('warning',err, 'Falta información');
         }
         this.loading = false;
         return;
@@ -116,13 +114,12 @@ export class ClienteComponent implements OnInit {
       if(this.dataFile !== undefined){
         await this.uploadFile();
       } else{
-        this.showToast('warning', 'Falta comprobante situación fiscal', 'Sin comprobante de situación fiscal del cliente, no se procederá a timbrar la factura correspondiente de cliente.');
+        this.notificationService.sendNotification('warning', 'Falta comprobante situación fiscal', 'Sin comprobante de situación fiscal del cliente, este es un documento requerido en CFDI 4.0');
       }
-      this.showToast('info', 'Exito!', 'Cliente creado correctamente');
+      this.notificationService.sendNotification('info','Cliente creado correctamente');
       this.loading = false;
     } catch (error) {
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-      this.showToast('danger', 'Error', msg, true);
+      this.notificationService.sendNotification('danger',error?.message, 'Error');
       this.loading = false;
     }
 
@@ -144,10 +141,10 @@ export class ClienteComponent implements OnInit {
           this.colonias = data.colonias;
           this.clientInfo.localidad = data.colonias[0];
           if (data.colonias.length < 1) {
-            alert(`No se ha encontrado información pata el codigo postal ${zc}`);
+            this.notificationService.sendNotification('warning',`No se ha encontrado información pata el codigo postal ${zc}`);
           }
         }, (error: NtError) => {
-          this.showToast('warning', 'Error', error.message, true);
+          this.notificationService.sendNotification('warning',error?.message, 'Error');
         });
     }
   }
@@ -168,10 +165,9 @@ export class ClienteComponent implements OnInit {
     try {
 
       this.clientInfo = await this.clientService.updateClient(client).toPromise();
-      this.showToast('info', 'Exito!', 'Cliente activado exitosamente');
+      this.notificationService.sendNotification('info','Cliente activado exitosamente');
     } catch (error) {
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-      this.showToast('danger', 'Error', msg, true);
+      this.notificationService.sendNotification('danger',error?.message, 'Error');
     }
     this.loading = false;
   }
@@ -183,10 +179,10 @@ export class ClienteComponent implements OnInit {
     try {
 
       this.clientInfo = await this.clientService.updateClient(client).toPromise();
-      this.showToast('info', 'Exito!', 'Cliente activado exitosamente');
+      this.notificationService.sendNotification('info',  'Cliente activado exitosamente');
     } catch (error) {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
-      this.showToast('danger', 'Error', msg, true);
+      this.notificationService.sendNotification('danger', 'Error', msg);
     }
     this.loading = false;
   }
@@ -202,7 +198,7 @@ export class ClienteComponent implements OnInit {
         this.dataFile.extension = file.name.substring(file.name.lastIndexOf('.'), file.name.length);
         this.dataFile.data = reader.result.toString();
       };
-      reader.onerror = (error) => { this.showToast('danger', 'Error', 'Error cargando el archivo', true); };
+      reader.onerror = (error) => { this.notificationService.sendNotification('danger', 'Error', 'Error cargando el archivo'); };
     }
   }
 
@@ -213,17 +209,13 @@ export class ClienteComponent implements OnInit {
       this.dataFile.referencia = this.clientInfo.id.toString();
       this.dataFile.tipoArchivo = 'DOCUMENTO';
       await this.resourcesService.insertResourceFile(this.dataFile).toPromise();
-      this.showToast('info', 'Exito!', 'El archivo se cargo correctamente');
+      this.notificationService.sendNotification('info','El archivo se cargo correctamente');
       //this.loadCompanyInfo(this.companyInfo.rfc);
       this.formInfo.fileDataName = '';
       this.formInfo.doctType = '*';
       this.loadClientInfo(this.clientInfo.rfc, this.clientInfo.correoPromotor)
     } catch (error) {
-      console.error(error);
-      this.formInfo.fileDataName = '';
-      this.formInfo.doctType = '*';
-      let msg = error.error.message || `${error.statusText} : ${error.message}`;
-      this.showToast('danger', 'Error', msg, true);
+      this.notificationService.sendNotification('danger',error?.message, 'Error cargando archivo');
     }
     this.loading = false;
   }
@@ -231,23 +223,6 @@ export class ClienteComponent implements OnInit {
   public downloadFile() {
     const path: string = `/recursos/CLIENTES/referencias/${this.clientInfo.id}/files/DOCUMENTO`;
     this.downloadService.dowloadResourceFile(path, `DocumentoRelacionado_${this.clientInfo.rfc}`);
-  }
-
-  private showToast(type: NbComponentStatus, title: string, body: string, clickdestroy?: boolean) {
-    const config = {
-      status: type,
-      destroyByClick: clickdestroy || false,
-      duration: 8000,
-      hasIcon: true,
-      position: NbGlobalPhysicalPosition.TOP_RIGHT,
-      preventDuplicates: true,
-    };
-    const titleContent = title ? `${title}` : 'xxxx';
-
-    this.toastrService.show(
-      body,
-      titleContent,
-      config);
   }
 
 }

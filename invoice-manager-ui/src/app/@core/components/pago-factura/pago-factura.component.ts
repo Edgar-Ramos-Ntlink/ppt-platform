@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PagoBase } from '../../../models/pago-base';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Cuenta } from '../../../models/cuenta';
@@ -9,7 +9,6 @@ import { PagosValidatorService } from '../../util-services/pagos-validator.servi
 import { ResourceFile } from '../../../models/resource-file';
 import { PagoFactura } from '../../../models/pago-factura';
 import { Factura } from '../../models/factura';
-import { NbToastrService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../reducers';
 import { invoice } from '../../core.selectors';
@@ -17,8 +16,8 @@ import { bignumber, format } from 'mathjs';
 import { InvoicesData } from '../../data/invoices-data';
 import { updateComplementosPago, updateInvoice } from '../../core.actions';
 import { CfdiData } from '../../data/cfdi-data';
-import { AppConstants } from '../../../models/app-constants';
 import { DatePipe } from '@angular/common';
+import { NotificationsService } from '../../util-services/notifications.service';
 
 @Component({
     selector: 'nt-pago-factura',
@@ -45,7 +44,7 @@ export class PagoFacturaComponent implements OnInit {
         private cfdiService: CfdiData,
         private fileService: FilesData,
         private paymentValidator: PagosValidatorService,
-        private toastService: NbToastrService,
+        private notificationService: NotificationsService,
         private store: Store<AppState>
     ) {
         this.store.pipe(select(invoice)).subscribe((fact) => {
@@ -114,11 +113,9 @@ export class PagoFacturaComponent implements OnInit {
         if (event.target.files && event.target.files.length > 0) {
             const file = event.target.files[0];
             if (file.size > 1000000) {
-                this.toastService.warning(
+                this.notificationService.sendNotification('warning',
                     'El archivo demasiado grande, intenta con un archivo mas pequeño.',
-                    'Archivo demasiado grande',
-                    AppConstants.TOAST_CONFIG
-                );
+                    'Archivo demasiado grande');
             } else {
                 reader.readAsDataURL(file);
                 reader.onload = () => {
@@ -126,10 +123,7 @@ export class PagoFacturaComponent implements OnInit {
                     this.newPayment.documento = reader.result.toString();
                 };
                 reader.onerror = (error) => {
-                    this.toastService.danger(
-                        'Error leyendo el archivo',
-                        AppConstants.TOAST_CONFIG
-                    );
+                    this.notificationService.sendNotification('danger','Error en la lectura del archivo');
                 };
             }
         }
@@ -161,11 +155,7 @@ export class PagoFacturaComponent implements OnInit {
                 this.store.dispatch(updateComplementosPago({ complementos }));
             }
         } catch (error) {
-            this.toastService.danger(
-                error?.message,
-                'Error en el borrado',
-                AppConstants.TOAST_CONFIG
-            );
+            this.notificationService.sendNotification('danger',error?.message,'Error en el borrado del pago');
         }
         this.loading = false;
     }
@@ -211,12 +201,7 @@ export class PagoFacturaComponent implements OnInit {
 
                     this.fileService.insertResourceFile(resourceFile).subscribe(
                         (response) => console.log(response),
-                        (e) =>
-                            this.toastService.warning(
-                                e?.message,
-                                'Error cargando imagen pago',
-                                AppConstants.TOAST_CONFIG
-                            )
+                        (e) => this.notificationService.sendNotification('warning',e?.message,'Error cargando imagen pago')
                     );
                 }
 
@@ -257,19 +242,10 @@ export class PagoFacturaComponent implements OnInit {
                 }
             } else {
                 errors.forEach((e) =>
-                    this.toastService.warning(
-                        e,
-                        'Error de validacion',
-                        AppConstants.TOAST_CONFIG
-                    )
-                );
+                this.notificationService.sendNotification('warning',e,'Error de validacion'));
             }
         } catch (error) {
-            this.toastService.danger(
-                error?.message,
-                'Error al crear el pago',
-                AppConstants.TOAST_CONFIG
-            );
+            this.notificationService.sendNotification('danger',error?.message,'Error en la creacion del pago');
         }
         this.loading = false;
     }

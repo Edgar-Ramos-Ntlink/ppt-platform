@@ -35,12 +35,15 @@ public interface ClientMapper {
   List<ClientDto> getClientDtosFromEntities(List<Client> entities);
 
   @Mappings({
-    @Mapping(source = "rfc", target = "informacionFiscal.rfc"),
+    @Mapping(
+        expression = "java(clientDto.getRfc().toUpperCase())",
+        target = "informacionFiscal.rfc"),
     @Mapping(source = "giro", target = "informacionFiscal.giro"),
-    @Mapping(source = "nombre", target = "informacionFiscal.nombre"),
     @Mapping(source = "moral", target = "informacionFiscal.moral"),
     @Mapping(source = "curp", target = "informacionFiscal.curp"),
-    @Mapping(source = "razonSocial", target = "informacionFiscal.razonSocial"),
+    @Mapping(
+        expression = "java(clientDto.getRazonSocial().toUpperCase())",
+        target = "informacionFiscal.razonSocial"),
     @Mapping(source = "regimenFiscal", target = "informacionFiscal.regimenFiscal"),
     @Mapping(source = "calle", target = "informacionFiscal.calle"),
     @Mapping(source = "noExterior", target = "informacionFiscal.noExterior"),

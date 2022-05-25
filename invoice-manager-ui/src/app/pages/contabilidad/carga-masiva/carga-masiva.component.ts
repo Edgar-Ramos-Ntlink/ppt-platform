@@ -7,8 +7,7 @@ import { Empresa } from '../../../models/empresa';
 import { Cfdi } from '../../../@core/models/cfdi/cfdi';
 import { Concepto } from '../../../@core/models/cfdi/concepto';
 import { Factura } from '../../../@core/models/factura';
-import { NbToastrService } from '@nebular/theme';
-import { AppConstants } from '../../../models/app-constants';
+import { NotificationsService } from '../../../@core/util-services/notifications.service';
 
 @Component({
     selector: 'ngx-carga-masiva',
@@ -33,7 +32,7 @@ export class CargaMasivaComponent implements OnInit {
         private companyService: CompaniesData,
         private cfdiValidator: CfdiValidatorService,
         private invoiceService: InvoicesData,
-        private toastrService: NbToastrService,
+        private notificationService: NotificationsService,
     ) {}
 
     ngOnInit() {
@@ -169,10 +168,10 @@ export class CargaMasivaComponent implements OnInit {
                     this.params.dataValid = false;
                 } 
             }
-            if(this.params.dataValid){this.toastrService.success('Se han validado correctamente todas las facturas',"Facturas Validas",AppConstants.TOAST_CONFIG);}
+            if(this.params.dataValid){this.notificationService.sendNotification('info','Se han validado correctamente todas las facturas',"Facturas Validas");}
         } else {
             this.params.dataValid = false;
-            this.toastrService.warning('No se encontro informacion cargada o valida',"No hay datos",AppConstants.TOAST_CONFIG);
+            this.notificationService.sendNotification('warning','No se encontro informacion cargada o valida',"No hay datos");
         }
         this.loading = false;
     }
@@ -249,7 +248,7 @@ export class CargaMasivaComponent implements OnInit {
         cfdi.receptor.rfc = transfer.RFC_RECEPTOR;
         cfdi.receptor.domicilioFiscalReceptor = receptorCompany.cp;
         cfdi.receptor.regimenFiscalReceptor = receptorCompany.regimenFiscal;
-        cfdi.receptor.usoCfdi = 'P01';
+        cfdi.receptor.usoCfdi = 'G03';
         factura.direccionEmisor =
             this.cfdiValidator.generateCompanyAddress(receptorCompany);
         cfdi.emisor.nombre = emisorCompany.razonSocial;
@@ -280,7 +279,7 @@ export class CargaMasivaComponent implements OnInit {
         factura.cfdi = await this.cfdiValidator.calcularImportes(cfdi);
         return factura;
         }catch(error){
-            this.toastrService.danger(error?.message,"Error en la validacion del CFDI",AppConstants.TOAST_CONFIG);
+            this.notificationService.sendNotification('danger',error?.message,"Error en la validacion del CFDI");
             factura.notas = `Error en la construccion de la factura de ${transfer.RFC_EMISOR} para  ${transfer.RFC_RECEPTOR} : ${error.message}`;
         }
     }

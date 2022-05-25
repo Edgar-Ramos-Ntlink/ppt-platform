@@ -17,10 +17,8 @@ public class Constants {
   public static final String DATE_PRE_FOLIO_GENERIC_FORMAT = "MMyy";
 
   public static final String CANCEL_ACK = "CANCEL_ACK";
-  public static final String CSD_KEY = "CSD-KEY";
-  public static final String CSD_CERT = "CSD-CERT";
+  public static final String CFDI_DATE_PATTERN = "%fecha-timbrado%";
 
-  public static final Integer MILISECONDS = 1000;
   public static final Integer BAD_REQUEST = 400;
   public static final Integer SELLO_CFDI_SIZE = 8;
   public static final Integer IVA_IMPUESTO_16 = 16;
@@ -41,14 +39,10 @@ public class Constants {
 
   public static class PagoPpdCreditoDefaults {
 
-    public static final String BANCO = "N/A";
     public static final String USER = "Sistema";
-    public static final String COMENTARIO = "Pago Automatico por sistema";
     public static final String FORMA_PAGO = "CREDITO";
     public static final String MONEDA = "MXN";
-    public static final String TIPO_CAMBIO = "1.0";
     public static final String STATUS_PAGO = "ACEPTADO";
-    public static final String CUENTA = "CreditoPPD";
   }
 
   public static class ComplementoPpdDefaults {

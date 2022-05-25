@@ -388,7 +388,7 @@ public class PagoService {
                             String.format("El pago con id %d no existe", idPago))));
     List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : payment.getFacturas()) {
-      FacturaCustom factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
+      FacturaCustom factura = facturaService.getFacturaBaseByFolio(pagoFact.getFolio());
       facturas.add(factura);
     }
     pagoEvaluatorService.deletepaymentValidation(payment, facturas);

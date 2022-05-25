@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { NbDialogService, NbToastrService } from '@nebular/theme';
+import { NbDialogService } from '@nebular/theme';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { Client } from '../../../models/client';
 import { InvoicesData } from '../../../@core/data/invoices-data';
@@ -12,7 +12,7 @@ import { AppState } from '../../../reducers';
 import { NtError } from '../../../@core/models/nt-error';
 import { initInvoice, updateInvoice } from '../../../@core/core.actions';
 import { invoice } from '../../../@core/core.selectors';
-import { AppConstants } from '../../../models/app-constants';
+import { NotificationsService } from '../../../@core/util-services/notifications.service';
 
 @Component({
     selector: 'ngx-revision',
@@ -31,7 +31,7 @@ export class RevisionComponent implements OnInit {
         private clientsService: ClientsData,
         private invoiceService: InvoicesData,
         private cfdiService: CfdiData,
-        private toastrService: NbToastrService,
+        private notificationService: NotificationsService,
         private dialogService: NbDialogService,
         private route: ActivatedRoute,
         private store: Store<AppState>
@@ -60,25 +60,17 @@ export class RevisionComponent implements OnInit {
             (invoice) => {
                 this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
-                if (
-                    invoice.metodoPago === 'PPD' &&
-                    invoice.cfdi.tipoDeComprobante === 'P'
-                ) {
-                    this.cfdiService
-                        .findInvoicePaymentComplementsByFolio(folio)
-                        .subscribe((pagos) => (this.pagosCfdi = pagos));
-                }
-                if (
-                    invoice.metodoPago === 'PPD' &&
-                    invoice.tipoDocumento === 'Factura'
-                ) {
-                    this.cfdiService
-                        .findInvoicePaymentComplementsByFolio(folio)
-                        .subscribe((pagos) => (this.pagosCfdi = pagos));
-                }
+
+                this.cfdiService
+                    .findInvoicePaymentComplementsByFolio(folio)
+                    .subscribe((pagos) => (this.pagosCfdi = pagos));
             },
             (error: NtError) => {
-                this.toastrService.danger(error.message);
+                this.notificationService.sendNotification(
+                    'danger',
+                    error.message,
+                    'Error'
+                );
                 this.store.dispatch(initInvoice({ invoice: new Factura() }));
                 this.loading = false;
             }
@@ -90,19 +82,19 @@ export class RevisionComponent implements OnInit {
         const fact = { ...this.factura };
         this.invoiceService.generateReplacement(factura.folio, fact).subscribe(
             (invoice) => {
-                this.toastrService.success(
+                this.notificationService.sendNotification(
+                    'success',
                     'El documento relacionado se ha generado exitosamente',
-                    'Documento relacionado',
-                    AppConstants.TOAST_CONFIG
+                    'Documento relacionado'
                 );
                 this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
             },
             (error: NtError) => {
-                this.toastrService.danger(
-                    error?.message,
-                    'Error en la sustitución',
-                    AppConstants.TOAST_CONFIG
+                this.notificationService.sendNotification(
+                    'danger',
+                    error.message,
+                    'Error en la sustitucion'
                 );
                 this.loading = false;
             }
@@ -114,19 +106,19 @@ export class RevisionComponent implements OnInit {
         const fact = { ...factura };
         this.invoiceService.generateCreditNote(factura.folio, fact).subscribe(
             (invoice) => {
-                this.toastrService.success(
+                this.notificationService.sendNotification(
+                    'success',
                     'La nota de credito se ha generado exitosamente',
-                    'Nota credito creada',
-                    AppConstants.TOAST_CONFIG
+                    'Nota credito creada'
                 );
                 this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
             },
             (error: NtError) => {
-                this.toastrService.danger(
-                    error?.message,
-                    'Error creando la nota de crédito',
-                    AppConstants.TOAST_CONFIG
+                this.notificationService.sendNotification(
+                    'danger',
+                    error.message,
+                    'Error creando la nota de crédito'
                 );
                 this.loading = false;
             }
@@ -145,19 +137,18 @@ export class RevisionComponent implements OnInit {
         this.loading = true;
         this.invoiceService.updateInvoice(fact).subscribe(
             (invoice) => {
-                this.toastrService.success(
-                    '',
-                    'factura aceptada',
-                    AppConstants.TOAST_CONFIG
+                this.notificationService.sendNotification(
+                    'success',
+                    'factura aceptada'
                 );
                 this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
             },
             (error: NtError) => {
-                this.toastrService.danger(
-                    error?.message,
-                    'Error',
-                    AppConstants.TOAST_CONFIG
+                this.notificationService.sendNotification(
+                    'danger',
+                    error.message,
+                    'Error'
                 );
                 this.loading = false;
             }
@@ -179,19 +170,18 @@ export class RevisionComponent implements OnInit {
                         result.statusFactura = '6'; // update to rechazo operaciones
                         this.invoiceService.updateInvoice(result).subscribe(
                             (invoice) => {
-                                this.toastrService.success(
-                                    '',
-                                    'factura rechazada',
-                                    AppConstants.TOAST_CONFIG
+                                this.notificationService.sendNotification(
+                                    'success',
+                                    'factura rechazada'
                                 );
                                 this.store.dispatch(updateInvoice({ invoice }));
                                 this.loading = false;
                             },
                             (error: NtError) => {
-                                this.toastrService.danger(
+                                this.notificationService.sendNotification(
+                                    'danger',
                                     error?.message,
-                                    'Error',
-                                    AppConstants.TOAST_CONFIG
+                                    'Error'
                                 );
                                 this.loading = false;
                             }
@@ -201,10 +191,10 @@ export class RevisionComponent implements OnInit {
                     }
                 });
         } catch (error) {
-            this.toastrService.danger(
-                error?.message,
-                'Error',
-                AppConstants.TOAST_CONFIG
+            this.notificationService.sendNotification(
+                'danger',
+                error.message,
+                'Error en el rechazo'
             );
             this.loading = false;
         }
@@ -231,10 +221,9 @@ export class RevisionComponent implements OnInit {
                                 .timbrarFactura(fact.folio, invoice)
                                 .subscribe(
                                     (invoice) => {
-                                        this.toastrService.success(
-                                            '',
-                                            'factura timbrada',
-                                            AppConstants.TOAST_CONFIG
+                                        this.notificationService.sendNotification(
+                                            'success',
+                                            'factura timbrada'
                                         );
                                         this.store.dispatch(
                                             updateInvoice({ invoice })
@@ -242,10 +231,10 @@ export class RevisionComponent implements OnInit {
                                         this.loading = false;
                                     },
                                     (error: NtError) => {
-                                        this.toastrService.danger(
+                                        this.notificationService.sendNotification(
+                                            'danger',
                                             error?.message,
-                                            'Error',
-                                            AppConstants.TOAST_CONFIG
+                                            'Error al timbrar'
                                         );
                                         this.loading = false;
                                     }
@@ -255,18 +244,18 @@ export class RevisionComponent implements OnInit {
                         }
                     });
             } else {
-                this.toastrService.danger(
+                this.notificationService.sendNotification(
+                    'danger',
                     'El cliente que solicita la factura se encuentra inactivo',
-                    'Cliente inactivo',
-                    AppConstants.TOAST_CONFIG
+                    'Cliente inactivo'
                 );
                 this.loading = false;
             }
         } catch (error) {
-            this.toastrService.danger(
-                error?.message,
-                'Error',
-                AppConstants.TOAST_CONFIG
+            this.notificationService.sendNotification(
+                'danger',
+                error.message,
+                'Error'
             );
             this.loading = false;
         }
@@ -285,10 +274,9 @@ export class RevisionComponent implements OnInit {
                             .cancelarFactura(fact.folio, result)
                             .subscribe(
                                 (invoice) => {
-                                    this.toastrService.success(
-                                        '',
-                                        'factura cancelada',
-                                        AppConstants.TOAST_CONFIG
+                                    this.notificationService.sendNotification(
+                                        'success',
+                                        'factura cancelada'
                                     );
                                     this.store.dispatch(
                                         updateInvoice({ invoice })
@@ -296,10 +284,10 @@ export class RevisionComponent implements OnInit {
                                     this.loading = false;
                                 },
                                 (error: NtError) => {
-                                    this.toastrService.danger(
+                                    this.notificationService.sendNotification(
+                                        'danger',
                                         error?.message,
-                                        'Error',
-                                        AppConstants.TOAST_CONFIG
+                                        'Error'
                                     );
                                     this.loading = false;
                                 }
@@ -309,10 +297,10 @@ export class RevisionComponent implements OnInit {
                     }
                 });
         } catch (error) {
-            this.toastrService.danger(
-                error?.message,
-                'Error',
-                AppConstants.TOAST_CONFIG
+            this.notificationService.sendNotification(
+                'danger',
+                error.message,
+                'Error'
             );
             this.loading = false;
         }
@@ -330,18 +318,18 @@ export class RevisionComponent implements OnInit {
             (invoice) => {
                 this.loading = false;
                 this.store.dispatch(updateInvoice({ invoice }));
-                this.toastrService.success(
-                    'acctualización exitosa',
-                    'CFDI Revalidado',
-                    AppConstants.TOAST_CONFIG
+                this.notificationService.sendNotification(
+                    'success',
+                    'actualización exitosa',
+                    'CFDI Revalidado'
                 );
             },
             (error: NtError) => {
                 this.loading = false;
-                this.toastrService.danger(
-                    error?.message,
-                    'Error en la revalidacion del CFDI',
-                    AppConstants.TOAST_CONFIG
+                this.notificationService.sendNotification(
+                    'danger',
+                    error.message,
+                    'Error en la revalidacion'
                 );
             }
         );

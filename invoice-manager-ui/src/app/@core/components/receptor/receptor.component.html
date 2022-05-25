@@ -7,7 +7,7 @@
                 id="rfcReceptor"
                 type="text"
                 [ngModel]="receptor.rfc"
-                class="form-control"
+                class="form-control text-uppercase"
                 fullWidth
                 placeholder="Rfc"
                 disabled
@@ -19,7 +19,7 @@
                 id="nombreReceptor"
                 type="text"
                 [ngModel]="receptor.nombre"
-                class="form-control"
+                class="form-control text-uppercase"
                 fullWidth
                 placeholder="Nombre"
                 (ngModelChange)="updateRazonSocial($event)"
@@ -34,9 +34,9 @@
                 id="cpReceptor"
                 type="text"
                 [ngModel]="receptor.domicilioFiscalReceptor"
-                class="form-control"
+                class="form-control text-uppercase"
                 fullWidth
-                (ngModelChange)="updateRazonSocial($event)"
+                (ngModelChange)="updateDomicilioFiscal($event)"
                 placeholder="Codigo postal domicilio fical"
                 [disabled]="!allowEdit"
             />
@@ -46,13 +46,13 @@
             <select
                 id="inputRegimen"
                 style="display: block"
-                class="form-control"
+                class="form-control text-uppercase"
                 [disabled]="!allowEdit"
                 [ngModel]="receptor.regimenFiscalReceptor"
                 (change)="updateRegimenFiscal($event.target.value)"
             >
-                <option value="*">Seleccionar</option>
-                <option
+                <option value="*">SELECCIONAR</option>
+                <option class="text-uppercase"
                     *ngFor="let regimen of regimenes"
                     [(value)]="regimen.clave"
                 >
@@ -74,7 +74,7 @@
                 [(ngModel)]="direccion"
                 [disabled]="!allowEdit"
                 placeholder="Direccion Receptor"
-                class="form-control"
+                class="form-control text-uppercase"
             ></textarea>
         </div>
         <div class="col-sm-2">
@@ -83,13 +83,13 @@
                 selected="1"
                 id="inputCfdiUsage"
                 style="display: block"
-                class="form-control"
+                class="form-control text-uppercase"
                 [disabled]="!allowEdit"
                 [ngModel]="receptor.usoCfdi"
                 (change)="updateUsoCfdi($event.target.value)"
             >
-                <option value="*">Seleccionar</option>
-                <option
+                <option value="*">SELECCIONAR</option>
+                <option class="text-uppercase"
                     *ngFor="let clave of usoCfdiCat"
                     [(value)]="clave.clave"
                 >

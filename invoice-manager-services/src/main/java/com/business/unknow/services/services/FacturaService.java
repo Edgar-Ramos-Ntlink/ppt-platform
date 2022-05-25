@@ -21,7 +21,6 @@ import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.entities.CfdiPago;
 import com.business.unknow.services.entities.Factura;
 import com.business.unknow.services.mapper.FacturaMapper;
 import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
@@ -371,20 +370,9 @@ public class FacturaService {
     return downloaderService.generateBase64Report("COMPLEMENTOS", complements, headersOrder);
   }
 
-  public FacturaCustom getComplementoByIdCfdiAnParcialidad(String folio, Integer parcialidad) {
-    List<CfdiPago> pagos = cfdiPagoRepository.findByIdCfdiAndParcialidad(folio, parcialidad);
-    Optional<CfdiPago> pago = pagos.stream().findFirst();
-    if (pago.isPresent()) {
-      return getFacturaBaseByFolio(pago.get().getFolio());
-    } else {
-      throw new ResponseStatusException(
-          HttpStatus.NOT_FOUND, String.format("La factura con el pre-folio %s no existe", folio));
-    }
-  }
-
   public FacturaCustom getFacturaByFolio(String folio) {
     try {
-      getBaseFacturaByFolio(folio);
+      getFacturaBaseByFolio(folio);
       InputStream is =
           filesService.getS3InputStream(S3Buckets.CFDIS, String.format("%s.json", folio));
 
@@ -393,17 +381,6 @@ public class FacturaService {
       throw new ResponseStatusException(
           HttpStatus.INTERNAL_SERVER_ERROR, "Error recuperando detalles de la factura");
     }
-  }
-
-  public FacturaCustom getBaseFacturaByFolio(String folio) {
-    return mapper.getFacturaDtoFromEntity(
-        repository
-            .findByFolio(folio)
-            .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("La factura con el folio %s no existe", folio))));
   }
 
   public FacturaCustom getFacturaBaseByFolio(String folio) {
@@ -517,7 +494,7 @@ public class FacturaService {
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public FacturaCustom stamp(String folio, FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
-    FacturaCustom factura = getBaseFacturaByFolio(facturaCustom.getFolio());
+    FacturaCustom factura = getFacturaBaseByFolio(facturaCustom.getFolio());
     InvoiceValidator.validate(facturaCustom, folio);
     List<PagoDto> pagosFactura = new ArrayList<>();
     if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())) {

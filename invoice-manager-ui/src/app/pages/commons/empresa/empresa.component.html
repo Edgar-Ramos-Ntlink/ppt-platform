@@ -15,14 +15,14 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="inputRFC" class="label">RFC</label>
-                  <input type="text" [(ngModel)]="companyInfo.rfc" class="form-control" fullWidth id="inputRFC"
+                  <input type="text" [(ngModel)]="companyInfo.rfc" class="form-control text-uppercase" fullWidth id="inputRFC"
                     placeholder="RFC Empresa" [disabled]="companyInfo.id!==undefined || companyInfo.activo">
                 </div>
               </div>
               <div class="col-md-5">
                 <div class="form-group">
                   <label for="inputSocialReason" class="label">Razón Social</label>
-                  <input type="text" [(ngModel)]="companyInfo.razonSocial" class="form-control" fullWidth
+                  <input type="text" [(ngModel)]="companyInfo.razonSocial" class="form-control text-uppercase" fullWidth
                     [disabled]="companyInfo.activo" id="inputSocialReason" placeholder="Razón Social">
                 </div>
               </div>
@@ -30,7 +30,7 @@
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="inputShortName" class="label">Nombre Corto</label>
-                  <input type="text" [(ngModel)]="companyInfo.nombre" class="form-control" fullWidth
+                  <input type="text" [(ngModel)]="companyInfo.nombre" class="form-control text-uppercase" fullWidth
                     [disabled]="companyInfo.activo" id="inputShortName" placeholder="Nombre corto">
                 </div>
               </div>
@@ -39,27 +39,27 @@
             <div class="row">
               <div class="col-sm-3">
                 <label for="inputPais" class="label">País</label>
-                <select id="inputPais" selected="0" fullWidth class="form-control" style="display:block;"
+                <select id="inputPais" selected="0" fullWidth class="form-control text-uppercase" style="display:block;"
                   [disabled]="companyInfo.activo">
-                  <option value="0">México</option>
+                  <option value="0">MEXICO</option>
                 </select>
               </div>
               <div class="col-sm-3">
                 <div class="form-group">
                   <label for="inputZipCode" class="label">Código Postal</label>
                   <input type="text" [(ngModel)]="companyInfo.cp" (ngModelChange)="zipCodeInfo($event)"
-                    [disabled]="companyInfo.activo" class="form-control" fullWidth id="inputZipCode"
+                    [disabled]="companyInfo.activo" class="form-control text-uppercase" fullWidth id="inputZipCode"
                     placeholder="00300">
                 </div>
               </div>
               <div class="col-sm-6">
                 <label for="inputColonia" class="label">Seleccionar colonia</label>
-                <select id="inputColonia" fullWidth class="form-control" *ngIf="!companyInfo.activo"
+                <select id="inputColonia" fullWidth class="form-control text-uppercase" *ngIf="!companyInfo.activo"
                   [(ngModel)]="formInfo.coloniaId" (change)="onLocation($event.target.value)" style="display:block;">
                   <option value="*">Seleccionar</option>
                   <option *ngFor="let colonia of colonias; let i = index" [value]="i">{{colonia}}</option>
                 </select>
-                <input type="text" [(ngModel)]="companyInfo.colonia" class="form-control" fullWidth
+                <input type="text" [(ngModel)]="companyInfo.colonia" class="form-control text-uppercase" fullWidth
                   [disabled]="companyInfo.activo" *ngIf="companyInfo.activo" id="inputLocalidad" placeholder="Colonia">
               </div>
 
@@ -67,19 +67,19 @@
             <div class="row">
               <div class="col-sm-4">
                 <label for="inputState" class="label">Estado</label>
-                <input type="text" [(ngModel)]="companyInfo.estado" class="form-control" fullWidth id="inputState"
+                <input type="text" [(ngModel)]="companyInfo.estado" class="form-control text-uppercase" fullWidth id="inputState"
                   [disabled]="companyInfo.activo" placeholder="Estado">
               </div>
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="inputCity" class="label">Municipio/Delegación</label>
-                  <input type="text" [(ngModel)]="companyInfo.municipio" class="form-control" fullWidth id="inputCity"
+                  <input type="text" [(ngModel)]="companyInfo.municipio" class="form-control text-uppercase" fullWidth id="inputCity"
                     [disabled]="companyInfo.activo" placeholder="Municipio/Delegación">
                 </div>
               </div>
               <div class="col-sm-2" *ngIf="isAdministrator || module === 'legal'">
                 <label for="Operativa" class="label">Operativa</label>
-                <select selected="true" id="operativa" style="display:block" fullWidth class="form-control"
+                <select selected="true" id="operativa" style="display:block" fullWidth class="form-control text-uppercase"
                   [disabled]="companyInfo.activo" [(ngModel)]="companyInfo.operativa"
                   (change)="onOperativaSelected($event.target.value)">
                   <option value="true">Operativa</option>
@@ -91,21 +91,21 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="inputCalle" class="label">Calle</label>
-                  <input type="text" [(ngModel)]="companyInfo.calle" class="form-control" fullWidth id="inputCalle"
+                  <input type="text" [(ngModel)]="companyInfo.calle" class="form-control text-uppercase" fullWidth id="inputCalle"
                     [disabled]="companyInfo.activo" placeholder="Calle">
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="inputExterior" class="label">No exterior</label>
-                  <input type="text" [(ngModel)]="companyInfo.noExterior" class="form-control" fullWidth
+                  <input type="text" [(ngModel)]="companyInfo.noExterior" class="form-control text-uppercase" fullWidth
                     [disabled]="companyInfo.activo" id="inputExterior" placeholder="No exterior">
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="inputInterior" class="label">No interior</label>
-                  <input type="text" [(ngModel)]="companyInfo.noInterior" class="form-control" fullWidth
+                  <input type="text" [(ngModel)]="companyInfo.noInterior" class="form-control text-uppercase" fullWidth
                     [disabled]="companyInfo.activo" id="inputInterior" placeholder="No interior">
                 </div>
               </div>
@@ -114,7 +114,7 @@
             <div class="row ">
               <div class="col-sm-6">
                 <label for="inputGiro" class="label">Giro Empresa</label>
-                <select id="inputGiro" fullWidth class="form-control" (change)="onGiroSelection($event.target.value)"
+                <select id="inputGiro" fullWidth class="form-control text-uppercase" (change)="onGiroSelection($event.target.value)"
                   [disabled]="companyInfo.activo" style="display:block;" [(ngModel)]="companyInfo.giro">
                   <option value="*">Seleccionar</option>
                   <option *ngFor="let giro of girosCat" [(value)]="giro.id">{{giro.nombre}}</option>
@@ -122,7 +122,7 @@
               </div>
               <div class="col-sm-3">
                 <label for="inputCompanyType" class="label">Linea Empresa</label>
-                <select selected="*" id="inputCompanyType" style="display:block" fullWidth class="form-control"
+                <select selected="*" id="inputCompanyType" style="display:block" fullWidth class="form-control text-uppercase"
                   [disabled]="companyInfo.activo" [(ngModel)]="companyInfo.tipo"
                   (change)="onLineaSelected($event.target.value)">
                   <option value="*">Seleccionar</option>
@@ -134,7 +134,7 @@
               </div>
               <div class="col-sm-3">
                 <label for="inputPayType" class="label">Regimen Fiscal</label>
-                <select selected="1" id="inputPayType" style="display:block;" fullWidth class="form-control"
+                <select selected="1" id="inputPayType" style="display:block;" fullWidth class="form-control text-uppercase"
                   [(ngModel)]="companyInfo.regimenFiscal" [disabled]="companyInfo.activo"
                   (change)="onRegimenFiscalSelected($event.target.value)">
                   <option value="*">Seleccionar</option>
@@ -151,7 +151,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="inputRepresentante" class="label">Nombre Representante Legal</label>
-                  <input type="text" [(ngModel)]="companyInfo.representanteLegal" class="form-control" fullWidth
+                  <input type="text" [(ngModel)]="companyInfo.representanteLegal" class="form-control text-uppercase" fullWidth
                     [disabled]="companyInfo.activo" id="inputRepresentante" placeholder="Nombre representante legal"
                     [disabled]="companyInfo.id===undefined || companyInfo.activo">
                 </div>
@@ -160,14 +160,14 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="estatusJuridico" class="label">Estatus Juridico Actual</label>
-                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico" class="form-control" fullWidth
+                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico" class="form-control text-uppercase" fullWidth
                     [disabled]="companyInfo.activo" id="estatusJuridico" placeholder="Estatus Juridico">
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="estatusJuridico2" class="label">Estatus Juridico Fase 2</label>
-                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico2" class="form-control" fullWidth
+                  <input type="text" [(ngModel)]="companyInfo.estatusJuridico2" class="form-control text-uppercase" fullWidth
                     [disabled]="companyInfo.activo" id="estatusJuridico2" placeholder="Estatus Juridico 2">
                 </div>
               </div>
@@ -299,7 +299,7 @@
                     <div class="row">
                       <div class="col-sm-3">
                         <label for="inputDocType" class="label">Tipo Documento</label>
-                        <select selected="*" id="inputDocType" style="display:block" fullWidth class="form-control"
+                        <select selected="*" id="inputDocType" style="display:block" fullWidth class="form-control text-uppercase"
                           [disabled]="companyInfo.activo" [(ngModel)]="formInfo.doctType">
                           <option value="*">Seleccionar</option>
                           <option value="LOGO" *ngIf="companyInfo.id && (isAdministrator || module === 'legal')">Logotipo</option>
@@ -384,20 +384,40 @@
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="inputEmail" class="label">Correo Empresa</label>
-                  <input type="email" [(ngModel)]="companyInfo.correo" class="form-control" fullWidth id="inputEmail"
+                  <input type="email" [(ngModel)]="companyInfo.correo" class="form-control text-lowercase" fullWidth id="inputEmail"
                     [disabled]="companyInfo.activo" placeholder="Email">
                 </div>
               </div>
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="inputPassword" class="label">Contraseña correo</label>
-                  <input type="password" [(ngModel)]="companyInfo.pwCorreo" class="form-control" fullWidth
-                    [disabled]="companyInfo.activo" id="inputPassword" placeholder="Password">
+                    <div class="input-group">
+                      <input name="fiel-hide" type="password" class="input form-control" id="fiel-hide-mail-pass"
+                        [(ngModel)]="companyInfo.pwCorreo" class="form-control" [disabled]="companyInfo.activo"
+                        placeholder="Contraseña correo" aria-label="password" aria-describedby="basic-addon1"
+                        *ngIf="!formInfo.showEmailPass" />
+                      <div class="input-group-append">
+                        <button class="input-group-text" (click)="toogleEmailPass()" *ngIf="!formInfo.showEmailPass">
+                          <i class="fa fa-eye" id="hide_eye"></i>
+                        </button>
+                      </div>
+  
+                      <input name="fiel-show" type="text" class="input form-control" id="fiel-show-mail-pass"
+                      [(ngModel)]="companyInfo.pwCorreo" [disabled]="companyInfo.activo"
+                        placeholder="Contraseña correo" aria-label="password" aria-describedby="basic-addon1"
+                        *ngIf="formInfo.showEmailPass" />
+                      <div class="input-group-append">
+                        <button class="input-group-text" (click)="toogleEmailPass()" *ngIf="formInfo.showEmailPass">
+                          <i class="fa fa-eye-slash" id="hide_eye"></i>
+                        </button>
+                      </div>
+                    </div>
+                  
                 </div>
               </div>
               <div class="col-sm-4">
                 <label for="dominioCorreo" class="label">Dominio Correo</label>
-                <input type="text" [(ngModel)]="companyInfo.dominioCorreo" class="form-control" fullWidth
+                <input type="text" [(ngModel)]="companyInfo.dominioCorreo" class="form-control text-lowercase" fullWidth
                   [disabled]="companyInfo.activo" id="dominioCorreo" placeholder="@tiendalocal">
               </div>
 
@@ -407,7 +427,7 @@
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="noCert" class="label">No de certificado</label>
-                  <input type="text" [(ngModel)]="companyInfo.noCertificado" class="form-control" fullWidth id="noCert"
+                  <input type="text" [(ngModel)]="companyInfo.noCertificado" class="form-control text-lowercase" fullWidth id="noCert"
                     [disabled]="companyInfo.activo" placeholder="0000000000">
                 </div>
               </div>
@@ -423,7 +443,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <label for="inputWeb" class="label">Sitio web</label>
-                    <input type="text" [(ngModel)]="companyInfo.web" class="form-control" fullWidth id="inputWeb"
+                    <input type="text" [(ngModel)]="companyInfo.web" class="form-control text-lowercase" fullWidth id="inputWeb"
                       [disabled]="companyInfo.activo" placeholder="www.mi-empresa.com">
                   </div>
 
@@ -508,14 +528,14 @@
                             (click)="openAccountDialog(companyInfo.rfc,fila.cuenta)">
                             <i class="fa fa-search"></i></button>
                         </td>
-                        <td scope="row">{{fila.banco}}</td>
-                        <td scope="row">{{fila.razonSocial}}</td>
-                        <td scope="row">{{fila.linea}}</td>
+                        <td scope="row" class="text-uppercase">{{fila.banco}}</td>
+                        <td scope="row" class="text-uppercase">{{fila.razonSocial}}</td>
+                        <td scope="row" class="text-uppercase">{{fila.linea}}</td>
                         <td scope="row">{{fila.cuenta}}</td>
                         <td scope="row">{{fila.clabe}}</td>
-                        <td scope="row">{{fila.tipoContrato}}</td>
-                        <td scope="row">{{fila.sucursal}}</td>
-                        <td scope="row">{{fila.domicilioBanco}}</td>
+                        <td scope="row" class="text-uppercase">{{fila.tipoContrato}}</td>
+                        <td scope="row" class="text-uppercase">{{fila.sucursal}}</td>
+                        <td scope="row" class="text-uppercase">{{fila.domicilioBanco}}</td>
                         <td scope="row">{{fila.fechaCreacion}}</td>
                       </tr>
                     </tbody>
@@ -531,7 +551,7 @@
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="registroPatronal" class="label">Registro Patronal</label>
-                  <input type="text" [(ngModel)]="companyInfo.registroPatronal" class="form-control" fullWidth
+                  <input type="text" [(ngModel)]="companyInfo.registroPatronal" class="form-control text-uppercase" fullWidth
                     [disabled]="companyInfo.activo" id="registroPatronal" placeholder="Registro Patronal">
                 </div>
               </div>
@@ -568,7 +588,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="Actividad" class="label">Actividad SAT</label>
-                  <input type="text" [(ngModel)]="companyInfo.actividadSAT" class="form-control" fullWidth
+                  <input type="text" [(ngModel)]="companyInfo.actividadSAT" class="form-control text-uppercase" fullWidth
                     [disabled]="companyInfo.activo" id="Actividad" placeholder="Actividad Sat">
                 </div>
               </div>
@@ -602,17 +622,17 @@
             <div class="row">
               <div class="col-4">
                 <label for="impuestoEstatal" class="label">Impuesto Estatal</label>
-                <input type="text" [(ngModel)]="companyInfo.impuestoEstatal" class="form-control" fullWidth
+                <input type="text" [(ngModel)]="companyInfo.impuestoEstatal" class="form-control text-uppercase" fullWidth
                   [disabled]="companyInfo.activo" id="impuestoEstatal" placeholder="Impuesto Estatal">
               </div>
               <div class="col-4">
                 <label for="entidadRegistroPatronal" class="label">Entidad registro patronal</label>
-                <input type="text" [(ngModel)]="companyInfo.entidadRegistroPatronal" class="form-control" fullWidth
+                <input type="text" [(ngModel)]="companyInfo.entidadRegistroPatronal" class="form-control text-uppercase" fullWidth
                   [disabled]="companyInfo.activo" id="entidadRegistroPatronal" placeholder="Entidad registro patronal">
               </div>
               <div class="col-4">
                 <label for="entidadImpuestoPatronal" class="label">Entidad/Impuesto Estatal</label>
-                <input type="text" [(ngModel)]="companyInfo.entidadImpuestoPatronal" class="form-control" fullWidth
+                <input type="text" [(ngModel)]="companyInfo.entidadImpuestoPatronal" class="form-control text-uppercase" fullWidth
                   [disabled]="companyInfo.activo" id="entidadImpuestoPatronal" placeholder="Entidad/Impuesto Estatal">
               </div>
             </div>
@@ -621,7 +641,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="noCert" class="label">No de certificado</label>
-                <input type="text" [(ngModel)]="companyInfo.noCertificado" class="form-control" fullWidth id="noCert"
+                <input type="text" [(ngModel)]="companyInfo.noCertificado" class="form-control text-uppercase" fullWidth id="noCert"
                   [disabled]="companyInfo.activo" placeholder="0000000000">
               </div>
             </div>
@@ -687,7 +707,7 @@
                 <div class="row">
                   <div class="col-sm-3">
                     <label for="inputDocType" class="label">Tipo Documento</label>
-                    <select selected="*" id="inputDocType" style="display:block" fullWidth class="form-control"
+                    <select selected="*" id="inputDocType" style="display:block" fullWidth class="form-control text-uppercase"
                       [disabled]="companyInfo.activo" [(ngModel)]="formInfo.doctType">
                       <option value="*">Seleccionar</option>
                       <option value="CSD-CERT">Certificado CSD(.cer)</option>
@@ -905,7 +925,7 @@
             </div>
             <div class="col-md-9">
               <div class="form-group">
-                <input type="text" [(ngModel)]="data.resumen" class="form-control" fullWidth id="stockholderrfc"
+                <input type="text" [(ngModel)]="data.resumen" class="form-control text-uppercase" fullWidth id="stockholderrfc"
                   placeholder="RFC">
               </div>
             </div>
@@ -917,7 +937,7 @@
             </div>
             <div class="col-md-9">
               <div class="form-group">
-                <input class="form-control" fullWidth id="stockholdername" [(ngModel)]="data.detalle"
+                <input class="form-control text-uppercase" fullWidth id="stockholdername" [(ngModel)]="data.detalle"
                   placeholder="Nombre completo">
               </div>
             </div>
@@ -972,14 +992,14 @@
           <div class="row">
             <div class="col-4">
               <label for="inputYear" class="label">Año</label>
-              <select id="inputYear" style="display:block;" class="form-control" [(ngModel)]="data.anio" name="year">
+              <select id="inputYear" style="display:block;" class="form-control text-uppercase" [(ngModel)]="data.anio" name="year">
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let year of years" [value]="year">{{year}}</option>
               </select>
             </div>
             <div class="col-8">
               <label for="dataDetail" class="label">Detalle</label>
-              <input id="dataDetail" class="form-control" fullWidth type="number" [(ngModel)]="data.detalle" fullWidth
+              <input id="dataDetail" class="form-control text-uppercase" fullWidth type="number" [(ngModel)]="data.detalle" fullWidth
                 placeholder="Cantidad de Ingreso anual">
             </div>
           </div>
@@ -987,7 +1007,7 @@
           <div class="row">
             <div class="col-4">
               <label for="inputDataType" class="label">Tipo Dato</label>
-              <select id="inputDataType" style="display:block;" class="form-control" [(ngModel)]="data.tipoDato"
+              <select id="inputDataType" style="display:block;" class="form-control text-uppercase" [(ngModel)]="data.tipoDato"
                 name="inputDataType">
                 <option value="INGRESO">Ingreso anual</option>
               </select>
@@ -1042,7 +1062,7 @@
             </div>
             <div class="col-md-9">
               <div class="form-group">
-                <input type="text" [(ngModel)]="data.resumen" class="form-control" fullWidth id="Resumen"
+                <input type="text" [(ngModel)]="data.resumen" class="form-control text-uppercase" fullWidth id="Resumen"
                   placeholder="Descripcion corta">
               </div>
             </div>
@@ -1054,7 +1074,7 @@
             </div>
             <div class="col-md-9">
               <div class="form-group">
-                <textarea class="form-control" fullWidth id="inputdetails" rows="3" [(ngModel)]="data.detalle"
+                <textarea class="form-control text-uppercase" fullWidth id="inputdetails" rows="3" [(ngModel)]="data.detalle"
                   placeholder="Expliación detallada"></textarea>
               </div>
             </div>

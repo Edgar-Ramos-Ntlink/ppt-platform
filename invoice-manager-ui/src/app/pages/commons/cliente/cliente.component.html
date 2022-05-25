@@ -23,21 +23,21 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="inputRFC" class="label">RFC</label>
-              <input type="text" [(ngModel)]="clientInfo.rfc" [disabled]="clientInfo.id !== undefined" class="form-control" fullWidth id="inputRFC"
+              <input type="text" [(ngModel)]="clientInfo.rfc" [disabled]="clientInfo.id !== undefined" class="form-control text-uppercase" fullWidth id="inputRFC"
                 placeholder="RFC cliente">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <label for="inputSocialReason" class="label">Razón Social</label>
-              <input type="text" [(ngModel)]="clientInfo.razonSocial" class="form-control" fullWidth [disabled]="clientInfo.activo"
+              <input type="text" [(ngModel)]="clientInfo.razonSocial" class="form-control text-uppercase" fullWidth
                 id="inputSocialReason" placeholder="Razón Social">
             </div>
           </div>
           <div class="col-sm-2">
             <label for="inputPais" class="label">País</label>
             <select id="inputPais" selected="0" fullWidth class="form-control" style="display:block;" [(ngModel)]="clientInfo.pais" [disabled]="clientInfo.activo">
-              <option value="MEX">México</option>
+              <option value="MEX">MÉXICO</option>
             </select>
           </div>
           
@@ -54,9 +54,9 @@
             <div class="form-group">
               <label for="inputColonia" class="label">Seleccionar colonia</label>
               <select id="inputColonia" [(ngModel)]="formInfo.coloniaId" fullWidth
-                (selectedChange)="onLocation($event)" style="display:block;" class="form-control">
+                (selectedChange)="onLocation($event)" style="display:block;" class="form-control text-uppercase">
                 <option value="*">Seleccionar</option>
-                <option *ngFor="let colonia of colonias; let i = index" [value]="i">{{colonia}}</option>
+                <option *ngFor="let colonia of colonias; let i = index" [value]="i" class="text-uppercase">{{colonia}}</option>
                 <option value="other">Otra</option>
               </select>
             </div>
@@ -64,19 +64,19 @@
           <div [ngClass]="{'col-sm-4': formInfo.coloniaId !=='other', 'col-sm-3': formInfo.coloniaId ==='other'}"  *ngIf="formInfo.coloniaId==='other'">
             <div class="form-group">
               <label for="inputLocalidad" class="label">Colonia</label>
-              <input type="text" [(ngModel)]="clientInfo.localidad" class="form-control" fullWidth 
+              <input type="text" [(ngModel)]="clientInfo.localidad" class="form-control text-uppercase" fullWidth 
                 id="inputLocalidad" placeholder="Escriba la colonia">
             </div>
           </div>
           <div class="col-sm-2">
             <label for="inputState" class="label">Estado</label>
-            <input type="text" [(ngModel)]="clientInfo.estado" class="form-control" fullWidth id="inputState" 
+            <input type="text" [(ngModel)]="clientInfo.estado" class="form-control text-uppercase" fullWidth id="inputState" 
               placeholder="Estado">
           </div>
           <div class="col-sm-3">
             <div class="form-group">
               <label for="inputCity" class="label">Municipio/Delegación</label>
-              <input type="text" [(ngModel)]="clientInfo.municipio" class="form-control" fullWidth id="inputCity"
+              <input type="text" [(ngModel)]="clientInfo.municipio" class="form-control text-uppercase" fullWidth id="inputCity"
                 placeholder="Municipio/Delegación">
             </div>
           </div>
@@ -86,21 +86,21 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="inputCalle" class="label">Calle</label>
-              <input type="text" [(ngModel)]="clientInfo.calle" class="form-control" fullWidth id="inputCalle" 
+              <input type="text" [(ngModel)]="clientInfo.calle" class="form-control text-uppercase" fullWidth id="inputCalle" 
                 placeholder="Calle">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="inputExterior" class="label">No. exterior</label>
-              <input type="text" [(ngModel)]="clientInfo.noExterior" class="form-control" fullWidth 
+              <input type="text" [(ngModel)]="clientInfo.noExterior" class="form-control text-uppercase" fullWidth 
                 id="inputExterior" placeholder="No. exterior">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="inputInterior" class="label">No. interior</label>
-              <input type="text" [(ngModel)]="clientInfo.noInterior" class="form-control" fullWidth 
+              <input type="text" [(ngModel)]="clientInfo.noInterior" class="form-control text-uppercase" fullWidth 
                 id="inputInterior" placeholder="No. interior">
             </div>
           </div>
@@ -111,11 +111,11 @@
             <select
               id="inputRegimen"
               style="display: block"
-              class="form-control"
+              class="form-control text-uppercase"
               [(ngModel)]="clientInfo.regimenFiscal"
             >
-              <option value="*">Seleccionar</option>
-              <option
+              <option value="*">SELECCIONAR</option>
+              <option class="text-uppercase"
                 *ngFor="let regimen of regimenes"
                 [(value)]="regimen.clave"
               >

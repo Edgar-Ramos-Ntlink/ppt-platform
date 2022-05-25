@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import static com.business.unknow.Constants.CFDI_DATE_PATTERN;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.COMPROBANTE;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.IMPUESTO;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.PAGO_CLAVE;
@@ -67,6 +68,7 @@ public class InvoiceBuilderService {
     String folio =
         facturaCustom.getFolio() == null ? FacturaUtils.generateFolio() : facturaCustom.getFolio();
     Cfdi cfdi = cfdiService.recalculateCfdiAmmounts(facturaCustom.getCfdi());
+    cfdi.setFecha(CFDI_DATE_PATTERN);
     cfdi.setFolio(folio);
     return facturaCustom.toBuilder()
         .cfdi(cfdi)
@@ -158,7 +160,7 @@ public class InvoiceBuilderService {
     Cfdi cfdi = facturaCustom.getCfdi();
     cfdi.setComplemento(ImmutableList.of());
     complement.setPagos(new ArrayList<>());
-    BigDecimal basePago =
+    BigDecimal iva =
         pagoDto
             .getMonto()
             .multiply(BigDecimal.valueOf(IVA_IMPUESTO_16))
@@ -166,15 +168,16 @@ public class InvoiceBuilderService {
     Totales totales =
         Totales.builder()
             .montoTotalPagos(pagoDto.getMonto())
-            .totalTrasladosBaseIVA16(basePago)
-            .totalTrasladosImpuestoIVA16(pagoDto.getMonto().subtract(basePago))
+            .totalTrasladosBaseIVA16(
+                pagoDto.getMonto().subtract(iva).setScale(2, RoundingMode.HALF_UP))
+            .totalTrasladosImpuestoIVA16(iva.setScale(2, RoundingMode.HALF_UP))
             .build();
     Pago pago =
         Pago.builder()
             .fechaPago(DATE_TIME_FORMAT.format(pagoDto.getFechaPago()))
             .formaDePagoP(catalogService.getPaymentFormByValue(pagoDto.getFormaPago()))
             .monedaP(pagoDto.getMoneda())
-            .monto(pagoDto.getMonto())
+            .monto(pagoDto.getMonto().setScale(2, RoundingMode.HALF_UP))
             .tipoCambioP(pagoDto.getTipoDeCambio().toString())
             .build();
     Pagos pagos = Pagos.builder().totales(totales).build();
@@ -212,8 +215,9 @@ public class InvoiceBuilderService {
           pagoFacturaDto
               .getMonto()
               .multiply(BigDecimal.valueOf(IVA_IMPUESTO_16))
-              .divide(BigDecimal.valueOf(IVA_BASE_16), 4, RoundingMode.HALF_UP);
-      BigDecimal base = pagoFacturaDto.getMonto().subtract(impuesto);
+              .divide(BigDecimal.valueOf(IVA_BASE_16), 2, RoundingMode.HALF_UP);
+      BigDecimal base =
+          pagoFacturaDto.getMonto().subtract(impuesto).setScale(2, RoundingMode.HALF_UP);
       TrasladoDR trasladoDR =
           TrasladoDR.builder()
               .baseDR(base)
@@ -284,6 +288,7 @@ public class InvoiceBuilderService {
   private Cfdi buildCfdiComplement(FacturaCustom facturaCustom) {
     return Cfdi.builder()
         .version(facturaCustom.getCfdi().getVersion())
+        .fecha(CFDI_DATE_PATTERN)
         .serie(Constants.ComplementoPpdDefaults.SERIE)
         .folio(FacturaUtils.generateFolio())
         .subtotal(BigDecimal.ZERO)
@@ -307,7 +312,6 @@ public class InvoiceBuilderService {
         .valorUnitario(BigDecimal.ZERO)
         .importe(BigDecimal.ZERO)
         .objetoImp(PAGO_IMPUESTOS)
-        .descuento(BigDecimal.ZERO)
         .build();
   }
 }

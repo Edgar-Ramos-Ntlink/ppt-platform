@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { CfdiData } from "../../data/cfdi-data";
-import { NbDialogService, NbToastrService } from "@nebular/theme";
+import { NbDialogService } from "@nebular/theme";
 import { Cfdi } from "../../models/cfdi/cfdi";
 import { Concepto } from "../../models/cfdi/concepto";
 import { ConceptoComponent } from "./concepto/concepto.component";
@@ -13,6 +13,7 @@ import { select, Store } from "@ngrx/store";
 import { Factura } from "../../models/factura";
 import { invoice } from "../../core.selectors";
 import { InvoicesData } from "../../data/invoices-data";
+import { NotificationsService } from "../../util-services/notifications.service";
 
 @Component({
   selector: "nt-conceptos",
@@ -31,7 +32,7 @@ export class ConceptosComponent implements OnInit {
     private cfdiService: CfdiData,
     private cfdiValidator: CfdiValidatorService,
     private invoiceService: InvoicesData,
-    private toastrService: NbToastrService,
+    private notificationService: NotificationsService,
     private dialogService: NbDialogService,
   ) {}
 
@@ -48,7 +49,7 @@ export class ConceptosComponent implements OnInit {
 
       const errors = this.cfdiValidator.validarCfdi(cfdi);
       if (errors.length > 0) {
-        errors.forEach((e) => this.toastrService.warning("Validacion", e));
+        errors.forEach((e) => this.notificationService.sendNotification('warning',e,'Error validacion'));
       } else {
         if (this.cfdi.folio && this.cfdi.folio.length > 0) {
           // update invoice in backend side
@@ -64,7 +65,7 @@ export class ConceptosComponent implements OnInit {
       }
       this.loading = false;
     } catch (error) {
-      this.toastrService.danger("Error", error?.message);
+      this.notificationService.sendNotification('danger',error?.message,'Error removiendo concepto');
       this.loading = false;
     }
   }
@@ -92,7 +93,7 @@ export class ConceptosComponent implements OnInit {
         }
         const errors = this.cfdiValidator.validarCfdi(cfdi);
         if (errors.length > 0) {
-          errors.forEach((e) => this.toastrService.warning("Validacion", e));
+          errors.forEach((e) => this.notificationService.sendNotification('warning',e,'Error validacion'));
         } else {
           if (this.cfdi.folio && this.cfdi.folio.length > 0) {
             // update invoice in backend side
@@ -112,7 +113,7 @@ export class ConceptosComponent implements OnInit {
       }
       this.loading = false;
     } catch (error) {
-      this.toastrService.danger("Error", error?.message);
+      this.notificationService.sendNotification('danger',error?.message,'Error');
       this.loading = false;
     }
   }
