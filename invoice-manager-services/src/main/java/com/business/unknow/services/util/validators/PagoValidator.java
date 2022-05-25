@@ -6,7 +6,7 @@ import com.business.unknow.model.error.InvoiceManagerException;
 
 public class PagoValidator extends Validator {
 
-  public static void validatePayment(PagoDto dto) throws InvoiceManagerException {
+  public static void validate(PagoDto dto) throws InvoiceManagerException {
     checkNotNull(dto.getBanco(), "Banco");
     checkNotNull(dto.getCuenta(), "Cuenta");
     checkNotNull(dto.getFechaPago(), "Fecha de pago");

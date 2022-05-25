@@ -209,10 +209,6 @@ public class PagoService {
     return mapper.getPagosDtoFromEntities(repository.findPagosByFolio(folio));
   }
 
-  public List<PagoFacturaDto> findPagosFacturaByFolio(String folio) {
-    return mapper.getPagosFacturaDtoFromEntities(facturaPagosRepository.findByFolio(folio));
-  }
-
   public PagoDto getPaymentById(Integer id) throws InvoiceManagerException {
     Optional<Pago> payment = repository.findById(id);
     if (payment.isPresent()) {
@@ -225,15 +221,11 @@ public class PagoService {
     }
   }
 
-  public PagoDto insertNewPaymentWithoutValidation(PagoDto payment) {
-    return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(payment)));
-  }
-
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public PagoDto insertNewPayment(PagoDto pagoDto)
       throws InvoiceManagerException, NtlinkUtilException {
-    PagoValidator.validatePayment(pagoDto);
+    PagoValidator.validate(pagoDto);
     List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : pagoDto.getFacturas()) {
       FacturaCustom factura = facturaService.getFacturaByFolio(pagoFact.getFolio());
@@ -337,7 +329,7 @@ public class PagoService {
             .revisor1(pago.getRevisor1())
             .revisor2(pago.getRevisor2())
             .build(); // payment only update revision
-    PagoValidator.validatePayment(pago);
+    PagoValidator.validate(pago);
 
     List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : pago.getFacturas()) {
