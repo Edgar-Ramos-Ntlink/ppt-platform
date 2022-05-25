@@ -251,6 +251,16 @@ public class CatalogService {
     }
   }
 
+
+  public String getPaymentFormByValue(String value) {
+    for (String key : paymentFormMappings.keySet()) {
+     FormaPagoDto formaPagoDto= paymentFormMappings.get(key);
+      if (formaPagoDto.getDescripcion().equalsIgnoreCase(value)) {
+        return formaPagoDto.getId();
+      }
+    }
+    return null;
+  }
   /**
    * Gets Tax Regime by key
    *

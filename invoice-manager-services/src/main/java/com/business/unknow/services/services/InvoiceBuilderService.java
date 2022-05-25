@@ -5,13 +5,13 @@ import static com.business.unknow.Constants.ComplementoPpdDefaults.IMPUESTO;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.PAGO_CLAVE;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.PAGO_DESC;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.PAGO_IMPUESTOS;
+import static com.business.unknow.Constants.ComplementoPpdDefaults.PAGO_IMPUESTOS_GRAL;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.PAGO_UNIDAD;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.TASA_O_CUOTA;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.TIPO_FACTOR;
 import static com.business.unknow.Constants.DATE_TIME_FORMAT;
 import static com.business.unknow.Constants.IVA_BASE_16;
 import static com.business.unknow.Constants.IVA_IMPUESTO_16;
-import static com.business.unknow.Constants.PagoPpdCreditoDefaults.MONEDA;
 import static com.business.unknow.enums.FacturaStatus.VALIDACION_TESORERIA;
 import static com.mx.ntlink.models.generated.CTipoFactor.TASA;
 
@@ -123,38 +123,41 @@ public class InvoiceBuilderService {
     String folio = FacturaUtils.generateFolio();
     Cfdi cfdi = buildCfdiComplement(facturaCustom);
     cfdi.setFolio(folio);
-    Pagos pagos = assignComplementPaymentData(facturaCustom, facturaCustoms, pagoDto, folio);
-    cfdi.setComplemento(ImmutableList.of(pagos));
-    return FacturaCustom.builder()
-        .folio(folio)
-        .preFolio(FacturaUtils.generatePreFolio(amount))
-        .total(pagoDto.getMonto())
-        .packFacturacion(facturaCustom.getPackFacturacion())
-        .saldoPendiente(BigDecimal.ZERO)
-        .lineaEmisor(facturaCustom.getLineaEmisor())
-        .rfcEmisor(facturaCustom.getRfcEmisor())
-        .metodoPago(Constants.ComplementoPpdDefaults.METODO_PAGO)
-        .rfcRemitente(facturaCustom.getRfcRemitente())
-        .lineaRemitente(facturaCustom.getLineaRemitente())
-        .razonSocialEmisor(facturaCustom.getRazonSocialEmisor())
-        .razonSocialRemitente(facturaCustom.getRazonSocialRemitente())
-        .validacionTeso(false)
-        .validacionOper(false)
-        .statusFactura(VALIDACION_TESORERIA.getValor())
-        .cfdi(cfdi)
-        .solicitante(facturaCustom.getSolicitante())
-        .tipoDocumento(TipoDocumento.COMPLEMENTO.getDescripcion())
-        .build();
+    FacturaCustom complement =
+        FacturaCustom.builder()
+            .folio(folio)
+            .preFolio(FacturaUtils.generatePreFolio(amount))
+            .total(pagoDto.getMonto())
+            .packFacturacion(facturaCustom.getPackFacturacion())
+            .saldoPendiente(BigDecimal.ZERO)
+            .lineaEmisor(facturaCustom.getLineaEmisor())
+            .rfcEmisor(facturaCustom.getRfcEmisor())
+            .metodoPago(Constants.ComplementoPpdDefaults.METODO_PAGO)
+            .rfcRemitente(facturaCustom.getRfcRemitente())
+            .lineaRemitente(facturaCustom.getLineaRemitente())
+            .razonSocialEmisor(facturaCustom.getRazonSocialEmisor())
+            .razonSocialRemitente(facturaCustom.getRazonSocialRemitente())
+            .validacionTeso(false)
+            .validacionOper(false)
+            .statusFactura(VALIDACION_TESORERIA.getValor())
+            .cfdi(cfdi)
+            .solicitante(facturaCustom.getSolicitante())
+            .tipoDocumento(TipoDocumento.COMPLEMENTO.getDescripcion())
+            .build();
+    Pagos pagos = assignComplementPaymentData(facturaCustom, facturaCustoms, pagoDto, complement);
+    complement.getCfdi().setComplemento(ImmutableList.of(pagos));
+    return complement;
   }
 
   private Pagos assignComplementPaymentData(
       FacturaCustom facturaCustom,
       List<FacturaCustom> facturaCustoms,
       PagoDto pagoDto,
-      String folio)
+      FacturaCustom complement)
       throws InvoiceManagerException {
     Cfdi cfdi = facturaCustom.getCfdi();
     cfdi.setComplemento(ImmutableList.of());
+    complement.setPagos(new ArrayList<>());
     BigDecimal basePago =
         pagoDto
             .getMonto()
@@ -169,7 +172,7 @@ public class InvoiceBuilderService {
     Pago pago =
         Pago.builder()
             .fechaPago(DATE_TIME_FORMAT.format(pagoDto.getFechaPago()))
-            .formaDePagoP(pagoDto.getFormaPago())
+            .formaDePagoP(catalogService.getPaymentFormByValue(pagoDto.getFormaPago()))
             .monedaP(pagoDto.getMoneda())
             .monto(pagoDto.getMonto())
             .tipoCambioP(pagoDto.getTipoDeCambio().toString())
@@ -202,32 +205,31 @@ public class InvoiceBuilderService {
               .orElse(PagoComplemento.builder().build());
       BigDecimal saldoAnterior =
           Objects.isNull(lastPayment.getImporteSaldoInsoluto())
-              ? pagoDto.getMonto()
+              ? facturaCustom.getTotal()
               : lastPayment.getImporteSaldoInsoluto();
 
-      BigDecimal base =
+      BigDecimal impuesto =
           pagoFacturaDto
               .getMonto()
               .multiply(BigDecimal.valueOf(IVA_IMPUESTO_16))
               .divide(BigDecimal.valueOf(IVA_BASE_16), 4, RoundingMode.HALF_UP);
-      ;
+      BigDecimal base = pagoFacturaDto.getMonto().subtract(impuesto);
       TrasladoDR trasladoDR =
           TrasladoDR.builder()
               .baseDR(base)
               .impuestoDR(IMPUESTO)
               .tipoFactorDR(TASA)
               .tasaOCuotaDR(TASA_O_CUOTA)
-              .importeDR(pagoFacturaDto.getMonto().subtract(base))
+              .importeDR(impuesto)
               .build();
       TrasladoP trasladoP =
           TrasladoP.builder()
-              .importeP(pagoFacturaDto.getMonto().subtract(base))
+              .importeP(impuesto)
               .baseP(base)
               .tasaOCuotaP(TASA_O_CUOTA)
               .impuestoP(IMPUESTO)
               .tipoFactorP(TIPO_FACTOR)
               .build();
-      ;
 
       ImpuestosDR impuestosDR =
           ImpuestosDR.builder()
@@ -241,11 +243,13 @@ public class InvoiceBuilderService {
               .folio(facturaCustomIterate.getFolio())
               .monedaDR(pagoDto.getMoneda())
               .numParcialidad(numeroParcialidad)
-              .impSaldoAnt(saldoAnterior)
-              .impPagado(pagoDto.getMonto())
-              .impSaldoInsoluto(saldoAnterior.subtract(pagoDto.getMonto()))
+              .impSaldoAnt(saldoAnterior.setScale(2, RoundingMode.HALF_UP))
+              .impPagado(pagoDto.getMonto().setScale(2, RoundingMode.HALF_UP))
+              .impPagado(pagoDto.getMonto().setScale(2, RoundingMode.HALF_UP))
+              .impSaldoInsoluto(
+                  saldoAnterior.subtract(pagoDto.getMonto()).setScale(2, RoundingMode.HALF_UP))
               // TODO:VALIDATE objetoImpDR value
-              .objetoImpDR(PAGO_IMPUESTOS)
+              .objetoImpDR(PAGO_IMPUESTOS_GRAL)
               .impuestosDR(impuestosDR)
               .build();
       pago.setImpuestosP(
@@ -256,7 +260,7 @@ public class InvoiceBuilderService {
       PagoComplemento pagoComplemento =
           PagoComplemento.builder()
               .folioOrigen(facturaCustomIterate.getFolio())
-              .folio(folio)
+              .folio(complement.getFolio())
               .idDocumento(facturaCustomIterate.getUuid())
               .equivalenciaDR(documentoRelacionado.getEquivalenciaDR().toString())
               .monedaDr(documentoRelacionado.getMonedaDR())
@@ -268,6 +272,7 @@ public class InvoiceBuilderService {
               .tipoCambio((pagoDto.getTipoDeCambio()))
               .build();
       facturaCustomIterate.getPagos().add(pagoComplemento);
+      complement.getPagos().add(pagoComplemento);
       facturaCustomIterate.setSaldoPendiente(
           facturaCustomIterate.getSaldoPendiente().subtract(pagoFacturaDto.getMonto()));
     }
@@ -282,7 +287,7 @@ public class InvoiceBuilderService {
         .serie(Constants.ComplementoPpdDefaults.SERIE)
         .folio(FacturaUtils.generateFolio())
         .subtotal(BigDecimal.ZERO)
-        .moneda(MONEDA)
+        .moneda(Constants.ComplementoPpdDefaults.MONEDA)
         .total(BigDecimal.ZERO)
         .tipoDeComprobante(COMPROBANTE)
         .lugarExpedicion(facturaCustom.getCfdi().getLugarExpedicion())

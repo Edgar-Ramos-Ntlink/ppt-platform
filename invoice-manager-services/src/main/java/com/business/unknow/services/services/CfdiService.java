@@ -49,7 +49,7 @@ public class CfdiService {
    * @return {@link Cfdi}
    * @throws {@link InvoiceManagerException}
    */
-  public Cfdi recalculateCfdi(Cfdi cfdi) throws InvoiceManagerException, NtlinkUtilException {
+  public Cfdi recalculateCfdi(Cfdi cfdi) throws InvoiceManagerException {
     CfdiValidator.validate(cfdi);
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(cfdi);
     return cfdiMapper.comprobanteToCfdi(comprobante);
@@ -65,7 +65,7 @@ public class CfdiService {
     return cfdiPagoMapper.getDtosFromEntities(cfdiPagoRepository.findByFolio(folio));
   }
 
-  public Cfdi recalculateCfdiAmmounts(Cfdi cfdi) throws NtlinkUtilException {
+  public Cfdi recalculateCfdiAmmounts(Cfdi cfdi) {
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(cfdi);
     return cfdiMapper.comprobanteToCfdi(comprobante);
   }

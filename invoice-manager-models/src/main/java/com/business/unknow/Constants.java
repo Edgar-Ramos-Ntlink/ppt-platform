@@ -61,6 +61,7 @@ public class Constants {
     public static final String PAGO_CLAVE = "84111506";
     public static final String PAGO_UNIDAD = "ACT";
     public static final String PAGO_IMPUESTOS = "01";
+    public static final String PAGO_IMPUESTOS_GRAL = "02";
     public static final String PAGO_DESC = "Pago";
     public static final String TIPO_FACTOR = "TASA";
     public static final String IMPUESTO = "002";

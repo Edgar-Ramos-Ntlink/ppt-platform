@@ -47,6 +47,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -451,22 +452,23 @@ public class FacturaService {
                         HttpStatus.NOT_FOUND,
                         String.format("La factura con el folio %d no existe", folio)));
     facturaServiceEvaluator.facturaStatusValidation(facturaCustom);
-    facturaCustom.setCfdi(cfdiService.updateCfdi(facturaCustom.getCfdi()));
     InvoiceValidator.validate(facturaCustom, facturaCustom.getFolio());
-    Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
     Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
     entityFromDto.setId(factura.getId());
     repository.save(entityFromDto);
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
-    if (!(factura.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())
-        || factura.getStatusFactura().equals(FacturaStatus.CANCELADA.getValor()))) {
+    if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
+        && !(factura.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())
+            || factura.getStatusFactura().equals(FacturaStatus.CANCELADA.getValor()))) {
+      facturaCustom.setCfdi(cfdiService.updateCfdi(facturaCustom.getCfdi()));
+      Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
       filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
       FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
       facturaPdf.setCfdi(comprobante);
       byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
       filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
+      reportDataService.upsertReportData(facturaCustom.getCfdi());
     }
-    reportDataService.upsertReportData(facturaCustom.getCfdi());
     return facturaCustom;
   }
 
@@ -522,7 +524,13 @@ public class FacturaService {
       pagosFactura = pagoService.findPagosByFolio(folio);
     }
     timbradoServiceEvaluator.facturaTimbradoValidation(facturaCustom, pagosFactura);
-    facturaCustom = facturaExecutorService.stampInvoice(facturaCustom);
+    String xml =
+        new String(
+            Base64.getDecoder()
+                .decode(
+                    filesService.getS3File(
+                        S3Buckets.CFDIS, facturaCustom.getFolio().concat(XML.getFormat()))));
+    facturaCustom = facturaExecutorService.stampInvoice(facturaCustom, xml);
     Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
     entityFromDto.setId(factura.getId());
     repository.save(entityFromDto);
