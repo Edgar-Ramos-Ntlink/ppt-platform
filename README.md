@@ -96,3 +96,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.1.0 Removing External SDK module
   - [x] 4.2.0 Removing S3 dependencies
   - [x] 4.3.0 Factura Reportes CFDI 4.0
+  - [x] 4.4.0 Payment Complement version 2.0
