@@ -13,7 +13,12 @@ import { Pago } from '../../../@core/models/cfdi/pago';
 import { Factura } from '../../../@core/models/factura';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../reducers';
-import { initInvoice, updateInvoice, updateReceptor, updateReceptorAddress } from '../../../@core/core.actions';
+import {
+    initInvoice,
+    updateInvoice,
+    updateReceptor,
+    updateReceptorAddress,
+} from '../../../@core/core.actions';
 import { NtError } from '../../../@core/models/nt-error';
 import { Receptor } from '../../../@core/models/cfdi/receptor';
 import { invoice } from '../../../@core/core.selectors';
@@ -31,7 +36,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     public girosCat: Catalogo[] = [];
     public companiesCat: Empresa[] = [];
     public clientsCat: Client[] = [];
-    public formInfo:any = {giro:'*',empresa:'*'}
+    public formInfo: any = { giro: '*', empresa: '*' };
 
     public factura: Factura = new Factura();
     public loading: boolean = false;
@@ -43,62 +48,60 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         private invoiceService: InvoicesData,
         private cfdiService: CfdiData,
         private cfdiValidator: CfdiValidatorService,
-        private notificationService : NotificationsService,
+        private notificationService: NotificationsService,
         private route: ActivatedRoute,
         private router: Router,
         private store: Store<AppState>
-    ) { }
+    ) {}
 
     ngOnInit() {
         this.route.paramMap.subscribe((route) => {
             const folio = route.get('folio');
-            
+
             if (folio === '*') {
                 this.loading = true;
                 this.store.dispatch(initInvoice({ invoice: new Factura() }));
                 this.clientsService
                     .getClientsByPromotor(sessionStorage.getItem('email'))
-                    .subscribe((clients) => { this.clientsCat = clients; this.loading = false }, (error) => this.loading = false);
+                    .subscribe(
+                        (clients) => {
+                            this.clientsCat = clients;
+                            this.loading = false;
+                        },
+                        (error) => (this.loading = false)
+                    );
             } else {
-                this.getInvoiceByFolio(folio)
+                this.getInvoiceByFolio(folio);
             }
             this.folio = folio;
         });
 
-        
-
         this.catalogsService.getAllGiros().then((cat) => (this.girosCat = cat));
-        this.store.pipe(select(invoice)).subscribe((fact) => (this.factura = fact));
+        this.store
+            .pipe(select(invoice))
+            .subscribe((fact) => (this.factura = fact));
     }
 
     ngOnDestroy() {
         this.store.dispatch(initInvoice({ invoice: new Factura() }));
     }
 
-
     public getInvoiceByFolio(folio: string) {
         this.pagosCfdi = [];
         this.invoiceService.getInvoiceByFolio(folio).subscribe(
             (invoice) => {
                 this.store.dispatch(updateInvoice({ invoice }));
-                if (
-                    invoice.metodoPago === 'PPD' &&
-                    invoice.cfdi.tipoDeComprobante === 'P'
-                ) {
-                    alert('Implement pagos logic');
-                    //this.pagosCfdi = cfdi.complemento[0].pagos;
-                }
-                if (
-                    invoice.metodoPago === 'PPD' &&
-                    invoice.tipoDocumento === 'Factura'
-                ) {
-                    this.cfdiService
-                        .findInvoicePaymentComplementsByFolio(folio)
-                        .subscribe((pagos) => (this.pagosCfdi = pagos));
-                }
+
+                this.cfdiService
+                    .findInvoicePaymentComplementsByFolio(folio)
+                    .subscribe((pagos) => (this.pagosCfdi = pagos));
             },
             (error: NtError) => {
-                this.notificationService.sendNotification('danger',error?.message,'Error recuperando informacion CFDI');
+                this.notificationService.sendNotification(
+                    'danger',
+                    error?.message,
+                    'Error recuperando informacion CFDI'
+                );
                 this.store.dispatch(initInvoice({ invoice: new Factura() }));
                 this.loading = false;
             }
@@ -116,7 +119,11 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                     .toPromise();
             }
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message,'Error giro empresas');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error giro empresas'
+            );
         }
     }
 
@@ -128,8 +135,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         const emisor = new Emisor();
         emisor.rfc = companyInfo.rfc.toUpperCase();
         emisor.nombre = companyInfo.razonSocial.toUpperCase();
-        emisor.regimenFiscal =
-            "601" || companyInfo.regimenFiscal;
+        emisor.regimenFiscal = '601' || companyInfo.regimenFiscal;
 
         let invoice = JSON.parse(JSON.stringify(this.factura));
         invoice.cfdi.emisor = emisor;
@@ -138,24 +144,32 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         invoice.lineaEmisor = companyInfo.tipo;
         invoice.lineaRemitente = 'CLIENTE';
         invoice.cfdi.lugarExpedicion = companyInfo.cp;
-        invoice.direccionEmisor = this.cfdiValidator.generateAddress(
-            companyInfo
-        );
+        invoice.direccionEmisor =
+            this.cfdiValidator.generateAddress(companyInfo);
 
         this.store.dispatch(updateInvoice({ invoice }));
     }
 
-
     public onClientSelected(client: Client) {
         if (!client.activo) {
-            this.notificationService.sendNotification('warning',`El cliente ${client.razonSocial} no se encuentra activo, solicite su activación al equipo de operaciones`,
-            "Cliente inactivo");
+            this.notificationService.sendNotification(
+                'warning',
+                `El cliente ${client.razonSocial} no se encuentra activo, solicite su activación al equipo de operaciones`,
+                'Cliente inactivo'
+            );
             return;
         }
 
-        if (client.regimenFiscal == undefined || client.regimenFiscal == null || client.regimenFiscal === '*') {
-            this.notificationService.sendNotification('warning',`El cliente ${client.razonSocial} no cuenta con regimen fiscal, delo de alta antes de continuar`,
-            "Informacion faltante");
+        if (
+            client.regimenFiscal == undefined ||
+            client.regimenFiscal == null ||
+            client.regimenFiscal === '*'
+        ) {
+            this.notificationService.sendNotification(
+                'warning',
+                `El cliente ${client.razonSocial} no cuenta con regimen fiscal, delo de alta antes de continuar`,
+                'Informacion faltante'
+            );
             return;
         }
         let receptor = new Receptor();
@@ -173,59 +187,77 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         this.store.dispatch(initInvoice({ invoice: new Factura() }));
     }
 
-
     public async solicitarCfdi() {
         this.loading = true;
         try {
             let invoice = JSON.parse(JSON.stringify(this.factura));
-            invoice.solicitante = sessionStorage.getItem("email");
-            invoice.lineaEmisor = "A";
-            invoice.lineaRemitente = "CLIENTE";
+            invoice.solicitante = sessionStorage.getItem('email');
+            invoice.lineaEmisor = 'A';
+            invoice.lineaRemitente = 'CLIENTE';
             invoice.metodoPago = invoice.cfdi.metodoPago;
             invoice.formaPago = invoice.cfdi.formaPago;
             invoice.rfcEmisor = invoice.cfdi.emisor.rfc;
             invoice.razonSocialEmisor = invoice.cfdi.emisor.nombre;
             invoice.rfcRemitente = invoice.cfdi.receptor.rfc;
             invoice.razonSocialRemitente = invoice.cfdi.receptor.nombre;
-            invoice.statusFactura = "1";
-            
+            invoice.statusFactura = '1';
+
             let errors: string[] = this.cfdiValidator.validarCfdi(invoice.cfdi);
             if (errors.length === 0) {
                 invoice = await this.invoiceService
                     .insertNewInvoice(invoice)
                     .toPromise();
                 this.loading = false;
-                this.notificationService.sendNotification('success','Solicitud de factura enviada correctamente');
+                this.notificationService.sendNotification(
+                    'success',
+                    'Solicitud de factura enviada correctamente'
+                );
                 this.store.dispatch(updateInvoice({ invoice }));
             } else {
                 errors.forEach((e) =>
-                    this.notificationService.sendNotification('warning',e,'Información incompleta'));
+                    this.notificationService.sendNotification(
+                        'warning',
+                        e,
+                        'Información incompleta'
+                    )
+                );
                 this.loading = false;
             }
         } catch (error) {
             this.loading = false;
-            this.notificationService.sendNotification('danger',error?.message,'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
     }
 
     public async revalidateInvoice() {
         this.loading = true;
-        const fact:Factura = JSON.parse(JSON.stringify(this.factura));
+        const fact: Factura = JSON.parse(JSON.stringify(this.factura));
         fact.statusFactura = '1';
         fact.validacionOper = false;
         fact.total = this.factura.cfdi.total;
         fact.metodoPago = this.factura.cfdi.metodoPago;
         fact.saldoPendiente = this.factura.cfdi.total;
-        
+
         this.invoiceService.updateInvoice(fact).subscribe(
             (invoice) => {
                 this.loading = false;
                 this.store.dispatch(updateInvoice({ invoice }));
-                this.notificationService.sendNotification('success','CFDI revalidado correctamente');
+                this.notificationService.sendNotification(
+                    'success',
+                    'CFDI revalidado correctamente'
+                );
             },
             (error: NtError) => {
                 this.loading = false;
-                this.notificationService.sendNotification('danger',error?.message,'Error en revalidacion');
+                this.notificationService.sendNotification(
+                    'danger',
+                    error?.message,
+                    'Error en revalidacion'
+                );
             }
         );
     }
@@ -237,5 +269,4 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
     public goToRelacionado(folio: number) {
         this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
     }
-
 }

@@ -58,14 +58,6 @@ public class FacturaController {
     return new ResponseEntity<>(service.getFacturaByFolio(folio), HttpStatus.OK);
   }
 
-  @GetMapping("/complementos/{folio}")
-  public ResponseEntity<FacturaCustom> getComplementoByIdCfdiAnParcialidad(
-      @PathVariable String folio,
-      @RequestParam(name = "parcialidad", defaultValue = "1") Integer parcialidad) {
-    return new ResponseEntity<>(
-        service.getComplementoByIdCfdiAnParcialidad(folio, parcialidad), HttpStatus.OK);
-  }
-
   @GetMapping("/{folio}/pagos")
   public ResponseEntity<List<PagoDto>> getPagosBy(@PathVariable String folio) {
     return new ResponseEntity<>(pagoService.findPagosByFolio(folio), HttpStatus.OK);
@@ -105,15 +97,6 @@ public class FacturaController {
       @RequestBody @Valid FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
     return new ResponseEntity<>(service.sendMail(facturaCustom), HttpStatus.OK);
-  }
-
-  @PostMapping("/{folio}/complementos")
-  public ResponseEntity<FacturaCustom> getComplementos(
-      @PathVariable String folio, @RequestBody @Valid PagoDto pago)
-      throws InvoiceManagerException, NtlinkUtilException {
-    FacturaCustom facturaCustom = service.createComplemento(folio, pago);
-    return new ResponseEntity<>(
-        service.stamp(facturaCustom.getFolio(), facturaCustom), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/sustitucion")

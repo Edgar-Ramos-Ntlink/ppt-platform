@@ -20,12 +20,6 @@ public class CfdiService {
 
   @Autowired private FilesService filesService;
 
-  @Autowired private FacturaService facturaService;
-
-  @Autowired private CatalogService catalogService;
-
-  @Autowired private ReportDataService reportDataService;
-
   @Autowired private CfdiMapper cfdiMapper;
 
   @Autowired private CfdiPagoMapper cfdiPagoMapper;
@@ -42,7 +36,7 @@ public class CfdiService {
    *
    * @param {@link Cfdi}
    */
-  public Cfdi updateCfdi(Cfdi cfdi) throws InvoiceManagerException {
+  public Cfdi updateCfdi(Cfdi cfdi) throws InvoiceManagerException, NtlinkUtilException {
     CfdiValidator.validate(cfdi);
     Cfdi newCfdi = recalculateCfdi(cfdi);
     return newCfdi;

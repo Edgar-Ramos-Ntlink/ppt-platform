@@ -151,25 +151,19 @@ export class PreCfdiComponent implements OnInit {
         this.invoiceService.getInvoiceByFolio(folio).subscribe(
             (invoice) => {
                 this.store.dispatch(updateInvoice({ invoice }));
-                if (
-                    invoice.metodoPago === 'PPD' &&
-                    invoice.cfdi.tipoDeComprobante === 'P'
-                ) {
-                    alert('Implement pagos logic');
-                    //this.pagosCfdi = cfdi.complemento[0].pagos;
-                }
-                if (
-                    invoice.metodoPago === 'PPD' &&
-                    invoice.tipoDocumento === 'Factura'
-                ) {
-                    this.cfdiService
-                        .findInvoicePaymentComplementsByFolio(folio)
-                        .subscribe((pagos) => (this.pagosCfdi = pagos));
-                }
+
+                this.cfdiService
+                    .findInvoicePaymentComplementsByFolio(folio)
+                    .subscribe((pagos) => (this.pagosCfdi = pagos));
+
                 this.loading = false;
             },
             (error: NtError) => {
-                this.notificationService.sendNotification('danger',error.message,'Error');
+                this.notificationService.sendNotification(
+                    'danger',
+                    error.message,
+                    'Error'
+                );
                 this.store.dispatch(initInvoice({ invoice: new Factura() }));
                 this.loading = false;
             }
@@ -189,7 +183,11 @@ export class PreCfdiComponent implements OnInit {
                 .subscribe(
                     (companies) => (this.emisoresCat = companies),
                     (error: NtError) =>
-                    this.notificationService.sendNotification('danger',error?.message,'Error recuperando emisores')
+                        this.notificationService.sendNotification(
+                            'danger',
+                            error?.message,
+                            'Error recuperando emisores'
+                        )
                 );
         }
     }
@@ -207,7 +205,11 @@ export class PreCfdiComponent implements OnInit {
                 .subscribe(
                     (companies) => (this.receptoresCat = companies),
                     (error: NtError) => (error: NtError) =>
-                    this.notificationService.sendNotification('danger',error?.message,'Error recuperando receptores')
+                        this.notificationService.sendNotification(
+                            'danger',
+                            error?.message,
+                            'Error recuperando receptores'
+                        )
                 );
         }
     }
@@ -239,9 +241,11 @@ export class PreCfdiComponent implements OnInit {
         );
 
         if (!clientInfo.activo) {
-            this.notificationService.sendNotification('warning',
+            this.notificationService.sendNotification(
+                'warning',
                 `El receptor ${clientInfo.razonSocial} no se encuentra activo,notifique al supervisor para activarlo`,
-                'Cliente inactivo');
+                'Cliente inactivo'
+            );
             return;
         }
 
@@ -250,9 +254,11 @@ export class PreCfdiComponent implements OnInit {
             clientInfo.regimenFiscal == null ||
             clientInfo.regimenFiscal === '*'
         ) {
-            this.notificationService.sendNotification('warning',
+            this.notificationService.sendNotification(
+                'warning',
                 `El receptor ${clientInfo.razonSocial} no cuenta con regimen fiscal, delo de alta antes de continuar`,
-                'Informacion faltante');
+                'Informacion faltante'
+            );
             return;
         }
         let receptor = new Receptor();
@@ -270,9 +276,11 @@ export class PreCfdiComponent implements OnInit {
         const client = this.clientsCat.find((c) => rfc === c.rfc);
 
         if (!client.activo) {
-            this.notificationService.sendNotification('warning',
+            this.notificationService.sendNotification(
+                'warning',
                 `El cliente ${client.razonSocial} no se encuentra activo,notifique al supervisor para activarlo`,
-                'Cliente inactivo');
+                'Cliente inactivo'
+            );
             return;
         }
 
@@ -281,9 +289,11 @@ export class PreCfdiComponent implements OnInit {
             client.regimenFiscal == null ||
             client.regimenFiscal === '*'
         ) {
-            this.notificationService.sendNotification('warning',
+            this.notificationService.sendNotification(
+                'warning',
                 `El cliente ${client.razonSocial} no cuenta con regimen fiscal, delo de alta antes de continuar`,
-                'Informacion faltante');
+                'Informacion faltante'
+            );
             return;
         }
         let receptor = new Receptor();
@@ -308,7 +318,11 @@ export class PreCfdiComponent implements OnInit {
                     },
                     (error: NtError) => {
                         this.loading = false;
-                        this.notificationService.sendNotification('danger',error.message,'Error');
+                        this.notificationService.sendNotification(
+                            'danger',
+                            error.message,
+                            'Error'
+                        );
                     }
                 );
         } else {
@@ -369,17 +383,28 @@ export class PreCfdiComponent implements OnInit {
                     .insertNewInvoice(invoice)
                     .toPromise();
                 this.loading = false;
-                this.notificationService.sendNotification('success','Solicitud de factura enviada correctamente');
+                this.notificationService.sendNotification(
+                    'success',
+                    'Solicitud de factura enviada correctamente'
+                );
                 this.store.dispatch(updateInvoice({ invoice }));
             } else {
                 errors.forEach((e) =>
-                this.notificationService.sendNotification('warning',e,'Informacion incompleta')
+                    this.notificationService.sendNotification(
+                        'warning',
+                        e,
+                        'Informacion incompleta'
+                    )
                 );
                 this.loading = false;
             }
         } catch (error) {
             this.loading = false;
-            this.notificationService.sendNotification('danger',error.message,'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error.message,
+                'Error'
+            );
         }
     }
 
@@ -388,14 +413,20 @@ export class PreCfdiComponent implements OnInit {
         const fact = { ...this.factura };
         this.invoiceService.generateReplacement(factura.folio, fact).subscribe(
             (invoice) => {
-                this.notificationService.sendNotification('success',
+                this.notificationService.sendNotification(
+                    'success',
                     'El documento relacionado se ha generado exitosamente',
-                    'Documento relacionado');
+                    'Documento relacionado'
+                );
                 this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
             },
             (error: NtError) => {
-                this.notificationService.sendNotification('danger',error.message,'Error en la sustitucion');
+                this.notificationService.sendNotification(
+                    'danger',
+                    error.message,
+                    'Error en la sustitucion'
+                );
                 this.loading = false;
             }
         );
@@ -406,14 +437,20 @@ export class PreCfdiComponent implements OnInit {
         const fact = { ...factura };
         this.invoiceService.generateCreditNote(factura.folio, fact).subscribe(
             (invoice) => {
-                this.notificationService.sendNotification('success',
+                this.notificationService.sendNotification(
+                    'success',
                     'La nota de credito se ha generado exitosamente',
-                    'Nota credito creada');
+                    'Nota credito creada'
+                );
                 this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
             },
             (error: NtError) => {
-                this.notificationService.sendNotification('danger',error.message,'Error en la creacion de la nota de credito');
+                this.notificationService.sendNotification(
+                    'danger',
+                    error.message,
+                    'Error en la creacion de la nota de credito'
+                );
                 this.loading = false;
             }
         );
@@ -434,13 +471,19 @@ export class PreCfdiComponent implements OnInit {
                         result.statusFactura = '9'; // update to rechazo contabilidad
                         this.invoiceService.updateInvoice(result).subscribe(
                             (invoice) => {
-                                this.notificationService.sendNotification('success','factura rechazada');
+                                this.notificationService.sendNotification(
+                                    'success',
+                                    'factura rechazada'
+                                );
                                 this.store.dispatch(updateInvoice({ invoice }));
                                 this.loading = false;
                             },
                             (error: NtError) => {
-                                this.notificationService.sendNotification('danger',
-                                    error?.message,'Error');
+                                this.notificationService.sendNotification(
+                                    'danger',
+                                    error?.message,
+                                    'Error'
+                                );
                                 this.loading = false;
                             }
                         );
@@ -449,7 +492,11 @@ export class PreCfdiComponent implements OnInit {
                     }
                 });
         } catch (error) {
-            this.notificationService.sendNotification('danger',error.message,'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error.message,
+                'Error'
+            );
             this.loading = false;
         }
     }
@@ -467,14 +514,21 @@ export class PreCfdiComponent implements OnInit {
                             .timbrarFactura(fact.folio, invoice)
                             .subscribe(
                                 (invoice) => {
-                                    this.notificationService.sendNotification('success','factura timbrada');
+                                    this.notificationService.sendNotification(
+                                        'success',
+                                        'factura timbrada'
+                                    );
                                     this.store.dispatch(
                                         updateInvoice({ invoice })
                                     );
                                     this.loading = false;
                                 },
                                 (error: NtError) => {
-                                    this.notificationService.sendNotification('danger',error?.message,'Error en el timbrado');
+                                    this.notificationService.sendNotification(
+                                        'danger',
+                                        error?.message,
+                                        'Error en el timbrado'
+                                    );
                                     this.loading = false;
                                 }
                             );
@@ -483,7 +537,11 @@ export class PreCfdiComponent implements OnInit {
                     }
                 });
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message,'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
             this.loading = false;
         }
     }
@@ -501,15 +559,21 @@ export class PreCfdiComponent implements OnInit {
                             .cancelarFactura(fact.folio, result)
                             .subscribe(
                                 (invoice) => {
-                                    this.notificationService.sendNotification('success',
-                                        'factura cancelada');
+                                    this.notificationService.sendNotification(
+                                        'success',
+                                        'factura cancelada'
+                                    );
                                     this.store.dispatch(
                                         updateInvoice({ invoice })
                                     );
                                     this.loading = false;
                                 },
                                 (error: NtError) => {
-                                    this.notificationService.sendNotification('danger',error?.message,'Error');
+                                    this.notificationService.sendNotification(
+                                        'danger',
+                                        error?.message,
+                                        'Error'
+                                    );
                                     this.loading = false;
                                 }
                             );
@@ -518,7 +582,11 @@ export class PreCfdiComponent implements OnInit {
                     }
                 });
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message,'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
             this.loading = false;
         }
     }
@@ -534,11 +602,19 @@ export class PreCfdiComponent implements OnInit {
             (invoice) => {
                 this.loading = false;
                 this.store.dispatch(updateInvoice({ invoice }));
-                this.notificationService.sendNotification('success','acctualización exitosa','CFDI Revalidado');
+                this.notificationService.sendNotification(
+                    'success',
+                    'acctualización exitosa',
+                    'CFDI Revalidado'
+                );
             },
             (error: NtError) => {
                 this.loading = false;
-                this.notificationService.sendNotification('danger',error?.message,'Error en la revalidacion');
+                this.notificationService.sendNotification(
+                    'danger',
+                    error?.message,
+                    'Error en la revalidacion'
+                );
             }
         );
     }
@@ -585,7 +661,11 @@ export class PreCfdiComponent implements OnInit {
                     },
                     (error: NtError) => {
                         this.loading = false;
-                        this.notificationService.sendNotification('danger',error?.message,'Error generando complemento');
+                        this.notificationService.sendNotification(
+                            'danger',
+                            error?.message,
+                            'Error generando complemento'
+                        );
                     }
                 );
         } else {
@@ -607,7 +687,11 @@ export class PreCfdiComponent implements OnInit {
                     (companies) => (this.emisoresCat = companies),
                     (error: NtError) => {
                         this.loading = false;
-                        this.notificationService.sendNotification('danger',error?.message,'Error');
+                        this.notificationService.sendNotification(
+                            'danger',
+                            error?.message,
+                            'Error'
+                        );
                     }
                 );
         }

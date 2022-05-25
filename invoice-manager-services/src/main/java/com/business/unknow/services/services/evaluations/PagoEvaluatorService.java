@@ -2,9 +2,7 @@ package com.business.unknow.services.services.evaluations;
 
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.pagos.PagoDto;
-import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.util.validators.Validator;
 import java.util.ArrayList;
 import java.util.List;
 import org.jeasy.rules.api.Facts;
@@ -15,20 +13,20 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-@Service("PagoValidator")
-public class PagoEvaluatorService extends Validator {
+@Service
+public class PagoEvaluatorService {
 
   @Autowired
   @Qualifier("creationSuite")
-  public Rules creationSuite;
+  private Rules creationSuite;
 
   @Autowired
   @Qualifier("deletePagoSuite")
-  public Rules deletePagoSuite;
+  private Rules deletePagoSuite;
 
   @Autowired
   @Qualifier("paymentUpdateSuite")
-  public Rules paymentUpdateSuite;
+  private Rules paymentUpdateSuite;
 
   @Autowired protected RulesEngine rulesEngine;
 
@@ -82,29 +80,6 @@ public class PagoEvaluatorService extends Validator {
           results.toString(),
           "Alguna regla de actualizacion de pagos fue ejecutada.",
           HttpStatus.CONFLICT.value());
-    }
-  }
-
-  public void validatePayment(PagoDto dto) throws InvoiceManagerException {
-    checkNotNull(dto.getBanco(), "Banco");
-    checkNotNull(dto.getCuenta(), "Cuenta");
-    checkNotNull(dto.getFechaPago(), "Fecha de pago");
-    checkNotNull(dto.getFormaPago(), "Forma de pago");
-    checkNotNull(dto.getMoneda(), "Moneda");
-    checkNotNull(dto.getMonto(), "Monto");
-    checkNotNull(dto.getAcredor(), "Razon social empresa");
-    checkNotNull(dto.getDeudor(), "Razon social cliente");
-    checkNotNull(dto.getSolicitante(), "Solicitante");
-    checkNotNull(dto.getStatusPago(), "Estatus de pago");
-    checkNotNull(dto.getTipoDeCambio(), "Tipo de cambio");
-    checkNotNegative(dto.getTipoDeCambio(), "Tipo de cambio");
-    checkNotNegative(dto.getMonto(), "Monto pago");
-    if (!dto.getFacturas().isEmpty()) {
-      for (PagoFacturaDto fact : dto.getFacturas()) {
-        checkNotNull(fact.getFolio(), "Folio factura");
-        checkNotEmpty(fact.getFolio(), "Folio factura");
-        checkNotNull(fact.getMonto(), "Monto pago");
-      }
     }
   }
 }

@@ -16,6 +16,7 @@ import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.aws.S3Utils;
 import com.mx.ntlink.cfdi.mappers.CfdiMapper;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
+import com.mx.ntlink.helper.CfdiTransformer;
 import com.mx.ntlink.models.generated.Comprobante;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,13 +67,8 @@ public class FilesService {
   public void sendXmlToS3(String name, Comprobante comprobante) {
     log.info("Saving {}.xml to S3", name);
     try {
-      JAXBContext contextObj = JAXBContext.newInstance(Comprobante.class);
-      Marshaller marshallerObj = contextObj.createMarshaller();
-      marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-      ByteArrayOutputStream xmlStream = new ByteArrayOutputStream();
-      marshallerObj.marshal(comprobante, xmlStream);
-      s3Utils.upsertFile(
-          s3Bucket, S3Buckets.CFDIS.name(), name.concat(".xml"), xmlStream.toByteArray());
+      String xml = CfdiTransformer.cfdiMoldelToString(comprobante);
+      s3Utils.upsertFile(s3Bucket, S3Buckets.CFDIS.name(), name.concat(".xml"), xml.getBytes());
     } catch (JAXBException | NtlinkUtilException e) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,

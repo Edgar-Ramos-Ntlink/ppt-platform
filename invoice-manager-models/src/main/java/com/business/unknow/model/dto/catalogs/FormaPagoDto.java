@@ -22,5 +22,5 @@ public class FormaPagoDto implements Serializable {
 
   private String id;
   private String descripcion;
-  private boolean shortDescripcion;
+  private String shortDescripcion;
 }

@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import static com.business.unknow.Constants.CFDI_DATE_PATTERN;
 import static com.business.unknow.Constants.LOCAL_DATE_TIME_FORMATTER;
 import static com.business.unknow.Constants.SELLO_CFDI_SIZE;
 import static com.business.unknow.enums.FacturaStatus.CANCELADA;
@@ -44,17 +45,17 @@ public class FacturaExecutorService {
   @Value("${ntlink.host}")
   private String host;
 
-  public FacturaCustom stampInvoice(FacturaCustom facturaCustom) {
+  public FacturaCustom stampInvoice(FacturaCustom facturaCustom, String xml) {
     try {
       // TODO: USE UTC
-      facturaCustom
-          .getCfdi()
-          .setFecha(LOCAL_DATE_TIME_FORMATTER.format(LocalDateTime.now().minusHours(6)));
-      Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
       TimbraCfdiQrSinSello timbraCfdiQrSinSello = new TimbraCfdiQrSinSello();
       timbraCfdiQrSinSello.setUserName(user);
       timbraCfdiQrSinSello.setPassword(password);
-      timbraCfdiQrSinSello.setComprobante(CfdiTransformer.cfdiMoldelToString(comprobante));
+      timbraCfdiQrSinSello.setComprobante(
+          xml.replace(
+              CFDI_DATE_PATTERN,
+              LOCAL_DATE_TIME_FORMATTER.format(LocalDateTime.now().minusHours(6))));
+      log.info(timbraCfdiQrSinSello.getComprobante());
       TimbraCfdiQrSinSelloResult response =
           ntLinkClient.timbrarSinSelloConQr(timbraCfdiQrSinSello).getTimbraCfdiQrSinSelloResult();
       Comprobante comprobanteResponse = CfdiTransformer.xmlToCfdiModel(response.getCfdi());

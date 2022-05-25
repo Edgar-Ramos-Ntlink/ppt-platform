@@ -17,6 +17,7 @@ import com.business.unknow.services.mapper.PagoMapper;
 import com.business.unknow.services.repositories.PagoFacturaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
+import com.business.unknow.services.util.validators.PagoValidator;
 import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.IOException;
@@ -34,7 +35,6 @@ import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -48,15 +48,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Slf4j
 public class PagoService {
 
-  @Autowired private PagoRepository repository;
-
-  @Autowired private PagoFacturaRepository facturaPagosRepository;
-
-  @Autowired private PagoMapper mapper;
-
-  @Autowired
-  @Qualifier("PagoValidator")
-  private PagoEvaluatorService pagoEvaluatorService;
+  @Autowired private PagoEvaluatorService pagoEvaluatorService;
 
   @Autowired private FilesService filesService;
 
@@ -65,6 +57,12 @@ public class PagoService {
   @Autowired private CfdiService cfdiService;
 
   @Autowired private DownloaderService downloaderService;
+
+  @Autowired private PagoRepository repository;
+
+  @Autowired private PagoFacturaRepository facturaPagosRepository;
+
+  @Autowired private PagoMapper mapper;
 
   private Page<Pago> paymentsSearch(
       Optional<String> solicitante,
@@ -211,10 +209,6 @@ public class PagoService {
     return mapper.getPagosDtoFromEntities(repository.findPagosByFolio(folio));
   }
 
-  public List<PagoFacturaDto> findPagosFacturaByFolio(String folio) {
-    return mapper.getPagosFacturaDtoFromEntities(facturaPagosRepository.findByFolio(folio));
-  }
-
   public PagoDto getPaymentById(Integer id) throws InvoiceManagerException {
     Optional<Pago> payment = repository.findById(id);
     if (payment.isPresent()) {
@@ -227,20 +221,15 @@ public class PagoService {
     }
   }
 
-  public PagoDto insertNewPaymentWithoutValidation(PagoDto payment) {
-    return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(payment)));
-  }
-
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public PagoDto insertNewPayment(PagoDto pagoDto)
       throws InvoiceManagerException, NtlinkUtilException {
-    pagoEvaluatorService.validatePayment(pagoDto);
+    PagoValidator.validate(pagoDto);
     List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : pagoDto.getFacturas()) {
-      FacturaCustom factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
+      FacturaCustom factura = facturaService.getFacturaByFolio(pagoFact.getFolio());
       facturas.add(factura);
-      // Populate missing information
       pagoFact.setAcredor(factura.getRazonSocialEmisor());
       pagoFact.setDeudor(factura.getRazonSocialRemitente());
       pagoFact.setTotalFactura(factura.getTotal());
@@ -265,19 +254,14 @@ public class PagoService {
       log.info(
           "Generando complemento para : {}",
           factPpd.stream().map(f -> f.getFolio()).collect(Collectors.toList()));
-      FacturaCustom fact = facturaService.generateComplemento(facturas, pagoDto);
-      factPpd.forEach(
-          f -> {
-            Optional<PagoFacturaDto> pagoFact =
-                pagoDto.getFacturas().stream()
-                    .filter(p -> p.getFolio().equals(f.getFolio()))
-                    .findAny();
-            if (pagoFact.isPresent()) {
-              pagoFact.get().setIdCfdi(fact.getIdCfdi());
-            }
-          });
+      FacturaCustom facturaCustomComeplemento =
+          facturaService.generateComplemento(facturas, pagoDto);
+      pagoDto
+          .getFacturas()
+          .forEach(a -> a.setFolioReferencia(facturaCustomComeplemento.getFolio()));
     }
     if (!factPue.isEmpty()) {
+      pagoDto.getFacturas().forEach(a -> a.setFolioReferencia(a.getFolio()));
       factPue.forEach(
           f -> {
             Optional<PagoFacturaDto> pagoFact =
@@ -325,10 +309,6 @@ public class PagoService {
     return mapper.getPagoDtoFromEntity(payment);
   }
 
-  public List<PagoFacturaDto> getPAgoFacturaByIdCfdi(int idCfdi) {
-    return mapper.getPagosFacturaDtoFromEntities(facturaPagosRepository.findByIdCfdi(idCfdi));
-  }
-
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public PagoDto updatePago(Integer idPago, PagoDto pago)
@@ -349,7 +329,7 @@ public class PagoService {
             .revisor1(pago.getRevisor1())
             .revisor2(pago.getRevisor2())
             .build(); // payment only update revision
-    pagoEvaluatorService.validatePayment(pago);
+    PagoValidator.validate(pago);
 
     List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : pago.getFacturas()) {
@@ -373,7 +353,7 @@ public class PagoService {
 
       List<String> folioFacts =
           pago.getFacturas().stream()
-              .map(f -> f.getFolio())
+              .map(f -> f.getFolioReferencia())
               .distinct()
               .collect(Collectors.toList());
 
@@ -400,7 +380,7 @@ public class PagoService {
                             String.format("El pago con id %d no existe", idPago))));
     List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : payment.getFacturas()) {
-      FacturaCustom factura = facturaService.getBaseFacturaByFolio(pagoFact.getFolio());
+      FacturaCustom factura = facturaService.getFacturaBaseByFolio(pagoFact.getFolio());
       facturas.add(factura);
     }
     pagoEvaluatorService.deletepaymentValidation(payment, facturas);

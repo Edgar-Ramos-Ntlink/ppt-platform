@@ -22,6 +22,7 @@ public class PagoComplemento {
 
   private String idDocumento;
   private String folioOrigen;
+  private String folio;
   private String equivalenciaDR;
   private String monedaDr;
   private int numeroParcialidad;
