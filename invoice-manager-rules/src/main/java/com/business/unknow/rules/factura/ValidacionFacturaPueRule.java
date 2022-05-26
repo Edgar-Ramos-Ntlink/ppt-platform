@@ -16,27 +16,29 @@ import org.jeasy.rules.annotation.Rule;
 public class ValidacionFacturaPueRule {
 
   @Condition
-  public boolean condition(@Fact("factura") FacturaCustom facturaDto) {
-    if ((FacturaStatus.VALIDACION_OPERACIONES.getValor().equals(facturaDto.getStatusFactura())
-            || FacturaStatus.VALIDACION_TESORERIA.getValor().equals(facturaDto.getStatusFactura())
-            || FacturaStatus.RECHAZO_TESORERIA.getValor().equals(facturaDto.getStatusFactura()))
-        && facturaDto.getTipoDocumento().equals(TipoDocumento.FACTURA.getDescripcion())
-        && facturaDto.getMetodoPago().equals(MetodosPago.PUE.name())) {
+  public boolean condition(@Fact("facturaCustom") FacturaCustom facturaCustom) {
+    if ((FacturaStatus.VALIDACION_OPERACIONES.getValor().equals(facturaCustom.getStatusFactura())
+            || FacturaStatus.VALIDACION_TESORERIA
+                .getValor()
+                .equals(facturaCustom.getStatusFactura())
+            || FacturaStatus.RECHAZO_TESORERIA.getValor().equals(facturaCustom.getStatusFactura()))
+        && facturaCustom.getTipoDocumento().equals(TipoDocumento.FACTURA.getDescripcion())
+        && facturaCustom.getMetodoPago().equals(MetodosPago.PUE.name())) {
       return true;
     }
     return false;
   }
 
   @Action
-  public void execute(@Fact("factura") FacturaCustom facturaDto) {
-    if (facturaDto.getValidacionOper() && facturaDto.getValidacionTeso()) {
-      facturaDto.setStatusFactura(FacturaStatus.POR_TIMBRAR.getValor());
-    } else if (facturaDto.getValidacionOper() && !facturaDto.getValidacionTeso()) {
-      facturaDto.setStatusFactura(FacturaStatus.VALIDACION_TESORERIA.getValor());
-    } else if (!facturaDto.getValidacionOper() && facturaDto.getValidacionTeso()) {
-      facturaDto.setStatusFactura(FacturaStatus.VALIDACION_OPERACIONES.getValor());
+  public void execute(@Fact("factura") FacturaCustom facturaCustom) {
+    if (facturaCustom.getValidacionOper() && facturaCustom.getValidacionTeso()) {
+      facturaCustom.setStatusFactura(FacturaStatus.POR_TIMBRAR.getValor());
+    } else if (facturaCustom.getValidacionOper() && !facturaCustom.getValidacionTeso()) {
+      facturaCustom.setStatusFactura(FacturaStatus.VALIDACION_TESORERIA.getValor());
+    } else if (!facturaCustom.getValidacionOper() && facturaCustom.getValidacionTeso()) {
+      facturaCustom.setStatusFactura(FacturaStatus.VALIDACION_OPERACIONES.getValor());
     } else {
-      facturaDto.setStatusFactura(FacturaStatus.VALIDACION_OPERACIONES.getValor());
+      facturaCustom.setStatusFactura(FacturaStatus.VALIDACION_OPERACIONES.getValor());
     }
   }
 }

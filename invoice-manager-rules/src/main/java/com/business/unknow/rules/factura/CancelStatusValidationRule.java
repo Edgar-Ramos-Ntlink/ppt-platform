@@ -17,7 +17,7 @@ import org.jeasy.rules.annotation.Rule;
 public class CancelStatusValidationRule {
 
   @Condition
-  public boolean condition(@Fact("facturaDto") FacturaCustom facturaCustom) {
+  public boolean condition(@Fact("facturaCustom") FacturaCustom facturaCustom) {
     return !TIMBRADA.getValor().equals(facturaCustom.getStatusFactura());
   }
 

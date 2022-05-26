@@ -17,8 +17,8 @@ import org.jeasy.rules.annotation.Rule;
 public class ValidacionFacturaComplementoRule {
 
   @Condition
-  public boolean condition(@Fact("factura") FacturaCustom facturaDto) {
-    if (facturaDto.getTipoDocumento().equals(TipoDocumento.COMPLEMENTO.getDescripcion())) {
+  public boolean condition(@Fact("facturaCustom") FacturaCustom facturaCustom) {
+    if (facturaCustom.getTipoDocumento().equals(TipoDocumento.COMPLEMENTO.getDescripcion())) {
       return true;
     }
     return false;

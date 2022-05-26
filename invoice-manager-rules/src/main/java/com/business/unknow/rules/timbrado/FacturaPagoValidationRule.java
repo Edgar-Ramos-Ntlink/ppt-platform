@@ -24,7 +24,7 @@ public class FacturaPagoValidationRule {
 
   @Condition
   public boolean condition(
-      @Fact("facturaCustom") FacturaCustom facturaCustom, List<PagoDto> pagos) {
+      @Fact("facturaCustom") FacturaCustom facturaCustom, @Fact("pagos") List<PagoDto> pagos) {
 
     if (!facturaCustom.getLineaEmisor().equals(LineaEmpresa.A.name())) {
       return false;

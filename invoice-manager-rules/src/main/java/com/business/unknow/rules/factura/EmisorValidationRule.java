@@ -11,7 +11,7 @@ import org.jeasy.rules.annotation.Rule;
 @Rule(name = FacturaSuite.EMISOR_VALIDATION_RULE, description = FacturaSuite.EMISOR_VALIDATION)
 public class EmisorValidationRule {
   @Condition
-  public boolean condition(@Fact("facturaContext") EmpresaDto empresaDto) {
+  public boolean condition(@Fact("facturaCustom") EmpresaDto empresaDto) {
     return empresaDto != null && !empresaDto.getActivo();
   }
 

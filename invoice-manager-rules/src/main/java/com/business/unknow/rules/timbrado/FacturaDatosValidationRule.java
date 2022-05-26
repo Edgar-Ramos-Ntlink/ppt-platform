@@ -16,7 +16,7 @@ import org.jeasy.rules.annotation.Rule;
 public class FacturaDatosValidationRule {
 
   @Condition
-  public boolean condition(@Fact("facturaContext") FacturaCustom facturaCustom) {
+  public boolean condition(@Fact("facturaCustom") FacturaCustom facturaCustom) {
     if (facturaCustom.getUuid() != null || facturaCustom.getFechaTimbrado() != null) {
       return true;
     } else {

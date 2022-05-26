@@ -35,9 +35,9 @@ public class FacturaEvaluatorService {
     ValidationRules.validateRulesResponse(results);
   }
 
-  public void facturaStatusValidation(FacturaCustom facturaDto) {
+  public void facturaStatusValidation(FacturaCustom facturaCustom) {
     Facts facts = new Facts();
-    facts.put("factura", facturaDto);
+    facts.put("facturaCustom", facturaCustom);
     rulesEngine.fire(invoiceValidationSuite, facts);
   }
 }
