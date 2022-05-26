@@ -17,7 +17,7 @@ import org.jeasy.rules.annotation.Rule;
 public class FacturaStatusRule {
 
   @Condition
-  public boolean condition(@Fact("FacturaCustom") FacturaCustom facturaCustom) {
+  public boolean condition(@Fact("facturaCustom") FacturaCustom facturaCustom) {
     return facturaCustom.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())
         || facturaCustom.getStatusFactura().equals(FacturaStatus.CANCELADA.getValor())
         || facturaCustom.getStatusFactura().equals(FacturaStatus.RECHAZO_OPERACIONES.getValor())

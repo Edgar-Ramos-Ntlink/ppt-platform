@@ -39,7 +39,7 @@ public class TimbradoEvaluatorService {
       throws InvoiceManagerException {
     Facts facts = new Facts();
     List<String> results = new ArrayList<>();
-    facts.put("FacturaCustom", facturaCustom);
+    facts.put("facturaCustom", facturaCustom);
     facts.put("pagos", pagos);
     facts.put("results", results);
     rulesEngine.fire(stampSuite, facts);

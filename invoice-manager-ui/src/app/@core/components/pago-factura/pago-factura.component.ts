@@ -14,10 +14,11 @@ import { AppState } from '../../../reducers';
 import { invoice } from '../../core.selectors';
 import { bignumber, format } from 'mathjs';
 import { InvoicesData } from '../../data/invoices-data';
-import { updateInvoice } from '../../core.actions';
+import { initInvoice, updateInvoice } from '../../core.actions';
 import { CfdiData } from '../../data/cfdi-data';
 import { DatePipe } from '@angular/common';
 import { NotificationsService } from '../../util-services/notifications.service';
+import { NtError } from '../../models/nt-error';
 
 @Component({
     selector: 'nt-pago-factura',
@@ -214,14 +215,7 @@ export class PagoFacturaComponent implements OnInit {
                 const factura: Factura = JSON.parse(
                     JSON.stringify(this.factura)
                 );
-                if (payment.formaPago !== 'CREDITO') {
-                    factura.saldoPendiente = +format(
-                        bignumber(factura.saldoPendiente).minus(
-                            bignumber(payment.monto)
-                        )
-                    );
-                    this.store.dispatch(updateInvoice({ invoice: factura }));
-                }
+                this.updateInvoiceByFolio(factura.folio);
 
                 this.newPayment = new PagoBase();
                 this.newPayment.moneda = 'MXN';
@@ -251,5 +245,22 @@ export class PagoFacturaComponent implements OnInit {
             );
         }
         this.loading = false;
+    }
+
+    public updateInvoiceByFolio(folio: string) {
+        this.invoiceService.getInvoiceByFolio(folio).subscribe(
+            (invoice) => {
+                this.store.dispatch(updateInvoice({ invoice }));
+            },
+            (error: NtError) => {
+                this.notificationService.sendNotification(
+                    'danger',
+                    error?.message,
+                    'Error'
+                );
+                this.store.dispatch(initInvoice({ invoice: new Factura() }));
+                this.loading = false;
+            }
+        );
     }
 }
