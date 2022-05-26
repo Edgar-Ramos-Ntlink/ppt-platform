@@ -1,26 +1,33 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../reducers';
-import { cfdi, complementos } from '../../core.selectors';
-import { Cfdi } from '../../models/cfdi/cfdi';
-import { ComplementoPago } from '../../models/complemento-pago';
+import { invoice } from '../../core.selectors';
+import { Factura } from '../../models/factura';
 
 @Component({
-  selector: 'nt-complementos-pago',
-  templateUrl: './complementos-pago.component.html',
-  styleUrls: ['./complementos-pago.component.scss']
+    selector: 'nt-complementos-pago',
+    templateUrl: './complementos-pago.component.html',
+    styleUrls: ['./complementos-pago.component.scss'],
 })
 export class ComplementosPagoComponent implements OnInit {
+    public factura: Factura;
 
-  
-  public cfdi:Cfdi;
-  public complementos: ComplementoPago[];
+    constructor(private store: Store<AppState>, private router: Router) {}
 
-  constructor(private store: Store<AppState>) { }
+    ngOnInit(): void {
+        this.store
+            .pipe(select(invoice))
+            .subscribe((fact) => (this.factura = fact));
+        console.log(this.factura.pagos);
+    }
 
-  ngOnInit(): void {
-    this.store.pipe(select(cfdi)).subscribe((cfdi)=>this.cfdi = cfdi);
-    this.store.pipe(select(complementos)).subscribe((complementos)=>this.complementos = complementos);
-  }
+    public redirectToChildCfdi(folio: string) {
+        console.log('a');
+        this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
+    }
 
+    public redirectToCfdi(folio: string) {
+        this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
+    }
 }

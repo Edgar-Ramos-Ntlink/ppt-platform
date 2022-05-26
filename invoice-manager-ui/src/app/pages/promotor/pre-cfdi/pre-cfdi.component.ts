@@ -91,10 +91,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         this.invoiceService.getInvoiceByFolio(folio).subscribe(
             (invoice) => {
                 this.store.dispatch(updateInvoice({ invoice }));
-
-                this.cfdiService
-                    .findInvoicePaymentComplementsByFolio(folio)
-                    .subscribe((pagos) => (this.pagosCfdi = pagos));
             },
             (error: NtError) => {
                 this.notificationService.sendNotification(

@@ -23,7 +23,6 @@ import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Factura;
 import com.business.unknow.services.mapper.FacturaMapper;
-import com.business.unknow.services.repositories.facturas.CfdiPagoRepository;
 import com.business.unknow.services.repositories.facturas.FacturaDao;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
@@ -103,8 +102,6 @@ public class FacturaService {
   @Autowired private FacturaDao facturaDao;
 
   @Autowired private FacturaRepository repository;
-
-  @Autowired private CfdiPagoRepository cfdiPagoRepository;
 
   @Autowired private CfdiMapper cfdiMapper;
 

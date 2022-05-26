@@ -23,7 +23,6 @@ import {
     updateReceptorAddress,
 } from '../../../@core/core.actions';
 import { invoice } from '../../../@core/core.selectors';
-import { AppConstants } from '../../../models/app-constants';
 import { Emisor } from '../../../@core/models/cfdi/emisor';
 import { Receptor } from '../../../@core/models/cfdi/receptor';
 import { ClientsData } from '../../../@core/data/clients-data';
@@ -151,11 +150,6 @@ export class PreCfdiComponent implements OnInit {
         this.invoiceService.getInvoiceByFolio(folio).subscribe(
             (invoice) => {
                 this.store.dispatch(updateInvoice({ invoice }));
-
-                this.cfdiService
-                    .findInvoicePaymentComplementsByFolio(folio)
-                    .subscribe((pagos) => (this.pagosCfdi = pagos));
-
                 this.loading = false;
             },
             (error: NtError) => {

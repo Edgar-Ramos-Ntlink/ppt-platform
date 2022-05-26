@@ -60,10 +60,6 @@ export class RevisionComponent implements OnInit {
             (invoice) => {
                 this.store.dispatch(updateInvoice({ invoice }));
                 this.loading = false;
-
-                this.cfdiService
-                    .findInvoicePaymentComplementsByFolio(folio)
-                    .subscribe((pagos) => (this.pagosCfdi = pagos));
             },
             (error: NtError) => {
                 this.notificationService.sendNotification(

@@ -1,8 +1,12 @@
 package com.business.unknow.model.dto;
 
+import static com.business.unknow.Constants.JSON_DATETIME_FORMAT;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.math.BigDecimal;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +33,10 @@ public class PagoComplemento {
   private BigDecimal importeSaldoAnterior;
   private BigDecimal importePagado;
   private BigDecimal importeSaldoInsoluto;
+
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATETIME_FORMAT)
+  private Date fechaPago;
+
   private boolean valido;
   private BigDecimal tipoCambioDr;
   private BigDecimal tipoCambio;

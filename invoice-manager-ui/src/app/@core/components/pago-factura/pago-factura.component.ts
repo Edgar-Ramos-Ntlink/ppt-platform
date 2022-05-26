@@ -14,7 +14,7 @@ import { AppState } from '../../../reducers';
 import { invoice } from '../../core.selectors';
 import { bignumber, format } from 'mathjs';
 import { InvoicesData } from '../../data/invoices-data';
-import { updateComplementosPago, updateInvoice } from '../../core.actions';
+import { updateInvoice } from '../../core.actions';
 import { CfdiData } from '../../data/cfdi-data';
 import { DatePipe } from '@angular/common';
 import { NotificationsService } from '../../util-services/notifications.service';
@@ -113,9 +113,11 @@ export class PagoFacturaComponent implements OnInit {
         if (event.target.files && event.target.files.length > 0) {
             const file = event.target.files[0];
             if (file.size > 1000000) {
-                this.notificationService.sendNotification('warning',
+                this.notificationService.sendNotification(
+                    'warning',
                     'El archivo demasiado grande, intenta con un archivo mas pequeño.',
-                    'Archivo demasiado grande');
+                    'Archivo demasiado grande'
+                );
             } else {
                 reader.readAsDataURL(file);
                 reader.onload = () => {
@@ -123,7 +125,10 @@ export class PagoFacturaComponent implements OnInit {
                     this.newPayment.documento = reader.result.toString();
                 };
                 reader.onerror = (error) => {
-                    this.notificationService.sendNotification('danger','Error en la lectura del archivo');
+                    this.notificationService.sendNotification(
+                        'danger',
+                        'Error en la lectura del archivo'
+                    );
                 };
             }
         }
@@ -145,17 +150,12 @@ export class PagoFacturaComponent implements OnInit {
                 .updateInvoice(factura)
                 .toPromise();
             this.store.dispatch(updateInvoice({ invoice }));
-            if (
-                factura.metodoPago === 'PPD' &&
-                factura.tipoDocumento === 'Factura'
-            ) {
-                const complementos = await this.cfdiService
-                    .findInvoicePaymentComplementsByFolio(factura.folio)
-                    .toPromise();
-                this.store.dispatch(updateComplementosPago({ complementos }));
-            }
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message,'Error en el borrado del pago');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error en el borrado del pago'
+            );
         }
         this.loading = false;
     }
@@ -201,7 +201,12 @@ export class PagoFacturaComponent implements OnInit {
 
                     this.fileService.insertResourceFile(resourceFile).subscribe(
                         (response) => console.log(response),
-                        (e) => this.notificationService.sendNotification('warning',e?.message,'Error cargando imagen pago')
+                        (e) =>
+                            this.notificationService.sendNotification(
+                                'warning',
+                                e?.message,
+                                'Error cargando imagen pago'
+                            )
                     );
                 }
 
@@ -217,17 +222,6 @@ export class PagoFacturaComponent implements OnInit {
                     );
                     this.store.dispatch(updateInvoice({ invoice: factura }));
                 }
-                if (
-                    factura.metodoPago === 'PPD' &&
-                    factura.tipoDocumento === 'Factura'
-                ) {
-                    const complementos = await this.cfdiService
-                        .findInvoicePaymentComplementsByFolio(factura.folio)
-                        .toPromise();
-                    this.store.dispatch(
-                        updateComplementosPago({ complementos })
-                    );
-                }
 
                 this.newPayment = new PagoBase();
                 this.newPayment.moneda = 'MXN';
@@ -242,10 +236,19 @@ export class PagoFacturaComponent implements OnInit {
                 }
             } else {
                 errors.forEach((e) =>
-                this.notificationService.sendNotification('warning',e,'Error de validacion'));
+                    this.notificationService.sendNotification(
+                        'warning',
+                        e,
+                        'Error de validacion'
+                    )
+                );
             }
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message,'Error en la creacion del pago');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error en la creacion del pago'
+            );
         }
         this.loading = false;
     }

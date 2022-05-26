@@ -1,22 +1,14 @@
-export class ComplementoPago{
-    public id: number;
-    public version: string;
-    public fechaPago: Date;
-    public formaPago: string;
-    public moneda: string;
-    public monto: number;
-    public folio: string;
+export class ComplementoPago {
     public idDocumento: string;
-    public importePagado: number;
-    public importeSaldoAnterior: number;
-    public importeSaldoInsoluto: number;
-    public metodoPago: string;
+    public folioOrigen: string;
+    public folio: string;
+    public equivalenciaDR: string;
     public monedaDr: string;
+    public fechaPago: Date;
     public numeroParcialidad: number;
-    public serie: string;
-
-
-    constructor() {
-        this.moneda = 'MXN';
-    }
+    public importeSaldoAnterior: number;
+    public importePagado: number;
+    public importeSaldoInsoluto: number;
+    public valido: boolean;
+    public tipoCambio: number;
 }
