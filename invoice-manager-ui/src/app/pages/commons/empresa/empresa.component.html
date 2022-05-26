@@ -1,1890 +1,1890 @@
 <div class="row">
-  <div class="col-md-12">
-    <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
-      <nb-card-header class=""
-        >Datos empresa
-        <button
-          type="button"
-          class="btn btn-outline-danger float-right"
-          *ngIf="companyInfo.activo"
-          (click)="inactivateCompany()"
-        >
-          Desactivar
-        </button>
-        <button
-          type="button"
-          class="btn btn-outline-success float-right"
-          *ngIf="!companyInfo.activo && companyInfo.id"
-          (click)="activateCompany()"
-        >
-          Activar
-        </button>
-      </nb-card-header>
-      <nb-card-body>
-        <nb-tabset fullWidth>
-          <nb-tab tabTitle="Datos generales">
-            <p class="font-weight-bold">Informacion Fiscal</p>
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="inputRFC" class="label">RFC</label>
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.rfc"
-                    class="form-control"
-                    fullWidth
-                    id="inputRFC"
-                    placeholder="RFC Empresa"
-                    [disabled]="
-                      companyInfo.id !== undefined || companyInfo.activo
-                    "
-                  />
-                </div>
-              </div>
-              <div class="col-md-5">
-                <div class="form-group">
-                  <label for="inputSocialReason" class="label"
-                    >Razón Social</label
-                  >
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.razonSocial"
-                    class="form-control"
-                    fullWidth
-                    [disabled]="companyInfo.activo"
-                    id="inputSocialReason"
-                    placeholder="Razón Social"
-                  />
-                </div>
-              </div>
+	<div class="col-md-12">
+		<nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
+			<nb-card-header class=""
+				>Datos empresa
+				<button
+					type="button"
+					class="btn btn-outline-danger float-right"
+					*ngIf="companyInfo.activo"
+					(click)="inactivateCompany()"
+				>
+					Desactivar
+				</button>
+				<button
+					type="button"
+					class="btn btn-outline-success float-right"
+					*ngIf="!companyInfo.activo && companyInfo.id"
+					(click)="activateCompany()"
+				>
+					Activar
+				</button>
+			</nb-card-header>
+			<nb-card-body>
+				<nb-tabset fullWidth>
+					<nb-tab tabTitle="Datos generales">
+						<p class="font-weight-bold">Informacion Fiscal</p>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="inputRFC" class="label">RFC</label>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.rfc"
+										class="form-control"
+										fullWidth
+										id="inputRFC"
+										placeholder="RFC Empresa"
+										[disabled]="
+											companyInfo.id !== undefined || companyInfo.activo
+										"
+									/>
+								</div>
+							</div>
+							<div class="col-md-5">
+								<div class="form-group">
+									<label for="inputSocialReason" class="label"
+										>Razón Social</label
+									>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.razonSocial"
+										class="form-control"
+										fullWidth
+										[disabled]="companyInfo.activo"
+										id="inputSocialReason"
+										placeholder="Razón Social"
+									/>
+								</div>
+							</div>
 
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="inputShortName" class="label">Nombre Corto</label>
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.nombre"
-                    class="form-control"
-                    fullWidth
-                    [disabled]="companyInfo.activo"
-                    id="inputShortName"
-                    placeholder="Nombre corto"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-3">
-                <label for="inputPais" class="label">País</label>
-                <select
-                  id="inputPais"
-                  selected="0"
-                  fullWidth
-                  class="form-control"
-                  style="display: block"
-                  [disabled]="companyInfo.activo"
-                >
-                  <option value="0">México</option>
-                </select>
-              </div>
-              <div class="col-sm-3">
-                <div class="form-group">
-                  <label for="inputZipCode" class="label">Código Postal</label>
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.cp"
-                    (ngModelChange)="zipCodeInfo($event)"
-                    [disabled]="companyInfo.activo"
-                    class="form-control"
-                    fullWidth
-                    id="inputZipCode"
-                    placeholder="00300"
-                  />
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <label for="inputColonia" class="label"
-                  >Seleccionar colonia</label
-                >
-                <select
-                  id="inputColonia"
-                  fullWidth
-                  class="form-control"
-                  *ngIf="!companyInfo.activo"
-                  [(ngModel)]="formInfo.coloniaId"
-                  (change)="onLocation($event.target.value)"
-                  style="display: block"
-                >
-                  <option value="*">Seleccionar</option>
-                  <option
-                    *ngFor="let colonia of colonias; let i = index"
-                    [value]="i"
-                  >
-                    {{ colonia }}
-                  </option>
-                </select>
-                <input
-                  type="text"
-                  [(ngModel)]="companyInfo.colonia"
-                  class="form-control"
-                  fullWidth
-                  [disabled]="companyInfo.activo"
-                  *ngIf="companyInfo.activo"
-                  id="inputLocalidad"
-                  placeholder="Colonia"
-                />
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-4">
-                <label for="inputState" class="label">Estado</label>
-                <input
-                  type="text"
-                  [(ngModel)]="companyInfo.estado"
-                  class="form-control"
-                  fullWidth
-                  id="inputState"
-                  [disabled]="companyInfo.activo"
-                  placeholder="Estado"
-                />
-              </div>
-              <div class="col-sm-4">
-                <div class="form-group">
-                  <label for="inputCity" class="label"
-                    >Municipio/Delegación</label
-                  >
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.municipio"
-                    class="form-control"
-                    fullWidth
-                    id="inputCity"
-                    [disabled]="companyInfo.activo"
-                    placeholder="Municipio/Delegación"
-                  />
-                </div>
-              </div>
-              <div
-                class="col-sm-2"
-                *ngIf="isAdministrator || module === 'legal'"
-              >
-                <label for="Operativa" class="label">Operativa</label>
-                <select
-                  selected="true"
-                  id="operativa"
-                  style="display: block"
-                  fullWidth
-                  class="form-control"
-                  [disabled]="companyInfo.activo"
-                  [(ngModel)]="companyInfo.operativa"
-                  (change)="onOperativaSelected($event.target.value)"
-                >
-                  <option value="true">Operativa</option>
-                  <option value="false">No Operativa</option>
-                </select>
-              </div>
-              <div
-                class="col-sm-2"
-                *ngIf="isAdministrator || module === 'legal'"
-              >
-                <label for="Bloquear" class="label">Bloquear</label>
-                <select
-                  selected="true"
-                  id="Bloquear"
-                  style="display: block"
-                  fullWidth
-                  class="form-control"
-                  [disabled]="companyInfo.activo"
-                  [(ngModel)]="companyInfo.blocked"
-                  (change)="onBlockSelected($event.target.value)"
-                >
-                  <option value="true">bloqueada</option>
-                  <option value="false">no bloqueada</option>
-                </select>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="inputCalle" class="label">Calle</label>
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.calle"
-                    class="form-control"
-                    fullWidth
-                    id="inputCalle"
-                    [disabled]="companyInfo.activo"
-                    placeholder="Calle"
-                  />
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="inputExterior" class="label">No exterior</label>
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.noExterior"
-                    class="form-control"
-                    fullWidth
-                    [disabled]="companyInfo.activo"
-                    id="inputExterior"
-                    placeholder="No exterior"
-                  />
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="inputInterior" class="label">No interior</label>
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.noInterior"
-                    class="form-control"
-                    fullWidth
-                    [disabled]="companyInfo.activo"
-                    id="inputInterior"
-                    placeholder="No interior"
-                  />
-                </div>
-              </div>
-            </div>
-            <p class="font-weight-bold">Datos addicionales</p>
-            <div class="row">
-              <div class="col-sm-6">
-                <label for="inputGiro" class="label">Giro Empresa</label>
-                <select
-                  id="inputGiro"
-                  fullWidth
-                  class="form-control"
-                  (change)="onGiroSelection($event.target.value)"
-                  [disabled]="companyInfo.activo"
-                  style="display: block"
-                  [(ngModel)]="companyInfo.giro"
-                >
-                  <option value="*">Seleccionar</option>
-                  <option *ngFor="let giro of girosCat" [(value)]="giro.id">
-                    {{ giro.nombre }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-sm-3">
-                <label for="inputCompanyType" class="label"
-                  >Linea Empresa</label
-                >
-                <select
-                  selected="*"
-                  id="inputCompanyType"
-                  style="display: block"
-                  fullWidth
-                  class="form-control"
-                  [disabled]="companyInfo.activo"
-                  [(ngModel)]="companyInfo.tipo"
-                  (change)="onLineaSelected($event.target.value)"
-                >
-                  <option value="*">Seleccionar</option>
-                  <option value="A">Tipo A</option>
-                  <option value="B">Tipo B</option>
-                  <option value="C">Tipo C</option>
-                  <option value="D">Tipo D</option>
-                </select>
-              </div>
-              <div class="col-sm-3">
-                <label for="inputPayType" class="label">Regimen Fiscal</label>
-                <select
-                  selected="1"
-                  id="inputPayType"
-                  style="display: block"
-                  fullWidth
-                  class="form-control"
-                  [(ngModel)]="companyInfo.regimenFiscal"
-                  [disabled]="companyInfo.activo"
-                  (change)="onRegimenFiscalSelected($event.target.value)"
-                >
-                  <option value="*">Seleccionar</option>
-                  <option value="601">General de Ley Personas Morales</option>
-                  <option value="626">Régimen Simplificado de Confianza</option>
-                </select>
-              </div>
-            </div>
-            <br />
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="inputShortName" class="label">Nombre Corto</label>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.nombre"
+										class="form-control"
+										fullWidth
+										[disabled]="companyInfo.activo"
+										id="inputShortName"
+										placeholder="Nombre corto"
+									/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3">
+								<label for="inputPais" class="label">País</label>
+								<select
+									id="inputPais"
+									selected="0"
+									fullWidth
+									class="form-control"
+									style="display: block"
+									[disabled]="companyInfo.activo"
+								>
+									<option value="0">México</option>
+								</select>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label for="inputZipCode" class="label">Código Postal</label>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.cp"
+										(ngModelChange)="zipCodeInfo($event)"
+										[disabled]="companyInfo.activo"
+										class="form-control"
+										fullWidth
+										id="inputZipCode"
+										placeholder="00300"
+									/>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<label for="inputColonia" class="label"
+									>Seleccionar colonia</label
+								>
+								<select
+									id="inputColonia"
+									fullWidth
+									class="form-control"
+									*ngIf="!companyInfo.activo"
+									[(ngModel)]="formInfo.coloniaId"
+									(change)="onLocation($event.target.value)"
+									style="display: block"
+								>
+									<option value="*">Seleccionar</option>
+									<option
+										*ngFor="let colonia of colonias; let i = index"
+										[value]="i"
+									>
+										{{ colonia }}
+									</option>
+								</select>
+								<input
+									type="text"
+									[(ngModel)]="companyInfo.colonia"
+									class="form-control"
+									fullWidth
+									[disabled]="companyInfo.activo"
+									*ngIf="companyInfo.activo"
+									id="inputLocalidad"
+									placeholder="Colonia"
+								/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<label for="inputState" class="label">Estado</label>
+								<input
+									type="text"
+									[(ngModel)]="companyInfo.estado"
+									class="form-control"
+									fullWidth
+									id="inputState"
+									[disabled]="companyInfo.activo"
+									placeholder="Estado"
+								/>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="inputCity" class="label"
+										>Municipio/Alcaldía</label
+									>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.municipio"
+										class="form-control"
+										fullWidth
+										id="inputCity"
+										[disabled]="companyInfo.activo"
+										placeholder="Municipio/Delegación"
+									/>
+								</div>
+							</div>
+							<div
+								class="col-sm-2"
+								*ngIf="isAdministrator || module === 'legal'"
+							>
+								<label for="Operativa" class="label">Operativa</label>
+								<select
+									selected="true"
+									id="operativa"
+									style="display: block"
+									fullWidth
+									class="form-control"
+									[disabled]="companyInfo.activo"
+									[(ngModel)]="companyInfo.operativa"
+									(change)="onOperativaSelected($event.target.value)"
+								>
+									<option value="true">Operativa</option>
+									<option value="false">No Operativa</option>
+								</select>
+							</div>
+							<div
+								class="col-sm-2"
+								*ngIf="isAdministrator || module === 'legal'"
+							>
+								<label for="Bloquear" class="label">Bloquear</label>
+								<select
+									selected="true"
+									id="Bloquear"
+									style="display: block"
+									fullWidth
+									class="form-control"
+									[disabled]="companyInfo.activo"
+									[(ngModel)]="companyInfo.blocked"
+									(change)="onBlockSelected($event.target.value)"
+								>
+									<option value="true">bloqueada</option>
+									<option value="false">no bloqueada</option>
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="inputCalle" class="label">Calle</label>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.calle"
+										class="form-control"
+										fullWidth
+										id="inputCalle"
+										[disabled]="companyInfo.activo"
+										placeholder="Calle"
+									/>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="inputExterior" class="label">No exterior</label>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.noExterior"
+										class="form-control"
+										fullWidth
+										[disabled]="companyInfo.activo"
+										id="inputExterior"
+										placeholder="No exterior"
+									/>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="inputInterior" class="label">No interior</label>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.noInterior"
+										class="form-control"
+										fullWidth
+										[disabled]="companyInfo.activo"
+										id="inputInterior"
+										placeholder="No interior"
+									/>
+								</div>
+							</div>
+						</div>
+						<p class="font-weight-bold">Datos adicionales</p>
+						<div class="row">
+							<div class="col-sm-6">
+								<label for="inputGiro" class="label">Giro Empresa</label>
+								<select
+									id="inputGiro"
+									fullWidth
+									class="form-control"
+									(change)="onGiroSelection($event.target.value)"
+									[disabled]="companyInfo.activo"
+									style="display: block"
+									[(ngModel)]="companyInfo.giro"
+								>
+									<option value="*">Seleccionar</option>
+									<option *ngFor="let giro of girosCat" [(value)]="giro.id">
+										{{ giro.nombre }}
+									</option>
+								</select>
+							</div>
+							<div class="col-sm-3">
+								<label for="inputCompanyType" class="label"
+									>Linea Empresa</label
+								>
+								<select
+									selected="*"
+									id="inputCompanyType"
+									style="display: block"
+									fullWidth
+									class="form-control"
+									[disabled]="companyInfo.activo"
+									[(ngModel)]="companyInfo.tipo"
+									(change)="onLineaSelected($event.target.value)"
+								>
+									<option value="*">Seleccionar</option>
+									<option value="A">Tipo A</option>
+									<option value="B">Tipo B</option>
+									<option value="C">Tipo C</option>
+									<option value="D">Tipo D</option>
+								</select>
+							</div>
+							<div class="col-sm-3">
+								<label for="inputPayType" class="label">Regimen Fiscal</label>
+								<select
+									selected="1"
+									id="inputPayType"
+									style="display: block"
+									fullWidth
+									class="form-control"
+									[(ngModel)]="companyInfo.regimenFiscal"
+									[disabled]="companyInfo.activo"
+									(change)="onRegimenFiscalSelected($event.target.value)"
+								>
+									<option value="*">Seleccionar</option>
+									<option value="601">General de Ley Personas Morales</option>
+									<option value="626">Régimen Simplificado de Confianza</option>
+								</select>
+							</div>
+						</div>
+						<br />
 
-            <p class="font-weight-bold">Datos legales</p>
-            <br />
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="inputRepresentante" class="label"
-                    >Nombre Representante Legal</label
-                  >
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.representanteLegal"
-                    class="form-control"
-                    fullWidth
-                    [disabled]="companyInfo.activo"
-                    id="inputRepresentante"
-                    placeholder="Nombre representante legal"
-                    [disabled]="
-                      companyInfo.id === undefined || companyInfo.activo
-                    "
-                  />
-                </div>
-              </div>
+						<p class="font-weight-bold">Datos legales</p>
+						<br />
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="inputRepresentante" class="label"
+										>Nombre Representante Legal</label
+									>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.representanteLegal"
+										class="form-control"
+										fullWidth
+										[disabled]="companyInfo.activo"
+										id="inputRepresentante"
+										placeholder="Nombre representante legal"
+										[disabled]="
+											companyInfo.id === undefined || companyInfo.activo
+										"
+									/>
+								</div>
+							</div>
 
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="estatusJuridico" class="label"
-                    >Estatus Juridico Actual</label
-                  >
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.estatusJuridico"
-                    class="form-control"
-                    fullWidth
-                    [disabled]="companyInfo.activo"
-                    id="estatusJuridico"
-                    placeholder="Estatus Juridico"
-                  />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="estatusJuridico2" class="label"
-                    >Estatus Juridico Fase 2</label
-                  >
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.estatusJuridico2"
-                    class="form-control"
-                    fullWidth
-                    [disabled]="companyInfo.activo"
-                    id="estatusJuridico2"
-                    placeholder="Estatus Juridico 2"
-                  />
-                </div>
-              </div>
-            </div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="estatusJuridico" class="label"
+										>Estatus Juridico Actual</label
+									>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.estatusJuridico"
+										class="form-control"
+										fullWidth
+										[disabled]="companyInfo.activo"
+										id="estatusJuridico"
+										placeholder="Estatus Juridico"
+									/>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="estatusJuridico2" class="label"
+										>Estatus Juridico Fase 2</label
+									>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.estatusJuridico2"
+										class="form-control"
+										fullWidth
+										[disabled]="companyInfo.activo"
+										id="estatusJuridico2"
+										placeholder="Estatus Juridico 2"
+									/>
+								</div>
+							</div>
+						</div>
 
-            <div *ngIf="companyInfo.id">
-              <!-- STOCK-HOLDERS -->
-              <div
-                class="row"
-                *ngIf="
-                  companyInfo.id && (isAdministrator || module === 'legal')
-                "
-              >
-                <p class="font-weight-bold">Accionistas</p>
-                <div class="col-md-12">
-                  <div class="clearfix">
-                    <div class="row float-right" style="margin-right: 1px">
-                      <button
-                        type="button"
-                        (click)="
-                          openDetallesDialog(
-                            stockHolderDialog,
-                            undefined,
-                            'ACCIONISTA'
-                          )
-                        "
-                        style="margin-left: 25px"
-                        class="btn btn-primary float-right"
-                      >
-                        Nuevo Accionista
-                      </button>
-                    </div>
-                  </div>
-                  <br />
+						<div *ngIf="companyInfo.id">
+							<!-- STOCK-HOLDERS -->
+							<div
+								class="row"
+								*ngIf="
+									companyInfo.id && (isAdministrator || module === 'legal')
+								"
+							>
+								<p class="font-weight-bold">Accionistas</p>
+								<div class="col-md-12">
+									<div class="clearfix">
+										<div class="row float-right" style="margin-right: 1px">
+											<button
+												type="button"
+												(click)="
+													openDetallesDialog(
+														stockHolderDialog,
+														undefined,
+														'ACCIONISTA'
+													)
+												"
+												style="margin-left: 25px"
+												class="btn btn-primary float-right"
+											>
+												Nuevo Accionista
+											</button>
+										</div>
+									</div>
+									<br />
 
-                  <div
-                    class=""
-                    *ngIf="accionistas.length === 0"
-                    class="alert alert-primary"
-                    role="alert"
-                  >
-                    No hay accionistas para la empresa
-                  </div>
+									<div
+										class=""
+										*ngIf="accionistas.length === 0"
+										class="alert alert-primary"
+										role="alert"
+									>
+										No hay accionistas para la empresa
+									</div>
 
-                  <div class="table-responsive" *ngIf="accionistas.length > 0">
-                    <table class="table table-sm">
-                      <thead class="thead-dark">
-                        <tr>
-                          <th class="text-center">ACCIONES</th>
-                          <th scope="col">RFC</th>
-                          <th scope="col">NOMBRE</th>
-                          <th scope="col">NOTIFICANTE</th>
-                          <th scope="col">FECHA</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let fila of accionistas">
-                          <td scope="row" class="text-center">
-                            <button
-                              class="btn d-inline mr-2 ml-2"
-                              [ngClass]="{
-                                'btn-outline-secondary':
-                                  fila.area !== module && !isAdministrator,
-                                'btn-outline-danger':
-                                  fila.area === module || isAdministrator
-                              }"
-                              (click)="deleteDetail(fila.id)"
-                              [disabled]="
-                                fila.area != module && !isAdministrator
-                              "
-                            >
-                              <i class="fa fa-trash"></i>
-                            </button>
-                            <button
-                              class="btn d-inline mr-2 ml-2"
-                              [ngClass]="{
-                                'btn-outline-secondary':
-                                  fila.area !== module && !isAdministrator,
-                                'btn-outline-primary':
-                                  fila.area === module || isAdministrator
-                              }"
-                              [disabled]="
-                                fila.area != module && !isAdministrator
-                              "
-                              (click)="
-                                openDetallesDialog(stockHolderDialog, fila)
-                              "
-                            >
-                              <i class="fa fa-search"></i>
-                            </button>
-                            <button
-                              class="btn d-inline mr-2 ml-2"
-                              [ngClass]="{
-                                'btn-outline-secondary':
-                                  fila.area !== module && !isAdministrator,
-                                'btn-outline-primary':
-                                  fila.area === module || isAdministrator
-                              }"
-                              [disabled]="
-                                fila.area != module && !isAdministrator
-                              "
-                              (click)="downloadDocumentDetail(fila)"
-                            >
-                              <i class="fa fa-download"></i>
-                            </button>
-                          </td>
-                          <td scope="row">{{ fila.resumen }}</td>
-                          <td scope="row">{{ fila.detalle }}</td>
-                          <td scope="row">{{ fila.notificante }}</td>
-                          <td scope="row">{{ fila.fechaCreacion }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+									<div class="table-responsive" *ngIf="accionistas.length > 0">
+										<table class="table table-sm">
+											<thead class="thead-dark">
+												<tr>
+													<th class="text-center">ACCIONES</th>
+													<th scope="col">RFC</th>
+													<th scope="col">NOMBRE</th>
+													<th scope="col">NOTIFICANTE</th>
+													<th scope="col">FECHA</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr *ngFor="let fila of accionistas">
+													<td scope="row" class="text-center">
+														<button
+															class="btn d-inline mr-2 ml-2"
+															[ngClass]="{
+																'btn-outline-secondary':
+																	fila.area !== module && !isAdministrator,
+																'btn-outline-danger':
+																	fila.area === module || isAdministrator
+															}"
+															(click)="deleteDetail(fila.id)"
+															[disabled]="
+																fila.area != module && !isAdministrator
+															"
+														>
+															<i class="fa fa-trash"></i>
+														</button>
+														<button
+															class="btn d-inline mr-2 ml-2"
+															[ngClass]="{
+																'btn-outline-secondary':
+																	fila.area !== module && !isAdministrator,
+																'btn-outline-primary':
+																	fila.area === module || isAdministrator
+															}"
+															[disabled]="
+																fila.area != module && !isAdministrator
+															"
+															(click)="
+																openDetallesDialog(stockHolderDialog, fila)
+															"
+														>
+															<i class="fa fa-search"></i>
+														</button>
+														<button
+															class="btn d-inline mr-2 ml-2"
+															[ngClass]="{
+																'btn-outline-secondary':
+																	fila.area !== module && !isAdministrator,
+																'btn-outline-primary':
+																	fila.area === module || isAdministrator
+															}"
+															[disabled]="
+																fila.area != module && !isAdministrator
+															"
+															(click)="downloadDocumentDetail(fila)"
+														>
+															<i class="fa fa-download"></i>
+														</button>
+													</td>
+													<td scope="row">{{ fila.resumen }}</td>
+													<td scope="row">{{ fila.detalle }}</td>
+													<td scope="row">{{ fila.notificante }}</td>
+													<td scope="row">{{ fila.fechaCreacion }}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
 
-              <!-- REPRESENTANT-->
-              <div
-                class="row"
-                *ngIf="
-                  companyInfo.id && (isAdministrator || module === 'legal')
-                "
-              >
-                <p class="font-weight-bold">Apoderados</p>
-                <div class="col-md-12">
-                  <div class="clearfix">
-                    <div class="row float-right" style="margin-right: 1px">
-                      <button
-                        type="button"
-                        (click)="
-                          openDetallesDialog(
-                            stockHolderDialog,
-                            undefined,
-                            'APODERADO'
-                          )
-                        "
-                        style="margin-left: 25px"
-                        class="btn btn-primary float-right"
-                      >
-                        Nuevo Apoderado
-                      </button>
-                    </div>
-                  </div>
-                  <br />
+							<!-- REPRESENTANT-->
+							<div
+								class="row"
+								*ngIf="
+									companyInfo.id && (isAdministrator || module === 'legal')
+								"
+							>
+								<p class="font-weight-bold">Apoderados</p>
+								<div class="col-md-12">
+									<div class="clearfix">
+										<div class="row float-right" style="margin-right: 1px">
+											<button
+												type="button"
+												(click)="
+													openDetallesDialog(
+														stockHolderDialog,
+														undefined,
+														'APODERADO'
+													)
+												"
+												style="margin-left: 25px"
+												class="btn btn-primary float-right"
+											>
+												Nuevo Apoderado
+											</button>
+										</div>
+									</div>
+									<br />
 
-                  <div
-                    class=""
-                    *ngIf="apoderados.length === 0"
-                    class="alert alert-primary"
-                    role="alert"
-                  >
-                    No hay apoderados para la empresa
-                  </div>
+									<div
+										class=""
+										*ngIf="apoderados.length === 0"
+										class="alert alert-primary"
+										role="alert"
+									>
+										No hay apoderados para la empresa
+									</div>
 
-                  <div class="table-responsive" *ngIf="apoderados.length > 0">
-                    <table class="table table-sm">
-                      <thead class="thead-dark">
-                        <tr>
-                          <th class="text-center">ACCIONES</th>
-                          <th scope="col">RFC</th>
-                          <th scope="col">NOMBRE</th>
-                          <th scope="col">NOTIFICANTE</th>
-                          <th scope="col">FECHA</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let fila of apoderados">
-                          <td scope="row" class="text-center">
-                            <button
-                              class="btn d-inline mr-2 ml-2"
-                              [ngClass]="{
-                                'btn-outline-secondary':
-                                  fila.area !== module && !isAdministrator,
-                                'btn-outline-danger':
-                                  fila.area === module || isAdministrator
-                              }"
-                              (click)="deleteDetail(fila.id)"
-                              [disabled]="
-                                fila.area != module && !isAdministrator
-                              "
-                            >
-                              <i class="fa fa-trash"></i>
-                            </button>
-                            <button
-                              class="btn d-inline mr-2 ml-2"
-                              [ngClass]="{
-                                'btn-outline-secondary':
-                                  fila.area !== module && !isAdministrator,
-                                'btn-outline-primary':
-                                  fila.area === module || isAdministrator
-                              }"
-                              [disabled]="
-                                fila.area != module && !isAdministrator
-                              "
-                              (click)="
-                                openDetallesDialog(stockHolderDialog, fila)
-                              "
-                            >
-                              <i class="fa fa-search"></i>
-                            </button>
-                            <button
-                              class="btn d-inline mr-2 ml-2"
-                              [ngClass]="{
-                                'btn-outline-secondary':
-                                  fila.area !== module && !isAdministrator,
-                                'btn-outline-primary':
-                                  fila.area === module || isAdministrator
-                              }"
-                              [disabled]="
-                                fila.area != module && !isAdministrator
-                              "
-                              (click)="downloadDocumentDetail(fila)"
-                            >
-                              <i class="fa fa-download"></i>
-                            </button>
-                          </td>
-                          <td scope="row">{{ fila.resumen }}</td>
-                          <td scope="row">{{ fila.detalle }}</td>
-                          <td scope="row">{{ fila.notificante }}</td>
-                          <td scope="row">{{ fila.fechaCreacion }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <div
-                *ngIf="
-                  companyInfo.id && (isAdministrator || module === 'legal')
-                "
-              >
-                <p class="font-weight-bold">Documentos empresa</p>
+									<div class="table-responsive" *ngIf="apoderados.length > 0">
+										<table class="table table-sm">
+											<thead class="thead-dark">
+												<tr>
+													<th class="text-center">ACCIONES</th>
+													<th scope="col">RFC</th>
+													<th scope="col">NOMBRE</th>
+													<th scope="col">NOTIFICANTE</th>
+													<th scope="col">FECHA</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr *ngFor="let fila of apoderados">
+													<td scope="row" class="text-center">
+														<button
+															class="btn d-inline mr-2 ml-2"
+															[ngClass]="{
+																'btn-outline-secondary':
+																	fila.area !== module && !isAdministrator,
+																'btn-outline-danger':
+																	fila.area === module || isAdministrator
+															}"
+															(click)="deleteDetail(fila.id)"
+															[disabled]="
+																fila.area != module && !isAdministrator
+															"
+														>
+															<i class="fa fa-trash"></i>
+														</button>
+														<button
+															class="btn d-inline mr-2 ml-2"
+															[ngClass]="{
+																'btn-outline-secondary':
+																	fila.area !== module && !isAdministrator,
+																'btn-outline-primary':
+																	fila.area === module || isAdministrator
+															}"
+															[disabled]="
+																fila.area != module && !isAdministrator
+															"
+															(click)="
+																openDetallesDialog(stockHolderDialog, fila)
+															"
+														>
+															<i class="fa fa-search"></i>
+														</button>
+														<button
+															class="btn d-inline mr-2 ml-2"
+															[ngClass]="{
+																'btn-outline-secondary':
+																	fila.area !== module && !isAdministrator,
+																'btn-outline-primary':
+																	fila.area === module || isAdministrator
+															}"
+															[disabled]="
+																fila.area != module && !isAdministrator
+															"
+															(click)="downloadDocumentDetail(fila)"
+														>
+															<i class="fa fa-download"></i>
+														</button>
+													</td>
+													<td scope="row">{{ fila.resumen }}</td>
+													<td scope="row">{{ fila.detalle }}</td>
+													<td scope="row">{{ fila.notificante }}</td>
+													<td scope="row">{{ fila.fechaCreacion }}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div
+								*ngIf="
+									companyInfo.id && (isAdministrator || module === 'legal')
+								"
+							>
+								<p class="font-weight-bold">Documentos empresa</p>
 
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="row">
-                      <div class="col-sm-3">
-                        <label for="inputDocType" class="label"
-                          >Tipo Documento</label
-                        >
-                        <select
-                          selected="*"
-                          id="inputDocType"
-                          style="display: block"
-                          fullWidth
-                          class="form-control"
-                          [disabled]="companyInfo.activo"
-                          [(ngModel)]="formInfo.doctType"
-                        >
-                          <option value="*">Seleccionar</option>
-                          <option
-                            value="LOGO"
-                            *ngIf="
-                              companyInfo.id &&
-                              (isAdministrator || module === 'legal')
-                            "
-                          >
-                            Logotipo
-                          </option>
-                          <option value="INE">INE Representante</option>
-                          <option value="PODER_1">Poder 1</option>
-                          <option value="PODER_2">Poder 2</option>
-                          <option value="PODER_3">poder 3</option>
-                          <option value="ACTA">Acta Constitutiva</option>
-                          <option value="CONSTANCIA">Constancia Fiscal</option>
-                          <option value="INSCRIPCION">
-                            Solicitud inscripción
-                          </option>
-                          <option value="ACUSE">Acuse unico</option>
-                          <option value="CAMBIO_DOMICILIO">
-                            Cambio de domicilio
-                          </option>
-                        </select>
-                      </div>
-                      <div class="form-group col-sm-9">
-                        <label for="certFile" class="label"
-                          >Documento Relacionado</label
-                        >
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="row">
+											<div class="col-sm-3">
+												<label for="inputDocType" class="label"
+													>Tipo Documento</label
+												>
+												<select
+													selected="*"
+													id="inputDocType"
+													style="display: block"
+													fullWidth
+													class="form-control"
+													[disabled]="companyInfo.activo"
+													[(ngModel)]="formInfo.doctType"
+												>
+													<option value="*">Seleccionar</option>
+													<option
+														value="LOGO"
+														*ngIf="
+															companyInfo.id &&
+															(isAdministrator || module === 'legal')
+														"
+													>
+														Logotipo
+													</option>
+													<option value="INE">INE Representante</option>
+													<option value="PODER_1">Poder 1</option>
+													<option value="PODER_2">Poder 2</option>
+													<option value="PODER_3">poder 3</option>
+													<option value="ACTA">Acta Constitutiva</option>
+													<option value="CONSTANCIA">Constancia Fiscal</option>
+													<option value="INSCRIPCION">
+														Solicitud inscripción
+													</option>
+													<option value="ACUSE">Acuse unico</option>
+													<option value="CAMBIO_DOMICILIO">
+														Cambio de domicilio
+													</option>
+												</select>
+											</div>
+											<div class="form-group col-sm-9">
+												<label for="certFile" class="label"
+													>Documento Relacionado</label
+												>
 
-                        <div class="input-group">
-                          <div class="custom-file" id="documentFile">
-                            <input
-                              type="file"
-                              class="custom-file-input"
-                              id="documentFile"
-                              [disabled]="
-                                companyInfo.activo || formInfo.doctType == '*'
-                              "
-                              accept=".pdf,.xls,.xlsx,.doc, .docx,image/*"
-                              (change)="fileDataUploadListener($event)"
-                              style="display: block"
-                              aria-describedby="inputDocFile"
-                            />
-                            <label
-                              class="custom-file-label"
-                              for="inputDocFile"
-                              >{{ formInfo.fileDataName }}</label
-                            >
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <br />
+												<div class="input-group">
+													<div class="custom-file" id="documentFile">
+														<input
+															type="file"
+															class="custom-file-input"
+															id="documentFile"
+															[disabled]="
+																companyInfo.activo || formInfo.doctType == '*'
+															"
+															accept=".pdf,.xls,.xlsx,.doc, .docx,image/*"
+															(change)="fileDataUploadListener($event)"
+															style="display: block"
+															aria-describedby="inputDocFile"
+														/>
+														<label
+															class="custom-file-label"
+															for="inputDocFile"
+															>{{ formInfo.fileDataName }}</label
+														>
+													</div>
+												</div>
+											</div>
+										</div>
+										<br />
 
-                    <div class="clearfix">
-                      <div class="row float-right" style="margin-right: 1px">
-                        <button
-                          type="button"
-                          (click)="fileDocumentUpload()"
-                          style="margin-left: 25px"
-                          [disabled]="
-                            companyInfo.activo || dataFile.data == undefined
-                          "
-                          [ngClass]="{
-                            'btn-secondary':
-                              companyInfo.id == undefined ||
-                              dataFile.data == undefined,
-                            'btn-primary':
-                              companyInfo.id != undefined &&
-                              dataFile.data != undefined
-                          }"
-                          class="btn float-right"
-                        >
-                          Cargar documento
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+										<div class="clearfix">
+											<div class="row float-right" style="margin-right: 1px">
+												<button
+													type="button"
+													(click)="fileDocumentUpload()"
+													style="margin-left: 25px"
+													[disabled]="
+														companyInfo.activo || dataFile.data == undefined
+													"
+													[ngClass]="{
+														'btn-secondary':
+															companyInfo.id == undefined ||
+															dataFile.data == undefined,
+														'btn-primary':
+															companyInfo.id != undefined &&
+															dataFile.data != undefined
+													}"
+													class="btn float-right"
+												>
+													Cargar documento
+												</button>
+											</div>
+										</div>
+									</div>
 
-                  <div class="col-sm-6">
-                    <br />
-                    <br />
-                    <div
-                      class=""
-                      *ngIf="legalDocuments.length === 0"
-                      class="alert alert-primary"
-                      role="alert"
-                    >
-                      No hay documentos relacionados a la empresa
-                    </div>
+									<div class="col-sm-6">
+										<br />
+										<br />
+										<div
+											class=""
+											*ngIf="legalDocuments.length === 0"
+											class="alert alert-primary"
+											role="alert"
+										>
+											No hay documentos relacionados a la empresa
+										</div>
 
-                    <div
-                      class="table-responsive"
-                      *ngIf="legalDocuments.length > 0"
-                    >
-                      <table class="table table-sm">
-                        <thead class="thead-dark">
-                          <tr>
-                            <th class="text-center">DESCARGA</th>
-                            <th scope="col">TIPO ARCHIVO</th>
-                            <th scope="col">FECHA</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let fila of legalDocuments">
-                            <td scope="row" class="text-center">
-                              <button
-                                class="btn d-inline btn-outline-primary"
-                                (click)="downloadFile(fila)"
-                              >
-                                <i class="fa fa-download"></i>
-                              </button>
-                            </td>
-                            <td scope="row">{{ fila.tipoArchivo }}</td>
-                            <td scope="row">{{ fila.fechaCreacion }}</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </nb-tab>
-          <nb-tab
-            tabTitle="Datos digitales"
-            *ngIf="companyInfo.id && isAdministrator"
-          >
-            <p class="font-weight-bold">Datos correo empresa</p>
-            <div class="row">
-              <div class="col-sm-4">
-                <div class="form-group">
-                  <label for="inputEmail" class="label">Correo Empresa</label>
-                  <input
-                    type="email"
-                    [(ngModel)]="companyInfo.correo"
-                    class="form-control"
-                    fullWidth
-                    id="inputEmail"
-                    [disabled]="companyInfo.activo"
-                    placeholder="Email"
-                  />
-                </div>
-              </div>
-              <div class="col-sm-4">
-                <div class="form-group">
-                  <label for="inputPassword" class="label"
-                    >Contraseña correo</label
-                  >
-                  <div class="input-group">
-                    <input
-                      name="inputPassword-show"
-                      type="password"
-                      class="input form-control"
-                      id="inputPassword-show"
-                      [(ngModel)]="companyInfo.pwCorreo"
-                      [disabled]="companyInfo.activo"
-                      placeholder="Password"
-                      aria-label="password"
-                      aria-describedby="basic-addon1"
-                      *ngIf="!formInfo.showPass"
-                    />
-                    <div class="input-group-append">
-                      <button
-                        class="input-group-text"
-                        (click)="tooglePass()"
-                        *ngIf="!formInfo.showPass"
-                      >
-                        <i class="fa fa-eye" id="hide_eye"></i>
-                      </button>
-                    </div>
-                    <input
-                      name="inputPassword-hide"
-                      type="text"
-                      class="input form-control"
-                      id="inputPassword-hide"
-                      [(ngModel)]="companyInfo.pwCorreo"
-                      [disabled]="companyInfo.activo"
-                      placeholder="Password"
-                      aria-label="password"
-                      aria-describedby="basic-addon1"
-                      *ngIf="formInfo.showPass"
-                    />
-                    <div class="input-group-append">
-                      <button
-                        class="input-group-text"
-                        (click)="tooglePass()"
-                        *ngIf="formInfo.showPass"
-                      >
-                        <i class="fa fa-eye-slash" id="hide_eye"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+										<div
+											class="table-responsive"
+											*ngIf="legalDocuments.length > 0"
+										>
+											<table class="table table-sm">
+												<thead class="thead-dark">
+													<tr>
+														<th class="text-center">DESCARGA</th>
+														<th scope="col">TIPO ARCHIVO</th>
+														<th scope="col">FECHA</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr *ngFor="let fila of legalDocuments">
+														<td scope="row" class="text-center">
+															<button
+																class="btn d-inline btn-outline-primary"
+																(click)="downloadFile(fila)"
+															>
+																<i class="fa fa-download"></i>
+															</button>
+														</td>
+														<td scope="row">{{ fila.tipoArchivo }}</td>
+														<td scope="row">{{ fila.fechaCreacion }}</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</nb-tab>
+					<nb-tab
+						tabTitle="Datos digitales"
+						*ngIf="companyInfo.id && isAdministrator"
+					>
+						<p class="font-weight-bold">Datos correo empresa</p>
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="inputEmail" class="label">Correo Empresa</label>
+									<input
+										type="email"
+										[(ngModel)]="companyInfo.correo"
+										class="form-control"
+										fullWidth
+										id="inputEmail"
+										[disabled]="companyInfo.activo"
+										placeholder="Email"
+									/>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="inputPassword" class="label"
+										>Contraseña correo</label
+									>
+									<div class="input-group">
+										<input
+											name="inputPassword-show"
+											type="password"
+											class="input form-control"
+											id="inputPassword-show"
+											[(ngModel)]="companyInfo.pwCorreo"
+											[disabled]="companyInfo.activo"
+											placeholder="Password"
+											aria-label="password"
+											aria-describedby="basic-addon1"
+											*ngIf="!formInfo.showPass"
+										/>
+										<div class="input-group-append">
+											<button
+												class="input-group-text"
+												(click)="tooglePass()"
+												*ngIf="!formInfo.showPass"
+											>
+												<i class="fa fa-eye" id="hide_eye"></i>
+											</button>
+										</div>
+										<input
+											name="inputPassword-hide"
+											type="text"
+											class="input form-control"
+											id="inputPassword-hide"
+											[(ngModel)]="companyInfo.pwCorreo"
+											[disabled]="companyInfo.activo"
+											placeholder="Password"
+											aria-label="password"
+											aria-describedby="basic-addon1"
+											*ngIf="formInfo.showPass"
+										/>
+										<div class="input-group-append">
+											<button
+												class="input-group-text"
+												(click)="tooglePass()"
+												*ngIf="formInfo.showPass"
+											>
+												<i class="fa fa-eye-slash" id="hide_eye"></i>
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
 
-              <div class="col-sm-4">
-                <label for="dominioCorreo" class="label">Dominio Correo</label>
-                <input
-                  type="text"
-                  [(ngModel)]="companyInfo.dominioCorreo"
-                  class="form-control"
-                  fullWidth
-                  [disabled]="companyInfo.activo"
-                  id="dominioCorreo"
-                  placeholder="@tiendalocal"
-                />
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="noCert" class="label">No de certificado</label>
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.noCertificado"
-                    class="form-control"
-                    fullWidth
-                    id="noCert"
-                    [disabled]="companyInfo.activo"
-                    placeholder="0000000000"
-                  />
-                </div>
-              </div>
-            </div>
+							<div class="col-sm-4">
+								<label for="dominioCorreo" class="label">Dominio Correo</label>
+								<input
+									type="text"
+									[(ngModel)]="companyInfo.dominioCorreo"
+									class="form-control"
+									fullWidth
+									[disabled]="companyInfo.activo"
+									id="dominioCorreo"
+									placeholder="@tiendalocal"
+								/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="noCert" class="label">No de certificado</label>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.noCertificado"
+										class="form-control"
+										fullWidth
+										id="noCert"
+										[disabled]="companyInfo.activo"
+										placeholder="0000000000"
+									/>
+								</div>
+							</div>
+						</div>
 
-            <p class="font-weight-bold">Datos adicionales</p>
+						<p class="font-weight-bold">Datos adicionales</p>
 
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="row">
-                  <div class="col-md-12">
-                    <label for="inputWeb" class="label">Sitio web</label>
-                    <input
-                      type="text"
-                      [(ngModel)]="companyInfo.web"
-                      class="form-control"
-                      fullWidth
-                      id="inputWeb"
-                      [disabled]="companyInfo.activo"
-                      placeholder="www.mi-empresa.com"
-                    />
-                  </div>
-                </div>
-                <label for="logoFile" class="label">Logotipo Empresa</label>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="row">
+									<div class="col-md-12">
+										<label for="inputWeb" class="label">Sitio web</label>
+										<input
+											type="text"
+											[(ngModel)]="companyInfo.web"
+											class="form-control"
+											fullWidth
+											id="inputWeb"
+											[disabled]="companyInfo.activo"
+											placeholder="www.mi-empresa.com"
+										/>
+									</div>
+								</div>
+								<label for="logoFile" class="label">Logotipo Empresa</label>
 
-                <div class="row">
-                  <div class="form-group col-md-12">
-                    <div class="input-group">
-                      <div class="custom-file" id="logoFile">
-                        <input
-                          type="file"
-                          class="custom-file-input"
-                          id="inputLogoFile"
-                          accept="image/*"
-                          [disabled]="companyInfo.activo"
-                          (change)="logoUploadListener($event)"
-                          style="display: block"
-                          aria-describedby="inputGroupFileAddon01"
-                        />
-                        <label class="custom-file-label" for="inputLogoFile">{{
-                          formInfo.logoFileName
-                        }}</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-6" *ngIf="logo != undefined">
-                    <div>
-                      <img [src]="sanitize(logo)" style="height: 120px" />
-                    </div>
-                  </div>
-                  <div class="col"></div>
-                </div>
-              </div>
-            </div>
-          </nb-tab>
+								<div class="row">
+									<div class="form-group col-md-12">
+										<div class="input-group">
+											<div class="custom-file" id="logoFile">
+												<input
+													type="file"
+													class="custom-file-input"
+													id="inputLogoFile"
+													accept="image/*"
+													[disabled]="companyInfo.activo"
+													(change)="logoUploadListener($event)"
+													style="display: block"
+													aria-describedby="inputGroupFileAddon01"
+												/>
+												<label class="custom-file-label" for="inputLogoFile">{{
+													formInfo.logoFileName
+												}}</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="row">
+									<div class="col"></div>
+									<div class="col-6" *ngIf="logo != undefined">
+										<div>
+											<img [src]="sanitize(logo)" style="height: 120px" />
+										</div>
+									</div>
+									<div class="col"></div>
+								</div>
+							</div>
+						</div>
+					</nb-tab>
 
-          <nb-tab
-            tabTitle="Cuentas bancarias"
-            *ngIf="
-              companyInfo.id &&
-              (isAdministrator || module === 'tesoreria' || module == 'bancos')
-            "
-          >
-            <div class="row">
-              <div class="col-md-12">
-                <div class="clearfix">
-                  <div class="row float-left" style="margin-right: 1px">
-                    <p class="font-weight-bold">Cuentas bancarias</p>
-                  </div>
-                  <div
-                    class="row float-right"
-                    style="margin-right: 1px"
-                    *ngIf="
-                      companyInfo.id && (isAdministrator || module == 'bancos')
-                    "
-                  >
-                    <button
-                      type="button"
-                      (click)="openAccountDialog(companyInfo.rfc, '*')"
-                      style="margin-left: 25px"
-                      class="btn btn-primary float-right"
-                    >
-                      Nueva Cuenta
-                    </button>
-                  </div>
-                </div>
-                <br />
+					<nb-tab
+						tabTitle="Cuentas bancarias"
+						*ngIf="
+							companyInfo.id &&
+							(isAdministrator || module === 'tesoreria' || module == 'bancos')
+						"
+					>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="clearfix">
+									<div class="row float-left" style="margin-right: 1px">
+										<p class="font-weight-bold">Cuentas bancarias</p>
+									</div>
+									<div
+										class="row float-right"
+										style="margin-right: 1px"
+										*ngIf="
+											companyInfo.id && (isAdministrator || module == 'bancos')
+										"
+									>
+										<button
+											type="button"
+											(click)="openAccountDialog(companyInfo.rfc, '*')"
+											style="margin-left: 25px"
+											class="btn btn-primary float-right"
+										>
+											Nueva Cuenta
+										</button>
+									</div>
+								</div>
+								<br />
 
-                <div
-                  class=""
-                  *ngIf="cuentas.length === 0"
-                  class="alert alert-primary"
-                  role="alert"
-                >
-                  No hay cuentas bancarias registradas para la empresa
-                </div>
+								<div
+									class=""
+									*ngIf="cuentas.length === 0"
+									class="alert alert-primary"
+									role="alert"
+								>
+									No hay cuentas bancarias registradas para la empresa
+								</div>
 
-                <div class="table-responsive" *ngIf="cuentas.length > 0">
-                  <table class="table table-sm">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th class="text-center">ACCIONES</th>
-                        <th scope="col">BANCO</th>
-                        <th scope="col">RAZON SOCIAL</th>
-                        <th scope="col">LINEA</th>
-                        <th scope="col">CUENTA</th>
-                        <th scope="col">CLABE</th>
-                        <th scope="col">TIPO CONTRATO</th>
-                        <th scope="col">SUCURSAL</th>
-                        <th scope="col">DOMICILIO</th>
-                        <th scope="col">FECHA</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let fila of cuentas">
-                        <td scope="row" class="text-center">
-                          <button
-                            class="btn d-inline mr-2 ml-2"
-                            [ngClass]="{
-                              'btn-outline-secondary':
-                                fila.area !== module && !isAdministrator,
-                              'btn-outline-primary':
-                                fila.area === module || isAdministrator
-                            }"
-                            [disabled]="fila.area != module && !isAdministrator"
-                            (click)="deleteAccount(fila.id)"
-                          >
-                            <i class="fa fa-trash"></i>
-                          </button>
-                          <button
-                            class="btn d-inline mr-2 ml-2"
-                            [ngClass]="{
-                              'btn-outline-secondary':
-                                fila.area !== module && !isAdministrator,
-                              'btn-outline-primary':
-                                fila.area === module || isAdministrator
-                            }"
-                            [disabled]="fila.area != module && !isAdministrator"
-                            (click)="
-                              openAccountDialog(companyInfo.rfc, fila.cuenta)
-                            "
-                          >
-                            <i class="fa fa-search"></i>
-                          </button>
-                        </td>
-                        <td scope="row">{{ fila.banco }}</td>
-                        <td scope="row">{{ fila.razonSocial }}</td>
-                        <td scope="row">{{ fila.linea }}</td>
-                        <td scope="row">{{ fila.cuenta }}</td>
-                        <td scope="row">{{ fila.clabe }}</td>
-                        <td scope="row">{{ fila.tipoContrato }}</td>
-                        <td scope="row">{{ fila.sucursal }}</td>
-                        <td scope="row">{{ fila.domicilioBanco }}</td>
-                        <td scope="row">{{ fila.fechaCreacion }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </nb-tab>
-          <nb-tab
-            tabTitle="Contabilidad"
-            *ngIf="
-              companyInfo.id && (isAdministrator || module === 'contabilidad')
-            "
-          >
-            <p class="font-weight-bold">Datos Fiscales</p>
-            <div class="row">
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="registroPatronal" class="label"
-                    >Registro Patronal</label
-                  >
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.registroPatronal"
-                    class="form-control"
-                    fullWidth
-                    [disabled]="companyInfo.activo"
-                    id="registroPatronal"
-                    placeholder="Registro Patronal"
-                  />
-                </div>
-              </div>
+								<div class="table-responsive" *ngIf="cuentas.length > 0">
+									<table class="table table-sm">
+										<thead class="thead-dark">
+											<tr>
+												<th class="text-center">ACCIONES</th>
+												<th scope="col">BANCO</th>
+												<th scope="col">RAZON SOCIAL</th>
+												<th scope="col">LINEA</th>
+												<th scope="col">CUENTA</th>
+												<th scope="col">CLABE</th>
+												<th scope="col">TIPO CONTRATO</th>
+												<th scope="col">SUCURSAL</th>
+												<th scope="col">DOMICILIO</th>
+												<th scope="col">FECHA</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr *ngFor="let fila of cuentas">
+												<td scope="row" class="text-center">
+													<button
+														class="btn d-inline mr-2 ml-2"
+														[ngClass]="{
+															'btn-outline-secondary':
+																fila.area !== module && !isAdministrator,
+															'btn-outline-primary':
+																fila.area === module || isAdministrator
+														}"
+														[disabled]="fila.area != module && !isAdministrator"
+														(click)="deleteAccount(fila.id)"
+													>
+														<i class="fa fa-trash"></i>
+													</button>
+													<button
+														class="btn d-inline mr-2 ml-2"
+														[ngClass]="{
+															'btn-outline-secondary':
+																fila.area !== module && !isAdministrator,
+															'btn-outline-primary':
+																fila.area === module || isAdministrator
+														}"
+														[disabled]="fila.area != module && !isAdministrator"
+														(click)="
+															openAccountDialog(companyInfo.rfc, fila.cuenta)
+														"
+													>
+														<i class="fa fa-search"></i>
+													</button>
+												</td>
+												<td scope="row">{{ fila.banco }}</td>
+												<td scope="row">{{ fila.razonSocial }}</td>
+												<td scope="row">{{ fila.linea }}</td>
+												<td scope="row">{{ fila.cuenta }}</td>
+												<td scope="row">{{ fila.clabe }}</td>
+												<td scope="row">{{ fila.tipoContrato }}</td>
+												<td scope="row">{{ fila.sucursal }}</td>
+												<td scope="row">{{ fila.domicilioBanco }}</td>
+												<td scope="row">{{ fila.fechaCreacion }}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</nb-tab>
+					<nb-tab
+						tabTitle="Contabilidad"
+						*ngIf="
+							companyInfo.id && (isAdministrator || module === 'contabilidad')
+						"
+					>
+						<p class="font-weight-bold">Datos Fiscales</p>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="registroPatronal" class="label"
+										>Registro Patronal</label
+									>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.registroPatronal"
+										class="form-control"
+										fullWidth
+										[disabled]="companyInfo.activo"
+										id="registroPatronal"
+										placeholder="Registro Patronal"
+									/>
+								</div>
+							</div>
 
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="fiel" class="label"
-                    >Contraseña Sello Timbrado</label
-                  >
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="fiel" class="label"
+										>Contraseña Sello Timbrado</label
+									>
 
-                  <div class="input-group">
-                    <input
-                      name="fiel-hide"
-                      type="password"
-                      class="input form-control"
-                      id="fiel-hide"
-                      [(ngModel)]="companyInfo.fiel"
-                      [disabled]="companyInfo.activo"
-                      placeholder="Firma Electrónica Avanzada"
-                      aria-label="password"
-                      aria-describedby="basic-addon1"
-                      *ngIf="!formInfo.showFiel"
-                    />
-                    <div class="input-group-append">
-                      <button
-                        class="input-group-text"
-                        (click)="toogleFiel()"
-                        *ngIf="!formInfo.showFiel"
-                      >
-                        <i class="fa fa-eye" id="hide_eye"></i>
-                      </button>
-                    </div>
+									<div class="input-group">
+										<input
+											name="fiel-hide"
+											type="password"
+											class="input form-control"
+											id="fiel-hide"
+											[(ngModel)]="companyInfo.fiel"
+											[disabled]="companyInfo.activo"
+											placeholder="Firma Electrónica Avanzada"
+											aria-label="password"
+											aria-describedby="basic-addon1"
+											*ngIf="!formInfo.showFiel"
+										/>
+										<div class="input-group-append">
+											<button
+												class="input-group-text"
+												(click)="toogleFiel()"
+												*ngIf="!formInfo.showFiel"
+											>
+												<i class="fa fa-eye" id="hide_eye"></i>
+											</button>
+										</div>
 
-                    <input
-                      name="fiel-show"
-                      type="text"
-                      class="input form-control"
-                      id="fiel-show"
-                      [(ngModel)]="companyInfo.fiel"
-                      [disabled]="companyInfo.activo"
-                      placeholder="Firma Electrónica Avanzada"
-                      aria-label="password"
-                      aria-describedby="basic-addon1"
-                      *ngIf="formInfo.showFiel"
-                    />
-                    <div class="input-group-append">
-                      <button
-                        class="input-group-text"
-                        (click)="toogleFiel()"
-                        *ngIf="formInfo.showFiel"
-                      >
-                        <i class="fa fa-eye-slash" id="hide_eye"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+										<input
+											name="fiel-show"
+											type="text"
+											class="input form-control"
+											id="fiel-show"
+											[(ngModel)]="companyInfo.fiel"
+											[disabled]="companyInfo.activo"
+											placeholder="Firma Electrónica Avanzada"
+											aria-label="password"
+											aria-describedby="basic-addon1"
+											*ngIf="formInfo.showFiel"
+										/>
+										<div class="input-group-append">
+											<button
+												class="input-group-text"
+												(click)="toogleFiel()"
+												*ngIf="formInfo.showFiel"
+											>
+												<i class="fa fa-eye-slash" id="hide_eye"></i>
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
 
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="Actividad" class="label">Actividad SAT</label>
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.actividadSAT"
-                    class="form-control"
-                    fullWidth
-                    [disabled]="companyInfo.activo"
-                    id="Actividad"
-                    placeholder="Actividad Sat"
-                  />
-                </div>
-              </div>
-            </div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="Actividad" class="label">Actividad SAT</label>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.actividadSAT"
+										class="form-control"
+										fullWidth
+										[disabled]="companyInfo.activo"
+										id="Actividad"
+										placeholder="Actividad Sat"
+									/>
+								</div>
+							</div>
+						</div>
 
-            <div class="row">
-              <div class="col-4">
-                <label for="expiracionCertificado" class="label"
-                  >Expiración Sellos</label
-                >
-                <input
-                  nbInput
-                  placeholder="Hasta"
-                  [nbDatepicker]="expirationpicker"
-                  fullWidth
-                  style="display: block"
-                  id="expiracionCertificado"
-                  [disabled]="companyInfo.activo"
-                  [(ngModel)]="companyInfo.expiracionCertificado"
-                />
-                <nb-datepicker #expirationpicker></nb-datepicker>
-              </div>
-              <div class="col-4">
-                <label for="expiracionFiel" class="label"
-                  >Expiración Fiel</label
-                >
-                <input
-                  nbInput
-                  placeholder="Hasta"
-                  [nbDatepicker]="expirationpickerFiel"
-                  fullWidth
-                  style="display: block"
-                  id="expiracionFiel"
-                  [disabled]="companyInfo.activo"
-                  [(ngModel)]="companyInfo.expiracionFiel"
-                />
-                <nb-datepicker #expirationpickerFiel></nb-datepicker>
-              </div>
-              <div class="col-4">
-                <label for="inputOperaciones" class="label"
-                  >Inicio Operaciones</label
-                >
-                <input
-                  nbInput
-                  placeholder="Inicio actividades"
-                  [nbDatepicker]="startOperationsPicker"
-                  fullWidth
-                  style="display: block"
-                  id="inputOperaciones"
-                  [disabled]="companyInfo.activo"
-                  [(ngModel)]="companyInfo.inicioActividades"
-                />
-                <nb-datepicker #startOperationsPicker></nb-datepicker>
-              </div>
-            </div>
-            <br />
-            <div class="row">
-              <div class="col-4">
-                <label for="impuestoEstatal" class="label"
-                  >Impuesto Estatal</label
-                >
-                <input
-                  type="text"
-                  [(ngModel)]="companyInfo.impuestoEstatal"
-                  class="form-control"
-                  fullWidth
-                  [disabled]="companyInfo.activo"
-                  id="impuestoEstatal"
-                  placeholder="Impuesto Estatal"
-                />
-              </div>
-              <div class="col-4">
-                <label for="entidadRegistroPatronal" class="label"
-                  >Entidad registro patronal</label
-                >
-                <input
-                  type="text"
-                  [(ngModel)]="companyInfo.entidadRegistroPatronal"
-                  class="form-control"
-                  fullWidth
-                  [disabled]="companyInfo.activo"
-                  id="entidadRegistroPatronal"
-                  placeholder="Entidad registro patronal"
-                />
-              </div>
-              <div class="col-4">
-                <label for="entidadImpuestoPatronal" class="label"
-                  >Entidad/Impuesto Estatal</label
-                >
-                <input
-                  type="text"
-                  [(ngModel)]="companyInfo.entidadImpuestoPatronal"
-                  class="form-control"
-                  fullWidth
-                  [disabled]="companyInfo.activo"
-                  id="entidadImpuestoPatronal"
-                  placeholder="Entidad/Impuesto Estatal"
-                />
-              </div>
-            </div>
-            <br />
-            <div class="row">
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="noCert" class="label">No de certificado</label>
-                  <input
-                    type="text"
-                    [(ngModel)]="companyInfo.noCertificado"
-                    class="form-control"
-                    fullWidth
-                    id="noCert"
-                    [disabled]="companyInfo.activo"
-                    placeholder="0000000000"
-                  />
-                </div>
-              </div>
-            </div>
-            <br />
-            <div class="row">
-              <div class="col-md-12">
-                <div class="clearfix">
-                  <div class="row float-left" style="margin-right: 1px">
-                    <p class="font-weight-bold">Ingresos anuales</p>
-                  </div>
-                  <div class="row float-right" style="margin-right: 1px">
-                    <button
-                      type="button"
-                      (click)="openAnualDataDialog(dataDialog)"
-                      style="margin-left: 25px"
-                      class="btn btn-primary float-right"
-                    >
-                      Nuevo Ingreso
-                    </button>
-                  </div>
-                </div>
-                <br />
+						<div class="row">
+							<div class="col-4">
+								<label for="expiracionCertificado" class="label"
+									>Expiración Sellos</label
+								>
+								<input
+									nbInput
+									placeholder="Hasta"
+									[nbDatepicker]="expirationpicker"
+									fullWidth
+									style="display: block"
+									id="expiracionCertificado"
+									[disabled]="companyInfo.activo"
+									[(ngModel)]="companyInfo.expiracionCertificado"
+								/>
+								<nb-datepicker #expirationpicker></nb-datepicker>
+							</div>
+							<div class="col-4">
+								<label for="expiracionFiel" class="label"
+									>Expiración Fiel</label
+								>
+								<input
+									nbInput
+									placeholder="Hasta"
+									[nbDatepicker]="expirationpickerFiel"
+									fullWidth
+									style="display: block"
+									id="expiracionFiel"
+									[disabled]="companyInfo.activo"
+									[(ngModel)]="companyInfo.expiracionFiel"
+								/>
+								<nb-datepicker #expirationpickerFiel></nb-datepicker>
+							</div>
+							<div class="col-4">
+								<label for="inputOperaciones" class="label"
+									>Inicio Operaciones</label
+								>
+								<input
+									nbInput
+									placeholder="Inicio actividades"
+									[nbDatepicker]="startOperationsPicker"
+									fullWidth
+									style="display: block"
+									id="inputOperaciones"
+									[disabled]="companyInfo.activo"
+									[(ngModel)]="companyInfo.inicioActividades"
+								/>
+								<nb-datepicker #startOperationsPicker></nb-datepicker>
+							</div>
+						</div>
+						<br />
+						<div class="row">
+							<div class="col-4">
+								<label for="impuestoEstatal" class="label"
+									>Impuesto Estatal</label
+								>
+								<input
+									type="text"
+									[(ngModel)]="companyInfo.impuestoEstatal"
+									class="form-control"
+									fullWidth
+									[disabled]="companyInfo.activo"
+									id="impuestoEstatal"
+									placeholder="Impuesto Estatal"
+								/>
+							</div>
+							<div class="col-4">
+								<label for="entidadRegistroPatronal" class="label"
+									>Entidad registro patronal</label
+								>
+								<input
+									type="text"
+									[(ngModel)]="companyInfo.entidadRegistroPatronal"
+									class="form-control"
+									fullWidth
+									[disabled]="companyInfo.activo"
+									id="entidadRegistroPatronal"
+									placeholder="Entidad registro patronal"
+								/>
+							</div>
+							<div class="col-4">
+								<label for="entidadImpuestoPatronal" class="label"
+									>Entidad/Impuesto Estatal</label
+								>
+								<input
+									type="text"
+									[(ngModel)]="companyInfo.entidadImpuestoPatronal"
+									class="form-control"
+									fullWidth
+									[disabled]="companyInfo.activo"
+									id="entidadImpuestoPatronal"
+									placeholder="Entidad/Impuesto Estatal"
+								/>
+							</div>
+						</div>
+						<br />
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="noCert" class="label">No de certificado</label>
+									<input
+										type="text"
+										[(ngModel)]="companyInfo.noCertificado"
+										class="form-control"
+										fullWidth
+										id="noCert"
+										[disabled]="companyInfo.activo"
+										placeholder="0000000000"
+									/>
+								</div>
+							</div>
+						</div>
+						<br />
+						<div class="row">
+							<div class="col-md-12">
+								<div class="clearfix">
+									<div class="row float-left" style="margin-right: 1px">
+										<p class="font-weight-bold">Ingresos anuales</p>
+									</div>
+									<div class="row float-right" style="margin-right: 1px">
+										<button
+											type="button"
+											(click)="openAnualDataDialog(dataDialog)"
+											style="margin-left: 25px"
+											class="btn btn-primary float-right"
+										>
+											Nuevo Ingreso
+										</button>
+									</div>
+								</div>
+								<br />
 
-                <div
-                  class=""
-                  *ngIf="ingresos.length === 0"
-                  class="alert alert-primary"
-                  role="alert"
-                >
-                  No hay ingresos registrados para la empresa
-                </div>
+								<div
+									class=""
+									*ngIf="ingresos.length === 0"
+									class="alert alert-primary"
+									role="alert"
+								>
+									No hay ingresos registrados para la empresa
+								</div>
 
-                <div class="table-responsive" *ngIf="ingresos.length > 0">
-                  <table class="table table-sm">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th class="text-center">ACCIONES</th>
-                        <th scope="col">TIPO</th>
-                        <th scope="col">AÑO</th>
-                        <th scope="col">DETALLE</th>
-                        <th scope="col">CREADOR</th>
-                        <th scope="col">FECHA</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let fila of ingresos">
-                        <td scope="row" class="text-center">
-                          <button
-                            class="btn d-inline mr-2 ml-2 btn-outline-danger"
-                            (click)="deleteAnualData(fila.id)"
-                          >
-                            <i class="fa fa-trash"></i>
-                          </button>
-                          <button
-                            class="btn d-inline mr-2 ml-2 btn-outline-primary"
-                            (click)="downloadDocumentData(fila)"
-                          >
-                            <i class="fa fa-download"></i>
-                          </button>
-                        </td>
-                        <td scope="row">{{ fila.tipoDato }}</td>
-                        <td scope="row">{{ fila.anio }}</td>
-                        <td scope="row">{{ fila.detalle }}</td>
-                        <td scope="row">{{ fila.creador }}</td>
-                        <td scope="row">{{ fila.creacion }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-            <p class="font-weight-bold">Documentos contabilidad</p>
+								<div class="table-responsive" *ngIf="ingresos.length > 0">
+									<table class="table table-sm">
+										<thead class="thead-dark">
+											<tr>
+												<th class="text-center">ACCIONES</th>
+												<th scope="col">TIPO</th>
+												<th scope="col">AÑO</th>
+												<th scope="col">DETALLE</th>
+												<th scope="col">CREADOR</th>
+												<th scope="col">FECHA</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr *ngFor="let fila of ingresos">
+												<td scope="row" class="text-center">
+													<button
+														class="btn d-inline mr-2 ml-2 btn-outline-danger"
+														(click)="deleteAnualData(fila.id)"
+													>
+														<i class="fa fa-trash"></i>
+													</button>
+													<button
+														class="btn d-inline mr-2 ml-2 btn-outline-primary"
+														(click)="downloadDocumentData(fila)"
+													>
+														<i class="fa fa-download"></i>
+													</button>
+												</td>
+												<td scope="row">{{ fila.tipoDato }}</td>
+												<td scope="row">{{ fila.anio }}</td>
+												<td scope="row">{{ fila.detalle }}</td>
+												<td scope="row">{{ fila.creador }}</td>
+												<td scope="row">{{ fila.creacion }}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<p class="font-weight-bold">Documentos contabilidad</p>
 
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="row">
-                  <div class="col-sm-3">
-                    <label for="inputDocType" class="label"
-                      >Tipo Documento</label
-                    >
-                    <select
-                      selected="*"
-                      id="inputDocType"
-                      style="display: block"
-                      fullWidth
-                      class="form-control"
-                      [disabled]="companyInfo.activo"
-                      [(ngModel)]="formInfo.doctType"
-                    >
-                      <option value="*">Seleccionar</option>
-                      <option value="CSD-CERT">Certificado CSD(.cer)</option>
-                      <option value="CSD-KEY">Llave CSD(.key)</option>
-                      <option value="FIEL-CERT">Certificado FIEL(.cer)</option>
-                      <option value="FIEL-KEY">Llave FIEL(.key)</option>
-                      <option value="REGISTRO_PATRONAL">
-                        Registro Patronal
-                      </option>
-                      <option value="REPSE">Repse</option>
-                    </select>
-                  </div>
-                  <div class="form-group col-sm-9">
-                    <label for="certFile" class="label"
-                      >Documento Relacionado</label
-                    >
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="row">
+									<div class="col-sm-3">
+										<label for="inputDocType" class="label"
+											>Tipo Documento</label
+										>
+										<select
+											selected="*"
+											id="inputDocType"
+											style="display: block"
+											fullWidth
+											class="form-control"
+											[disabled]="companyInfo.activo"
+											[(ngModel)]="formInfo.doctType"
+										>
+											<option value="*">Seleccionar</option>
+											<option value="CSD-CERT">Certificado CSD(.cer)</option>
+											<option value="CSD-KEY">Llave CSD(.key)</option>
+											<option value="FIEL-CERT">Certificado FIEL(.cer)</option>
+											<option value="FIEL-KEY">Llave FIEL(.key)</option>
+											<option value="REGISTRO_PATRONAL">
+												Registro Patronal
+											</option>
+											<option value="REPSE">Repse</option>
+										</select>
+									</div>
+									<div class="form-group col-sm-9">
+										<label for="certFile" class="label"
+											>Documento Relacionado</label
+										>
 
-                    <div class="input-group">
-                      <div class="custom-file" id="documentContaFile">
-                        <input
-                          type="file"
-                          class="custom-file-input"
-                          id="documentContaFile"
-                          [disabled]="
-                            companyInfo.activo || formInfo.doctType == '*'
-                          "
-                          accept=".pdf,.cer,.key"
-                          (change)="fileDataUploadListener($event)"
-                          style="display: block"
-                          aria-describedby="documentContaFile"
-                        />
-                        <label
-                          class="custom-file-label"
-                          for="documentContaFile"
-                          >{{ formInfo.fileDataName }}</label
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <br />
+										<div class="input-group">
+											<div class="custom-file" id="documentContaFile">
+												<input
+													type="file"
+													class="custom-file-input"
+													id="documentContaFile"
+													[disabled]="
+														companyInfo.activo || formInfo.doctType == '*'
+													"
+													accept=".pdf,.cer,.key"
+													(change)="fileDataUploadListener($event)"
+													style="display: block"
+													aria-describedby="documentContaFile"
+												/>
+												<label
+													class="custom-file-label"
+													for="documentContaFile"
+													>{{ formInfo.fileDataName }}</label
+												>
+											</div>
+										</div>
+									</div>
+								</div>
+								<br />
 
-                <div class="clearfix">
-                  <div class="row float-right" style="margin-right: 1px">
-                    <button
-                      type="button"
-                      (click)="fileDocumentUpload()"
-                      style="margin-left: 25px"
-                      [disabled]="
-                        companyInfo.activo || dataFile.data == undefined
-                      "
-                      [ngClass]="{
-                        'btn-secondary':
-                          companyInfo.id == undefined ||
-                          dataFile.data == undefined,
-                        'btn-primary':
-                          companyInfo.id != undefined &&
-                          dataFile.data != undefined
-                      }"
-                      class="btn btn-primary float-right"
-                    >
-                      Cargar documento
-                    </button>
-                  </div>
-                </div>
-              </div>
+								<div class="clearfix">
+									<div class="row float-right" style="margin-right: 1px">
+										<button
+											type="button"
+											(click)="fileDocumentUpload()"
+											style="margin-left: 25px"
+											[disabled]="
+												companyInfo.activo || dataFile.data == undefined
+											"
+											[ngClass]="{
+												'btn-secondary':
+													companyInfo.id == undefined ||
+													dataFile.data == undefined,
+												'btn-primary':
+													companyInfo.id != undefined &&
+													dataFile.data != undefined
+											}"
+											class="btn btn-primary float-right"
+										>
+											Cargar documento
+										</button>
+									</div>
+								</div>
+							</div>
 
-              <div class="col-sm-6">
-                <br />
-                <br />
-                <div
-                  class=""
-                  *ngIf="contableDocuments.length === 0"
-                  class="alert alert-primary"
-                  role="alert"
-                >
-                  No hay documentos relacionados a la empresa
-                </div>
+							<div class="col-sm-6">
+								<br />
+								<br />
+								<div
+									class=""
+									*ngIf="contableDocuments.length === 0"
+									class="alert alert-primary"
+									role="alert"
+								>
+									No hay documentos relacionados a la empresa
+								</div>
 
-                <div
-                  class="table-responsive"
-                  *ngIf="contableDocuments.length > 0"
-                >
-                  <table class="table table-sm">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th class="text-center">DESCARGA</th>
-                        <th scope="col">TIPO ARCHIVO</th>
-                        <th scope="col">FECHA</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let fila of contableDocuments">
-                        <td scope="row" class="text-center">
-                          <button
-                            class="btn d-inline btn-outline-primary"
-                            (click)="downloadFile(fila)"
-                          >
-                            <i class="fa fa-download"></i>
-                          </button>
-                        </td>
-                        <td scope="row">{{ fila.tipoArchivo }}</td>
-                        <td scope="row">{{ fila.fechaCreacion }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </nb-tab>
+								<div
+									class="table-responsive"
+									*ngIf="contableDocuments.length > 0"
+								>
+									<table class="table table-sm">
+										<thead class="thead-dark">
+											<tr>
+												<th class="text-center">DESCARGA</th>
+												<th scope="col">TIPO ARCHIVO</th>
+												<th scope="col">FECHA</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr *ngFor="let fila of contableDocuments">
+												<td scope="row" class="text-center">
+													<button
+														class="btn d-inline btn-outline-primary"
+														(click)="downloadFile(fila)"
+													>
+														<i class="fa fa-download"></i>
+													</button>
+												</td>
+												<td scope="row">{{ fila.tipoArchivo }}</td>
+												<td scope="row">{{ fila.fechaCreacion }}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</nb-tab>
 
-          <nb-tab tabTitle="Observaciones y Pendientes" *ngIf="companyInfo.id">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="clearfix">
-                  <div class="row float-left" style="margin-right: 1px">
-                    <p class="font-weight-bold">Observaciones</p>
-                  </div>
-                  <div class="row float-right" style="margin-right: 1px">
-                    <button
-                      type="button"
-                      (click)="
-                        openDetallesDialog(
-                          detailDialog,
-                          undefined,
-                          'OBSERVACION'
-                        )
-                      "
-                      style="margin-left: 25px"
-                      class="btn btn-primary float-right"
-                    >
-                      Nueva Observacion
-                    </button>
-                  </div>
-                </div>
-                <br />
+					<nb-tab tabTitle="Observaciones y Pendientes" *ngIf="companyInfo.id">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="clearfix">
+									<div class="row float-left" style="margin-right: 1px">
+										<p class="font-weight-bold">Observaciones</p>
+									</div>
+									<div class="row float-right" style="margin-right: 1px">
+										<button
+											type="button"
+											(click)="
+												openDetallesDialog(
+													detailDialog,
+													undefined,
+													'OBSERVACION'
+												)
+											"
+											style="margin-left: 25px"
+											class="btn btn-primary float-right"
+										>
+											Nueva Observacion
+										</button>
+									</div>
+								</div>
+								<br />
 
-                <div
-                  class=""
-                  *ngIf="observaciones.length === 0"
-                  class="alert alert-primary"
-                  role="alert"
-                >
-                  No hay observaciones para la empresa
-                </div>
+								<div
+									class=""
+									*ngIf="observaciones.length === 0"
+									class="alert alert-primary"
+									role="alert"
+								>
+									No hay observaciones para la empresa
+								</div>
 
-                <div class="table-responsive" *ngIf="observaciones.length > 0">
-                  <table class="table table-sm">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th class="text-center">ACCIONES</th>
-                        <th scope="col">AREA</th>
-                        <th scope="col">RESUMEN</th>
-                        <th scope="col">NOTIFICANTE</th>
-                        <th scope="col">FECHA</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let fila of observaciones">
-                        <td scope="row" class="text-center">
-                          <button
-                            class="btn d-inline mr-2 ml-2"
-                            [ngClass]="{
-                              'btn-outline-secondary':
-                                fila.area !== module && !isAdministrator,
-                              'btn-outline-danger':
-                                fila.area === module || isAdministrator
-                            }"
-                            (click)="deleteDetail(fila.id)"
-                            [disabled]="fila.area != module && !isAdministrator"
-                          >
-                            <i class="fa fa-trash"></i>
-                          </button>
-                          <button
-                            class="btn d-inline mr-2 ml-2"
-                            [ngClass]="{
-                              'btn-outline-secondary':
-                                fila.area !== module && !isAdministrator,
-                              'btn-outline-primary':
-                                fila.area === module || isAdministrator
-                            }"
-                            [disabled]="fila.area != module && !isAdministrator"
-                            (click)="openDetallesDialog(detailDialog, fila)"
-                          >
-                            <i class="fa fa-search"></i>
-                          </button>
-                        </td>
-                        <td scope="row">{{ fila.area }}</td>
-                        <td scope="row">{{ fila.resumen }}</td>
-                        <td scope="row">{{ fila.notificante }}</td>
-                        <td scope="row">{{ fila.fechaCreacion }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+								<div class="table-responsive" *ngIf="observaciones.length > 0">
+									<table class="table table-sm">
+										<thead class="thead-dark">
+											<tr>
+												<th class="text-center">ACCIONES</th>
+												<th scope="col">AREA</th>
+												<th scope="col">RESUMEN</th>
+												<th scope="col">NOTIFICANTE</th>
+												<th scope="col">FECHA</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr *ngFor="let fila of observaciones">
+												<td scope="row" class="text-center">
+													<button
+														class="btn d-inline mr-2 ml-2"
+														[ngClass]="{
+															'btn-outline-secondary':
+																fila.area !== module && !isAdministrator,
+															'btn-outline-danger':
+																fila.area === module || isAdministrator
+														}"
+														(click)="deleteDetail(fila.id)"
+														[disabled]="fila.area != module && !isAdministrator"
+													>
+														<i class="fa fa-trash"></i>
+													</button>
+													<button
+														class="btn d-inline mr-2 ml-2"
+														[ngClass]="{
+															'btn-outline-secondary':
+																fila.area !== module && !isAdministrator,
+															'btn-outline-primary':
+																fila.area === module || isAdministrator
+														}"
+														[disabled]="fila.area != module && !isAdministrator"
+														(click)="openDetallesDialog(detailDialog, fila)"
+													>
+														<i class="fa fa-search"></i>
+													</button>
+												</td>
+												<td scope="row">{{ fila.area }}</td>
+												<td scope="row">{{ fila.resumen }}</td>
+												<td scope="row">{{ fila.notificante }}</td>
+												<td scope="row">{{ fila.fechaCreacion }}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
 
-            <div class="row">
-              <div class="col-md-12">
-                <div class="clearfix">
-                  <div class="row float-left" style="margin-right: 1px">
-                    <p class="font-weight-bold">Pendientes</p>
-                  </div>
-                  <div class="row float-right" style="margin-right: 1px">
-                    <button
-                      type="button"
-                      (click)="
-                        openDetallesDialog(detailDialog, undefined, 'PENDIENTE')
-                      "
-                      style="margin-left: 25px"
-                      class="btn btn-primary float-right"
-                    >
-                      Nuevo Pendiente
-                    </button>
-                  </div>
-                </div>
-                <br />
-                <div
-                  class=""
-                  *ngIf="pendientes.length === 0"
-                  class="alert alert-primary"
-                  role="alert"
-                >
-                  No hay pendientes para la empresa
-                </div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="clearfix">
+									<div class="row float-left" style="margin-right: 1px">
+										<p class="font-weight-bold">Pendientes</p>
+									</div>
+									<div class="row float-right" style="margin-right: 1px">
+										<button
+											type="button"
+											(click)="
+												openDetallesDialog(detailDialog, undefined, 'PENDIENTE')
+											"
+											style="margin-left: 25px"
+											class="btn btn-primary float-right"
+										>
+											Nuevo Pendiente
+										</button>
+									</div>
+								</div>
+								<br />
+								<div
+									class=""
+									*ngIf="pendientes.length === 0"
+									class="alert alert-primary"
+									role="alert"
+								>
+									No hay pendientes para la empresa
+								</div>
 
-                <div class="table-responsive" *ngIf="pendientes.length > 0">
-                  <table class="table table-sm">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th class="text-center">ACCIONES</th>
-                        <th scope="col">AREA</th>
-                        <th scope="col">RESUMEN</th>
-                        <th scope="col">NOTIFICANTE</th>
-                        <th scope="col">FECHA</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let fila of pendientes">
-                        <td scope="row" class="text-center">
-                          <button
-                            class="btn d-inline mr-2 ml-2"
-                            [ngClass]="{
-                              'btn-outline-secondary':
-                                fila.area !== module && !isAdministrator,
-                              'btn-outline-danger':
-                                fila.area === module || isAdministrator
-                            }"
-                            (click)="deleteDetail(fila.id)"
-                            [disabled]="fila.area != module && !isAdministrator"
-                          >
-                            <i class="fa fa-trash"></i>
-                          </button>
-                          <button
-                            class="btn d-inline mr-2 ml-2"
-                            [ngClass]="{
-                              'btn-outline-secondary':
-                                fila.area !== module && !isAdministrator,
-                              'btn-outline-primary':
-                                fila.area === module || isAdministrator
-                            }"
-                            [disabled]="fila.area != module && !isAdministrator"
-                            (click)="openDetallesDialog(detailDialog, fila)"
-                          >
-                            <i class="fa fa-search"></i>
-                          </button>
-                        </td>
-                        <td scope="row">{{ fila.area }}</td>
-                        <td scope="row">{{ fila.resumen }}</td>
-                        <td scope="row">{{ fila.notificante }}</td>
-                        <td scope="row">{{ fila.fechaCreacion }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </nb-tab>
-        </nb-tabset>
-      </nb-card-body>
+								<div class="table-responsive" *ngIf="pendientes.length > 0">
+									<table class="table table-sm">
+										<thead class="thead-dark">
+											<tr>
+												<th class="text-center">ACCIONES</th>
+												<th scope="col">AREA</th>
+												<th scope="col">RESUMEN</th>
+												<th scope="col">NOTIFICANTE</th>
+												<th scope="col">FECHA</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr *ngFor="let fila of pendientes">
+												<td scope="row" class="text-center">
+													<button
+														class="btn d-inline mr-2 ml-2"
+														[ngClass]="{
+															'btn-outline-secondary':
+																fila.area !== module && !isAdministrator,
+															'btn-outline-danger':
+																fila.area === module || isAdministrator
+														}"
+														(click)="deleteDetail(fila.id)"
+														[disabled]="fila.area != module && !isAdministrator"
+													>
+														<i class="fa fa-trash"></i>
+													</button>
+													<button
+														class="btn d-inline mr-2 ml-2"
+														[ngClass]="{
+															'btn-outline-secondary':
+																fila.area !== module && !isAdministrator,
+															'btn-outline-primary':
+																fila.area === module || isAdministrator
+														}"
+														[disabled]="fila.area != module && !isAdministrator"
+														(click)="openDetallesDialog(detailDialog, fila)"
+													>
+														<i class="fa fa-search"></i>
+													</button>
+												</td>
+												<td scope="row">{{ fila.area }}</td>
+												<td scope="row">{{ fila.resumen }}</td>
+												<td scope="row">{{ fila.notificante }}</td>
+												<td scope="row">{{ fila.fechaCreacion }}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</nb-tab>
+				</nb-tabset>
+			</nb-card-body>
 
-      <nb-card-footer>
-        <div class="form-inline">
-          <button
-            type="button"
-            *ngIf="companyInfo.id == undefined"
-            (click)="insertNewCompany()"
-            nbButton
-            status="primary"
-          >
-            GUARDAR
-          </button>
-          <button
-            type="button"
-            *ngIf="companyInfo.id != undefined"
-            (click)="updateCompany()"
-            nbButton
-            [disabled]="companyInfo.activo"
-            status="primary"
-          >
-            ACTUALIZAR
-          </button>
-        </div>
-      </nb-card-footer>
-    </nb-card>
-  </div>
+			<nb-card-footer>
+				<div class="form-inline">
+					<button
+						type="button"
+						*ngIf="companyInfo.id == undefined"
+						(click)="insertNewCompany()"
+						nbButton
+						status="primary"
+					>
+						GUARDAR
+					</button>
+					<button
+						type="button"
+						*ngIf="companyInfo.id != undefined"
+						(click)="updateCompany()"
+						nbButton
+						[disabled]="companyInfo.activo"
+						status="primary"
+					>
+						ACTUALIZAR
+					</button>
+				</div>
+			</nb-card-footer>
+		</nb-card>
+	</div>
 
-  <!-- stockHolder dialog -->
+	<!-- stockHolder dialog -->
 
-  <ng-template #stockHolderDialog let-data let-ref="dialogRef">
-    <nb-card>
-      <nb-card-header>
-        <div class="clearfix">
-          <p class="h8 float-left font-weight-bold">
-            {{ data.tipo | titlecase }} empresa
-          </p>
-        </div>
-      </nb-card-header>
-      <br />
-      <nb-card-body>
-        <div style="width: 30vw">
-          <div class="row">
-            <div class="col-md-3">
-              <label for="stockholderrfc" class="font-weight-bold">RFC:</label>
-            </div>
-            <div class="col-md-9">
-              <div class="form-group">
-                <input
-                  type="text"
-                  [(ngModel)]="data.resumen"
-                  class="form-control"
-                  fullWidth
-                  id="stockholderrfc"
-                  placeholder="RFC"
-                />
-              </div>
-            </div>
-          </div>
+	<ng-template #stockHolderDialog let-data let-ref="dialogRef">
+		<nb-card>
+			<nb-card-header>
+				<div class="clearfix">
+					<p class="h8 float-left font-weight-bold">
+						{{ data.tipo | titlecase }} empresa
+					</p>
+				</div>
+			</nb-card-header>
+			<br />
+			<nb-card-body>
+				<div style="width: 30vw">
+					<div class="row">
+						<div class="col-md-3">
+							<label for="stockholderrfc" class="font-weight-bold">RFC:</label>
+						</div>
+						<div class="col-md-9">
+							<div class="form-group">
+								<input
+									type="text"
+									[(ngModel)]="data.resumen"
+									class="form-control"
+									fullWidth
+									id="stockholderrfc"
+									placeholder="RFC"
+								/>
+							</div>
+						</div>
+					</div>
 
-          <div class="row">
-            <div class="col-md-3">
-              <label for="stockholdername" class="font-weight-bold"
-                >Nombre:</label
-              >
-            </div>
-            <div class="col-md-9">
-              <div class="form-group">
-                <input
-                  class="form-control"
-                  fullWidth
-                  id="stockholdername"
-                  [(ngModel)]="data.detalle"
-                  placeholder="Nombre completo"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-3">
-              <label for="stockHolderDocument" class="font-weight-bold"
-                >Documento Relacionado</label
-              >
-            </div>
-            <div class="col-md-9">
-              <div class="input-group">
-                <div class="custom-file" id="stockHolderDocument">
-                  <input
-                    type="file"
-                    class="custom-file-input"
-                    id="stockHolderDocument"
-                    accept=".pdf,.doc,.docx,image/*"
-                    (change)="fileDataUploadListener($event)"
-                    style="display: block"
-                    aria-describedby="stockHolderDocument"
-                  />
-                  <label class="custom-file-label" for="stockHolderDocument">{{
-                    formInfo.fileDataName
-                  }}</label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nb-card-body>
-      <nb-card-footer>
-        <div class="clearfix">
-          <button
-            class="btn btn-warning float-right mr-2 ml-2"
-            (click)="ref.close(undefined)"
-          >
-            Salir
-          </button>
+					<div class="row">
+						<div class="col-md-3">
+							<label for="stockholdername" class="font-weight-bold"
+								>Nombre:</label
+							>
+						</div>
+						<div class="col-md-9">
+							<div class="form-group">
+								<input
+									class="form-control"
+									fullWidth
+									id="stockholdername"
+									[(ngModel)]="data.detalle"
+									placeholder="Nombre completo"
+								/>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-3">
+							<label for="stockHolderDocument" class="font-weight-bold"
+								>Documento Relacionado</label
+							>
+						</div>
+						<div class="col-md-9">
+							<div class="input-group">
+								<div class="custom-file" id="stockHolderDocument">
+									<input
+										type="file"
+										class="custom-file-input"
+										id="stockHolderDocument"
+										accept=".pdf,.doc,.docx,image/*"
+										(change)="fileDataUploadListener($event)"
+										style="display: block"
+										aria-describedby="stockHolderDocument"
+									/>
+									<label class="custom-file-label" for="stockHolderDocument">{{
+										formInfo.fileDataName
+									}}</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</nb-card-body>
+			<nb-card-footer>
+				<div class="clearfix">
+					<button
+						class="btn btn-warning float-right mr-2 ml-2"
+						(click)="ref.close(undefined)"
+					>
+						Salir
+					</button>
 
-          <button
-            class="btn btn-success float-right mr-2 ml-2"
-            (click)="ref.close(data)"
-            *ngIf="!data.id"
-          >
-            Guardar
-          </button>
-          <button
-            class="btn btn-success float-right mr-2 ml-2"
-            (click)="ref.close(data)"
-            *ngIf="data.id"
-          >
-            Actualizar
-          </button>
-        </div>
-      </nb-card-footer>
-    </nb-card>
-  </ng-template>
+					<button
+						class="btn btn-success float-right mr-2 ml-2"
+						(click)="ref.close(data)"
+						*ngIf="!data.id"
+					>
+						Guardar
+					</button>
+					<button
+						class="btn btn-success float-right mr-2 ml-2"
+						(click)="ref.close(data)"
+						*ngIf="data.id"
+					>
+						Actualizar
+					</button>
+				</div>
+			</nb-card-footer>
+		</nb-card>
+	</ng-template>
 
-  <!-- Company anual Data dialog -->
+	<!-- Company anual Data dialog -->
 
-  <ng-template #dataDialog let-data let-ref="dialogRef">
-    <nb-card>
-      <nb-card-header>
-        <div class="clearfix">
-          <p class="h8 float-left font-weight-bold">Dato anual de la empresa</p>
-        </div>
-      </nb-card-header>
-      <br />
-      <nb-card-body>
-        <div style="width: 30vw">
-          <div class="row">
-            <div class="col-4">
-              <label for="inputYear" class="label">Año</label>
-              <select
-                id="inputYear"
-                style="display: block"
-                class="form-control"
-                [(ngModel)]="data.anio"
-                name="year"
-              >
-                <option value="*">Seleccionar</option>
-                <option *ngFor="let year of years" [value]="year">
-                  {{ year }}
-                </option>
-              </select>
-            </div>
-            <div class="col-8">
-              <label for="dataDetail" class="label">Detalle</label>
-              <input
-                id="dataDetail"
-                class="form-control"
-                fullWidth
-                type="number"
-                [(ngModel)]="data.detalle"
-                fullWidth
-                placeholder="Cantidad de Ingreso anual"
-              />
-            </div>
-          </div>
+	<ng-template #dataDialog let-data let-ref="dialogRef">
+		<nb-card>
+			<nb-card-header>
+				<div class="clearfix">
+					<p class="h8 float-left font-weight-bold">Dato anual de la empresa</p>
+				</div>
+			</nb-card-header>
+			<br />
+			<nb-card-body>
+				<div style="width: 30vw">
+					<div class="row">
+						<div class="col-4">
+							<label for="inputYear" class="label">Año</label>
+							<select
+								id="inputYear"
+								style="display: block"
+								class="form-control"
+								[(ngModel)]="data.anio"
+								name="year"
+							>
+								<option value="*">Seleccionar</option>
+								<option *ngFor="let year of years" [value]="year">
+									{{ year }}
+								</option>
+							</select>
+						</div>
+						<div class="col-8">
+							<label for="dataDetail" class="label">Detalle</label>
+							<input
+								id="dataDetail"
+								class="form-control"
+								fullWidth
+								type="number"
+								[(ngModel)]="data.detalle"
+								fullWidth
+								placeholder="Cantidad de Ingreso anual"
+							/>
+						</div>
+					</div>
 
-          <div class="row">
-            <div class="col-4">
-              <label for="inputDataType" class="label">Tipo Dato</label>
-              <select
-                id="inputDataType"
-                style="display: block"
-                class="form-control"
-                [(ngModel)]="data.tipoDato"
-                name="inputDataType"
-              >
-                <option value="INGRESO">Ingreso anual</option>
-              </select>
-            </div>
+					<div class="row">
+						<div class="col-4">
+							<label for="inputDataType" class="label">Tipo Dato</label>
+							<select
+								id="inputDataType"
+								style="display: block"
+								class="form-control"
+								[(ngModel)]="data.tipoDato"
+								name="inputDataType"
+							>
+								<option value="INGRESO">Ingreso anual</option>
+							</select>
+						</div>
 
-            <div class="form-group col-md-8">
-              <label for="certFile" class="label">Documento Relacionado</label>
+						<div class="form-group col-md-8">
+							<label for="certFile" class="label">Documento Relacionado</label>
 
-              <div class="input-group">
-                <div class="custom-file" id="anualDataFile">
-                  <input
-                    type="file"
-                    class="custom-file-input"
-                    id="anualDataFile"
-                    accept=".pdf,.xls,.xlsx,.doc, .docx,image/*"
-                    (change)="fileDataUploadListener($event)"
-                    style="display: block"
-                    aria-describedby="inputAnualDataFile"
-                  />
-                  <label class="custom-file-label" for="inputAnualDataFile">{{
-                    formInfo.fileDataName
-                  }}</label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nb-card-body>
-      <nb-card-footer>
-        <div class="clearfix">
-          <button
-            class="btn btn-warning float-right mr-2 ml-2"
-            (click)="ref.close(undefined)"
-          >
-            Salir
-          </button>
+							<div class="input-group">
+								<div class="custom-file" id="anualDataFile">
+									<input
+										type="file"
+										class="custom-file-input"
+										id="anualDataFile"
+										accept=".pdf,.xls,.xlsx,.doc, .docx,image/*"
+										(change)="fileDataUploadListener($event)"
+										style="display: block"
+										aria-describedby="inputAnualDataFile"
+									/>
+									<label class="custom-file-label" for="inputAnualDataFile">{{
+										formInfo.fileDataName
+									}}</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</nb-card-body>
+			<nb-card-footer>
+				<div class="clearfix">
+					<button
+						class="btn btn-warning float-right mr-2 ml-2"
+						(click)="ref.close(undefined)"
+					>
+						Salir
+					</button>
 
-          <button
-            class="btn btn-success float-right mr-2 ml-2"
-            (click)="ref.close(data)"
-            *ngIf="!data.id"
-          >
-            Guardar
-          </button>
-          <button
-            class="btn btn-success float-right mr-2 ml-2"
-            (click)="ref.close(data)"
-            *ngIf="data.id"
-          >
-            Actualizar
-          </button>
-        </div>
-      </nb-card-footer>
-    </nb-card>
-  </ng-template>
+					<button
+						class="btn btn-success float-right mr-2 ml-2"
+						(click)="ref.close(data)"
+						*ngIf="!data.id"
+					>
+						Guardar
+					</button>
+					<button
+						class="btn btn-success float-right mr-2 ml-2"
+						(click)="ref.close(data)"
+						*ngIf="data.id"
+					>
+						Actualizar
+					</button>
+				</div>
+			</nb-card-footer>
+		</nb-card>
+	</ng-template>
 
-  <!-- Company details dialog -->
+	<!-- Company details dialog -->
 
-  <ng-template #detailDialog let-data let-ref="dialogRef">
-    <nb-card>
-      <nb-card-header>
-        <div class="clearfix">
-          <p class="h8 float-left font-weight-bold">
-            {{ data.tipo | titlecase }}
-          </p>
-        </div>
-      </nb-card-header>
-      <br />
-      <nb-card-body>
-        <div style="width: 30vw">
-          <div class="row">
-            <div class="col-md-3">
-              <label for="Resumen" class="font-weight-bold">Resumen :</label>
-            </div>
-            <div class="col-md-9">
-              <div class="form-group">
-                <input
-                  type="text"
-                  [(ngModel)]="data.resumen"
-                  class="form-control"
-                  fullWidth
-                  id="Resumen"
-                  placeholder="Descripcion corta"
-                />
-              </div>
-            </div>
-          </div>
+	<ng-template #detailDialog let-data let-ref="dialogRef">
+		<nb-card>
+			<nb-card-header>
+				<div class="clearfix">
+					<p class="h8 float-left font-weight-bold">
+						{{ data.tipo | titlecase }}
+					</p>
+				</div>
+			</nb-card-header>
+			<br />
+			<nb-card-body>
+				<div style="width: 30vw">
+					<div class="row">
+						<div class="col-md-3">
+							<label for="Resumen" class="font-weight-bold">Resumen :</label>
+						</div>
+						<div class="col-md-9">
+							<div class="form-group">
+								<input
+									type="text"
+									[(ngModel)]="data.resumen"
+									class="form-control"
+									fullWidth
+									id="Resumen"
+									placeholder="Descripcion corta"
+								/>
+							</div>
+						</div>
+					</div>
 
-          <div class="row">
-            <div class="col-md-3">
-              <label for="Detalle" class="font-weight-bold">Detalle :</label>
-            </div>
-            <div class="col-md-9">
-              <div class="form-group">
-                <textarea
-                  class="form-control"
-                  fullWidth
-                  id="inputdetails"
-                  rows="3"
-                  [(ngModel)]="data.detalle"
-                  placeholder="Expliación detallada"
-                ></textarea>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nb-card-body>
-      <nb-card-footer>
-        <div class="clearfix">
-          <button
-            class="btn btn-warning float-right mr-2 ml-2"
-            (click)="ref.close(undefined)"
-          >
-            Salir
-          </button>
+					<div class="row">
+						<div class="col-md-3">
+							<label for="Detalle" class="font-weight-bold">Detalle :</label>
+						</div>
+						<div class="col-md-9">
+							<div class="form-group">
+								<textarea
+									class="form-control"
+									fullWidth
+									id="inputdetails"
+									rows="3"
+									[(ngModel)]="data.detalle"
+									placeholder="Expliación detallada"
+								></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</nb-card-body>
+			<nb-card-footer>
+				<div class="clearfix">
+					<button
+						class="btn btn-warning float-right mr-2 ml-2"
+						(click)="ref.close(undefined)"
+					>
+						Salir
+					</button>
 
-          <button
-            class="btn btn-success float-right mr-2 ml-2"
-            (click)="ref.close(data)"
-            *ngIf="!data.id"
-          >
-            Guardar
-          </button>
-          <button
-            class="btn btn-success float-right mr-2 ml-2"
-            (click)="ref.close(data)"
-            *ngIf="data.id"
-          >
-            Actualizar
-          </button>
-        </div>
-      </nb-card-footer>
-    </nb-card>
-  </ng-template>
+					<button
+						class="btn btn-success float-right mr-2 ml-2"
+						(click)="ref.close(data)"
+						*ngIf="!data.id"
+					>
+						Guardar
+					</button>
+					<button
+						class="btn btn-success float-right mr-2 ml-2"
+						(click)="ref.close(data)"
+						*ngIf="data.id"
+					>
+						Actualizar
+					</button>
+				</div>
+			</nb-card-footer>
+		</nb-card>
+	</ng-template>
 </div>
