@@ -63,7 +63,7 @@ export class CfdiComponent implements OnInit {
             invoice.cfdi.formaPago = '01';
         }
         invoice.cfdi.metodoPago = clave;
-        invoice.metodoPago = clave
+        invoice.metodoPago = clave;
         this.store.dispatch(updateInvoice({ invoice }));
     }
 
@@ -84,7 +84,7 @@ export class CfdiComponent implements OnInit {
 
     updateCfdi() {
         this.loading = true;
-        const fact:Factura = JSON.parse(JSON.stringify(this.factura));
+        const fact: Factura = JSON.parse(JSON.stringify(this.factura));
         fact.total = this.cfdi.total;
         fact.metodoPago = this.cfdi.metodoPago;
         fact.saldoPendiente = this.cfdi.total;
@@ -92,12 +92,19 @@ export class CfdiComponent implements OnInit {
             (invoice) => {
                 this.loading = false;
                 this.store.dispatch(updateInvoice({ invoice }));
-                this.notificationService.sendNotification('success','actualización exitosa','CFDI actualizado');
-                
+                this.notificationService.sendNotification(
+                    'success',
+                    'actualización exitosa',
+                    'CFDI actualizado'
+                );
             },
             (error: NtError) => {
                 this.loading = false;
-                this.notificationService.sendNotification('danger',error?.message,'Error en la actualizacion');
+                this.notificationService.sendNotification(
+                    'danger',
+                    error?.message,
+                    'Error en la actualizacion'
+                );
             }
         );
     }
@@ -132,9 +139,5 @@ export class CfdiComponent implements OnInit {
             .then((fact) =>
                 this.router.navigate([`./pages/promotor/precfdi/${fact.folio}`])
             );
-    }
-
-    public redirectToChildCfdi(folio: string) {
-        this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
     }
 }

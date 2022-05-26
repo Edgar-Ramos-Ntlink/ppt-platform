@@ -33,7 +33,6 @@ public class FacturaController {
 
   @Autowired private PagoService pagoService;
 
-  // FACTRURAS
   @GetMapping
   public ResponseEntity<Page<FacturaCustom>> getAllFacturasByParametros(
       @RequestParam Map<String, String> parameters) {
@@ -77,7 +76,6 @@ public class FacturaController {
     return new ResponseEntity<>(service.updateFacturaCustom(folio, facturaCustom), HttpStatus.OK);
   }
 
-  // TIMBRADO
   @PostMapping("/{folio}/timbrar")
   public ResponseEntity<FacturaCustom> timbrarFactura(
       @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaCustom)
