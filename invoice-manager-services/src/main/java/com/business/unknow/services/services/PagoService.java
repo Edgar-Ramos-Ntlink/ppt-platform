@@ -380,29 +380,29 @@ public class PagoService {
                             String.format("El pago con id %d no existe", idPago))));
     List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : payment.getFacturas()) {
-      FacturaCustom factura = facturaService.getFacturaBaseByFolio(pagoFact.getFolio());
+      FacturaCustom factura = facturaService.getFacturaByFolio(pagoFact.getFolio());
       facturas.add(factura);
     }
     pagoEvaluatorService.deletepaymentValidation(payment, facturas);
 
-    for (FacturaCustom facturaDto : facturas) {
+    for (FacturaCustom fact : facturas) {
       Optional<PagoFacturaDto> pagoFactOpt =
           payment.getFacturas().stream()
-              .filter(p -> p.getFolio().equals(facturaDto.getFolio()))
+              .filter(p -> p.getFolio().equals(fact.getFolio()))
               .findAny();
       if (pagoFactOpt.isPresent()) {
-        Cfdi cfdi = cfdiService.getCfdiByFolio(facturaDto.getFolio());
+
         facturaService.updateTotalAndSaldoFactura(
-            facturaDto.getFolio(),
-            Optional.empty(),
-            Optional.of(
-                cfdi.getMoneda().equals(payment.getMoneda())
-                    ? pagoFactOpt.get().getMonto().negate()
-                    : pagoFactOpt
-                        .get()
-                        .getMonto()
-                        .divide(payment.getTipoDeCambio(), 2, RoundingMode.HALF_UP)
-                        .negate()));
+                fact.getFolio(),
+        Optional.empty(),
+        Optional.of(
+                fact.getCfdi().getMoneda().equals(payment.getMoneda())
+                ? pagoFactOpt.get().getMonto().negate()
+                : pagoFactOpt
+                    .get()
+                    .getMonto()
+                    .divide(payment.getTipoDeCambio(), 2, RoundingMode.HALF_UP)
+                    .negate()));
       }
     }
     for (String folioCfdi :

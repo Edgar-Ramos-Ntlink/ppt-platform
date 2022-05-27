@@ -42,7 +42,6 @@ export class PagoFacturaComponent implements OnInit {
         private accountsService: CuentasData,
         private invoiceService: InvoicesData,
         public datepipe: DatePipe,
-        private cfdiService: CfdiData,
         private fileService: FilesData,
         private paymentValidator: PagosValidatorService,
         private notificationService: NotificationsService,
