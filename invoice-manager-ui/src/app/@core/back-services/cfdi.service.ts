@@ -9,19 +9,7 @@ import { Cfdi } from '../models/cfdi/cfdi';
 export class CfdiService {
     constructor(private httpClient: HttpClient) {}
 
-    public getCfdiByFolio(prefolio: string): Observable<any> {
-        return this.httpClient.get(`../api/cfdis/${prefolio}`);
-    }
-
-    public updateCfdi(cfdi: Cfdi): Observable<any> {
-        return this.httpClient.put(`../api/cfdis/${cfdi.folio}`, cfdi);
-    }
-
     public recalculateCfdi(cfdi: Cfdi): Observable<any> {
         return this.httpClient.put(`../api/cfdis/recalculate`, cfdi);
-    }
-
-    public getFacturaInfo(prefolio: number): Observable<any> {
-        return this.httpClient.get(`../api/cfdis/${prefolio}/facturaInfo`);
     }
 }
