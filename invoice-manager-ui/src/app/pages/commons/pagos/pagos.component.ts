@@ -5,10 +5,11 @@ import { PaymentsData } from '../../../@core/data/payments-data';
 import { NbDialogService } from '@nebular/theme';
 import { ValidacionPagoComponent } from './validacion-pago/validacion-pago.component';
 import { PagoBase } from '../../../models/pago-base';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { User } from '../../../@core/models/user';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
+import { NotificationsService } from '../../../@core/util-services/notifications.service';
+import { NtError } from '../../../@core/models/nt-error';
 
 @Component({
   selector: 'ngx-pagos',
@@ -21,7 +22,6 @@ export class PagosComponent implements OnInit {
   public vista: string = 'validacion-pagos';
   public module: string = 'operaciones';
   public filterParams: any = { formaPago: '*', status: 'VALIDACION', acredor: '', deudor: '', since: '', to: '' };
-  public errors: string[] = [];
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
 
@@ -30,6 +30,7 @@ export class PagosComponent implements OnInit {
     private downloadService: DonwloadFileService,
     private router: Router,
     private dialogService: NbDialogService,
+    private notificationService: NotificationsService
   ) { }
 
   ngOnInit() {
@@ -64,36 +65,31 @@ export class PagosComponent implements OnInit {
   }
 
   public validar1(pago: PagoBase) {
-    this.errors = [];
     if (pago.solicitante !== this.user.email) {
       pago.revision1 = true;
       pago.revisor1 = this.user.email;
       this.paymentService.updatePaymentWithValidation(pago.id, pago)
         .subscribe(updatedPayment => pago = updatedPayment,
-          (error: HttpErrorResponse) => this.errors.push(error.error.message || `${error.statusText} : ${error.message}`));
+          (error: NtError) => this.notificationService.sendNotification('danger', error?.message,'Error validando el pago'));
     } else {
-      alert('El solicitante del pago no puede validar el pago.');
-      this.errors.push('El solicitante del pago no puede validar el pago.');
+      this.notificationService.sendNotification('warning', 'El solicitante del pago no puede validar el pago.','Error validando el pago');
     }
   }
 
   public validar2(pago: PagoBase) {
-    this.errors = [];
     if (pago.solicitante !== this.user.email && pago.revisor1 !== this.user.email) {
       pago.revision2 = true;
       pago.revisor2 = this.user.email;
       this.paymentService.updatePaymentWithValidation(pago.id, pago)
         .subscribe(updatedPayment => pago = updatedPayment,
-          (error: HttpErrorResponse) => this.errors.push(error.error.message || `${error.statusText} : ${error.message}`));
+          (error: NtError) =>this.notificationService.sendNotification('danger', error?.message,'Error validando el pago'));
     } else {
-      alert('El segundo revisor, no puede ser ni el solicitante ni el primer revisor.');
-      this.errors.push('El segundo revisor, no puede ser ni el solicitante ni el primer revisor.');
+      this.notificationService.sendNotification('warning','El segundo revisor, no puede ser ni el solicitante ni el primer revisor.','Error validando el pago');
     }
   }
 
 
   openDialog(payment: PagoBase) {
-    this.errors = [];
     this.dialogService.open(ValidacionPagoComponent, {
       context: {
         pago: payment,
@@ -106,12 +102,16 @@ export class PagosComponent implements OnInit {
           pago.revisor1 = this.user.email;
         }
         this.paymentService.updatePaymentWithValidation(pago.id, pago).toPromise()
-          .then(success => console.log(success), (error: HttpErrorResponse) => this.errors.push(error.error.message || `${error.statusText} : ${error.message}`))
+          .then(success => console.log(success), (error: NtError) => this.notificationService.sendNotification('danger', error?.message,'Error validando el pago'))
           .then(() => this.updateDataTable(this.page.number, this.page.size))
       } else {
         this.updateDataTable(this.page.number, this.page.size);
       }
     });
+  }
+
+  public openComprobante(id:Number){
+    window.open(`../api/pagos/${id}/comprobante`, "_blank");
   }
 
   public redirectToCfdi(folio: string) {

@@ -28,7 +28,7 @@ export class DashboardComponent  implements OnInit{
  public cards:CardSettings[]= []
 
   ngOnInit(): void {
-    this.companiesService.getCompanies({activo: true, linea: 'A', size:12})
+    this.companiesService.getCompanies({activo: true, linea: 'A', size:12, page : this.randomIntFromInterval(0,3)})
     .pipe(
       map((page:GenericPage<any>)=>{
         let result = page.content.map(e=>Object.assign({}, {title:e.NOMBRE_CORTO,imageSrc:`/api/empresas/${e.RFC}/logo`,description:e.GIRO,linkUrl:e.PAGINA_WEB}));
@@ -40,6 +40,10 @@ export class DashboardComponent  implements OnInit{
   public goToLink(link:string){
     console.log('Redirecting to :', link)
     window.open(link, "_blank");
+  }
+
+  private randomIntFromInterval(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
   /*

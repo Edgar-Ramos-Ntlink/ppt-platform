@@ -236,24 +236,24 @@ public class FilesService {
     }
   }
 
-  public ResponseEntity<byte[]> getCompanyImage(String rfc) throws IOException {
+  public ResponseEntity<byte[]> getS3File(S3Buckets bucket, String fileType, String reference)
+      throws IOException {
 
     Optional<ResourceFile> resource =
         resourceFileRepository.findByTipoRecursoAndReferenciaAndTipoArchivo(
-            S3Buckets.EMPRESAS.name(), rfc, "LOGO");
+            bucket.name(), reference, fileType);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-    byte[] bytes = null;
     if (resource.isPresent()) {
       headers.setContentType(MediaType.valueOf(resource.get().getFormato().replace(";", "")));
-      bytes = getS3InputStream(S3Buckets.EMPRESAS, resource.get().getNombre()).readAllBytes();
+      byte[] bytes = getS3InputStream(bucket, resource.get().getNombre()).readAllBytes();
+      return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     } else {
       headers.setContentType(MediaType.IMAGE_PNG);
-      bytes = noAvailableImage.getInputStream().readAllBytes();
+      byte[] bytes = noAvailableImage.getInputStream().readAllBytes();
       return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
-    return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
   }
 
   public void upsertFacturaFile(

@@ -1,8 +1,10 @@
 package com.business.unknow.services.rest;
 
+import com.business.unknow.enums.S3Buckets;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.services.services.FilesService;
 import com.business.unknow.services.services.PagoService;
 import com.mx.ntlink.NtlinkUtilException;
 import java.io.IOException;
@@ -29,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class PagosController {
 
   @Autowired private PagoService pagoService;
+
+  @Autowired private FilesService fileService;
 
   @GetMapping
   public ResponseEntity<Page<PagoDto>> getAllPayments(
@@ -75,6 +79,12 @@ public class PagosController {
   public ResponseEntity<PagoDto> getPagoById(@PathVariable(name = "idPago") Integer idPago)
       throws InvoiceManagerException {
     return new ResponseEntity<>(pagoService.getPaymentById(idPago), HttpStatus.OK);
+  }
+
+  @GetMapping("/{idPago}/comprobante")
+  public ResponseEntity<byte[]> getPaymentReceipt(@PathVariable(name = "idPago") Integer idPago)
+      throws IOException {
+    return fileService.getS3File(S3Buckets.PAGOS, "IMAGEN", idPago.toString());
   }
 
   @PostMapping

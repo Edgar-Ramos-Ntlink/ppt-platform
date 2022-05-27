@@ -1,5 +1,6 @@
 package com.business.unknow.services.rest;
 
+import com.business.unknow.enums.S3Buckets;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.services.EmpresaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -43,7 +44,7 @@ public class EmpresaController {
 
   @GetMapping(value = "/empresas/{rfc}/logo")
   public ResponseEntity<byte[]> getCompanyLogo(@PathVariable String rfc) throws IOException {
-    return fileService.getCompanyImage(rfc);
+    return fileService.getS3File(S3Buckets.EMPRESAS, "LOGO", rfc);
   }
 
   @GetMapping("/empresas/{rfc}")

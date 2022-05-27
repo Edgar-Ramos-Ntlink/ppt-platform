@@ -108,16 +108,13 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card>
-      <nb-card-header class="puff_center">Pagos</nb-card-header>
+      <nb-card-header>Pagos</nb-card-header>
       <nb-card-body>
 
         <div *ngIf="page.empty == true" class="alert alert-primary" role="alert">
-          No se encontraron resultados
+          No se encontraron pagos
         </div>
-        <div class="alert alert-warning" *ngIf="errors.length > 0" role="alert">
-          <p *ngFor="let message of errors">{{message}}</p>
-        </div>
-        <div class="clearfix puff_center" *ngIf="page.empty == false">
+        <div class="clearfix" *ngIf="page.empty == false">
           Resultados
           <button style="margin-left: 15px;" type="button" (click)="downloadHandler()"
             class="btn btn-success float-right">Descarga</button>
@@ -156,7 +153,7 @@
             <tbody>
               <tr *ngFor="let fila of page.content" [style.background]="cal(fila)">
                 <td scope="row" *ngIf="vista==='validacion-pagos' || vista === 'pagos'">
-                  <div class="form-inline" style="width: 150px;">
+                  <div class="form-inline" style="width: 200px;">
                     <button type="button" (click)="openDialog(fila)"
                     class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
                     &nbsp;
@@ -172,6 +169,10 @@
                       [ngClass]="{'btn-outline-secondary': !fila.revision1 || fila.revision2, 'btn-outline-success': fila.revision1 && !fila.revision2}"
                       (click)="validar2(fila)" [disabled]="!fila.revision1 || fila.revision2"><i
                         class="fa fa-check-circle"></i></button>
+                    &nbsp;
+                    <button type="button" (click)="openComprobante(fila.id)" [disabled]="fila.formaPago !== 'TRANSFERENCIA' && fila.formaPago !== 'DEPOSITO'"
+                    [ngClass]="{'btn-outline-secondary': fila.formaPago !== 'TRANSFERENCIA' && fila.formaPago !== 'DEPOSITO' , 'btn-outline-primary': fila.formaPago == 'TRANSFERENCIA' || fila.formaPago == 'DEPOSITO'}"
+                        class="btn-sm btn-outline-primary"><i class="fa fa-file"></i></button>
                   </div>
                 </td>
                 <td scope="row" *ngIf="vista==='historial-pagos'">

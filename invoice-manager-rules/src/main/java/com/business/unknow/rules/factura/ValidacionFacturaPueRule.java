@@ -30,7 +30,7 @@ public class ValidacionFacturaPueRule {
   }
 
   @Action
-  public void execute(@Fact("factura") FacturaCustom facturaCustom) {
+  public void execute(@Fact("facturaCustom") FacturaCustom facturaCustom) {
     if (facturaCustom.getValidacionOper() && facturaCustom.getValidacionTeso()) {
       facturaCustom.setStatusFactura(FacturaStatus.POR_TIMBRAR.getValor());
     } else if (facturaCustom.getValidacionOper() && !facturaCustom.getValidacionTeso()) {

@@ -25,7 +25,7 @@ public class ValidacionFacturaComplementoRule {
   }
 
   @Action
-  public void execute(@Fact("factura") FacturaCustom facturaDto) {
+  public void execute(@Fact("facturaCustom") FacturaCustom facturaDto) {
     if (facturaDto.getValidacionOper() && facturaDto.getValidacionTeso()) {
       facturaDto.setStatusFactura(POR_TIMBRAR.getValor());
     } else if (facturaDto.getValidacionOper() && !facturaDto.getValidacionTeso()) {
