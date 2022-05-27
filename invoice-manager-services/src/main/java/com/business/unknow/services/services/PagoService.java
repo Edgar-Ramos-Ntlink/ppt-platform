@@ -19,7 +19,6 @@ import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
 import com.business.unknow.services.util.validators.PagoValidator;
 import com.mx.ntlink.NtlinkUtilException;
-import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.sql.SQLException;
@@ -393,16 +392,16 @@ public class PagoService {
       if (pagoFactOpt.isPresent()) {
 
         facturaService.updateTotalAndSaldoFactura(
-                fact.getFolio(),
-        Optional.empty(),
-        Optional.of(
+            fact.getFolio(),
+            Optional.empty(),
+            Optional.of(
                 fact.getCfdi().getMoneda().equals(payment.getMoneda())
-                ? pagoFactOpt.get().getMonto().negate()
-                : pagoFactOpt
-                    .get()
-                    .getMonto()
-                    .divide(payment.getTipoDeCambio(), 2, RoundingMode.HALF_UP)
-                    .negate()));
+                    ? pagoFactOpt.get().getMonto().negate()
+                    : pagoFactOpt
+                        .get()
+                        .getMonto()
+                        .divide(payment.getTipoDeCambio(), 2, RoundingMode.HALF_UP)
+                        .negate()));
       }
     }
     for (String folioCfdi :
