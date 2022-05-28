@@ -261,16 +261,6 @@ public class PagoService {
     }
     if (!factPue.isEmpty()) {
       pagoDto.getFacturas().forEach(a -> a.setFolioReferencia(a.getFolio()));
-      factPue.forEach(
-          f -> {
-            Optional<PagoFacturaDto> pagoFact =
-                pagoDto.getFacturas().stream()
-                    .filter(p -> p.getFolio().equals(f.getFolio()))
-                    .findAny();
-            if (pagoFact.isPresent()) {
-              pagoFact.get().setIdCfdi(f.getIdCfdi());
-            }
-          });
     }
     for (FacturaCustom dto : facturas) {
       if (!FormaPago.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())
@@ -327,7 +317,7 @@ public class PagoService {
             .revision2(pago.getRevision2())
             .revisor1(pago.getRevisor1())
             .revisor2(pago.getRevisor2())
-            .build(); // payment only update revision
+            .build();
     PagoValidator.validate(pago);
 
     List<FacturaCustom> facturas = new ArrayList<>();

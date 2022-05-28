@@ -8,7 +8,6 @@ import { InvoicesData } from '../../../@core/data/invoices-data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
-import { CfdiData } from '../../../@core/data/cfdi-data';
 import { Pago } from '../../../@core/models/cfdi/pago';
 import { Factura } from '../../../@core/models/factura';
 import { select, Store } from '@ngrx/store';
@@ -46,7 +45,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
         private clientsService: ClientsData,
         private companiesService: CompaniesData,
         private invoiceService: InvoicesData,
-        private cfdiService: CfdiData,
         private cfdiValidator: CfdiValidatorService,
         private notificationService: NotificationsService,
         private route: ActivatedRoute,

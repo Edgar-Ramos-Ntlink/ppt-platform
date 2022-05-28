@@ -14,13 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmpresaRepository
     extends JpaRepository<Empresa, Integer>, JpaSpecificationExecutor<Empresa> {
-
   Page<Empresa> findAll(Pageable pageable);
-
-  @Query(
-      "select e from Empresa e where upper(e.tipo) like upper(:linea) and upper(e.razonSocial) like upper(:razonSocial)")
-  Page<Empresa> findByRazonSocialIgnoreCaseContaining(
-      @Param("razonSocial") String razonSocial, @Param("linea") String linea, Pageable pageable);
 
   @Query("select e from Empresa e where e.rfc = :rfc")
   Optional<Empresa> findByRfc(@Param("rfc") String rfc);

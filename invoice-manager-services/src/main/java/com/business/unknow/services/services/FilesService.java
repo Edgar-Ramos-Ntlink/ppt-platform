@@ -189,13 +189,11 @@ public class FilesService {
   public FacturaFileDto getFacturaFileByFolioAndType(String folio, String type)
       throws InvoiceManagerException {
     try {
-      String data = getS3File(S3Buckets.CFDIS, folio.concat(TipoArchivo.valueOf(type).getFormat()));
+      String pdf = getS3File(S3Buckets.CFDIS, folio.concat(TipoArchivo.valueOf(type).getFormat()));
 
-      FacturaFileDto fileDto = new FacturaFileDto();
-      fileDto.setFolio(folio);
-      fileDto.setData(data);
-      fileDto.setTipoArchivo(type);
-      return fileDto;
+      FacturaFileDto facturaFileDto =
+          FacturaFileDto.builder().data(pdf).tipoArchivo(type).folio(folio).build();
+      return facturaFileDto;
     } catch (Exception e) {
       throw new InvoiceManagerException(e.getMessage(), HttpStatus.CONFLICT.value());
     }

@@ -5,7 +5,7 @@ import { CompaniesData } from '../../../@core/data/companies-data';
 import { Empresa } from '../../../models/empresa';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { PagoBase } from '../../../models/pago-base';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { PaymentsData } from '../../../@core/data/payments-data';
@@ -99,7 +99,6 @@ export class PreCfdiComponent implements OnInit {
         private companiesService: CompaniesData,
         private invoiceService: InvoicesData,
         private paymentsService: PaymentsData,
-        private cfdiService: CfdiData,
         private clientsService: ClientsData,
         private cfdiValidator: CfdiValidatorService,
         private notificationService: NotificationsService,

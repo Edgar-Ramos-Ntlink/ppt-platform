@@ -19,6 +19,4 @@ public interface EmpresaMapper {
   @Mapping(expression = "java(dto.getNombre().toUpperCase())", target = "nombre")
   @Mapping(expression = "java(dto.getRazonSocial().toUpperCase())", target = "razonSocial")
   Empresa getEntityFromEmpresaDto(EmpresaDto dto);
-
-  List<Empresa> getEntitiesFromEmpresaDtos(List<EmpresaDto> dtos);
 }

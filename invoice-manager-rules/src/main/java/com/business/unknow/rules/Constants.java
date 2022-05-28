@@ -11,7 +11,6 @@ public class Constants {
   }
 
   public static class DeletePagoSuite {
-    public static final String DELETE_PAYMENT = "DeletePayment";
     public static final String DELETE_STATUS_PAYMENT_RULE_DESC =
         "No se permite borrar el pago por motivos de seguridad";
     public static final String DELETE_STATUS_PAYMENT_RULE = "DeleteStatusPaymentRule";
@@ -57,10 +56,6 @@ public class Constants {
         "Incongruencia en la validacion del pago.";
   }
 
-  public static class Prevalidations {
-    public static final String FACTURA_PADRE_STATUS = "FacturaPadrePagos";
-  }
-
   public static class Timbrado {
     public static final String TIMBRADO_SUITE = "FacturarSuite";
     public static final String TIMBRADO_STATUS = "FacturaStatus";
@@ -71,8 +66,6 @@ public class Constants {
     public static final String TIMBRADO_DATOS_VALIDATION_RULE = "FacturaDatosValidationRule";
     public static final String TIMBRADO_DATOS_VALIDATION_RULE_DESC =
         "Los datos de la factura tienen una inconsistencia.";
-    public static final String TIMBRADO_PADRE_STATUS = "FacturaPadreStatusValidation";
-    public static final String TIMBRADO_PADRE_STATUS_RULE = "FacturaPadreStatusValidationRule";
     public static final String TIMBRADO_PAGO_VALIDATION = "FacturaPagoValidation";
     public static final String TIMBRADO_PAGO_VALIDATION_RULE = "FacturaPagoValidationRule";
     public static final String TIMBRADO_PAGO_VALIDATION_RULE_DES =

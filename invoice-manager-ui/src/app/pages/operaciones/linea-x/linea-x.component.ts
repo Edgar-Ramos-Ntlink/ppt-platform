@@ -8,7 +8,6 @@ import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validato
 import { ActivatedRoute } from '@angular/router';
 import { Client } from '../../../models/client';
 import { NbDialogService } from '@nebular/theme';
-import { CfdiData } from '../../../@core/data/cfdi-data';
 import { Pago } from '../../../@core/models/cfdi/pago';
 import { Factura } from '../../../@core/models/factura';
 import { select, Store } from '@ngrx/store';
@@ -49,7 +48,6 @@ export class LineaXComponent implements OnInit {
         private clientsService: ClientsData,
         private companiesService: CompaniesData,
         private invoiceService: InvoicesData,
-        private cfdiService: CfdiData,
         private cfdiValidator: CfdiValidatorService,
         private notificationService: NotificationsService,
         private dialogService: NbDialogService,
