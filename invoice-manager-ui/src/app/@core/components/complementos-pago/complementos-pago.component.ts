@@ -19,11 +19,9 @@ export class ComplementosPagoComponent implements OnInit {
         this.store
             .pipe(select(invoice))
             .subscribe((fact) => (this.factura = fact));
-        console.log(this.factura.pagos);
     }
 
     public redirectToChildCfdi(folio: string) {
-        console.log('a');
         this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
     }
 

@@ -108,8 +108,7 @@
                     <!--button type="button" class="btn btn-info" (click)="limpiarForma()">LIMPIAR</button-->
                 </div>
                 <br />
-
-                <nt-pago-factura *ngIf="factura?.folio != undefined && factura?.statusFactura != '6' && factura?.statusFactura != '7'"></nt-pago-factura>
+                <nt-pago-factura *ngIf="factura?.folio != undefined && factura?.tipoDocumento === 'Factura'"></nt-pago-factura>
             </nb-card-body>
         </nb-card>
     </div>
