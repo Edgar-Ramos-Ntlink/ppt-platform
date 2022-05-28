@@ -58,6 +58,4 @@ public interface ClientMapper {
     @Mapping(source = "telefono", target = "informacionFiscal.telefono"),
   })
   Client getEntityFromClientDto(ClientDto dto);
-
-  List<Client> getEntitiesFromClientDtos(List<ClientDto> dto);
 }

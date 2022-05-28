@@ -28,7 +28,7 @@ public class CfdiService {
    *
    * @param {@link Cfdi}
    */
-  public Cfdi updateCfdi(Cfdi cfdi) throws InvoiceManagerException, NtlinkUtilException {
+  public Cfdi updateCfdi(Cfdi cfdi) throws InvoiceManagerException {
     CfdiValidator.validate(cfdi);
     Cfdi newCfdi = recalculateCfdi(cfdi);
     return newCfdi;

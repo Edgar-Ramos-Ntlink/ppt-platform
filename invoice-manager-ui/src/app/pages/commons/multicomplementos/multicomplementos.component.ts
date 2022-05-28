@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { GenericPage } from '../../../models/generic-page';
-import { User } from '../../../@core/models/user';
 import { PagoBase } from '../../../models/pago-base';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Cuenta } from '../../../models/cuenta';
 import { Contribuyente } from '../../../models/contribuyente';
 import { PaymentsData } from '../../../@core/data/payments-data';
-import { UsersData } from '../../../@core/data/users-data';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { CuentasData } from '../../../@core/data/cuentas-data';
@@ -46,7 +44,6 @@ export class MulticomplementosComponent implements OnInit {
     public filterParams = { solicitante: '', emisor: '', remitente: '' };
     constructor(
         private paymentsService: PaymentsData,
-        private userService: UsersData,
         private clientsService: ClientsData,
         private invoiceService: InvoicesData,
         private accountsService: CuentasData,
@@ -65,13 +62,13 @@ export class MulticomplementosComponent implements OnInit {
         this.paymentsService
             .getFormasPago()
             .subscribe((payTypes) => (this.payTypeCat = payTypes));
-        
-            this.filterParams.solicitante = sessionStorage.getItem('email');
-            this.clientsService
-                .getClientsByPromotor(sessionStorage.getItem('email'))
-                .subscribe((clients) => {
-                    this.clientsCat = clients;
-                });
+
+        this.filterParams.solicitante = sessionStorage.getItem('email');
+        this.clientsService
+            .getClientsByPromotor(sessionStorage.getItem('email'))
+            .subscribe((clients) => {
+                this.clientsCat = clients;
+            });
     }
 
     selectClient(cliente: Contribuyente) {

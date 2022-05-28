@@ -4,7 +4,6 @@ import { ClientsData } from '../../../@core/data/clients-data';
 import { Client } from '../../../models/client';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { ActivatedRoute } from '@angular/router';
-import { CfdiData } from '../../../@core/data/cfdi-data';
 import { Pago } from '../../../@core/models/cfdi/pago';
 import { Factura } from '../../../@core/models/factura';
 import { select, Store } from '@ngrx/store';
@@ -30,7 +29,6 @@ export class RevisionComponent implements OnInit {
     constructor(
         private clientsService: ClientsData,
         private invoiceService: InvoicesData,
-        private cfdiService: CfdiData,
         private notificationService: NotificationsService,
         private dialogService: NbDialogService,
         private route: ActivatedRoute,
