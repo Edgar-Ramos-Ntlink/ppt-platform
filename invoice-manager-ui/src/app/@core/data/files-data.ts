@@ -1,5 +1,4 @@
 import { Observable } from 'rxjs';
-import { GenericPage } from '../../models/generic-page';
 import { ResourceFile } from '../../models/resource-file';
 
 export abstract class FilesData {

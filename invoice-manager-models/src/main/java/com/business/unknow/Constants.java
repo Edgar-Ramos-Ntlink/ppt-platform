@@ -68,8 +68,5 @@ public class Constants {
 
     public static final String FORMA_PAGO = "CREDITO";
     public static final String TOTAL = "Total=\"0.0\"";
-    public static final String TOTAL_FINAL = "Total=\"0\"";
-    public static final String SUB_TOTAL = "SubTotal=\"0.0\"";
-    public static final String SUB_TOTAL_FINAL = "SubTotal=\"0\"";
   }
 }

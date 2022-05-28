@@ -13,6 +13,4 @@ public interface RoleMapper {
   Role getEntityFromRoleDto(RoleDto dto);
 
   List<RoleDto> getRoleDtosFromEntities(List<Role> entities);
-
-  List<Role> getEntitiesFromRoleDtos(List<RoleDto> dto);
 }

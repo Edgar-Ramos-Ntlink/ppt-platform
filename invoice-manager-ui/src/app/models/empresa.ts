@@ -1,14 +1,12 @@
-import { Contribuyente } from './contribuyente';
 import { Cuenta } from './cuenta';
 import { DetalleEmpresa } from './detalle-empresa';
 import { IngresoEmpresa } from './ingreso-empresa';
-import { ResourceFile } from './resource-file';
 
 export class Empresa {
     public id: number;
     public activo: boolean;
-    public estatus:string; // Se calculara automaticamnete basado entre representanteLegal & correo & cert & key & cuentas
-    public operativa:boolean;
+    public estatus: string; // Se calculara automaticamnete basado entre representanteLegal & correo & cert & key & cuentas
+    public operativa: boolean;
     public giro: string;
     public tipo: string; // linea empresa
     public regimenFiscal: string;
@@ -38,7 +36,7 @@ export class Empresa {
     //public logotipo: string;  se adjunta como documento
     //public llavePrivada: string; se adjunta como documento
     //public certificado: string; se adjunta como documento
-    // Archivo CSD 
+    // Archivo CSD
     // Acta constitutiva
     // comprobante domicilio empresa
     // INE representate legal
@@ -50,9 +48,7 @@ export class Empresa {
     public pwCorreo: string;
     public dominioCorreo: string;
     public pwSat: string; //sera reemplazada por la  FIEL (Firma Electrónica Avanzada), que es una contrasenia para timbrado
-    
-    
-    
+
     // OPCIONAL, puede ser realizado despues de paso 1
     // contabilidad
 
@@ -63,25 +59,24 @@ export class Empresa {
     public expiracionCertificado: Date;
     public expiracionFiel: Date;
 
-    public  impuestoEstatal:String;
-    public  entidadRegistroPatronal:String;
-    public  entidadImpuestoPatronal:String;
+    public impuestoEstatal: String;
+    public entidadRegistroPatronal: String;
+    public entidadImpuestoPatronal: String;
 
     public creador: string;
     public fechaCreacion: Date;
     public fechaActualizacion: Date;
 
-
-    public cuentas : Cuenta[];
-    public detalles : DetalleEmpresa[];
-    public ingresos : IngresoEmpresa[];
+    public cuentas: Cuenta[];
+    public detalles: DetalleEmpresa[];
+    public ingresos: IngresoEmpresa[];
 
     constructor() {
         this.activo = false;
         this.operativa = false;
         this.estatus = 'INACTIVO';
-        this.tipo= '*';
-        this.giro='*';
+        this.tipo = '*';
+        this.giro = '*';
         this.colonia = '*';
         this.regimenFiscal = '*';
         this.cuentas = [];

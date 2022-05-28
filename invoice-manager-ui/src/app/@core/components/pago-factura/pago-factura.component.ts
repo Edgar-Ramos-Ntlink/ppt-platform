@@ -15,7 +15,6 @@ import { invoice } from '../../core.selectors';
 import { bignumber, format } from 'mathjs';
 import { InvoicesData } from '../../data/invoices-data';
 import { initInvoice, updateInvoice } from '../../core.actions';
-import { CfdiData } from '../../data/cfdi-data';
 import { DatePipe } from '@angular/common';
 import { NotificationsService } from '../../util-services/notifications.service';
 import { NtError } from '../../models/nt-error';

@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { PaymentsData } from '../../../@core/data/payments-data';
-import { User } from '../../../@core/models/user';
-import { UsersData } from '../../../@core/data/users-data';
 import { GenericPage } from '../../../models/generic-page';
 import {
     NbSortDirection,
@@ -55,7 +53,6 @@ interface PagoFacturaModel {
     styleUrls: ['./pagos-facturas.component.scss'],
 })
 export class PagosFacturaComponent implements OnInit {
-
     customColumn = 'ACCIONES';
     defaultHeaders = [
         'MONTO',
@@ -97,12 +94,11 @@ export class PagosFacturaComponent implements OnInit {
         private router: Router,
         private downloadService: DonwloadFileService,
         private dataSourceBuilder: NbTreeGridDataSourceBuilder<PagoFacturaModel>
-    ) { }
+    ) {}
 
     ngOnInit() {
         this.errorMessages = [];
         this.module = this.router.url.split('/')[2];
-
 
         if (this.module === 'promotor') {
             this.filterParams.solicitante = sessionStorage.getItem('email');
@@ -178,7 +174,7 @@ export class PagosFacturaComponent implements OnInit {
             (error: HttpErrorResponse) =>
                 this.errorMessages.push(
                     error.error.message ||
-                    `${error.statusText} : ${error.message}`
+                        `${error.statusText} : ${error.message}`
                 )
         );
     }

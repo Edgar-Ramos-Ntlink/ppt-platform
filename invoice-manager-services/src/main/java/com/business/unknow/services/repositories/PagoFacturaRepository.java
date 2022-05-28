@@ -9,10 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PagoFacturaRepository extends JpaRepository<PagoFactura, Integer> {
-  List<PagoFactura> findByFolio(String folio);
-
   @Query("select c from PagoFactura c where c.pago.id=:idPago")
   List<PagoFactura> findByPagoId(@Param("idPago") Integer idPago);
-
-  List<PagoFactura> findByIdCfdi(Integer idCfdi);
 }

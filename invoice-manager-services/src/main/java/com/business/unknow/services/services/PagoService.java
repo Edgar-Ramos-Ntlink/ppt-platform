@@ -19,7 +19,6 @@ import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
 import com.business.unknow.services.util.validators.PagoValidator;
 import com.mx.ntlink.NtlinkUtilException;
-import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.sql.SQLException;
@@ -262,16 +261,6 @@ public class PagoService {
     }
     if (!factPue.isEmpty()) {
       pagoDto.getFacturas().forEach(a -> a.setFolioReferencia(a.getFolio()));
-      factPue.forEach(
-          f -> {
-            Optional<PagoFacturaDto> pagoFact =
-                pagoDto.getFacturas().stream()
-                    .filter(p -> p.getFolio().equals(f.getFolio()))
-                    .findAny();
-            if (pagoFact.isPresent()) {
-              pagoFact.get().setIdCfdi(f.getIdCfdi());
-            }
-          });
     }
     for (FacturaCustom dto : facturas) {
       if (!FormaPago.CREDITO.getPagoValue().equals(pagoDto.getFormaPago())
@@ -328,7 +317,7 @@ public class PagoService {
             .revision2(pago.getRevision2())
             .revisor1(pago.getRevisor1())
             .revisor2(pago.getRevisor2())
-            .build(); // payment only update revision
+            .build();
     PagoValidator.validate(pago);
 
     List<FacturaCustom> facturas = new ArrayList<>();
@@ -393,16 +382,16 @@ public class PagoService {
       if (pagoFactOpt.isPresent()) {
 
         facturaService.updateTotalAndSaldoFactura(
-                fact.getFolio(),
-        Optional.empty(),
-        Optional.of(
+            fact.getFolio(),
+            Optional.empty(),
+            Optional.of(
                 fact.getCfdi().getMoneda().equals(payment.getMoneda())
-                ? pagoFactOpt.get().getMonto().negate()
-                : pagoFactOpt
-                    .get()
-                    .getMonto()
-                    .divide(payment.getTipoDeCambio(), 2, RoundingMode.HALF_UP)
-                    .negate()));
+                    ? pagoFactOpt.get().getMonto().negate()
+                    : pagoFactOpt
+                        .get()
+                        .getMonto()
+                        .divide(payment.getTipoDeCambio(), 2, RoundingMode.HALF_UP)
+                        .negate()));
       }
     }
     for (String folioCfdi :
