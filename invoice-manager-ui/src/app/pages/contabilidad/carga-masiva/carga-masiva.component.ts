@@ -89,6 +89,10 @@ export class CargaMasivaComponent implements OnInit {
         this.fileInput.nativeElement.value = '';
     }
 
+    public openSampleFormat(){
+        window.open(`../FormatoMuestra.xlsx`, "_blank");
+    }
+
     public async validarInformacion() {
         this.loading = true;
         this.params.dataValid = true;

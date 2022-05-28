@@ -261,4 +261,8 @@ export class PagoFacturaComponent implements OnInit {
             }
         );
     }
+    
+    public openComprobante(id:Number){
+        window.open(`../api/pagos/${id}/comprobante`, "_blank");
+    }
 }

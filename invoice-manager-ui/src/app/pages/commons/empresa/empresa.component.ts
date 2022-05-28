@@ -133,10 +133,7 @@ export class EmpresaComponent implements OnInit {
                     : new Date(`${this.companyInfo.expiracionCertificado}`);
 
             // recovering ZIPCODE INFO
-            let cpInfo: ZipCodeInfo = await this.catalogsService.getZipCodeInfo(
-                this.companyInfo.cp
-            );
-
+           this.catalogsService.getZipCodeInfo(this.companyInfo.cp).then((cpInfo:ZipCodeInfo)=>{
             this.colonias = cpInfo.colonias;
             let index = 0;
             cpInfo.colonias.forEach((element) => {
@@ -145,7 +142,9 @@ export class EmpresaComponent implements OnInit {
                 }
                 index++;
             });
-
+           },(error:NtError)=>{
+                this.notificationService.sendNotification('danger', error.message, 'Error cargando  codigo postal');
+            });
             this.observaciones =
                 this.companyInfo.detalles.filter(
                     (d) => d.tipo === 'OBSERVACION'
