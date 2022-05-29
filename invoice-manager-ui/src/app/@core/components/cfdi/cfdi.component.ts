@@ -140,4 +140,9 @@ export class CfdiComponent implements OnInit {
                 this.router.navigate([`./pages/promotor/precfdi/${fact.folio}`])
             );
     }
+
+    public goToRelacionado(folio: String) {
+        console.log(folio);
+        this.router.navigate([`./pages/operaciones/revision/${folio}`]);
+    }
 }

@@ -10,7 +10,6 @@ import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { Client } from '../../../models/client';
-import { CfdiData } from '../../../@core/data/cfdi-data';
 import { Pago } from '../../../@core/models/cfdi/pago';
 import { Factura } from '../../../@core/models/factura';
 import { NtError } from '../../../@core/models/nt-error';

@@ -152,12 +152,12 @@
                         (click)="linkInvoice(factura)"
                         class="mr-2 ml-2 float-right"
                         [nbSpinner]="loading"
-                        [disabled]="loading || factura.idCfdiRelacionado"
+                        [disabled]="loading || factura.folioRelacionado"
                         nbSpinnerStatus="danger"
                         nbSpinnerSize="small"
                         nbSpinnerMessage=""
                         *ngIf="
-                            factura?.statusFactura === '3' &&
+                            factura?.statusFactura == '3' &&
                             factura?.tipoDocumento === 'Factura'
                         "
                     >
@@ -172,7 +172,7 @@
                         class="mr-2 ml-2 float-right"
                         (click)="generateCreditNoteInvoice(factura)"
                         [nbSpinner]="loading"
-                        [disabled]="loading || factura?.idCfdiRelacionado"
+                        [disabled]="loading || factura?.folioRelacionado"
                         nbSpinnerStatus="danger"
                         nbSpinnerSize="small"
                         nbSpinnerMessage=""

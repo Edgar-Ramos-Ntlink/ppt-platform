@@ -102,3 +102,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.1 Disable security for actuator
   - [x] 4.5.2 Cancel compelemento
   - [x] 4.5.3 Errase compelemento payment
+  - [x] 4.5.4 sustitution feature

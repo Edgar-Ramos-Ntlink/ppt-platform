@@ -34,18 +34,18 @@
 
     <button
         type="button"
-        *ngIf="factura?.idCfdiRelacionado"
+        *ngIf="factura?.folioRelacionado"
         class="btn btn-sm btn-outline-success float-right ml-1 mr-1"
-        (click)="goToRelacionado(factura?.idCfdiRelacionado)"
+        (click)="goToRelacionado(factura?.folioRelacionado)"
     >
         <i class="fa fa-link"></i>
     </button>
 
     <button
         type="button"
-        *ngIf="factura?.idCfdiRelacionadoPadre"
+        *ngIf="factura?.folioRelacionadoPadre"
         class="btn btn-sm btn-outline-success float-right ml-1 mr-1"
-        (click)="returnToSourceFact(factura?.idCfdiRelacionadoPadre)"
+        (click)="goToRelacionado(factura?.folioRelacionadoPadre)"
     >
         <i class="fa fa-arrow-left"></i>
     </button>

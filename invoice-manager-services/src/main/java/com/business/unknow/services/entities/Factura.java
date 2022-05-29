@@ -120,11 +120,11 @@ public class Factura {
   @Column(name = "ID_CFDI")
   private Integer idCfdi;
 
-  @Column(name = "ID_CFDI_RELACIONADO")
-  private Integer idCfdiRelacionado;
+  @Column(name = "FOLIO_RELACIONADO")
+  private String folioRelacionado;
 
-  @Column(name = "ID_CFDI_RELACIONADO_PADRE")
-  private Integer idCfdiRelacionadoPadre;
+  @Column(name = "FOLIO_RELACIONADO_PADRE")
+  private String folioRelacionadoPadre;
 
   @Column(name = "VALIDACION_TESO", columnDefinition = "TINYINT")
   private Boolean validacionTeso;

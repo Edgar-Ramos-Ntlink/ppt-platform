@@ -30,7 +30,6 @@ import com.business.unknow.services.repositories.facturas.FacturaDao;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
 import com.business.unknow.services.services.evaluations.TimbradoEvaluatorService;
-import com.business.unknow.services.services.translators.RelacionadosTranslator;
 import com.business.unknow.services.util.FacturaUtils;
 import com.business.unknow.services.util.validators.InvoiceValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,7 +95,7 @@ public class FacturaService {
 
   @Autowired private InvoiceBuilderService invoiceBuilderService;
 
-  @Autowired private RelacionadosTranslator sustitucionTranslator;
+  @Autowired private RelationBuilderService sustitucionTranslator;
 
   @Autowired private TimbradoEvaluatorService timbradoServiceEvaluator;
 
@@ -187,7 +186,6 @@ public class FacturaService {
     };
   }
 
-  // FACTURAS
   public Page<FacturaCustom> getFacturasByParametros(Map<String, String> parameters) {
 
     Page<Factura> result;
@@ -199,7 +197,7 @@ public class FacturaService {
       result =
           repository.findAll(
               buildSearchFilters(parameters),
-              PageRequest.of(page, size, Sort.by("fechaCreacion").descending()));
+              PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
     }
     return new PageImpl<>(
         mapper.getFacturaDtosFromEntities(result.getContent()),
@@ -648,26 +646,25 @@ public class FacturaService {
 
   public FacturaCustom postRelacion(FacturaCustom dto, TipoDocumento tipoDocumento)
       throws InvoiceManagerException, NtlinkUtilException {
-    FacturaCustom facturaDto = getFacturaByFolio(dto.getFolio());
-    if (FACTURA.getDescripcion().equals(facturaDto.getTipoDocumento())) {
+    FacturaCustom facturaCustom = getFacturaByFolio(dto.getFolio());
+    String folio = FacturaUtils.generateFolio();
+    dto.setFolioRelacionado(folio);
+    updateFacturaCustom(dto.getFolio(), dto);
+    if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())) {
       switch (tipoDocumento) {
         case FACTURA:
-          sustitucionTranslator.sustitucionFactura(facturaDto);
+          facturaCustom = sustitucionTranslator.sustitucionFactura(facturaCustom, folio);
           break;
         case NOTA_CREDITO:
-          sustitucionTranslator.notaCreditoFactura(facturaDto);
+          facturaCustom = sustitucionTranslator.notaCreditoFactura(facturaCustom);
           break;
         default:
           throw new InvoiceManagerException(
               "The type of document not supported",
-              String.format("The type of document %s not valid", facturaDto.getTipoDocumento()),
+              String.format("The type of document %s not valid", facturaCustom.getTipoDocumento()),
               HttpStatus.BAD_REQUEST.value());
       }
-      facturaDto.setIdCfdiRelacionadoPadre(dto.getIdCfdi());
-      facturaDto = createFacturaCustom(facturaDto);
-      FacturaCustom facturaAnterior = getFacturaByFolio(dto.getFolio());
-      facturaAnterior.setIdCfdiRelacionado(facturaDto.getIdCfdi());
-      repository.save(mapper.getEntityFromFacturaCustom(facturaAnterior));
+      createFacturaCustom(facturaCustom);
       return dto;
     } else {
       throw new InvoiceManagerException(
