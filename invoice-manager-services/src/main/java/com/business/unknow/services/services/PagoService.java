@@ -41,7 +41,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Slf4j
@@ -302,17 +301,9 @@ public class PagoService {
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public PagoDto updatePago(Integer idPago, PagoDto pago)
       throws InvoiceManagerException, NtlinkUtilException {
-    Pago entity =
-        repository
-            .findById(idPago)
-            .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("El pago con el id %d no existe", idPago)));
-
+    PagoDto entity = getPaymentById(idPago);
     PagoDto pagoDto =
-        mapper.getPagoDtoFromEntity(entity).toBuilder()
+        entity.toBuilder()
             .revision1(pago.getRevision1())
             .revision2(pago.getRevision2())
             .revisor1(pago.getRevisor1())
@@ -325,7 +316,7 @@ public class PagoService {
       FacturaCustom factura = facturaService.getFacturaByFolio(pagoFact.getFolio());
       facturas.add(factura);
     }
-    pagoEvaluatorService.validatePaymentUpdate(pago, mapper.getPagoDtoFromEntity(entity), facturas);
+    pagoEvaluatorService.validatePaymentUpdate(pago, entity, facturas);
 
     if (pago.getStatusPago().equals(RevisionPagos.RECHAZADO.name())) {
       pagoDto.setStatusPago(RevisionPagos.RECHAZADO.name());
@@ -358,57 +349,56 @@ public class PagoService {
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public void deletePago(Integer idPago) throws InvoiceManagerException, NtlinkUtilException {
-    PagoDto payment =
-        mapper.getPagoDtoFromEntity(
-            repository
-                .findById(idPago)
-                .orElseThrow(
-                    () ->
-                        new ResponseStatusException(
-                            HttpStatus.NOT_FOUND,
-                            String.format("El pago con id %d no existe", idPago))));
+    PagoDto entity = getPaymentById(idPago);
     List<FacturaCustom> facturas = new ArrayList<>();
-    for (PagoFacturaDto pagoFact : payment.getFacturas()) {
+    for (PagoFacturaDto pagoFact : entity.getFacturas()) {
       FacturaCustom factura = facturaService.getFacturaByFolio(pagoFact.getFolio());
       facturas.add(factura);
     }
-    pagoEvaluatorService.deletepaymentValidation(payment, facturas);
+    pagoEvaluatorService.deletepaymentValidation(entity, facturas);
 
     for (FacturaCustom fact : facturas) {
       Optional<PagoFacturaDto> pagoFactOpt =
-          payment.getFacturas().stream()
-              .filter(p -> p.getFolio().equals(fact.getFolio()))
-              .findAny();
-      if (pagoFactOpt.isPresent()) {
-
-        facturaService.updateTotalAndSaldoFactura(
-            fact.getFolio(),
-            Optional.empty(),
-            Optional.of(
-                fact.getCfdi().getMoneda().equals(payment.getMoneda())
-                    ? pagoFactOpt.get().getMonto().negate()
-                    : pagoFactOpt
-                        .get()
-                        .getMonto()
-                        .divide(payment.getTipoDeCambio(), 2, RoundingMode.HALF_UP)
-                        .negate()));
-      }
-    }
-    for (String folioCfdi :
-        payment.getFacturas().stream()
-            .map(f -> f.getFolio())
-            .distinct()
-            .collect(Collectors.toList())) {
-      FacturaCustom fact = facturaService.getFacturaBaseByFolio(folioCfdi);
-      if (TipoDocumento.COMPLEMENTO.equals(TipoDocumento.findByDesc(fact.getTipoDocumento()))) {
-        facturaService.deleteFactura(fact.getFolio());
-        filesService.deleteFacturaFile(fact.getFolio(), "PDF");
+          entity.getFacturas().stream().filter(p -> p.getFolio().equals(fact.getFolio())).findAny();
+      if (MetodosPago.PPD.name().equals(fact.getMetodoPago())) {
+        for (PagoFacturaDto pagoFacturaDto : entity.getFacturas()) {
+          FacturaCustom comeplement =
+              facturaService.getFacturaBaseByFolio(pagoFacturaDto.getFolioReferencia());
+          if (TipoDocumento.COMPLEMENTO.equals(
+              TipoDocumento.findByDesc(comeplement.getTipoDocumento()))) {
+            facturaService.deleteFactura(comeplement.getFolio());
+            filesService.deleteFacturaFile(comeplement.getFolio(), TipoArchivo.PDF.name());
+            filesService.deleteFacturaFile(comeplement.getFolio(), TipoArchivo.XML.name());
+            fact.setSaldoPendiente(fact.getSaldoPendiente().add(entity.getMonto()));
+            fact.getPagos()
+                .removeIf(
+                    a ->
+                        a.getFolio().equals(comeplement.getFolio())
+                            && a.getFechaPago().equals(entity.getFechaPago())
+                            && a.getFolioOrigen().equals(fact.getFolio()));
+            facturaService.updateFacturaCustom(fact.getFolio(), fact);
+          }
+        }
+      } else {
+        if (pagoFactOpt.isPresent()) {
+          facturaService.updateTotalAndSaldoFactura(
+              fact.getFolio(),
+              Optional.empty(),
+              Optional.of(
+                  fact.getCfdi().getMoneda().equals(entity.getMoneda())
+                      ? pagoFactOpt.get().getMonto().negate()
+                      : pagoFactOpt
+                          .get()
+                          .getMonto()
+                          .divide(entity.getTipoDeCambio(), 2, RoundingMode.HALF_UP)
+                          .negate()));
+        }
       }
     }
 
     filesService.deleteResourceFileByResourceReferenceAndType(
         "PAGOS", idPago.toString(), TipoArchivo.IMAGEN.name());
-    repository.delete(mapper.getEntityFromPagoDto(payment));
+    repository.delete(mapper.getEntityFromPagoDto(entity));
   }
 
   public void delePagoFacturas(int id) {

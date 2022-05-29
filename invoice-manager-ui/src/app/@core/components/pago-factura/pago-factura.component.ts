@@ -142,13 +142,7 @@ export class PagoFacturaComponent implements OnInit {
             await this.paymentsService.deletePayment(payment.id).toPromise();
             this.invoicePayments.splice(index, 1);
             const factura: Factura = JSON.parse(JSON.stringify(this.factura));
-            factura.saldoPendiente = +format(
-                bignumber(factura.saldoPendiente).add(bignumber(payment.monto))
-            );
-            const invoice = await this.invoiceService
-                .updateInvoice(factura)
-                .toPromise();
-            this.store.dispatch(updateInvoice({ invoice }));
+            this.updateInvoiceByFolio(factura.folio);
         } catch (error) {
             this.notificationService.sendNotification(
                 'danger',
@@ -261,8 +255,8 @@ export class PagoFacturaComponent implements OnInit {
             }
         );
     }
-    
-    public openComprobante(id:Number){
-        window.open(`../api/pagos/${id}/comprobante`, "_blank");
+
+    public openComprobante(id: Number) {
+        window.open(`../api/pagos/${id}/comprobante`, '_blank');
     }
 }
