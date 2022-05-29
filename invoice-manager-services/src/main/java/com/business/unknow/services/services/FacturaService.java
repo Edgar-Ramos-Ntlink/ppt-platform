@@ -8,15 +8,18 @@ import static com.business.unknow.Constants.PDF_FACTURA_TIMBRAR;
 import static com.business.unknow.enums.TipoArchivo.PDF;
 import static com.business.unknow.enums.TipoArchivo.TXT;
 import static com.business.unknow.enums.TipoArchivo.XML;
+import static com.business.unknow.enums.TipoDocumento.COMPLEMENTO;
 import static com.business.unknow.enums.TipoDocumento.FACTURA;
 
 import com.business.unknow.MailConstants;
 import com.business.unknow.enums.FacturaStatus;
+import com.business.unknow.enums.MetodosPago;
 import com.business.unknow.enums.S3Buckets;
 import com.business.unknow.enums.TipoDocumento;
 import com.business.unknow.model.config.MailContent;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.FacturaPdf;
+import com.business.unknow.model.dto.PagoComplemento;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.services.ClientDto;
@@ -417,23 +420,16 @@ public class FacturaService {
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public FacturaCustom updateFacturaCustom(String folio, FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
-    Factura factura =
-        repository
-            .findByFolio(folio)
-            .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("La factura con el folio %d no existe", folio)));
+    FacturaCustom entity = getFacturaBaseByFolio(folio);
     facturaServiceEvaluator.facturaStatusValidation(facturaCustom);
     InvoiceValidator.validate(facturaCustom, facturaCustom.getFolio());
     Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
-    entityFromDto.setId(factura.getId());
+    entityFromDto.setId(entity.getId());
     repository.save(entityFromDto);
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
     if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
-        && !(factura.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())
-            || factura.getStatusFactura().equals(FacturaStatus.CANCELADA.getValor()))) {
+        && !(entity.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())
+            || entity.getStatusFactura().equals(FacturaStatus.CANCELADA.getValor()))) {
       facturaCustom.setCfdi(cfdiService.updateCfdi(facturaCustom.getCfdi()));
       Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
       filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
@@ -567,33 +563,49 @@ public class FacturaService {
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public FacturaCustom cancelInvoice(String folio, FacturaCustom facturaCustom)
-      throws InvoiceManagerException {
-    Factura factura =
-        repository
-            .findByFolio(folio)
-            .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("La factura con el folio %d no existe", folio)));
+      throws InvoiceManagerException, NtlinkUtilException {
+    FacturaCustom entity = getFacturaBaseByFolio(folio);
     InvoiceValidator.validate(facturaCustom, folio);
     timbradoServiceEvaluator.invoiceCancelValidation(facturaCustom);
-    if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())) {
-      facturaCustom = facturaExecutorService.cancelInvoice(facturaCustom);
-      Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
-      entityFromDto.setId(factura.getId());
-      repository.save(entityFromDto);
-      filesService.sendFileToS3(
-          facturaCustom.getFolio().concat(CANCEL_ACK),
-          facturaCustom.getAcuse().getBytes(),
-          XML.getFormat(),
-          S3Buckets.CFDIS);
-      filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
-    } else {
-      // TODO: IMPLEMENT CANCEL COMPLEMENT  LOGIC
-      throw new InvoiceManagerException(
-          "Cancelacion de complemento no implementada", HttpStatus.NOT_IMPLEMENTED.value());
+    if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
+        && MetodosPago.PPD.name().equals(facturaCustom.getMetodoPago())) {
+      if (facturaCustom.getPagos().stream().anyMatch(a -> a.isValido())) {
+        throw new InvoiceManagerException(
+            String.format(
+                "La Factura %s no se puede cancelar un complemento no esta cancelado",
+                facturaCustom.getFolio()),
+            HttpStatus.NOT_IMPLEMENTED.value());
+      }
     }
+    facturaCustom = cancelInvoiceExecution(facturaCustom, entity);
+    return facturaCustom;
+  }
+
+  private FacturaCustom cancelInvoiceExecution(FacturaCustom facturaCustom, FacturaCustom entity)
+      throws InvoiceManagerException, NtlinkUtilException {
+    final String folio = facturaCustom.getFolio();
+    facturaCustom = facturaExecutorService.cancelInvoice(facturaCustom);
+    if (COMPLEMENTO.getDescripcion().equals(facturaCustom.getTipoDocumento())) {
+      for (PagoComplemento pagoComplemento : facturaCustom.getPagos()) {
+        pagoComplemento.setValido(false);
+        FacturaCustom facturaPadre = getFacturaByFolio(pagoComplemento.getFolioOrigen());
+        facturaPadre.getPagos().stream()
+            .filter(a -> a.getFolio().equals(folio))
+            .forEach(b -> b.setValido(false));
+        facturaPadre.setSaldoPendiente(
+            facturaPadre.getSaldoPendiente().add(pagoComplemento.getImportePagado()));
+        updateFacturaCustom(facturaPadre.getFolio(), facturaPadre);
+      }
+    }
+    Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
+    entityFromDto.setId(entity.getId());
+    repository.save(entityFromDto);
+    filesService.sendFileToS3(
+        facturaCustom.getFolio().concat(CANCEL_ACK),
+        facturaCustom.getAcuse().getBytes(),
+        XML.getFormat(),
+        S3Buckets.CFDIS);
+    filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
     return facturaCustom;
   }
 
