@@ -100,3 +100,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.4.1 Comeplementos link
   - [x] 4.5.0 Docker integration
   - [x] 4.5.1 Disable security for actuator
+  - [x] 4.5.2 Cancel compelemento
