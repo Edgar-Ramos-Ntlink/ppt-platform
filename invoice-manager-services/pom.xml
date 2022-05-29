@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.business.unknow</groupId>
 		<artifactId>invoice-manager-platform</artifactId>
-		<version>4.4.1</version>
+		<version>4.5.1</version>
 	</parent>
 
 	<artifactId>invoice-manager-services</artifactId>
@@ -20,6 +20,7 @@
 		<aws.java.version>1.11.103</aws.java.version>
 		<lombok.version>1.18.20</lombok.version>
 		<guava.version>31.0.1-jre</guava.version>
+		<docker.image.prefix>ppt-platform</docker.image.prefix>
 	</properties>
 
 	<dependencies>
@@ -221,6 +222,28 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.12</version>
+				<executions>
+					<execution>
+						<id>default</id>
+						<goals>
+							<goal>build</goal>
+							<goal>push</goal>
+						</goals>
+					</execution>
+				</executions>
+
+				<configuration>
+					<repository>${docker.image.prefix}/invoice-manager</repository>
+					<tag>${project.version}</tag>
+					<buildArgs>
+						<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+					</buildArgs>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>com.coveo</groupId>

@@ -98,3 +98,5 @@ Para desarrollar este proyecto es necesario
   - [x] 4.3.0 Factura Reportes CFDI 4.0
   - [x] 4.4.0 Payment Complement version 2.0
   - [x] 4.4.1 Comeplementos link
+  - [x] 4.5.0 Docker integration
+  - [x] 4.5.1 Disable security for actuator

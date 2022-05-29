@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: "dev"
+    active: "qa"
   main:
     banner-mode: "off"
   resources:
