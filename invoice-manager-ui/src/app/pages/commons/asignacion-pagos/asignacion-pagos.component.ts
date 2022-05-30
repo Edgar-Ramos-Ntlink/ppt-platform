@@ -19,6 +19,7 @@ import { NbDialogRef } from '@nebular/theme';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Router } from '@angular/router';
 import { Factura } from '../../../@core/models/factura';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'ngx-asignacion-pagos',
@@ -50,6 +51,7 @@ export class AsignacionPagosComponent implements OnInit {
     constructor(
         protected ref: NbDialogRef<AsignacionPagosComponent>,
         private paymentsService: PaymentsData,
+        public datepipe: DatePipe,
         private clientsService: ClientsData,
         private invoiceService: InvoicesData,
         private accountsService: CuentasData,
@@ -65,20 +67,20 @@ export class AsignacionPagosComponent implements OnInit {
         this.loading = false;
         this.page = new GenericPage();
         this.filterParams = { solicitante: '', emisor: '', remitente: '' };
+
         this.paymentsService
             .getFormasPago()
             .subscribe((payTypes) => (this.payTypeCat = payTypes));
         if (this.module === 'promotor') {
-            
-                this.filterParams.solicitante = sessionStorage.getItem('user');
-                this.clientsService
-                    .getClientsByPromotor(this.filterParams.solicitante)
-                    .subscribe((clients) => {
-                        this.clientsCat = clients;
-                    });
+            this.filterParams.solicitante = sessionStorage.getItem('email');
+            this.clientsService
+                .getClientsByPromotor(this.filterParams.solicitante)
+                .subscribe((clients) => {
+                    this.clientsCat = clients;
+                });
         } else {
             this.clientsService
-                .getClients({ page: '0', size: '1000' })
+                .getClients({ page: '0', size: '50' })
                 .pipe(
                     map(
                         (clientsPage: GenericPage<Client>) =>
@@ -183,8 +185,14 @@ export class AsignacionPagosComponent implements OnInit {
     }
 
     sendPayment() {
+        console.log(this.newPayment);
+        console.log(this.newPayment.fechaPago);
         const filename = this.paymentForm.filename;
         this.successMesagge = '';
+        this.newPayment.fechaPago = this.datepipe.transform(
+            this.newPayment.fechaPago,
+            'yyyy-MM-dd HH:mm:ss'
+        );
         this.payErrorMessages = [];
         const payment = { ...this.newPayment };
         console.log('Validating :', payment);
@@ -203,7 +211,7 @@ export class AsignacionPagosComponent implements OnInit {
         payment.solicitante =
             this.module !== 'promotor'
                 ? (payment.solicitante = this.page.content[0].solicitante)
-                : sessionStorage.getItem('email');;
+                : sessionStorage.getItem('email');
         this.payErrorMessages =
             this.paymentValidator.validatePagoSimple(payment);
         if (this.payErrorMessages.length === 0) {
@@ -239,13 +247,6 @@ export class AsignacionPagosComponent implements OnInit {
         } else {
             this.newPayment.facturas = [];
         }
-        /*
-    this.newPayment = new PagoBase();
-    this.newPayment.moneda = 'MXN';
-    this.paymentForm = { payType: '*', bankAccount: '*', filename: ''};
-    if (this.fileInput !== undefined) {
-      this.fileInput.value = '';
-    }*/
     }
 
     public updateDataTable(currentPage?: number, pageSize?: number) {

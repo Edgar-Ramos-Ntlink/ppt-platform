@@ -16,6 +16,7 @@ import { PagoFactura } from '../../../models/pago-factura';
 import { HttpErrorResponse } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Factura } from '../../../@core/models/factura';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'ngx-multicomplementos',
@@ -45,6 +46,7 @@ export class MulticomplementosComponent implements OnInit {
     constructor(
         private paymentsService: PaymentsData,
         private clientsService: ClientsData,
+        public datepipe: DatePipe,
         private invoiceService: InvoicesData,
         private accountsService: CuentasData,
         private fileService: FilesData,
@@ -163,6 +165,10 @@ export class MulticomplementosComponent implements OnInit {
         this.successMesagge = '';
         this.payErrorMessages = [];
         const payment = { ...this.newPayment };
+        this.newPayment.fechaPago = this.datepipe.transform(
+            this.newPayment.fechaPago,
+            'yyyy-MM-dd HH:mm:ss'
+        );
         for (const f of this.page.content) {
             if (f.pagoMonto !== undefined && f.pagoMonto > 0) {
                 payment.facturas.push(
@@ -175,7 +181,6 @@ export class MulticomplementosComponent implements OnInit {
                 );
             }
         }
-        // if( operador) {payment.solicitante = this.page.content[0].solicitante}
         payment.solicitante =
             this.module !== 'promotor'
                 ? (payment.solicitante = this.page.content[0].solicitante)
@@ -215,13 +220,6 @@ export class MulticomplementosComponent implements OnInit {
         } else {
             this.newPayment.facturas = [];
         }
-        /*
-    this.newPayment = new PagoBase();
-    this.newPayment.moneda = 'MXN';
-    this.paymentForm = { payType: '*', bankAccount: '*', filename: ''};
-    if (this.fileInput !== undefined) {
-      this.fileInput.value = '';
-    }*/
     }
 
     public updateDataTable(currentPage?: number, pageSize?: number) {

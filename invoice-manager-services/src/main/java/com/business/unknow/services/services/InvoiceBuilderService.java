@@ -167,13 +167,6 @@ public class InvoiceBuilderService {
             .getMonto()
             .multiply(BigDecimal.valueOf(IVA_IMPUESTO_16))
             .divide(BigDecimal.valueOf(IVA_BASE_16), 4, RoundingMode.HALF_UP);
-    Totales totales =
-        Totales.builder()
-            .montoTotalPagos(pagoDto.getMonto())
-            .totalTrasladosBaseIVA16(
-                pagoDto.getMonto().subtract(iva).setScale(2, RoundingMode.HALF_UP))
-            .totalTrasladosImpuestoIVA16(iva.setScale(2, RoundingMode.HALF_UP))
-            .build();
     Pago pago =
         Pago.builder()
             .fechaPago(DATE_TIME_FORMAT.format(pagoDto.getFechaPago()))
@@ -182,8 +175,11 @@ public class InvoiceBuilderService {
             .monto(pagoDto.getMonto().setScale(2, RoundingMode.HALF_UP))
             .tipoCambioP(pagoDto.getTipoDeCambio().toString())
             .build();
-    Pagos pagos = Pagos.builder().totales(totales).build();
+
     ImmutableList.Builder<DocumentoRelacionado> documentoRelacionados = ImmutableList.builder();
+
+    BigDecimal importeP = BigDecimal.ZERO;
+    BigDecimal baseP = BigDecimal.ZERO;
     for (FacturaCustom facturaCustomIterate : facturaCustoms) {
 
       PagoFacturaDto pagoFacturaDto =
@@ -210,7 +206,7 @@ public class InvoiceBuilderService {
               .orElse(PagoComplemento.builder().build());
       BigDecimal saldoAnterior =
           Objects.isNull(lastPayment.getImporteSaldoInsoluto())
-              ? facturaCustom.getTotal()
+              ? facturaCustomIterate.getTotal()
               : lastPayment.getImporteSaldoInsoluto();
 
       BigDecimal impuesto =
@@ -228,14 +224,9 @@ public class InvoiceBuilderService {
               .tasaOCuotaDR(TASA_O_CUOTA)
               .importeDR(impuesto)
               .build();
-      TrasladoP trasladoP =
-          TrasladoP.builder()
-              .importeP(impuesto)
-              .baseP(base)
-              .tasaOCuotaP(TASA_O_CUOTA)
-              .impuestoP(IMPUESTO)
-              .tipoFactorP(TIPO_FACTOR)
-              .build();
+
+      importeP = importeP.add(impuesto);
+      baseP = baseP.add(base);
 
       ImpuestosDR impuestosDR =
           ImpuestosDR.builder()
@@ -250,18 +241,17 @@ public class InvoiceBuilderService {
               .monedaDR(pagoDto.getMoneda())
               .numParcialidad(numeroParcialidad)
               .impSaldoAnt(saldoAnterior.setScale(2, RoundingMode.HALF_UP))
-              .impPagado(pagoDto.getMonto().setScale(2, RoundingMode.HALF_UP))
-              .impPagado(pagoDto.getMonto().setScale(2, RoundingMode.HALF_UP))
+              .impPagado(pagoFacturaDto.getMonto().setScale(2, RoundingMode.HALF_UP))
+              .impPagado(pagoFacturaDto.getMonto().setScale(2, RoundingMode.HALF_UP))
               .impSaldoInsoluto(
-                  saldoAnterior.subtract(pagoDto.getMonto()).setScale(2, RoundingMode.HALF_UP))
+                  saldoAnterior
+                      .subtract(pagoFacturaDto.getMonto())
+                      .setScale(2, RoundingMode.HALF_UP))
               // TODO:VALIDATE objetoImpDR value
               .objetoImpDR(PAGO_IMPUESTOS_GRAL)
               .impuestosDR(impuestosDR)
               .build();
-      pago.setImpuestosP(
-          ImpuestosP.builder()
-              .trasladosP(TrasladosP.builder().trasladoP(ImmutableList.of(trasladoP)).build())
-              .build());
+
       documentoRelacionados.add(documentoRelacionado);
       PagoComplemento pagoComplemento =
           PagoComplemento.builder()
@@ -283,6 +273,26 @@ public class InvoiceBuilderService {
       facturaCustomIterate.setSaldoPendiente(
           facturaCustomIterate.getSaldoPendiente().subtract(pagoFacturaDto.getMonto()));
     }
+
+    Totales totales =
+        Totales.builder()
+            .montoTotalPagos(pagoDto.getMonto())
+            .totalTrasladosBaseIVA16(baseP.setScale(2, RoundingMode.HALF_UP))
+            .totalTrasladosImpuestoIVA16(importeP.setScale(2, RoundingMode.HALF_UP))
+            .build();
+    TrasladoP trasladoP =
+        TrasladoP.builder()
+            .importeP(importeP.setScale(2, RoundingMode.HALF_UP))
+            .baseP(baseP.setScale(2, RoundingMode.HALF_UP))
+            .tasaOCuotaP(TASA_O_CUOTA)
+            .impuestoP(IMPUESTO)
+            .tipoFactorP(TIPO_FACTOR)
+            .build();
+    Pagos pagos = Pagos.builder().totales(totales).build();
+    pago.setImpuestosP(
+        ImpuestosP.builder()
+            .trasladosP(TrasladosP.builder().trasladoP(ImmutableList.of(trasladoP)).build())
+            .build());
     pago.setRelacionados(documentoRelacionados.build());
     pagos.setPagos(ImmutableList.of(pago));
     return pagos;

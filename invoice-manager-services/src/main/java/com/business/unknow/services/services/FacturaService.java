@@ -408,7 +408,12 @@ public class FacturaService {
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
     FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
     facturaPdf.setCfdi(comprobante);
-    byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
+    byte[] pdf =
+        FacturaUtils.generateFacturaPdf(
+            facturaPdf,
+            FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
+                ? PDF_FACTURA_SIN_TIMBRAR
+                : PDF_COMPLEMENTO_TIMBRAR);
     filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
     reportDataService.upsertReportData(facturaCustom.getCfdi());
     return facturaCustom;
@@ -433,7 +438,12 @@ public class FacturaService {
       filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
       FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
       facturaPdf.setCfdi(comprobante);
-      byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, PDF_FACTURA_SIN_TIMBRAR);
+      byte[] pdf =
+          FacturaUtils.generateFacturaPdf(
+              facturaPdf,
+              FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
+                  ? PDF_FACTURA_SIN_TIMBRAR
+                  : PDF_COMPLEMENTO_TIMBRAR);
       filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
       reportDataService.upsertReportData(facturaCustom.getCfdi());
     }
