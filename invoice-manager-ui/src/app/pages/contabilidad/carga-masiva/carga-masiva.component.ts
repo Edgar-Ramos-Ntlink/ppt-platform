@@ -248,14 +248,14 @@ export class CargaMasivaComponent implements OnInit {
         factura.statusFactura = '8';
         factura.solicitante = sessionStorage.getItem('email');
         const cfdi = new Cfdi();
-        cfdi.receptor.nombre = receptorCompany.razonSocial;
+        cfdi.receptor.nombre = receptorCompany.nombre;
         cfdi.receptor.rfc = transfer.RFC_RECEPTOR;
         cfdi.receptor.domicilioFiscalReceptor = receptorCompany.cp;
         cfdi.receptor.regimenFiscalReceptor = receptorCompany.regimenFiscal;
         cfdi.receptor.usoCfdi = 'G03';
         factura.direccionEmisor =
             this.cfdiValidator.generateCompanyAddress(receptorCompany);
-        cfdi.emisor.nombre = emisorCompany.razonSocial;
+        cfdi.emisor.nombre = emisorCompany.nombre;
 
         cfdi.emisor.rfc = transfer.RFC_EMISOR;
         cfdi.emisor.regimenFiscal = emisorCompany.regimenFiscal;

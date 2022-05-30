@@ -211,7 +211,7 @@ export class PreCfdiComponent implements OnInit {
 
         const emisor = new Emisor();
         emisor.rfc = companyInfo.rfc.toUpperCase();
-        emisor.nombre = companyInfo.razonSocial.toUpperCase();
+        emisor.nombre = companyInfo.nombre.toUpperCase();
         emisor.regimenFiscal = '601' || companyInfo.regimenFiscal;
 
         let invoice = JSON.parse(JSON.stringify(this.factura));
@@ -255,7 +255,7 @@ export class PreCfdiComponent implements OnInit {
         }
         let receptor = new Receptor();
         receptor.rfc = clientInfo.rfc.toUpperCase();
-        receptor.nombre = clientInfo.razonSocial.toUpperCase();
+        receptor.nombre = clientInfo.nombre.toUpperCase();
         receptor.domicilioFiscalReceptor = clientInfo.cp;
         receptor.regimenFiscalReceptor = clientInfo.regimenFiscal;
 
