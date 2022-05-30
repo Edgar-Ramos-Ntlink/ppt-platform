@@ -65,8 +65,9 @@ public class FacturaCustom implements Serializable {
   private String cadenaOriginalTimbrado;
   private String selloCfd;
   private Integer idCfdi;
-  private Integer idCfdiRelacionado;
-  private Integer idCfdiRelacionadoPadre;
+  private String folioRelacionado;
+  private String folioRelacionadoPadre;
+
   private BigDecimal total;
   private BigDecimal saldoPendiente;
 

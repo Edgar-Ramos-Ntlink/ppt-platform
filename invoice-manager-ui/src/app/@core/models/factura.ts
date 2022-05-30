@@ -32,8 +32,8 @@ export class Factura {
     public total: number;
     public montoTotalDesc: string;
     public cfdi: Cfdi;
-    public idCfdiRelacionado: number;
-    public idCfdiRelacionadoPadre: number;
+    public folioRelacionado: number;
+    public folioRelacionadoPadre: number;
     public validacionTeso: boolean;
     public validacionOper: boolean;
     public pagos: ComplementoPago[];
