@@ -134,7 +134,7 @@ export class LineaXComponent implements OnInit {
 
         const emisor = new Emisor();
         emisor.rfc = companyInfo.rfc.toUpperCase();
-        emisor.nombre = companyInfo.razonSocial.toUpperCase();
+        emisor.nombre = companyInfo.nombre.toUpperCase();
         emisor.regimenFiscal = '601' || companyInfo.regimenFiscal;
 
         let invoice = JSON.parse(JSON.stringify(this.factura));

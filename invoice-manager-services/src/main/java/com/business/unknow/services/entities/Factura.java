@@ -30,7 +30,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "FACTURAS")
+@Table(name = "FACTURAS40")
 public class Factura {
 
   @Id

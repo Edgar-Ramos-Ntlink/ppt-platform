@@ -29,7 +29,7 @@ El poryecto fue realizado pricnipalmente con Java 11 y Angular 8
 
 * Construye el proyecto desde el folder raíz evitando creacion de imagen de docker
   ```sh
-  mvn clean package install
+  mvn clean package install -Ddockerfile.skip
   ```
 
 * Inicializa los servicios de backend, desde la carpeta de <code>invoice-manager-services</code>
@@ -53,7 +53,7 @@ El poryecto fue realizado pricnipalmente con Java 11 y Angular 8
   ``` sh
   npm run build:prod
   ```
-* Compila los modulos del proyecto (package copia los archivos estaticos creados por angular)
+* Compila los modulos del proyecto (package copia los archivos estaticos creados por angular) y genera la imagen de docker
   ```sh
   mvn clean package install
   ```
@@ -76,6 +76,7 @@ Para desarrollar este proyecto es necesario
 * node js 12
 * maven 3.5 o mayor
 * angular 12
+* docker
 
 <!-- ROADMAP -->
 ## Roadmap
