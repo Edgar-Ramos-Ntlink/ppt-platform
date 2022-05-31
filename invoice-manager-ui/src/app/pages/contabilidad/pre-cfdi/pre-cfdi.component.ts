@@ -55,8 +55,6 @@ export class PreCfdiComponent implements OnInit {
     public soporte: boolean = false;
     public folio: string;
 
-    public complementos: Factura[] = [];
-
     public formInfo = {
         emisorRfc: '*',
         receptorRfc: '*',
@@ -609,60 +607,6 @@ export class PreCfdiComponent implements OnInit {
                 );
             }
         );
-    }
-
-    generateComplement() {
-        this.loading = true;
-        let errorMessages = [];
-        if (this.payment.monto === undefined) {
-            errorMessages.push(
-                'El monto del complemento es un valor requerido'
-            );
-        }
-        if (this.payment.monto <= 0) {
-            errorMessages.push(
-                'El monto del complemento no puede ser igual a 0'
-            );
-        }
-        if (this.payment.monto + this.paymentSum > this.factura.cfdi.total) {
-            errorMessages.push(
-                'El monto del complemento no puede ser superior al monto total de la factura'
-            );
-        }
-        if (this.payment.moneda !== this.factura.cfdi.moneda) {
-            errorMessages.push(
-                'El monto del complemento no puede ser superior al monto total de la factura'
-            );
-        }
-        if (this.payment.formaPago === undefined) {
-            errorMessages.push('La forma de pago es requerida');
-        }
-        if (
-            this.payment.fechaPago === undefined ||
-            this.payment.fechaPago === null
-        ) {
-            errorMessages.push('La fecha de pago es un valor requerido');
-        }
-        if (errorMessages.length === 0) {
-            this.invoiceService
-                .generateInvoiceComplement(this.factura.folio, this.payment)
-                .subscribe(
-                    (complement) => {
-                        this.getInvoiceByFolio(this.folio);
-                        /*   this.loadConceptos(); */
-                    },
-                    (error: NtError) => {
-                        this.loading = false;
-                        this.notificationService.sendNotification(
-                            'danger',
-                            error?.message,
-                            'Error generando complemento'
-                        );
-                    }
-                );
-        } else {
-            this.loading = false;
-        }
     }
 
     onGiroSelection(giroId: string) {

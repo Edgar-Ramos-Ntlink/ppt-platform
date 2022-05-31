@@ -4,8 +4,12 @@ import { Catalogo } from '../../../models/catalogos/catalogo';
 import { PagoBase } from '../../../models/pago-base';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Pago } from '../../../@core/models/cfdi/pago';
 import { Factura } from '../../../@core/models/factura';
+import { AppState } from '../../../reducers';
+import { select, Store } from '@ngrx/store';
+import { invoice } from '../../../@core/core.selectors';
+import { updateInvoice } from '../../../@core/core.actions';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'ngx-generar-complemento',
@@ -13,12 +17,11 @@ import { Factura } from '../../../@core/models/factura';
     styleUrls: ['./generar-complemento.component.scss'],
 })
 export class GenerarComplementoComponent implements OnInit {
-    @Input() factura: Factura;
+    public factura: Factura;
     @Input() loading: boolean;
     @Output() myEvent = new EventEmitter<string>();
 
     public complementPayTypeCat: Catalogo[] = [];
-    public payment: Pago;
     public paymentForm = {
         coin: '*',
         payType: '*',
@@ -26,63 +29,69 @@ export class GenerarComplementoComponent implements OnInit {
         filename: '',
         successPayment: false,
     };
-    public newPayment: PagoBase;
+    public newPayment: PagoBase = new PagoBase();
     public invoicePayments = [];
     public payErrorMessages: string[] = [];
     public validationCat: Catalogo[] = [];
     public paymentSum: number = 0;
 
-    public complementos: Factura[] = [];
-
     constructor(
         private paymentsService: PaymentsData,
-        private invoiceService: InvoicesData
+        private invoiceService: InvoicesData,
+        private store: Store<AppState>,
+        public datepipe: DatePipe
     ) {}
 
     ngOnInit() {
+        this.store
+            .pipe(select(invoice))
+            .subscribe((fact) => (this.factura = fact));
         this.paymentsService
             .getFormasPago()
             .subscribe((payTypes) => (this.complementPayTypeCat = payTypes));
         this.initVariables();
         this.loading = false;
+        this.newPayment.monto = this.factura.saldoPendiente;
     }
 
     public initVariables() {
-        this.payment = new Pago();
-        this.payment.formaPago = '*';
+        this.newPayment.formaPago = '*';
         this.payErrorMessages = [];
     }
 
     generateComplement() {
         this.loading = true;
-        console.log('cargando');
+        this.newPayment.fechaPago = this.datepipe.transform(
+            this.newPayment.fechaPago,
+            'yyyy-MM-dd HH:mm:ss'
+        );
         this.payErrorMessages = [];
-        if (this.payment.monto === undefined) {
+        if (this.newPayment.monto === undefined) {
             this.payErrorMessages.push(
                 'El monto del complemento es un valor requerido'
             );
         }
-        if (this.payment.monto <= 0) {
+        if (this.newPayment.monto <= 0) {
             this.payErrorMessages.push(
                 'El monto del complemento no puede ser igual a 0'
             );
         }
-        if (this.payment.monto + this.paymentSum > this.factura.cfdi.total) {
+        if (this.newPayment.monto + this.paymentSum > this.factura.cfdi.total) {
             this.payErrorMessages.push(
                 'El monto del complemento no puede ser superior al monto total de la factura'
             );
         }
-        if (this.payment.moneda !== this.factura.cfdi.moneda) {
+        if (this.newPayment.moneda !== this.factura.cfdi.moneda) {
             this.payErrorMessages.push(
                 'El monto del complemento no puede ser superior al monto total de la factura'
             );
         }
-        if (this.payment.formaPago === undefined) {
+        if (this.newPayment.formaPago === undefined) {
             this.payErrorMessages.push('La forma de pago es requerida');
         }
         if (
-            this.payment.fechaPago === undefined ||
-            this.payment.fechaPago === null
+            this.newPayment.fechaPago === undefined ||
+            this.newPayment.fechaPago === null
         ) {
             this.payErrorMessages.push(
                 'La fecha de pago es un valor requerido'
@@ -90,11 +99,10 @@ export class GenerarComplementoComponent implements OnInit {
         }
         if (this.payErrorMessages.length === 0) {
             this.invoiceService
-                .generateInvoiceComplement(this.factura.folio, this.payment)
+                .generateInvoiceComplement(this.factura.folio, this.newPayment)
                 .subscribe(
-                    (complement) => {
-                        // TODO emit generate complement event
-                        //this.myEvent.emit(this.factura.cfdi.id.toString());
+                    (invoice) => {
+                        this.store.dispatch(updateInvoice({ invoice }));
                         this.loading = false;
                     },
                     (error: HttpErrorResponse) => {
@@ -108,16 +116,6 @@ export class GenerarComplementoComponent implements OnInit {
                 );
         } else {
             this.loading = false;
-        }
-    }
-
-    calculatePaymentSum(complementos: Factura[]) {
-        if (complementos.length === 0) {
-            this.paymentSum = 0;
-        } else {
-            this.paymentSum = complementos
-                .map((c: Factura) => c.total)
-                .reduce((total, c) => total + c);
         }
     }
 }
