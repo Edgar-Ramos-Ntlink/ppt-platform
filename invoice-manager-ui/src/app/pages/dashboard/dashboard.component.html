@@ -1,62 +1,148 @@
+<div class="row">
+    <div class="col-md-12">
+        <nb-card>
+            <nb-card-header
+                ><h4 class="text-danger">Aviso importante</h4></nb-card-header
+            >
+            <nb-card-body>
+                <p>
+                    El Sistema de Administración Tributaria (SAT) informó que a
+                    partir del 1 de enero de este año entró en vigor la nueva
+                    versión del CFDI 4.0 y a partir del 1 de julio del presente
+                    año se hara obligatorio el timbrar por medio de CFDI 4.0.
+                </p>
 
+                <p>
+                    Por el momento estamos en el periodo de convivencia impuesto
+                    por el SAT y nuestro portal 3.3 y el
+                    <a href="https://v04.inv-manager.net">nuevo portal 4.0</a>
+                    estaran activos durante todo el mes de junio. Y a partir del
+                    1° de julio solo el
+                    <a href="https://v04.inv-manager.net">nuevo portal 4.0</a>
+                    estará activo.
+                </p>
+                <p>
+                    <strong class="text-danger"
+                        >Es muy importante amigo promotor actualice la
+                        información fiscal de sus clientes, pues la version CFDI
+                        4.0 require que tengamos el regimen fiscal del cliente y
+                        cargada la Constancia de Situacion Fiscal en el sistema,
+                        para evitar demoras en timbrado de sus facturas.</strong
+                    >
+                </p>
 
-<div class="area" >
-    <ul class="circles">
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-    </ul>
-  <div class="row">
-    <div class="col-xxxl-3 col-md-6" *ngFor="let statusCard of statusCards">
-      <ngx-status-card [title]="statusCard.title" [type]="statusCard.type">
-        <i [ngClass]="statusCard.iconClass"></i>
-      </ngx-status-card>
+                <p>
+                    Para actualizar la informacion, simplemente dirijase a la
+                    seccion de la izquierda y en el menú de clientes edite o
+                    carge el cliente como lo hace usualmente, sin embargo el
+                    sistema abrira una nueva pestaña redirigiendolo al sistema
+                    4.0. Es posible que le requira que acceda nuevamente a la
+                    plataforma, una vez actualizados los datos en el sistema 4.0
+                    , estos se replican al sistema 3.3, no es necesario hacer
+                    ninguna acción adicional.
+                </p>
+            </nb-card-body>
+        </nb-card>
     </div>
-  </div>
-  
-</div >
-
-
-
-
-<!--div class="row">
-  <div class="col-xxxl-3 col-xxl-4 col-lg-5 col-md-6">
-    <ngx-temperature></ngx-temperature>
-  </div>
-
-  <div class="col-xxxl-9 col-xxl-8 col-lg-7 col-md-6">
-    <ngx-electricity></ngx-electricity>
-  </div>
-</div-->
-
-<!--div class="row">
-  <div class="col-xxxl-9 col-xl-12">
-    <ngx-rooms></ngx-rooms>
-  </div>
-
-  <div class="col-xxxl-3 col-xxl-4 col-lg-7 col-md-6">
-    <ngx-contacts></ngx-contacts>
-  </div>
-
-  <div class="col-xxxl-3 col-xxl-4 col-lg-5 col-md-6">
-    <ngx-solar [chartValue]="solarValue"></ngx-solar>
-
-    <ngx-kitten></ngx-kitten>
-  </div>
-
-  <div class="col-xxxl-3 col-xxl-4 col-md-5">
-    <ngx-traffic></ngx-traffic>
-    <ngx-weather></ngx-weather>
-  </div>
-
-  <div class="col-xxxl-6 col-xxl-12 col-md-7">
-    <ngx-security-cameras></ngx-security-cameras>
-  </div>
-</div-->
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <nb-card>
+            <nb-card-header>Preguntas y respuestas</nb-card-header>
+            <nb-card-body>
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>
+                            ¿Por que debo de actualizar los datos de mis
+                            clientes?</strong
+                        >
+                        <p>
+                            Este es un requerimiento del SAT, y actualemente el
+                            sistema 3.3 no cuenta con los datos del regimen
+                            fiscal de los clientes
+                        </p>
+                        <strong>
+                            ¿Que datos debo de actualizar a mis
+                            clientes?</strong
+                        >
+                        <p>
+                            Es necesario actualice el regimen Fiscal de sus
+                            clientes, solicitar y cargar la constancia de
+                            situacion fiscal al sistema.
+                        </p>
+                        <p>
+                            El area de operaciones no require ser notificada,
+                            usted puede hacerlo por su cuenta.
+                        </p>
+                        <strong>
+                            ¿Donde puedo encontrar el regimen fiscal de mi
+                            cliente?</strong
+                        >
+                        <p>
+                            Esta información la puede obtener de la constancia
+                            de situacion fiscal
+                        </p>
+                        <strong>
+                            ¿Por que no puedo actualizar a mis clientes en la
+                            version 3.3?</strong
+                        >
+                        <p>
+                            El portal 3.3 sera dehabilitado el 1° de julio y no
+                            es compatible con CFDI 4.0
+                        </p>
+                        <strong>
+                            ¿Si actualizo mis datos en la version 4, tengo que
+                            actualizarlos en la version 3.3?</strong
+                        >
+                        <p>
+                            No es necesario, el sistema 4.0 actualiza la
+                            informacion de sus clientes en el portal 3.3 y 3l
+                            portal 4.0
+                        </p>
+                        <strong>
+                            ¿Puedo solicitar facturas en la version 4?</strong
+                        >
+                        <p>
+                            Por el momento aun no, si usted require una factura
+                            en CFDI 4.0 llame al area de operaciones
+                        </p>
+                        <strong
+                            >¿Cuando estará completamente operativo el portal
+                            4?</strong
+                        >
+                        <p>A partir del 1° de Julio</p>
+                        <strong
+                            >¿Que pasara con todas mis facturas de version
+                            3.3?</strong
+                        >
+                        <p>
+                            A partir del 4 de julio estaran disponibles, en el
+                            nuevo sistema, pues durante el mes de Junio
+                            estaremos migrando toda la información del portal
+                            3.3 al portal 4.0
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>
+                            ¿Como identifico las versiones de portales?
+                        </strong>
+                        <div class="row">
+                            <img
+                                src="/assets/images/portal33.png"
+                                style="width: 100%"
+                                alt="portal33"
+                            />
+                        </div>
+                        <div class="row">
+                            <img
+                                src="/assets/images/portal40.png"
+                                style="width: 100%"
+                                alt="portal40"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>
