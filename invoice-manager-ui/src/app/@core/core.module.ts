@@ -58,6 +58,7 @@ import { DonwloadFileService } from './util-services/download-file-service';
 import { PagosValidatorService } from './util-services/pagos-validator.service';
 import { ComplementosPagoComponent } from './components/complementos-pago/complementos-pago.component';
 import { InvoiceStatusComponent } from './components/invoice-status/invoice-status.component';
+import { GenerarComplementoComponent } from '../pages/commons/generar-complemento/generar-complemento.component';
 
 const DATA_SERVICES = [
     { provide: CatalogsData, useClass: CatalogsService },
@@ -111,6 +112,7 @@ const UTIL_SERVICES = [
         EmisorComponent,
         ConceptoComponent,
         PagoFacturaComponent,
+        GenerarComplementoComponent,
         ComplementosPagoComponent,
         InvoiceStatusComponent,
     ],

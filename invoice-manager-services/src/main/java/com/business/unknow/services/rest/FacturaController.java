@@ -112,4 +112,14 @@ public class FacturaController {
     return new ResponseEntity<>(
         service.postRelacion(facturaCustom, TipoDocumento.NOTA_CREDITO), HttpStatus.OK);
   }
+
+  @PostMapping("/{folio}/complementos")
+  public ResponseEntity<FacturaCustom> createComeplement(
+      @PathVariable String folio, @RequestBody @Valid PagoDto pago)
+      throws InvoiceManagerException, NtlinkUtilException {
+    FacturaCustom facturaCustom = service.createComplemento(folio, pago);
+
+    return new ResponseEntity<>(
+        service.stamp(facturaCustom.getFolio(), facturaCustom), HttpStatus.OK);
+  }
 }

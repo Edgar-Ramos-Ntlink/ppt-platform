@@ -22,6 +22,7 @@ import com.business.unknow.model.dto.FacturaPdf;
 import com.business.unknow.model.dto.PagoComplemento;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
+import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Factura;
@@ -652,6 +653,14 @@ public class FacturaService {
       throw new InvoiceManagerException(
           "Debe tener por lo menos un pago", HttpStatus.BAD_REQUEST.value());
     }
+  }
+
+  public FacturaCustom createComplemento(String folio, PagoDto pagoDto)
+      throws InvoiceManagerException, NtlinkUtilException {
+    PagoFacturaDto pagoFactura =
+        PagoFacturaDto.builder().folio(folio).monto(pagoDto.getMonto()).build();
+    pagoDto.setFacturas(ImmutableList.of(pagoFactura));
+    return generateComplemento(ImmutableList.of(getFacturaByFolio(folio)), pagoDto);
   }
 
   public FacturaCustom postRelacion(FacturaCustom dto, TipoDocumento tipoDocumento)

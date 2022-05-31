@@ -22,7 +22,7 @@
                     id="inputPayCoin"
                     style="display: block"
                     class="form-control"
-                    [(ngModel)]="payment.moneda"
+                    [(ngModel)]="newPayment.moneda"
                 >
                     <option value="MXN">Peso MX</option>
                 </select>
@@ -34,7 +34,7 @@
                     id="inputPayType"
                     style="display: block"
                     class="form-control"
-                    [(ngModel)]="payment.formaPago"
+                    [(ngModel)]="newPayment.formaPago"
                 >
                     <option value="*">Seleccionar</option>
                     <option
@@ -54,7 +54,7 @@
                     type="number"
                     min="0"
                     placeholder="Monto"
-                    [(ngModel)]="payment.monto"
+                    [(ngModel)]="newPayment.monto"
                 />
             </div>
             <div class="col-2">
@@ -64,8 +64,7 @@
                         nbInput
                         placeholder="Fecha de pago"
                         [nbDatepicker]="formpicker"
-                        format="dd\MM\yyyy"
-                        [(ngModel)]="payment.fechaPago"
+                        [(ngModel)]="newPayment.fechaPago"
                         style="display: block; width: 100%"
                     />
                     <nb-datepicker #formpicker></nb-datepicker>
@@ -87,92 +86,6 @@
                     Generar Complemento
                 </button>
             </div>
-        </div>
-    </div>
-
-    <div
-        *ngIf="
-            factura.pagos !== undefined &&
-            factura.metodoPago == 'PPD' &&
-            factura.pagos.length > 0
-        "
-    >
-        <p class="font-weight-bold">Complementos</p>
-        <br />
-        <div class="table-responsive slide_1">
-            <table class="table table-sm">
-                <thead class="thead-dark">
-                    <tr>
-                        <th class="text-center">Acciones</th>
-                        <th class="text-center">Folio</th>
-                        <th class="text-center">Status</th>
-                        <th class="text-center">Emisor</th>
-                        <th class="text-center">Receptor</th>
-                        <th class="text-center">Metodo Pago</th>
-                        <th class="text-center">Monto</th>
-                        <th class="text-center">Fecha Solicitud</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let complemento of factura.pagos">
-                        <td scope="row" class="text-center">
-                            <!--   <button type="button"  class="btn btn-outline-primary"
-                  (click)="downloadPdf(complemento.folio)">
-                  <i class="fa fa-file-pdf"></i>
-                </button>&nbsp;&nbsp;
-                <button type="button" [disabled]="complemento.statusFactura !='Timbrada'" class="btn"
-                  [ngClass]="{'btn-outline-secondary': complemento.statusFactura !='Timbrada', 'btn-outline-primary':complemento.statusFactura =='Timbrada'}"
-                  (click)="downloadXml(complemento.folio)">
-                  <i class="fa fa-code"></i>
-                </button>&nbsp;&nbsp; -->
-                            <button
-                                type="button"
-                                [disabled]="
-                                    complemento.statusFactura == 'Timbrada' ||
-                                    complemento.statusFactura == 'Cancelada' ||
-                                    loading
-                                "
-                                class="btn"
-                                [ngClass]="{
-                                    'btn-outline-secondary':
-                                        complemento.statusFactura ==
-                                            'Timbrada' ||
-                                        complemento.statusFactura ==
-                                            'Cancelada',
-                                    'btn-outline-success':
-                                        complemento.statusFactura !=
-                                            'Timbrada' &&
-                                        complemento.statusFactura != 'Cancelada'
-                                }"
-                                (click)="timbrarFactura(complemento, dialog)"
-                            >
-                                <i class="fa fa-check-circle"></i>
-                            </button>
-                        </td>
-                        <td scope="row" class="text-center">
-                            {{ complemento.folio }}
-                        </td>
-                        <td scope="row" class="text-center">
-                            {{ complemento.statusFactura }}
-                        </td>
-                        <td scope="row" class="text-center">
-                            {{ complemento.rfcEmisor }}
-                        </td>
-                        <td scope="row" class="text-center">
-                            {{ complemento.rfcRemitente }}
-                        </td>
-                        <td scope="row" class="text-center">
-                            {{ complemento.metodoPago }}
-                        </td>
-                        <td scope="row" class="text-center">
-                            {{ complemento.total | currency }}
-                        </td>
-                        <td scope="row" class="text-center">
-                            {{ complemento.fechaCreacion }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 
