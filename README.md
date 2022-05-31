@@ -28,3 +28,4 @@ VERSION 3.2.0
     - [x] 3.5.7 Adding Company block logic
     - [x] 3.5.8 Email resend logic fix and  ui password check
     - [x] 3.5.9 Companies module UI fix typo
+    - [x] 3.5.10 CFDI40 redirect and dashboard message
