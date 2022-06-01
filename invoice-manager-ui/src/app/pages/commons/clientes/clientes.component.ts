@@ -132,11 +132,8 @@ export class ClientesComponent implements OnInit {
     }
 
     public redirectToCliente(rfc: string, promotor: string) {
-        //this.router.navigate([`./pages/${this.module}/cliente/${rfc}/${promotor}`]);
-        //'https://v04.inv-manager.net/#/pages/promotor/cliente/*'
-        window.open(
-            `https://v04.inv-manager.net/#/pages/${this.module}/cliente/${rfc}/${promotor}`,
-            '_blank'
-        );
+        this.router.navigate([
+            `./pages/${this.module}/cliente/${rfc}/${promotor}`,
+        ]);
     }
 }
