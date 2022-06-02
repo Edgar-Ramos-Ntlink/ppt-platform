@@ -23,7 +23,6 @@ import com.business.unknow.model.dto.PagoComplemento;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
-import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Factura;
 import com.business.unknow.services.mapper.FacturaMapper;
@@ -536,7 +535,6 @@ public class FacturaService {
 
   public FacturaCustom sendMail(FacturaCustom facturaCustom) {
     try {
-      ClientDto clientDto = clientService.getClientByRFC(facturaCustom.getRfcRemitente());
       String xml =
           filesService.getS3File(S3Buckets.CFDIS, facturaCustom.getFolio().concat(XML.getFormat()));
       String pdf =
@@ -555,11 +553,11 @@ public class FacturaService {
               .bodyText(
                   String.format(
                       MailConstants.STAMP_INVOICE_BODY_MESSAGE,
-                      clientDto.getRazonSocial(),
+                      facturaCustom.getRazonSocialRemitente(),
                       facturaCustom.getFolio()))
               .attachments(files)
               .build();
-      mailService.sendEmail(ImmutableList.of(clientDto.getCorreo()), mailContent);
+      mailService.sendEmail(ImmutableList.of(facturaCustom.getSolicitante()), mailContent);
       return facturaCustom;
     } catch (Exception e) {
       throw new ResponseStatusException(

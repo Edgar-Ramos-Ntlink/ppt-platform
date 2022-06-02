@@ -40,8 +40,8 @@ export class ClientsService {
     return this.httpClient.get(`../api/promotores/${promotor}/clientes/${rfc}`);
   }
 
-  public getClientByRFC(rfc:string) : Observable<Object>{
-    return this.httpClient.get(`../api/clientes/${rfc}`);
+  public getClientById(id:number) : Observable<Object>{
+    return this.httpClient.get(`../api/clientes/${id}`);
   }
 
   public insertNewClient(client : Client) : Observable<Object>{
@@ -49,7 +49,7 @@ export class ClientsService {
   }
 
   public updateClient(cliente : Client) : Observable<Object>{
-    return this.httpClient.put(`../api/clientes/${cliente.rfc}`,cliente);
+    return this.httpClient.put(`../api/clientes/${cliente.id}`,cliente);
   }
 
 }

@@ -23,8 +23,8 @@ public class ClienteValidator extends Validator {
     checkNotEmpty(dto.getMunicipio(), "Municipio");
     checkNotNull(dto.getRfc(), "RFC");
     checkNotEmpty(dto.getRfc(), "RFC");
-    checkNotNull(dto.getCorreo(), "Correo");
-    checkNotEmpty(dto.getCorreo(), "Correo");
+    checkNotNull(dto.getCorreoContacto(), "Correo cliente");
+    checkNotEmpty(dto.getCorreoContacto(), "Correo cliente");
 
     if (dto.getPorcentajeCliente().compareTo(BigDecimal.ZERO) < 0) {
       throw new InvoiceManagerException(
@@ -65,8 +65,8 @@ public class ClienteValidator extends Validator {
           "RFC invalido, verifique que no contenga espacios o caracteres inválidos",
           Constants.BAD_REQUEST);
     }
-    if (dto.getCorreo() != null && !dto.getCorreo().isEmpty()) {
-      checkValidEmail(dto.getCorreo());
+    if (dto.getCorreoContacto() != null && !dto.getCorreoContacto().isEmpty()) {
+      checkValidEmail(dto.getCorreoContacto());
     }
   }
 }

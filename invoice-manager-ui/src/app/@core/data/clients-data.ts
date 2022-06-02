@@ -13,7 +13,7 @@ export abstract class ClientsData {
 
     abstract getClientsByPromotorAndRfc(promotor: string,rfc:string): Observable<Client>;
 
-    abstract getClientByRFC(rfc: string): Observable<Client>;
+    abstract getClientById(id: number): Observable<Client>;
 
     abstract getClientByName(name: string): Observable<Client[]>;
 
