@@ -40,9 +40,9 @@ public class ClientController {
     return new ResponseEntity<>(service.getClientsByParametrosReport(parameters), HttpStatus.OK);
   }
 
-  @GetMapping("/clientes/{rfc}")
-  public ResponseEntity<ClientDto> updateClient(@PathVariable String rfc) {
-    return new ResponseEntity<>(service.getClientByRFC(rfc), HttpStatus.OK);
+  @GetMapping("/clientes/{id}")
+  public ResponseEntity<ClientDto> updateClient(@PathVariable Integer id) {
+    return new ResponseEntity<>(service.getClientById(id), HttpStatus.OK);
   }
 
   @GetMapping("/promotores/{promotor}/clientes")
@@ -51,7 +51,7 @@ public class ClientController {
   }
 
   @GetMapping("/promotores/{promotor}/clientes/{rfc}")
-  public ResponseEntity<ClientDto> clinetePorPromotorYRfc(
+  public ResponseEntity<ClientDto> clintePorPromotorYRfc(
       @PathVariable String promotor, @PathVariable String rfc) {
     return new ResponseEntity<>(
         service.getClientsByPromotorAndClient(promotor, rfc), HttpStatus.OK);
@@ -63,16 +63,16 @@ public class ClientController {
     return new ResponseEntity<>(service.insertNewClient(client), HttpStatus.CREATED);
   }
 
-  @PutMapping("/clientes/{rfc}")
+  @PutMapping("/clientes/{id}")
   public ResponseEntity<ClientDto> updateClient(
-      @PathVariable String rfc, @RequestBody @Valid ClientDto client)
+      @PathVariable Integer id, @RequestBody @Valid ClientDto client)
       throws InvoiceManagerException {
-    return new ResponseEntity<>(service.updateClientInfo(client, rfc), HttpStatus.OK);
+    return new ResponseEntity<>(service.updateClientInfo(client, id), HttpStatus.OK);
   }
 
-  @DeleteMapping("/clientes/{rfc}")
-  public ResponseEntity<Void> deleteClient(@PathVariable String rfc) {
-    service.deleteClientInfo(rfc);
+  @DeleteMapping("/clientes/{id}")
+  public ResponseEntity<Void> deleteClient(@PathVariable Integer id) {
+    service.deleteClientInfo(id);
     return new ResponseEntity<Void>(HttpStatus.OK);
   }
 }

@@ -20,6 +20,7 @@ import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Router } from '@angular/router';
 import { Factura } from '../../../@core/models/factura';
 import { DatePipe } from '@angular/common';
+import { Empresa } from '../../../models/empresa';
 
 @Component({
     selector: 'ngx-asignacion-pagos',
@@ -41,11 +42,11 @@ export class AsignacionPagosComponent implements OnInit {
     public cuentas: Cuenta[];
     public loading: boolean = false;
 
-    public clientsCat: Contribuyente[] = [];
-    public companiesCat: Contribuyente[] = [];
+    public clientsCat: Client[] = [];
+    public companiesCat: Empresa[] = [];
 
-    public selectedClient: Contribuyente;
-    public selectedCompany: Contribuyente;
+    public selectedClient: Client;
+    public selectedCompany: Empresa;
 
     public filterParams = { solicitante: '', emisor: '', remitente: '' };
     constructor(
@@ -97,7 +98,7 @@ export class AsignacionPagosComponent implements OnInit {
         this.ref.close();
     }
 
-    selectClient(cliente: Contribuyente) {
+    selectClient(cliente: Client) {
         this.selectedClient = cliente;
         this.filterParams.remitente = cliente.razonSocial;
 
@@ -111,7 +112,7 @@ export class AsignacionPagosComponent implements OnInit {
                 map((page: GenericPage<Factura>) => {
                     return page.content.map(
                         (f) =>
-                            new Contribuyente(f.rfcEmisor, f.razonSocialEmisor)
+                            new Empresa(f.rfcEmisor, f.razonSocialEmisor)
                     );
                 })
             )

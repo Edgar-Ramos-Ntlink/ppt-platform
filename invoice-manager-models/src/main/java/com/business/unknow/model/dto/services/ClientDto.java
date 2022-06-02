@@ -51,7 +51,6 @@ public class ClientDto implements Serializable {
   private String pais;
   private String coo;
   private String cp;
-  private String correo;
   private String telefono;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)

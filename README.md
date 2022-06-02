@@ -106,4 +106,5 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.4 sustitution feature
   - [x] 4.5.5 Multi Complement feature
   - [x] 4.5.6 Contabilidad Payments
-  - [x] 4.5.7 Enable Json Logs
+  - [x] 4.5.7 Clients DB model refactor to flat object
+  - [x] 4.5.8 Enable Json Logs

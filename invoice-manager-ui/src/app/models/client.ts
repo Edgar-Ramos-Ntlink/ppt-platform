@@ -25,20 +25,20 @@ export class Client {
     public pais: string;
     public localidad: string;
     public cp: string;
-    public coo: string;
-    public correo: string;
     public fechaCreacion: Date;
     public fechaActualizacion: Date;
     
 
 
-    constructor() {
+    constructor(rfc?:string,nombre?:string) {
         this.porcentajePromotor = 0;
         this.porcentajeCliente = 0;
         this.porcentajeDespacho = 0;
         this.porcentajeContacto = 0;
         this.correoContacto = '';
         this.regimenFiscal = '*';
+        this.rfc = rfc;
+        this.razonSocial = nombre;
     }
 
 }

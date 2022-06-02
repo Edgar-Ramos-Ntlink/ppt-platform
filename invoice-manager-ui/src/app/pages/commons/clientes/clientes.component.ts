@@ -131,9 +131,9 @@ export class ClientesComponent implements OnInit {
       }
     
 
-    public redirectToCliente(rfc: string, promotor: string) {
+    public redirectToCliente(id: number) {
         this.router.navigate([
-            `./pages/${this.module}/cliente/${rfc}/${promotor}`,
+            `./pages/${this.module}/cliente/${id}`,
         ]);
     }
 }

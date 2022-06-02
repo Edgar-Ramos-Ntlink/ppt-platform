@@ -3,7 +3,6 @@ import { GenericPage } from '../../../models/generic-page';
 import { PagoBase } from '../../../models/pago-base';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Cuenta } from '../../../models/cuenta';
-import { Contribuyente } from '../../../models/contribuyente';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { InvoicesData } from '../../../@core/data/invoices-data';
@@ -17,6 +16,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Factura } from '../../../@core/models/factura';
 import { DatePipe } from '@angular/common';
+import { Client } from '../../../models/client';
+import { Empresa } from '../../../models/empresa';
 
 @Component({
     selector: 'ngx-multicomplementos',
@@ -36,11 +37,11 @@ export class MulticomplementosComponent implements OnInit {
     public cuentas: Cuenta[];
     public loading: boolean = false;
 
-    public clientsCat: Contribuyente[] = [];
-    public companiesCat: Contribuyente[] = [];
+    public clientsCat: Client[] = [];
+    public companiesCat: Empresa[] = [];
 
-    public selectedClient: Contribuyente;
-    public selectedCompany: Contribuyente;
+    public selectedClient: Client;
+    public selectedCompany: Empresa;
 
     public filterParams = { solicitante: '', emisor: '', remitente: '' };
     constructor(
@@ -73,7 +74,7 @@ export class MulticomplementosComponent implements OnInit {
             });
     }
 
-    selectClient(cliente: Contribuyente) {
+    selectClient(cliente: Client) {
         this.selectedClient = cliente;
         this.filterParams.remitente = cliente.razonSocial;
         this.invoiceService
@@ -87,7 +88,7 @@ export class MulticomplementosComponent implements OnInit {
                 map((page: GenericPage<Factura>) => {
                     return page.content.map(
                         (f) =>
-                            new Contribuyente(f.rfcEmisor, f.razonSocialEmisor)
+                            new Empresa(f.rfcEmisor, f.razonSocialEmisor)
                     );
                 })
             )

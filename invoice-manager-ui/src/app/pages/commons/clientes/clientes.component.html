@@ -81,14 +81,14 @@
             <tbody>
               <tr *ngFor="let fila of page.content">
                 <td scope="row" class="text-center"> <button class="btn btn-sm btn-outline-primary"
-                    (click)="redirectToCliente(fila.rfc,fila.correoPromotor)"><i class="fa fa-edit"></i></button>
+                    (click)="redirectToCliente(fila.id)"><i class="fa fa-edit"></i></button>
                 </td>
                 <td scope="row" class="text-uppercase">{{fila.rfc}}</td>
                 <td scope="row" class="text-uppercase">{{fila.razonSocial}}</td>
                 <td scope="row" *ngIf="fila.activo">ACTIVO</td>
                 <td scope="row" *ngIf="!fila.activo">INACTIVO</td>
                 <td scope="row">{{fila.correoPromotor}}</td>
-                <td scope="row">{{fila.correo}}</td>
+                <td scope="row">{{fila.correoContacto}}</td>
                 <td scope="row" class="text-uppercase">{{fila.calle}} , {{fila.noExterior}},
                   {{fila.localidad}}, {{fila.municipio}}, C.P.
                   {{fila.cp}}</td>
