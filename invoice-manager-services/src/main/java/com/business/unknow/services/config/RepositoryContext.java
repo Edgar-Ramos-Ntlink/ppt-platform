@@ -23,8 +23,8 @@ public class RepositoryContext {
   @Bean(name = "invoiceDatasource")
   public HikariDataSource cloudrdbmsDatasource() {
 
-    HikariConfig HikariConfig= new HikariConfig();
-    return HikariDataSource.class()
+    HikariConfig HikariConfig = new HikariConfig();
+    return DataSourceBuilder.create()
         .type(HikariDataSource.class)
         .url(cloud.getDataSourceUrl())
         .driverClassName(cloud.getDataSourceClassName())

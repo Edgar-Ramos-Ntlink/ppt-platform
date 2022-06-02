@@ -35,7 +35,4 @@ public class InvoiceConfig implements Serializable {
 
   @Value("${invoicedatasource.springDatasourceUrl}")
   private String dataSourceUrl;
-
-  @Value("${invoicedatasource.maximum-pool-size}")
-  private String maxPoolSize;
 }

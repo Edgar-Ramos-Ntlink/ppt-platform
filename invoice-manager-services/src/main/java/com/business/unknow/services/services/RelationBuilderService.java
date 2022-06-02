@@ -4,8 +4,6 @@ import static com.business.unknow.Constants.ComplementoPpdDefaults.IMPUESTO;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.PAGO_IMPUESTOS_GRAL;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.TASA_O_CUOTA;
 import static com.business.unknow.Constants.FacturaSustitucionConstants.FACTURA_TASA;
-import static com.business.unknow.Constants.IVA_BASE_16;
-import static com.business.unknow.Constants.IVA_IMPUESTO_16;
 import static com.business.unknow.enums.TipoRelacion.NOTA_CREDITO;
 import static com.business.unknow.enums.TipoRelacion.SUSTITUCION;
 
@@ -76,8 +74,10 @@ public class RelationBuilderService {
                 .cfdiRelacionado(ImmutableList.of(relacionado))
                 .build());
     assignRelationBaseData(facturaCustom, folio);
-    BigDecimal impuesto = facturaCustom.getSaldoPendiente().multiply(TASA_O_CUOTA).setScale(2, RoundingMode.HALF_UP);
-    BigDecimal base =facturaCustom.getSaldoPendiente().subtract(impuesto).setScale(2, RoundingMode.HALF_UP);
+    BigDecimal impuesto =
+        facturaCustom.getSaldoPendiente().multiply(TASA_O_CUOTA).setScale(2, RoundingMode.HALF_UP);
+    BigDecimal base =
+        facturaCustom.getSaldoPendiente().subtract(impuesto).setScale(2, RoundingMode.HALF_UP);
 
     facturaCustom.setTipoDocumento(TipoDocumento.NOTA_CREDITO.getDescripcion());
     facturaCustom.setTotal(facturaCustom.getSaldoPendiente());
