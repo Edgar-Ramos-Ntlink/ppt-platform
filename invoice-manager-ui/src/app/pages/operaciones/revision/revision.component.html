@@ -158,7 +158,8 @@
                         nbSpinnerMessage=""
                         *ngIf="
                             factura?.statusFactura == '3' &&
-                            factura?.tipoDocumento === 'Factura'
+                            factura?.tipoDocumento === 'Factura' &&
+                            !factura?.folioRelacionado
                         "
                     >
                         Sustituir Factura
@@ -177,8 +178,9 @@
                         nbSpinnerSize="small"
                         nbSpinnerMessage=""
                         *ngIf="
-                            factura?.statusFactura === '3' &&
-                            factura?.tipoDocumento === 'Factura'
+                            factura?.statusFactura == '3' &&
+                            factura?.tipoDocumento === 'Factura' &&
+                            !factura?.folioRelacionado
                         "
                     >
                         Nota de crédito

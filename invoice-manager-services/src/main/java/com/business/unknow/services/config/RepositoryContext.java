@@ -1,6 +1,7 @@
 package com.business.unknow.services.config;
 
 import com.business.unknow.services.config.properties.InvoiceConfig;
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,9 @@ public class RepositoryContext {
 
   @Bean(name = "invoiceDatasource")
   public HikariDataSource cloudrdbmsDatasource() {
-    return DataSourceBuilder.create()
+
+    HikariConfig HikariConfig= new HikariConfig();
+    return HikariDataSource.class()
         .type(HikariDataSource.class)
         .url(cloud.getDataSourceUrl())
         .driverClassName(cloud.getDataSourceClassName())

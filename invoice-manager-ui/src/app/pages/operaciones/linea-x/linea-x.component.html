@@ -290,7 +290,8 @@
                         nbSpinnerMessage=""
                         *ngIf="
                             factura?.statusFactura == '3' &&
-                            factura?.tipoDocumento === 'Factura'
+                            factura?.tipoDocumento === 'Factura' &&
+                            !factura?.folioRelacionado
                         "
                     >
                         Sustituir Factura
@@ -309,8 +310,9 @@
                         nbSpinnerSize="small"
                         nbSpinnerMessage=""
                         *ngIf="
-                            factura?.statusFactura === '3' &&
-                            factura?.tipoDocumento === 'Factura'
+                            factura?.statusFactura == '3' &&
+                            factura?.tipoDocumento === 'Factura' &&
+                            !factura?.folioRelacionado
                         "
                     >
                         Nota de crédito
@@ -326,16 +328,13 @@
                     "
                 ></nt-pago-factura>
 
-                <!-- <div *ngIf="!loading"> -->
                 <ngx-generar-complemento
-                    class="slide_1"
-                    [factura]="factura"
-                    [(loading)]="loading"
                     *ngIf="
-                        factura?.statusFactura === '3' && factura?.folio !== '*'
+                        factura?.statusFactura == '3' &&
+                        factura?.lineaEmisor !== 'A' &&
+                        factura?.folio !== '*'
                     "
-                >
-                </ngx-generar-complemento>
+                ></ngx-generar-complemento>
             </nb-card-body>
         </nb-card>
     </div>

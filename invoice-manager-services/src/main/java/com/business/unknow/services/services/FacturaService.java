@@ -665,17 +665,25 @@ public class FacturaService {
 
   public FacturaCustom postRelacion(FacturaCustom dto, TipoDocumento tipoDocumento)
       throws InvoiceManagerException, NtlinkUtilException {
+    if (!dto.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())) {
+      throw new ResponseStatusException(
+          HttpStatus.CONFLICT,
+          String.format(
+              "La factura con el pre-folio %s no esta timbrada y no puede tener nota de credito",
+              dto.getPreFolio()));
+    }
     FacturaCustom facturaCustom = getFacturaByFolio(dto.getFolio());
     String folio = FacturaUtils.generateFolio();
     dto.setFolioRelacionado(folio);
-    updateFacturaCustom(dto.getFolio(), dto);
+
     if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())) {
       switch (tipoDocumento) {
         case FACTURA:
           facturaCustom = sustitucionTranslator.sustitucionFactura(facturaCustom, folio);
           break;
         case NOTA_CREDITO:
-          facturaCustom = sustitucionTranslator.notaCreditoFactura(facturaCustom);
+          facturaCustom = sustitucionTranslator.notaCreditoFactura(facturaCustom, folio);
+          dto.setSaldoPendiente(BigDecimal.ZERO);
           break;
         default:
           throw new InvoiceManagerException(
@@ -684,6 +692,7 @@ public class FacturaService {
               HttpStatus.BAD_REQUEST.value());
       }
       createFacturaCustom(facturaCustom);
+      updateFacturaCustom(dto.getFolio(), dto);
       return dto;
     } else {
       throw new InvoiceManagerException(
