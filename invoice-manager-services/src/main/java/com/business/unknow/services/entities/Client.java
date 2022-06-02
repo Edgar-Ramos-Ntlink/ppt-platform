@@ -15,7 +15,6 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,9 +42,8 @@ public class Client {
   @Column(name = "ID_CLIENTE")
   private int id;
 
-  @NotNull
   @Column(name = "ACTIVO")
-  private Boolean activo;
+  private boolean activo;
 
   @Column(name = "MORAL")
   private boolean moral;

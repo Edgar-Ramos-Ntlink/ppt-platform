@@ -95,7 +95,7 @@ public class ClientService {
                   row.put("RAZON_SOCIAL", c.getRazonSocial());
                   row.put("REGIMEN_FISCAL", c.getRegimenFiscal());
                   row.put("RESIDENCIA_FISCAL", c.getCp());
-                  row.put("ACTIVO", c.getActivo() ? "ACTIVO" : "INACTIVO");
+                  row.put("ACTIVO", c.isActivo() ? "ACTIVO" : "INACTIVO");
                   row.put("PROMOTOR", c.getCorreoPromotor());
                   row.put("EMAIL_CLIENTE", c.getCorreoContacto());
 
