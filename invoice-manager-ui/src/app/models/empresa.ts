@@ -71,7 +71,7 @@ export class Empresa {
     public detalles: DetalleEmpresa[];
     public ingresos: IngresoEmpresa[];
 
-    constructor() {
+    constructor(rfc?:string,nombre?:string) {
         this.activo = false;
         this.operativa = false;
         this.estatus = 'INACTIVO';
@@ -82,5 +82,7 @@ export class Empresa {
         this.cuentas = [];
         this.detalles = [];
         this.ingresos = [];
+        this.rfc = rfc;
+        this.razonSocial = nombre;
     }
 }

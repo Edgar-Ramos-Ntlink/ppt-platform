@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.business.unknow</groupId>
 		<artifactId>invoice-manager-platform</artifactId>
-		<version>4.5.6</version>
+		<version>4.5.8</version>
 	</parent>
 
 	<artifactId>invoice-manager-services</artifactId>
@@ -43,6 +43,16 @@
 			<groupId>com.business.unknow</groupId>
 			<artifactId>invoice-manager-rule</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
@@ -133,6 +143,29 @@
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback.contrib</groupId>
+			<artifactId>logback-json-classic</artifactId>
+			<version>0.1.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback.contrib</groupId>
+			<artifactId>logback-jackson</artifactId>
+			<version>0.1.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.9.3</version>
+		</dependency>
+
     </dependencies>
 
 	<dependencyManagement>

@@ -4,15 +4,12 @@ import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Client;
-import com.business.unknow.services.entities.Contribuyente;
 import com.business.unknow.services.mapper.ClientMapper;
 import com.business.unknow.services.repositories.ClientRepository;
-import com.business.unknow.services.repositories.ContribuyenteRepository;
 import com.business.unknow.services.util.ContactoHelper;
 import com.business.unknow.services.util.validators.ClienteValidator;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +30,6 @@ import org.springframework.web.server.ResponseStatusException;
 public class ClientService {
 
   @Autowired private ClientRepository repository;
-
-  @Autowired private ContribuyenteRepository contribuyenteRepository;
 
   @Autowired private ClientMapper mapper;
 
@@ -96,12 +91,11 @@ public class ClientService {
             .map(
                 c -> {
                   Map<String, Object> row = new HashMap<>();
-                  Contribuyente contribuyente = c.getInformacionFiscal();
-                  row.put("RFC", contribuyente.getRfc());
-                  row.put("RAZON_SOCIAL", contribuyente.getRazonSocial());
-                  row.put("REGIMEN_FISCAL", contribuyente.getRegimenFiscal());
-                  row.put("RESIDENCIA_FISCAL", contribuyente.getCp());
-                  row.put("ACTIVO", c.getActivo() ? "ACTIVO" : "INACTIVO");
+                  row.put("RFC", c.getRfc());
+                  row.put("RAZON_SOCIAL", c.getRazonSocial());
+                  row.put("REGIMEN_FISCAL", c.getRegimenFiscal());
+                  row.put("RESIDENCIA_FISCAL", c.getCp());
+                  row.put("ACTIVO", c.isActivo() ? "ACTIVO" : "INACTIVO");
                   row.put("PROMOTOR", c.getCorreoPromotor());
                   row.put("EMAIL_CLIENTE", c.getCorreoContacto());
 
@@ -109,14 +103,14 @@ public class ClientService {
                       "DOMICILIO",
                       String.format(
                           "%s EXT:%s INT:%s,%s,%s,%s,%s C.P. %s",
-                          contribuyente.getCalle(),
-                          contribuyente.getNoExterior(),
-                          contribuyente.getNoInterior(),
-                          contribuyente.getLocalidad(),
-                          contribuyente.getMunicipio(),
-                          contribuyente.getEstado(),
-                          contribuyente.getPais(),
-                          contribuyente.getCp()));
+                          c.getCalle(),
+                          c.getNoExterior(),
+                          c.getNoInterior(),
+                          c.getColonia(),
+                          c.getMunicipio(),
+                          c.getEstado(),
+                          c.getPais(),
+                          c.getCp()));
 
                   return row;
                 })
@@ -125,14 +119,14 @@ public class ClientService {
     return downloaderService.generateBase64Report("Reporte Empresas", data, headers);
   }
 
-  public ClientDto getClientByRFC(String rfc) {
+  public ClientDto getClientById(Integer id) {
     Client client =
         repository
-            .findByRfc(rfc)
+            .findById(id)
             .orElseThrow(
                 () ->
                     new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, String.format("No existe cliente con  rfc %s", rfc)));
+                        HttpStatus.NOT_FOUND, "El cliente solicitado no existe"));
     return mapper.getClientDtoFromEntity(client);
   }
 
@@ -153,56 +147,39 @@ public class ClientService {
   public ClientDto insertNewClient(ClientDto cliente) throws InvoiceManagerException {
     ClienteValidator.validate(cliente);
     cliente.setRfc(cliente.getRfc().trim());
-    Optional<Contribuyente> entity = contribuyenteRepository.findByRfc(cliente.getRfc());
     Optional<Client> client =
         repository.findByCorreoPromotorAndClient(cliente.getCorreoPromotor(), cliente.getRfc());
-    cliente.setCorreoContacto(
-        contactoHelper.translateContacto(
-            cliente.getRfc(), cliente.getCorreoPromotor(), cliente.getPorcentajeContacto()));
-    Client clientEntity = mapper.getEntityFromClientDto(cliente);
-    if (!entity.isPresent() && !client.isPresent()) {
-      cliente.setRfc(cliente.getRfc().toUpperCase());
-    } else if (entity.isPresent() && client.isPresent()) {
+    if (!client.isPresent()) {
+      Client clientEntity = mapper.getEntityFromClientDto(cliente);
+      return mapper.getClientDtoFromEntity(repository.save(clientEntity));
+    } else {
       throw new ResponseStatusException(
           HttpStatus.BAD_REQUEST,
           String.format(
               "El RFC %s  para  el promotor %s ya existe en el sistema",
               cliente.getRfc(), cliente.getCorreoPromotor()));
-    } else if (entity.isPresent() && !client.isPresent()) {
-      clientEntity.setInformacionFiscal(entity.get());
     }
-    clientEntity.setActivo(false);
-    return mapper.getClientDtoFromEntity(repository.save(clientEntity));
   }
 
-  public ClientDto updateClientInfo(ClientDto client, String rfc) throws InvoiceManagerException {
+  public ClientDto updateClientInfo(ClientDto client, Integer id) throws InvoiceManagerException {
     ClienteValidator.validate(client);
-    client.setCorreoContacto(
-        contactoHelper.translateContacto(
-            client.getRfc(), client.getCorreoPromotor(), client.getPorcentajeContacto()));
-    Optional<Client> dbClient =
-        repository.findByCorreoPromotorAndClient(client.getCorreoPromotor(), rfc);
+    Optional<Client> dbClient = repository.findById(id);
     if (dbClient.isPresent()) {
       Client entity = mapper.getEntityFromClientDto(client);
-      entity.getInformacionFiscal().setId(dbClient.get().getInformacionFiscal().getId());
-      entity.getInformacionFiscal().setFechaCreacion(dbClient.get().getFechaCreacion());
-      entity.getInformacionFiscal().setFechaActualizacion(new Date());
       return mapper.getClientDtoFromEntity(repository.save(entity));
     } else {
       throw new ResponseStatusException(
-          HttpStatus.NOT_FOUND, String.format("El cliente con el rfc %s no existe", rfc));
+          HttpStatus.NOT_FOUND,
+          String.format("El cliente con el rfc %s no existe", client.getRfc()));
     }
   }
 
-  public void deleteClientInfo(String rfc) {
+  public void deleteClientInfo(Integer id) {
     Client dbClient =
         repository
-            .findByRfc(rfc)
+            .findById(id)
             .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("El cliente con el rfc %s no existe", rfc)));
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe"));
     repository.delete(dbClient);
   }
 }

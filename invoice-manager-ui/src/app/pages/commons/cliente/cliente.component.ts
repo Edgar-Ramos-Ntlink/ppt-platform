@@ -46,20 +46,20 @@ export class ClienteComponent implements OnInit {
     this.catalogsService.getAllRegimenFiscal().then(reg => this.regimenes = reg);
     /** recovering folio info**/
     this.route.paramMap.subscribe(route => {
-      const rfc = route.get('rfc');
-      const promotor = route.get('promotor');
-      if (rfc !== '*') {
-        this.loadClientInfo(rfc, promotor);
+      const id = route.get('id');
+      if (id !== '*') {
+        this.loadClientInfo(+id);
       }
     });
   }
 
-  public async loadClientInfo(rfc: string, promotor: string) {
+  public async loadClientInfo(id:number) {
     this.loading = true;
     try {
-      this.formInfo.rfc = rfc;
       
-      this.clientInfo = await this.clientService.getClientsByPromotorAndRfc(promotor, rfc).toPromise();
+      
+      this.clientInfo = await this.clientService.getClientById(id).toPromise();
+      this.formInfo.rfc = this.clientInfo.rfc;
       const data: ZipCodeInfo = await this.catalogsService.getZipCodeInfo(this.clientInfo.cp);
       this.colonias = data.colonias;
       let index = 0;
@@ -213,7 +213,7 @@ export class ClienteComponent implements OnInit {
       //this.loadCompanyInfo(this.companyInfo.rfc);
       this.formInfo.fileDataName = '';
       this.formInfo.doctType = '*';
-      this.loadClientInfo(this.clientInfo.rfc, this.clientInfo.correoPromotor)
+      this.loadClientInfo(this.clientInfo.id)
     } catch (error) {
       this.notificationService.sendNotification('danger',error?.message, 'Error cargando archivo');
     }

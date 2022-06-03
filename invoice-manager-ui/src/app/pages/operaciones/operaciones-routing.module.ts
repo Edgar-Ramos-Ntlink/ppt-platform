@@ -23,10 +23,7 @@ const routes: Routes = [{
       path: 'clientes',
       component: ClientesComponent,
     }, {
-      path: 'cliente/:rfc',
-      component: ClienteComponent,
-    }, {
-      path: 'cliente/:rfc/:promotor',
+      path: 'cliente/:id',
       component: ClienteComponent,
     }, {
       path: 'empresas',

@@ -19,7 +19,7 @@ const routes: Routes = [{
       component: ClientesComponent,
     },
     {
-      path: 'cliente/:rfc',
+      path: 'cliente/:id',
       component: ClienteComponent,
     },
     {

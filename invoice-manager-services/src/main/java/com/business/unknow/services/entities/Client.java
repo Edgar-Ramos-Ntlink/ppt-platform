@@ -2,23 +2,19 @@ package com.business.unknow.services.entities;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.CascadeType;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,9 +42,48 @@ public class Client {
   @Column(name = "ID_CLIENTE")
   private int id;
 
-  @NotNull
   @Column(name = "ACTIVO")
-  private Boolean activo;
+  private boolean activo;
+
+  @Column(name = "MORAL")
+  private boolean moral;
+
+  @Basic(optional = false)
+  @Column(name = "RFC")
+  private String rfc;
+
+  @Column(name = "RAZON_SOCIAL")
+  private String razonSocial;
+
+  @Column(name = "REGIMEN_FISCAL")
+  private String regimenFiscal;
+
+  @Column(name = "CALLE")
+  private String calle;
+
+  @Column(name = "NO_EXTERIOR")
+  private String noExterior;
+
+  @Column(name = "NO_INTERIOR")
+  private String noInterior;
+
+  @Column(name = "COLONIA")
+  private String colonia;
+
+  @Column(name = "MUNICIPIO")
+  private String municipio;
+
+  @Column(name = "ESTADO")
+  private String estado;
+
+  @Column(name = "PAIS")
+  private String pais;
+
+  @Column(name = "CODIGO_POSTAL")
+  private String cp;
+
+  @Column(name = "TELEFONO")
+  private String telefono;
 
   @Column(name = "NOTAS")
   private String notas;
@@ -89,9 +124,4 @@ public class Client {
   @LastModifiedDate
   @Column(name = "FECHA_ACTUALIZACION")
   private Date fechaActualizacion;
-
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinColumn(name = "RFC", referencedColumnName = "RFC")
-  @Builder.Default
-  private Contribuyente informacionFiscal = new Contribuyente();
 }
