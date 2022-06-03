@@ -1,9 +1,8 @@
-import { string } from "mathjs";
-
 export class Client {
 
     public id: number;
     public activo: boolean;
+    public moral: boolean;
     public notas: string;
     public porcentajePromotor: number;
     public porcentajeCliente: number;
@@ -37,6 +36,8 @@ export class Client {
         this.porcentajeContacto = 0;
         this.correoContacto = '';
         this.regimenFiscal = '*';
+        this.activo = false;
+        this.moral = false;
         this.rfc = rfc;
         this.razonSocial = nombre;
     }

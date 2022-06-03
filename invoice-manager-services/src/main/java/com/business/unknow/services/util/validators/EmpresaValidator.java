@@ -48,7 +48,7 @@ public class EmpresaValidator extends Validator {
     checkNotNull(dto.getGiro(), "Giro");
     checkNotNull(dto.getTipo(), "Tipo");
     checkNotEquals(dto.getTipo(), "*");
-    checkNotNull(dto.getActivo(), "Activo");
+    checkNotNull(dto.isActivo(), "Activo");
     checkNotNull(dto.getTipo(), "Linea");
     checkNotEquals(dto.getTipo(), "*");
   }

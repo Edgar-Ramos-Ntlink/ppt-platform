@@ -2,9 +2,9 @@
   <div class="col-md-12">
     <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
       <nb-card-header class="">Datos empresa
-        <button type="button" class="btn btn-outline-danger float-right" *ngIf="companyInfo.activo"
+        <button type="button" class="btn btn-outline-danger float-right" *ngIf="companyInfo.activo && (module== 'legal' || module == 'contabilidad' || module == 'administracion')"
           (click)="inactivateCompany()">Desactivar</button>
-        <button type="button" class="btn btn-outline-success float-right" *ngIf="!companyInfo.activo && companyInfo.id"
+        <button type="button" class="btn btn-outline-success float-right" *ngIf="!companyInfo.activo && companyInfo.id && (module== 'legal' || module == 'contabilidad' || module == 'administracion')"
           (click)="activateCompany()">Activar</button>
       </nb-card-header>
       <nb-card-body>

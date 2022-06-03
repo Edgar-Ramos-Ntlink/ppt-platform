@@ -30,9 +30,11 @@ public class EmpresaDto implements Serializable {
 
   private int id;
 
-  private Boolean activo;
+  private boolean activo;
 
-  private Boolean operativa;
+  private boolean operativa;
+
+  private boolean bloqueada;
 
   private String estatus;
 
