@@ -83,6 +83,7 @@ public class FacturaCustom implements Serializable {
   private String subTotalDesc;
   private String usoCfdiDesc;
   private String regimenFiscalDesc;
+  private String regimenFiscalReceptorDesc;
   private String formaPagoDesc;
   private String metodoPagoDesc;
   private String direccionEmisor;

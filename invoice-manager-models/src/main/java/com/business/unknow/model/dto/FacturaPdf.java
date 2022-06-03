@@ -43,6 +43,9 @@ public class FacturaPdf {
   @XmlElement(name = "RegimenFiscalDesc")
   private String regimenFiscalDesc;
 
+  @XmlElement(name = "RegimenFiscalReceptorDesc")
+  private String regimenFiscalReceptorDesc;
+
   @XmlElement(name = "FormaPagoDesc")
   private String formaPagoDesc;
 

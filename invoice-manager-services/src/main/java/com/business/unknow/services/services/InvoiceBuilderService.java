@@ -91,6 +91,10 @@ public class InvoiceBuilderService {
             catalogService
                 .getTaxRegimeByKey(facturaCustom.getCfdi().getEmisor().getRegimenFiscal())
                 .getDescripcion())
+            .regimenFiscalReceptorDesc(
+                    catalogService
+                            .getTaxRegimeByKey(facturaCustom.getCfdi().getReceptor().getRegimenFiscalReceptor())
+                            .getDescripcion())
         .formaPagoDesc(
             catalogService
                 .getPaymentFormByKey(facturaCustom.getCfdi().getFormaPago())
