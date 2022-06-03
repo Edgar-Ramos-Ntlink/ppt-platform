@@ -4,6 +4,8 @@ import static com.business.unknow.Constants.ComplementoPpdDefaults.IMPUESTO;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.PAGO_IMPUESTOS_GRAL;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.TASA_O_CUOTA;
 import static com.business.unknow.Constants.FacturaSustitucionConstants.FACTURA_TASA;
+import static com.business.unknow.Constants.IVA_BASE_16;
+import static com.business.unknow.Constants.IVA_IMPUESTO_16;
 import static com.business.unknow.enums.TipoRelacion.NOTA_CREDITO;
 import static com.business.unknow.enums.TipoRelacion.SUSTITUCION;
 
@@ -75,7 +77,7 @@ public class RelationBuilderService {
                 .build());
     assignRelationBaseData(facturaCustom, folio);
     BigDecimal impuesto =
-        facturaCustom.getSaldoPendiente().multiply(TASA_O_CUOTA).setScale(2, RoundingMode.HALF_UP);
+        facturaCustom.getSaldoPendiente().multiply(BigDecimal.valueOf(IVA_IMPUESTO_16)).divide(BigDecimal.valueOf(IVA_BASE_16)).setScale(2, RoundingMode.HALF_UP);
     BigDecimal base =
         facturaCustom.getSaldoPendiente().subtract(impuesto).setScale(2, RoundingMode.HALF_UP);
 
@@ -109,7 +111,7 @@ public class RelationBuilderService {
             .claveUnidad(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_UNIDAD)
             .objetoImp(PAGO_IMPUESTOS_GRAL)
             .valorUnitario(base)
-            .importe(impuesto)
+            .importe(base)
             .descuento(BigDecimal.ZERO)
             .impuestos(ImmutableList.of(impuestoConcepto))
             .build();
