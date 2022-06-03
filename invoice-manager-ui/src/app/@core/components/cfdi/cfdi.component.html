@@ -194,6 +194,12 @@
 
         <br />
         <nt-complementos-pago></nt-complementos-pago>
-        <ngx-generar-complemento></ngx-generar-complemento>
+        <ngx-generar-complemento
+            *ngIf="
+                factura?.statusFactura == '3' &&
+                factura?.lineaEmisor !== 'A' &&
+                factura?.folio !== '*'
+            "
+        ></ngx-generar-complemento>
     </div>
 </div>
