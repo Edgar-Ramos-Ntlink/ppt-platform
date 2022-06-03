@@ -73,7 +73,10 @@ public class InvoiceBuilderService {
     return facturaCustom.toBuilder()
         .cfdi(cfdi)
         .total(facturaCustom.getCfdi().getTotal())
-        .saldoPendiente(facturaCustom.getCfdi().getTotal())
+        .saldoPendiente(
+            Objects.nonNull(facturaCustom.getSaldoPendiente())
+                ? facturaCustom.getSaldoPendiente()
+                : facturaCustom.getCfdi().getTotal())
         .totalDesc(
             NumberTranslatorUtil.getStringNumber(
                 facturaCustom.getCfdi().getTotal(), facturaCustom.getCfdi().getMoneda()))

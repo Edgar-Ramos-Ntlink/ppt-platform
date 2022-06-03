@@ -1,5 +1,12 @@
 package com.business.unknow.services.services;
 
+import static com.business.unknow.Constants.ComplementoPpdDefaults.IMPUESTO;
+import static com.business.unknow.Constants.ComplementoPpdDefaults.PAGO_IMPUESTOS_GRAL;
+import static com.business.unknow.Constants.ComplementoPpdDefaults.TASA_O_CUOTA;
+import static com.business.unknow.Constants.FacturaSustitucionConstants.FACTURA_TASA;
+import static com.business.unknow.Constants.IVA_BASE_16;
+import static com.business.unknow.Constants.IVA_IMPUESTO_16;
+import static com.business.unknow.enums.TipoRelacion.NOTA_CREDITO;
 import static com.business.unknow.enums.TipoRelacion.SUSTITUCION;
 
 import com.business.unknow.Constants.FacturaSustitucionConstants;
@@ -14,12 +21,14 @@ import com.google.common.collect.ImmutableList;
 import com.mx.ntlink.cfdi.modelos.CfdiRelacionado;
 import com.mx.ntlink.cfdi.modelos.CfdiRelacionados;
 import com.mx.ntlink.cfdi.modelos.Concepto;
+import com.mx.ntlink.cfdi.modelos.Impuesto;
+import com.mx.ntlink.cfdi.modelos.ImpuestoConcepto;
+import com.mx.ntlink.cfdi.modelos.Traslado;
+import com.mx.ntlink.cfdi.modelos.TrasladoConcepto;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.math.RoundingMode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class RelationBuilderService {
@@ -39,6 +48,97 @@ public class RelationBuilderService {
                 .tipoRelacion(SUSTITUCION.getId())
                 .cfdiRelacionado(ImmutableList.of(relacionado))
                 .build());
+    assignRelationBaseData(facturaCustom, folio);
+    if (facturaCustom.getLineaEmisor().equals(LineaEmpresa.A.name())) {
+      if (facturaCustom.getMetodoPago().equals(MetodosPago.PPD.name())) {
+        facturaCustom.setStatusFactura(FacturaStatus.VALIDACION_OPERACIONES.getValor());
+      } else {
+        facturaCustom.setStatusFactura(FacturaStatus.VALIDACION_TESORERIA.getValor());
+      }
+    } else {
+      facturaCustom.setStatusFactura(FacturaStatus.POR_TIMBRAR_CONTABILIDAD.getValor());
+    }
+    facturaCustom.setId(0);
+    return facturaCustom;
+  }
+
+  public FacturaCustom notaCreditoFactura(FacturaCustom facturaCustom, String folio) {
+    CfdiRelacionado relacionado =
+        CfdiRelacionado.builder()
+            .tipoRelacion(NOTA_CREDITO.getId())
+            .uuid(facturaCustom.getUuid())
+            .build();
+    facturaCustom
+        .getCfdi()
+        .setCfdiRelacionados(
+            CfdiRelacionados.builder()
+                .tipoRelacion(NOTA_CREDITO.getId())
+                .cfdiRelacionado(ImmutableList.of(relacionado))
+                .build());
+    assignRelationBaseData(facturaCustom, folio);
+    BigDecimal impuesto =
+        facturaCustom
+            .getSaldoPendiente()
+            .multiply(BigDecimal.valueOf(IVA_IMPUESTO_16))
+            .divide(BigDecimal.valueOf(IVA_BASE_16), 2, RoundingMode.HALF_UP);
+    BigDecimal base =
+        facturaCustom.getSaldoPendiente().subtract(impuesto).setScale(2, RoundingMode.HALF_UP);
+
+    facturaCustom.setTipoDocumento(TipoDocumento.NOTA_CREDITO.getDescripcion());
+    facturaCustom.setTotal(facturaCustom.getSaldoPendiente());
+    facturaCustom.getCfdi().setTotal(facturaCustom.getSaldoPendiente());
+    facturaCustom.getCfdi().setSubtotal(base);
+    facturaCustom.setSaldoPendiente(BigDecimal.ZERO);
+    facturaCustom.getCfdi().setTipoDeComprobante("E");
+    facturaCustom.setStatusFactura(FacturaStatus.VALIDACION_OPERACIONES.getValor());
+    facturaCustom
+        .getCfdi()
+        .getReceptor()
+        .setUsoCfdi(FacturaSustitucionConstants.NOTA_CREDITO_USO_CFDI);
+    facturaCustom.setValidacionTeso(true);
+    TrasladoConcepto trasladoConcepto =
+        TrasladoConcepto.builder()
+            .base(base)
+            .impuesto(IMPUESTO)
+            .tipoFactor(FACTURA_TASA)
+            .tasaOCuota(TASA_O_CUOTA)
+            .importe(impuesto)
+            .build();
+    ImpuestoConcepto impuestoConcepto =
+        ImpuestoConcepto.builder().traslados(ImmutableList.of(trasladoConcepto)).build();
+    Concepto concepto =
+        Concepto.builder()
+            .cantidad(new BigDecimal(1))
+            .claveProdServ(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_CONCEPTO)
+            .descripcion(FacturaSustitucionConstants.NOTA_CREDITO_DESC_CONCEPTO)
+            .claveUnidad(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_UNIDAD)
+            .objetoImp(PAGO_IMPUESTOS_GRAL)
+            .valorUnitario(base)
+            .importe(base)
+            .descuento(BigDecimal.ZERO)
+            .impuestos(ImmutableList.of(impuestoConcepto))
+            .build();
+    facturaCustom.getCfdi().setConceptos(ImmutableList.of(concepto));
+    Traslado traslado =
+        Traslado.builder()
+            .base(base)
+            .impuesto(IMPUESTO)
+            .tasaOCuota(TASA_O_CUOTA)
+            .importe(impuesto)
+            .tipoFactor(FACTURA_TASA)
+            .build();
+    Impuesto impuestoSub =
+        Impuesto.builder()
+            .totalImpuestosTrasladados(impuesto)
+            .totalImpuestosRetenidos(BigDecimal.ZERO)
+            .traslados(ImmutableList.of(traslado))
+            .build();
+    facturaCustom.getCfdi().setImpuestos(ImmutableList.of(impuestoSub));
+    facturaCustom.setId(0);
+    return facturaCustom;
+  }
+
+  private void assignRelationBaseData(FacturaCustom facturaCustom, String folio) {
     facturaCustom.setUuid(null);
     facturaCustom.getCfdi().setCertificado(null);
     facturaCustom.getCfdi().setNoCertificado(null);
@@ -48,6 +148,7 @@ public class RelationBuilderService {
     facturaCustom.setCadenaOriginalTimbrado(null);
     facturaCustom.setFechaTimbrado(null);
     facturaCustom.setFolio(folio);
+    facturaCustom.setPagos(null);
     facturaCustom.setValidacionOper(false);
     facturaCustom.setValidacionTeso(false);
     facturaCustom.setNotas("");
@@ -55,85 +156,5 @@ public class RelationBuilderService {
         FacturaUtils.generatePreFolio(
             facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento()));
     facturaCustom.setSelloCfd(null);
-    if (facturaCustom.getLineaEmisor().equals(LineaEmpresa.A.name())) {
-      if (facturaCustom.getMetodoPago().equals(MetodosPago.PPD.name())) {
-        facturaCustom.setStatusFactura(FacturaStatus.VALIDACION_OPERACIONES.getValor());
-      } else {
-        facturaCustom.setStatusFactura(FacturaStatus.VALIDACION_TESORERIA.getValor());
-      }
-
-    } else {
-      facturaCustom.setStatusFactura(FacturaStatus.POR_TIMBRAR_CONTABILIDAD.getValor());
-    }
-    facturaCustom.setId(0);
-    return facturaCustom;
-  }
-
-  public FacturaCustom notaCreditoFactura(FacturaCustom facturaDto) {
-    if (facturaDto.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())) {
-      updateBaseInfoNotaCredito(facturaDto);
-      return facturaDto;
-    } else {
-      throw new ResponseStatusException(
-          HttpStatus.CONFLICT,
-          String.format(
-              "La factura con el pre-folio %s no esta timbrada y no puede tener nota de credito",
-              facturaDto.getPreFolio()));
-    }
-  }
-
-  private void updateBaseInfoNotaCredito(FacturaCustom facturaDto) {
-    facturaDto.setCadenaOriginalTimbrado(null);
-    facturaDto.setFechaTimbrado(null);
-    facturaDto.setFolio(null);
-    facturaDto.setTipoDocumento(TipoDocumento.NOTA_CREDITO.getDescripcion());
-    facturaDto.setTotal(BigDecimal.ZERO);
-    facturaDto.setSaldoPendiente(BigDecimal.ZERO);
-    facturaDto.setValidacionOper(false);
-    facturaDto.setValidacionTeso(true);
-    facturaDto.setNotas("");
-    facturaDto.setPreFolio("");
-    facturaDto.setSelloCfd(null);
-    facturaDto.setStatusFactura(1);
-    facturaDto.setId(0);
-    if (facturaDto.getCfdi() != null) {
-      facturaDto.getCfdi().getImpuestos().stream()
-          .findFirst()
-          .get()
-          .setTotalImpuestosRetenidos(BigDecimal.ZERO);
-      facturaDto.getCfdi().getImpuestos().stream()
-          .findFirst()
-          .get()
-          .setTotalImpuestosTrasladados(BigDecimal.ZERO);
-      facturaDto.getCfdi().setSubtotal(BigDecimal.ZERO);
-      facturaDto.getCfdi().setTotal(BigDecimal.ZERO);
-      facturaDto.getCfdi().setTipoDeComprobante("E");
-      if (facturaDto.getCfdi().getReceptor() != null) {
-        facturaDto
-            .getCfdi()
-            .getReceptor()
-            .setUsoCfdi(FacturaSustitucionConstants.NOTA_CREDITO_USO_CFDI);
-      }
-      Concepto concepto =
-          Concepto.builder()
-              .cantidad(new BigDecimal(1))
-              .claveProdServ(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_CONCEPTO)
-              .descripcion(FacturaSustitucionConstants.NOTA_CREDITO_DESC_CONCEPTO)
-              .claveUnidad(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_UNIDAD)
-              .valorUnitario(BigDecimal.ZERO)
-              .importe(BigDecimal.ZERO)
-              .descuento(BigDecimal.ZERO)
-              .build();
-      facturaDto.getCfdi().setConceptos(new ArrayList<>());
-      facturaDto.getCfdi().getConceptos().add(concepto);
-      facturaDto.getCfdi().setComplemento(null);
-    }
-    CfdiRelacionado relacionado =
-        CfdiRelacionado.builder().uuid(facturaDto.getUuid()).tipoRelacion("01").build();
-    facturaDto
-        .getCfdi()
-        .setCfdiRelacionados(
-            CfdiRelacionados.builder().cfdiRelacionado(ImmutableList.of(relacionado)).build());
-    facturaDto.setUuid(null);
   }
 }
