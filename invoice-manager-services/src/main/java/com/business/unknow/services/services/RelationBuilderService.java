@@ -77,7 +77,10 @@ public class RelationBuilderService {
                 .build());
     assignRelationBaseData(facturaCustom, folio);
     BigDecimal impuesto =
-        facturaCustom.getSaldoPendiente().multiply(BigDecimal.valueOf(IVA_IMPUESTO_16)).divide(BigDecimal.valueOf(IVA_BASE_16)).setScale(2, RoundingMode.HALF_UP);
+        facturaCustom
+            .getSaldoPendiente()
+            .multiply(BigDecimal.valueOf(IVA_IMPUESTO_16))
+            .divide(BigDecimal.valueOf(IVA_BASE_16), 2, RoundingMode.HALF_UP);
     BigDecimal base =
         facturaCustom.getSaldoPendiente().subtract(impuesto).setScale(2, RoundingMode.HALF_UP);
 
@@ -145,6 +148,7 @@ public class RelationBuilderService {
     facturaCustom.setCadenaOriginalTimbrado(null);
     facturaCustom.setFechaTimbrado(null);
     facturaCustom.setFolio(folio);
+    facturaCustom.setPagos(null);
     facturaCustom.setValidacionOper(false);
     facturaCustom.setValidacionTeso(false);
     facturaCustom.setNotas("");

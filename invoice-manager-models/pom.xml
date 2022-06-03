@@ -5,12 +5,10 @@
     <parent>
         <groupId>com.business.unknow</groupId>
         <artifactId>invoice-manager-platform</artifactId>
-        <version>4.5.8</version>
+        <version>4.5.9</version>
     </parent>
-
     <artifactId>invoice-manager-models</artifactId>
     <name>invoice-manager-models</name>
-
     <properties>
         <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
         <jackson-annotations.version>2.9.9</jackson-annotations.version>
@@ -22,7 +20,6 @@
         <ntlink-utils-version>2.3.3</ntlink-utils-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -50,7 +47,6 @@
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
