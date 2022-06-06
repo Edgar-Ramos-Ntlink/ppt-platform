@@ -90,6 +90,7 @@ export class CargaMasivaComponent implements OnInit {
     }
 
     public openSampleFormat(){
+        console.log('donwloading sample format');
         window.open(`../FormatoMuestra.xlsx`, "_blank");
     }
 
@@ -186,6 +187,7 @@ export class CargaMasivaComponent implements OnInit {
     }
 
     private async loadfactura(invoices: any) {
+        let invalid = 0;
         for (const invoice of invoices) {
             invoice.observaciones = [];
             const factura = await this.buildFacturaFromTransfer(
@@ -194,8 +196,6 @@ export class CargaMasivaComponent implements OnInit {
                 this.companies[invoice.RFC_RECEPTOR]
             );
                 try {
-                    // TODO evaluate if descripcionCUPS is required
-                    //factura.cfdi.conceptos[0].descripcionCUPS = claves[0].descripcion;
                     await this.invoiceService
                         .insertNewInvoice(factura)
                         .toPromise();
@@ -203,6 +203,12 @@ export class CargaMasivaComponent implements OnInit {
                     invoice.observaciones.push(error?.message || 'Error desconocido');
                 }
         }
+        if(invalid === 0){
+            this.notificationService.sendNotification('success',`${invoices.length} han sido correctamente procesadas`,'Proceso completado');
+        }else {
+            this.notificationService.sendNotification('warning',`${invalid} facturas no se cargaron correctamente`,'Proceso parcialmente completo');
+        }
+        
         this.loading = false;
     }
 

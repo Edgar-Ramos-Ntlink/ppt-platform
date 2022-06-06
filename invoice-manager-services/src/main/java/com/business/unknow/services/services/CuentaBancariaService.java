@@ -57,8 +57,7 @@ public class CuentaBancariaService {
         if (parameters.get("empresa") != null) {
           predicates.add(
               criteriaBuilder.and(
-                  criteriaBuilder.like(
-                      root.get("empresa"), "%" + parameters.get("empresa") + "%")));
+                  criteriaBuilder.like(root.get("rfc"), "%" + parameters.get("empresa") + "%")));
         }
         if (parameters.get("banco") != null) {
           predicates.add(
@@ -75,6 +74,13 @@ public class CuentaBancariaService {
           predicates.add(
               criteriaBuilder.and(
                   criteriaBuilder.equal(root.get("clabe"), parameters.get("clabe"))));
+        }
+
+        if (parameters.get("razonSocial") != null) {
+          predicates.add(
+              criteriaBuilder.and(
+                  criteriaBuilder.like(
+                      root.get("razonSocial"), "%" + parameters.get("razonSocial") + "%")));
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

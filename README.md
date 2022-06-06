@@ -108,3 +108,5 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.6 Contabilidad Payments
   - [x] 4.5.7 Clients DB model refactor to flat object
   - [x] 4.5.8 Enable Json Logs
+  - [x] 4.5.9 database pool setup
+  - [x] 4.5.10 bug fixes

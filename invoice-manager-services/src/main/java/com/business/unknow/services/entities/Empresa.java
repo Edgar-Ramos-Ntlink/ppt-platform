@@ -42,10 +42,13 @@ public class Empresa implements Serializable {
   private int id;
 
   @Column(name = "ACTIVO")
-  private Boolean activo;
+  private boolean activo;
 
   @Column(name = "OPERATIVA")
-  private Boolean operativa;
+  private boolean operativa;
+
+  @Column(name = "BLOCKED")
+  private boolean bloqueada;
 
   @Column(name = "ESTATUS")
   private String estatus;
