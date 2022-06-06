@@ -12,7 +12,6 @@ import { Factura } from '../../models/factura';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../reducers';
 import { invoice } from '../../core.selectors';
-import { bignumber, format } from 'mathjs';
 import { InvoicesData } from '../../data/invoices-data';
 import { initInvoice, updateInvoice } from '../../core.actions';
 import { DatePipe } from '@angular/common';
@@ -48,6 +47,7 @@ export class PagoFacturaComponent implements OnInit {
     ) {
         this.store.pipe(select(invoice)).subscribe((fact) => {
             this.factura = fact;
+            console.log(fact)
             if (fact?.folio) {
                 const user = JSON.parse(sessionStorage.getItem('user'));
                 this.paymentsService
@@ -55,10 +55,6 @@ export class PagoFacturaComponent implements OnInit {
                     .subscribe(
                         (paymentForms) => (this.payTypeCat = paymentForms)
                     );
-
-                if (
-                    Math.abs(fact.saldoPendiente - this.newPayment.monto) > 0.01
-                ) {
                     this.newPayment.monto = fact.saldoPendiente;
                     this.paymentsService
                         .getPaymentsByFolio(this.factura.folio)
@@ -66,7 +62,6 @@ export class PagoFacturaComponent implements OnInit {
                             (payments: PagoBase[]) =>
                                 (this.invoicePayments = payments)
                         );
-                }
             }
         });
         this.newPayment.moneda = 'MXN';

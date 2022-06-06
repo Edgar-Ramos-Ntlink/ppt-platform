@@ -199,7 +199,7 @@ export class CfdiValidatorService {
             cfdi.receptor === undefined ||
             cfdi.receptor.rfc === undefined ||
             cfdi.receptor.rfc.length < 11 ||
-            cfdi.receptor.nombre.length < 8
+            cfdi.receptor.nombre.length  == 0
         ) {
             messages.push('La información del receptor es un valor solicitado');
         }
@@ -207,7 +207,7 @@ export class CfdiValidatorService {
             cfdi.emisor === undefined ||
             cfdi.emisor.rfc === undefined ||
             cfdi.emisor.rfc.length < 11 ||
-            cfdi.emisor.nombre.length < 8
+            cfdi.emisor.nombre.length == 0
         ) {
             messages.push('La información del emisor es un valor solicitado');
         }
