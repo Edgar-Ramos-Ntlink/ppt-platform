@@ -47,7 +47,6 @@ export class PagoFacturaComponent implements OnInit {
     ) {
         this.store.pipe(select(invoice)).subscribe((fact) => {
             this.factura = fact;
-            console.log(fact)
             if (fact?.folio) {
                 const user = JSON.parse(sessionStorage.getItem('user'));
                 this.paymentsService
