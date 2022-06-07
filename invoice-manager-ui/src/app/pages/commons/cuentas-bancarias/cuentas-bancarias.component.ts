@@ -20,7 +20,7 @@ export class CuentasBancariasComponent implements OnInit {
   public page: GenericPage<any> = new GenericPage();
   public pageSize = '10';
   public currentPage = '0';
-  public filterParams: any = { banco: '', empresa: '', cuenta: '',clabe:'', page: '', size: '10', empresarazon:'' };
+  public filterParams: any = { banco: '', empresa: '', cuenta: '',clabe:'', page: '', size: '10', razonSocial:'' };
 
   public module: string = 'tesoreria';
   public girosCat: Catalogo[] = [];
@@ -59,8 +59,6 @@ export class CuentasBancariasComponent implements OnInit {
           if(params.empresa){    
             this.companiesService.getCompanyByRFC(params.empresa) .subscribe((company: Empresa) => { this.filterParams.empresarazon = company.razonSocial;});      
           }
-      
-          this.getEmpresas();
           this.updateDataTable();
         }
       });
@@ -103,48 +101,5 @@ export class CuentasBancariasComponent implements OnInit {
   public onChangePageSize(pageSize: number) {
     this.updateDataTable(this.page.number, pageSize);
   }
-
-
-  //Giros
-
-
-  getSelector($event) {
-    let inputValue = (<HTMLInputElement>document.getElementById('empresasId')).value;
-    this.listEmpresasMatch = [];
-    this.errorMessages = [];
-    if (inputValue.length > 1) {
-        this.listEmpresasMatch = this.BuscarMatch(this.empresasRazonSocial, inputValue);
-        let index = this.empresasRazonSocial.indexOf(this.listEmpresasMatch[0]);
-        this.filterParams.empresa = this.empresasRfc[index];
-
-        if(index == -1)
-           this.errorMessages.push("No hay empresas registradas con esa razon social.");
-    }
-  
-  }  
-
-
-  getEmpresas(){
-    this.companiesService.getCompanies({ page: 0, size: 10000})
-      .pipe(map((Page: GenericPage<Empresa>) => Page.content))   
-      .subscribe(companies => {        
-            this.empresasRfc = companies.map(c => c.rfc);   
-            this.empresasRazonSocial = companies.map(c => c.razonSocial).map((x)=> x.toUpperCase());         
-      },
-        (error: HttpErrorResponse) =>
-          this.errorMessages.push(error.error.message || `${error.statusText} : ${error.message}`));
-      
-  }
-
-  BuscarMatch(arr, regex) {
-    let matches = [], i;
-    regex = regex.toUpperCase();
-    for (i = 0; i < arr.length; i++) {
-      if (arr[i].match(regex)) {
-        matches.push(arr[i]);
-      }
-    }
-    return matches;
-  };
 
 }

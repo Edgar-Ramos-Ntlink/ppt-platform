@@ -179,7 +179,9 @@ public class EmpresaService {
                       e.getPais(),
                       e.getCp()));
               row.put("LINEA", e.getTipo());
-              row.put("ACTIVA", e.getActivo() ? "SI" : "NO");
+              row.put("ACTIVA", e.isActivo() ? "SI" : "NO");
+              row.put("OPERATIVA", e.isOperativa() ? "SI" : "NO");
+              row.put("BLOQUEADA", e.isBloqueada() ? "SI" : "NO");
               row.put("GIRO", catalogService.getGiroEmpresa(e.getGiro()).orElse("SIN GIRO"));
               row.put("REGIMEN_FISCAL", e.getRegimenFiscal());
               row.put("PAGINA_WEB", e.getWeb());
@@ -291,6 +293,8 @@ public class EmpresaService {
             "DOMICILIO",
             "LINEA",
             "ACTIVA",
+            "OPERATIVA",
+            "BLOQUEADA",
             "GIRO",
             "REGIMEN_FISCAL",
             "PAGINA_WEB",
@@ -378,11 +382,11 @@ public class EmpresaService {
                         HttpStatus.NOT_FOUND,
                         String.format("El empresa con el rfc %s no existe", rfc)));
 
-    if (empresa.getActivo() && !empresaDto.getActivo()) {
+    if (empresa.isActivo() && !empresaDto.isActivo()) {
       notificationHandlerService.sendNotification(
           "DESACTIVACION_EMPRESA",
           String.format("Se desactivo la empresa %s", empresaDto.getRazonSocial()));
-    } else if (!empresa.getActivo() && empresaDto.getActivo()) {
+    } else if (!empresa.isActivo() && empresaDto.isActivo()) {
       notificationHandlerService.sendNotification(
           "ACTIVACION_EMPRESA",
           String.format("Se activo la empresa %s", empresaDto.getRazonSocial()));
