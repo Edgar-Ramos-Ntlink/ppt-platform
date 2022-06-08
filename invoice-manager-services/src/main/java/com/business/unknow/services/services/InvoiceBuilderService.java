@@ -70,13 +70,43 @@ public class InvoiceBuilderService {
     Cfdi cfdi = cfdiService.recalculateCfdiAmmounts(facturaCustom.getCfdi());
     cfdi.setFecha(CFDI_DATE_PATTERN);
     cfdi.setFolio(folio);
+    facturaCustom =
+        facturaCustom.toBuilder()
+            .cfdi(cfdi)
+            .total(facturaCustom.getCfdi().getTotal())
+            .saldoPendiente(
+                Objects.nonNull(facturaCustom.getSaldoPendiente())
+                    ? facturaCustom.getSaldoPendiente()
+                    : facturaCustom.getCfdi().getTotal())
+            .impuestosTrasladados(
+                facturaCustom.getCfdi().getImpuestos().stream()
+                    .collect(
+                        Collectors.reducing(
+                            BigDecimal.ZERO,
+                            Impuesto::getTotalImpuestosTrasladados,
+                            BigDecimal::add)))
+            .impuestosRetenidos(
+                facturaCustom.getCfdi().getImpuestos().stream()
+                    .collect(
+                        Collectors.reducing(
+                            BigDecimal.ZERO,
+                            Impuesto::getTotalImpuestosRetenidos,
+                            BigDecimal::add)))
+            .folio(folio)
+            .preFolio(
+                facturaCustom.getPreFolio() == null
+                    ? FacturaUtils.generatePreFolio(amount)
+                    : facturaCustom.getPreFolio())
+            .statusFactura(
+                facturaCustom.getStatusFactura() == null
+                    ? FacturaStatus.VALIDACION_OPERACIONES.getValor()
+                    : facturaCustom.getStatusFactura())
+            .build();
+    return assignDescData(facturaCustom);
+  }
+
+  public FacturaCustom assignDescData(FacturaCustom facturaCustom) throws NtlinkUtilException {
     return facturaCustom.toBuilder()
-        .cfdi(cfdi)
-        .total(facturaCustom.getCfdi().getTotal())
-        .saldoPendiente(
-            Objects.nonNull(facturaCustom.getSaldoPendiente())
-                ? facturaCustom.getSaldoPendiente()
-                : facturaCustom.getCfdi().getTotal())
         .totalDesc(
             NumberTranslatorUtil.getStringNumber(
                 facturaCustom.getCfdi().getTotal(), facturaCustom.getCfdi().getMoneda()))
@@ -91,38 +121,21 @@ public class InvoiceBuilderService {
             catalogService
                 .getTaxRegimeByKey(facturaCustom.getCfdi().getEmisor().getRegimenFiscal())
                 .getDescripcion())
-            .regimenFiscalReceptorDesc(
-                    catalogService
-                            .getTaxRegimeByKey(facturaCustom.getCfdi().getReceptor().getRegimenFiscalReceptor())
-                            .getDescripcion())
-        .formaPagoDesc(
+        .regimenFiscalReceptorDesc(
             catalogService
-                .getPaymentFormByKey(facturaCustom.getCfdi().getFormaPago())
+                .getTaxRegimeByKey(facturaCustom.getCfdi().getReceptor().getRegimenFiscalReceptor())
                 .getDescripcion())
+        .formaPagoDesc(
+            Objects.isNull(facturaCustom.getCfdi().getFormaPago())
+                ? null
+                : catalogService
+                    .getPaymentFormByKey(facturaCustom.getCfdi().getFormaPago())
+                    .getDescripcion())
         .metodoPagoDesc(
             MetodosPago.findByValor(facturaCustom.getCfdi().getMetodoPago()).getDescripcion())
         .tipoDeComprobanteDesc(
             TipoComprobante.findByValor(facturaCustom.getCfdi().getTipoDeComprobante())
                 .getDescripcion())
-        .impuestosTrasladados(
-            facturaCustom.getCfdi().getImpuestos().stream()
-                .collect(
-                    Collectors.reducing(
-                        BigDecimal.ZERO, Impuesto::getTotalImpuestosTrasladados, BigDecimal::add)))
-        .impuestosRetenidos(
-            facturaCustom.getCfdi().getImpuestos().stream()
-                .collect(
-                    Collectors.reducing(
-                        BigDecimal.ZERO, Impuesto::getTotalImpuestosRetenidos, BigDecimal::add)))
-        .folio(folio)
-        .preFolio(
-            facturaCustom.getPreFolio() == null
-                ? FacturaUtils.generatePreFolio(amount)
-                : facturaCustom.getPreFolio())
-        .statusFactura(
-            facturaCustom.getStatusFactura() == null
-                ? FacturaStatus.VALIDACION_OPERACIONES.getValor()
-                : facturaCustom.getStatusFactura())
         .build();
   }
 

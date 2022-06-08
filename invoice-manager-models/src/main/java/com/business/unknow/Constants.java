@@ -35,6 +35,7 @@ public class Constants {
     public static final String FACTURA_TASA = "Tasa";
     public static final String NOTA_CREDITO_CLAVE_CONCEPTO = "84111506";
     public static final String NOTA_CREDITO_CLAVE_UNIDAD = "ACT";
+    public static final String NOTA_CREDITO_UNIDAD = "Actividad";
     public static final String NOTA_CREDITO_DESC_CONCEPTO = "Devolucion";
   }
 

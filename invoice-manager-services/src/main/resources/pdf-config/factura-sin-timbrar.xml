@@ -84,7 +84,7 @@
                         </block>
                     </block-container>
                     <!-- Información del Receptor -->
-                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" height="20mm" fox:border-radius="2mm" font-size="2.4mm">
+                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" height="24mm" fox:border-radius="2mm" font-size="2.4mm">
                         <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
                             <inline-container>
                                 <block margin-left="3mm">INFORMACIÓN DEL RECEPTOR</block>
@@ -124,13 +124,17 @@
                         </block>
                         <block>
                             <inline-container>
-                                <block margin-left="3mm">
-                                    <inline font-weight="bold">
+                                <block>
+                                    <inline-container>
+                                        <block margin-left="3mm">
+                                            <inline font-weight="bold">
                                         Regimen fiscal:
                                     </inline>
-                                    <xsl:value-of select="factura/*[local-name()='Receptor']/@regimenFiscalReceptor" />
+                                            <xsl:value-of select="factura/cfdi:Receptor/@regimenFiscalReceptor" />
                                     -
-                                    <xsl:value-of select="regimenFiscalReceptorDesc" />
+                                            <xsl:value-of select="RegimenFiscalReceptorDesc" />
+                                        </block>
+                                    </inline-container>
                                 </block>
                             </inline-container>
                         </block>

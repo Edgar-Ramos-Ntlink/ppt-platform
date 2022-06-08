@@ -4,6 +4,7 @@ import static com.business.unknow.Constants.ComplementoPpdDefaults.IMPUESTO;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.PAGO_IMPUESTOS_GRAL;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.TASA_O_CUOTA;
 import static com.business.unknow.Constants.FacturaSustitucionConstants.FACTURA_TASA;
+import static com.business.unknow.Constants.FacturaSustitucionConstants.NOTA_CREDITO_UNIDAD;
 import static com.business.unknow.Constants.IVA_BASE_16;
 import static com.business.unknow.Constants.IVA_IMPUESTO_16;
 import static com.business.unknow.enums.TipoRelacion.NOTA_CREDITO;
@@ -12,7 +13,6 @@ import static com.business.unknow.enums.TipoRelacion.SUSTITUCION;
 import com.business.unknow.Constants.FacturaSustitucionConstants;
 import com.business.unknow.enums.FacturaStatus;
 import com.business.unknow.enums.LineaEmpresa;
-import com.business.unknow.enums.MetodosPago;
 import com.business.unknow.enums.TipoDocumento;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.services.repositories.facturas.FacturaDao;
@@ -48,13 +48,11 @@ public class RelationBuilderService {
                 .tipoRelacion(SUSTITUCION.getId())
                 .cfdiRelacionado(ImmutableList.of(relacionado))
                 .build());
+    facturaCustom.setTipoRelacion(SUSTITUCION.getId());
+    facturaCustom.setRelacion(facturaCustom.getUuid());
     assignRelationBaseData(facturaCustom, folio);
     if (facturaCustom.getLineaEmisor().equals(LineaEmpresa.A.name())) {
-      if (facturaCustom.getMetodoPago().equals(MetodosPago.PPD.name())) {
-        facturaCustom.setStatusFactura(FacturaStatus.VALIDACION_OPERACIONES.getValor());
-      } else {
-        facturaCustom.setStatusFactura(FacturaStatus.VALIDACION_TESORERIA.getValor());
-      }
+      facturaCustom.setStatusFactura(FacturaStatus.POR_TIMBRAR.getValor());
     } else {
       facturaCustom.setStatusFactura(FacturaStatus.POR_TIMBRAR_CONTABILIDAD.getValor());
     }
@@ -75,6 +73,8 @@ public class RelationBuilderService {
                 .tipoRelacion(NOTA_CREDITO.getId())
                 .cfdiRelacionado(ImmutableList.of(relacionado))
                 .build());
+    facturaCustom.setTipoRelacion(NOTA_CREDITO.getId());
+    facturaCustom.setRelacion(facturaCustom.getUuid());
     assignRelationBaseData(facturaCustom, folio);
     BigDecimal impuesto =
         facturaCustom
@@ -112,6 +112,7 @@ public class RelationBuilderService {
             .claveProdServ(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_CONCEPTO)
             .descripcion(FacturaSustitucionConstants.NOTA_CREDITO_DESC_CONCEPTO)
             .claveUnidad(FacturaSustitucionConstants.NOTA_CREDITO_CLAVE_UNIDAD)
+            .unidad(NOTA_CREDITO_UNIDAD)
             .objetoImp(PAGO_IMPUESTOS_GRAL)
             .valorUnitario(base)
             .importe(base)
