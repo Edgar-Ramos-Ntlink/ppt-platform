@@ -14,6 +14,14 @@
               <option value="B" *ngIf="module!='operaciones'">Tipo B</option>
               <option value="C" *ngIf="module!='operaciones'">Tipo C</option>
               <option value="D" *ngIf="module!='operaciones'">Tipo D</option>
+              <option value="E" *ngIf="module!='operaciones'">Tipo E</option>
+              <option value="LIQUIDACIONES" *ngIf="module!='operaciones'">
+                Liquidaciones
+              </option>
+              <option value="CEROS" *ngIf="module!='operaciones'">Ceros</option>
+              <option value="PROC_LIQUIDACION" *ngIf="module!='operaciones'">
+                Proc. Liquidacion
+              </option>
             </select>
           </div>
 
@@ -53,8 +61,8 @@
         <div class="row">
           <div class="col-2">
             <label for="registroPatronal" class="label">Registro Patronal</label>
-            <select selected="*" id="registroPatronal" [(ngModel)]="filterParams.registroPatronal" style="display:block;"
-              class="form-control">
+            <select selected="*" id="registroPatronal" [(ngModel)]="filterParams.registroPatronal"
+              style="display:block;" class="form-control">
               <option value="*">Todas</option>
               <option value="true">Con registro</option>
               <option value="false">Sin registro</option>
@@ -63,8 +71,8 @@
 
           <div class="col-2">
             <label for="representanteLegal" class="label">Representante Legal</label>
-            <select selected="*" id="representanteLegal" [(ngModel)]="filterParams.representanteLegal" style="display:block;"
-              class="form-control">
+            <select selected="*" id="representanteLegal" [(ngModel)]="filterParams.representanteLegal"
+              style="display:block;" class="form-control">
               <option value="*">Todas</option>
               <option value="true">Con representante</option>
               <option value="false">Sin representante</option>
@@ -83,13 +91,12 @@
 
           <div class="col-2">
             <label for="actividadSAT" class="label">Actividad SAT</label>
-            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.actividadSAT"
-              id="actividadSAT" fullWidth
-              placeholder="Actividad SAT">
+            <input type="text" class="form-control" fullWidth [(ngModel)]="filterParams.actividadSAT" id="actividadSAT"
+              fullWidth placeholder="Actividad SAT">
           </div>
 
           <div class="col-2">
-            <button class="btn btn-primary" style="width: 100%; margin-top: 28px;" [disabled]= "loading"
+            <button class="btn btn-primary" style="width: 100%; margin-top: 28px;" [disabled]="loading"
               (click)="updateDataTable(0,10)">BUSCAR</button>
           </div>
           <div class="col-2" *ngIf="module=='legal' || module == 'administracion'">
@@ -111,10 +118,12 @@
       <nb-card-header>
         <div class="clearfix">
           <strong>Empresas</strong>
-          <button type="button" *ngIf="page.empty == false" (click)="downloadHandler()" class="btn btn-sm btn-success float-right" [disabled]="loading">Descarga</button>
+          <button type="button" *ngIf="page.empty == false" (click)="downloadHandler()"
+            class="btn btn-sm btn-success float-right" [disabled]="loading">Descarga</button>
           <select id="inputunidad" style="display:block;width: 95px;margin-right: 15px;margin-left: 15px;"
             class="float-right form-control" [(ngModel)]="filterParams.size"
-            *ngIf="(page.last==false || page.first==true) && page.empty == false" (change)="onChangePageSize($event.target.value)">
+            *ngIf="(page.last==false || page.first==true) && page.empty == false"
+            (change)="onChangePageSize($event.target.value)">
             <option value="10">10</option>
             <option *ngIf="page.number<(page.totalElements/20)" value="20">20</option>
             <option *ngIf="page.number<(page.totalElements/50)" value="50">50</option>
@@ -127,10 +136,10 @@
           No se encontraron resultados
         </div>
 
-        
+
 
         <div *ngIf="page.empty == false" class="tableFixHead">
-          <table class="table table-sm" >
+          <table class="table table-sm">
             <thead class="thead-dark">
               <tr>
                 <th class="text-center">ACCIONES</th>
@@ -171,9 +180,10 @@
               <tr *ngFor="let fila of page.content">
                 <td scope="row" class="text-center">
                   <button class="btn btn-outline-primary" *ngIf="module ==='operaciones'"
-                    (click)="redirectToEmpresa(fila.RFC)"><i class="fa fa-search"></i></button> 
-                  <button class="btn" [disabled]="fila.BLOQUEADA === 'SI' && module != 'administracion'" *ngIf="module !=='operaciones'"
-                  [ngClass]="{'btn-outline-secondary': fila.BLOQUEADA === 'SI' && module != 'administracion' , 'btn-outline-primary': fila.BLOQUEADA !== 'SI' ||  module === 'administracion' }"
+                    (click)="redirectToEmpresa(fila.RFC)"><i class="fa fa-search"></i></button>
+                  <button class="btn" [disabled]="fila.BLOQUEADA === 'SI' && module != 'administracion'"
+                    *ngIf="module !=='operaciones'"
+                    [ngClass]="{'btn-outline-secondary': fila.BLOQUEADA === 'SI' && module != 'administracion' , 'btn-outline-primary': fila.BLOQUEADA === 'NO' ||  module === 'administracion' }"
                     (click)="redirectToEmpresa(fila.RFC)"><i class="fa fa-edit"></i></button>
                 </td>
                 <td scope="row" class="text-uppercase text-nowrap">{{fila.NOMBRE_CORTO}}</td>

@@ -74,6 +74,7 @@ export class Empresa {
 
     constructor(rfc?:string,nombre?:string) {
         this.activo = false;
+        this.bloqueada = true;
         this.operativa = false;
         this.estatus = 'INACTIVO';
         this.tipo = '*';

@@ -414,10 +414,9 @@ export class EmpresaComponent implements OnInit {
         }
     }
 
-    public async inactivateCompany() {
+    public async unlockCompany() {
         const company = { ...this.companyInfo };
-        company.activo = false;
-        company.estatus = 'INACTIVA';
+        company.bloqueada = true;
         this.loading = true;
         try {
             this.companyInfo = await this.empresaService
@@ -425,7 +424,46 @@ export class EmpresaComponent implements OnInit {
                 .toPromise();
             this.notificationService.sendNotification(
                 'info',
-                'La empresa ha sido desactivada satisfactoriamente'
+                'La empresa ha sido desbloqueda',
+                'Empresa desbloqueda'
+            );
+        } catch (error) {
+            this.notificationService.sendNotification('danger',error?.message, 'Error');
+        }
+        this.loading = false;
+    }
+
+    public async deactivateCompany() {
+        const company = { ...this.companyInfo };
+        company.activo = false;
+        this.loading = true;
+        try {
+            this.companyInfo = await this.empresaService
+                .updateCompany(this.companyInfo.rfc, company)
+                .toPromise();
+            this.notificationService.sendNotification(
+                'info',
+                'La empresa ha sido desactivada',
+                'Empresa inactiva'
+            );
+        } catch (error) {
+            this.notificationService.sendNotification('danger',error?.message, 'Error');
+        }
+        this.loading = false;
+    }
+
+    public async lockAndUpdateCompany() {
+        const company = { ...this.companyInfo };
+        company.bloqueada = false;
+        this.loading = true;
+        try {
+            this.companyInfo = await this.empresaService
+                .updateCompany(this.companyInfo.rfc, company)
+                .toPromise();
+            this.notificationService.sendNotification(
+                'success',
+                'La empresa ha sido bloqueda y actualizada',
+                'Empresa bloqueda'
             );
         } catch (error) {
             this.notificationService.sendNotification('danger',error?.message, 'Error');
@@ -483,6 +521,7 @@ export class EmpresaComponent implements OnInit {
             if (cert && key && logo && this.companyInfo.noCertificado) {
                 const company = { ...this.companyInfo };
                 company.activo = true;
+                company.bloqueada = true;
                 company.estatus = 'ACTIVA';
                 this.companyInfo = await this.empresaService
                     .updateCompany(this.companyInfo.rfc, company)
