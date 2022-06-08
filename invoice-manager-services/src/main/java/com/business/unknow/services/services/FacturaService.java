@@ -10,6 +10,7 @@ import static com.business.unknow.enums.TipoArchivo.TXT;
 import static com.business.unknow.enums.TipoArchivo.XML;
 import static com.business.unknow.enums.TipoDocumento.COMPLEMENTO;
 import static com.business.unknow.enums.TipoDocumento.FACTURA;
+import static com.business.unknow.enums.TipoDocumento.NOTA_CREDITO;
 
 import com.business.unknow.MailConstants;
 import com.business.unknow.enums.FacturaStatus;
@@ -406,12 +407,11 @@ public class FacturaService {
     facturaCustom.setFechaActualizacion(save.getFechaActualizacion());
     filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
-    FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
-    facturaPdf.setCfdi(comprobante);
     byte[] pdf =
-        FacturaUtils.generateFacturaPdf(
-            facturaPdf,
+        getPdfFromFactura(
+            facturaCustom,
             FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
+                    || NOTA_CREDITO.getDescripcion().equals(facturaCustom.getTipoDocumento())
                 ? PDF_FACTURA_SIN_TIMBRAR
                 : PDF_COMPLEMENTO_TIMBRAR);
     filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
@@ -425,23 +425,24 @@ public class FacturaService {
       throws InvoiceManagerException, NtlinkUtilException {
     FacturaCustom entity = getFacturaBaseByFolio(folio);
     facturaServiceEvaluator.facturaStatusValidation(facturaCustom);
+    facturaCustom = invoiceBuilderService.assignDescData(facturaCustom);
     InvoiceValidator.validate(facturaCustom, facturaCustom.getFolio());
     Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
     entityFromDto.setId(entity.getId());
     repository.save(entityFromDto);
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
-    if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
+    if ((FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
+            || NOTA_CREDITO.getDescripcion().equals(facturaCustom.getTipoDocumento()))
         && !(entity.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())
             || entity.getStatusFactura().equals(FacturaStatus.CANCELADA.getValor()))) {
       facturaCustom.setCfdi(cfdiService.updateCfdi(facturaCustom.getCfdi()));
       Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
       filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
-      FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
-      facturaPdf.setCfdi(comprobante);
       byte[] pdf =
-          FacturaUtils.generateFacturaPdf(
-              facturaPdf,
+          getPdfFromFactura(
+              facturaCustom,
               FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
+                      || NOTA_CREDITO.getDescripcion().equals(facturaCustom.getTipoDocumento())
                   ? PDF_FACTURA_SIN_TIMBRAR
                   : PDF_COMPLEMENTO_TIMBRAR);
       filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
@@ -523,6 +524,7 @@ public class FacturaService {
         getPdfFromFactura(
             facturaCustom,
             FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
+                    || NOTA_CREDITO.getDescripcion().equals(facturaCustom.getTipoDocumento())
                 ? PDF_FACTURA_TIMBRAR
                 : PDF_COMPLEMENTO_TIMBRAR),
         PDF.getFormat(),
@@ -644,6 +646,7 @@ public class FacturaService {
       }
       filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
       filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
+      facturaCustom = invoiceBuilderService.assignDescData(facturaCustom);
       byte[] pdf = getPdfFromFactura(facturaCustom, PDF_COMPLEMENTO_SIN_TIMBRAR);
       filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
       return facturaCustom;

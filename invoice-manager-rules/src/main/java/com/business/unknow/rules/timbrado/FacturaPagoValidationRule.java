@@ -10,6 +10,7 @@ import static com.business.unknow.rules.Constants.Timbrado.TIMBRADO_PAGO_VALIDAT
 import static com.business.unknow.rules.Constants.Timbrado.TIMBRADO_SUITE;
 
 import com.business.unknow.enums.LineaEmpresa;
+import com.business.unknow.enums.TipoRelacion;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import java.math.BigDecimal;
@@ -28,10 +29,12 @@ public class FacturaPagoValidationRule {
 
     if (!facturaCustom.getLineaEmisor().equals(LineaEmpresa.A.name())) {
       return false;
-    } else if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())) {
+    } else if (TipoRelacion.SUSTITUCION.getId().equals(facturaCustom.getTipoRelacion())) {
+      return false;
+    }
+    if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())) {
       if (pagos == null && pagos.isEmpty()) {
         return !PPD.getClave().equals(facturaCustom.getMetodoPago());
-        // PPD never has payments and PUE always should have payments
       } else {
         if (PUE.getClave().equals(facturaCustom.getMetodoPago())) {
           BigDecimal paymentsAmmount =
