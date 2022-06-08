@@ -7,6 +7,7 @@ export class Empresa {
     public activo: boolean;
     public estatus: string; // Se calculara automaticamnete basado entre representanteLegal & correo & cert & key & cuentas
     public operativa: boolean;
+    public bloqueada: boolean;
     public giro: string;
     public tipo: string; // linea empresa
     public regimenFiscal: string;
@@ -73,6 +74,7 @@ export class Empresa {
 
     constructor(rfc?:string,nombre?:string) {
         this.activo = false;
+        this.bloqueada = true;
         this.operativa = false;
         this.estatus = 'INACTIVO';
         this.tipo = '*';

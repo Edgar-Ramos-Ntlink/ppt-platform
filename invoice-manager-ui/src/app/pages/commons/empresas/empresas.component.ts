@@ -96,7 +96,7 @@ export class EmpresasComponent implements OnInit {
   }
 
   public newCompany() {
-    this.router.navigate([`./pages/operaciones/empresa/*`])
+    this.router.navigate([`./pages/${this.module}/empresa/*`])
   }
 
   public async downloadHandler() {
