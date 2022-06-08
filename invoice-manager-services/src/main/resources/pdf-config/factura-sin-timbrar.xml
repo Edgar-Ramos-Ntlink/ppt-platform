@@ -10,13 +10,11 @@
             </layout-master-set>
             <page-sequence master-reference="letter">
                 <title>Invoice</title>
-
                 <static-content flow-name="xsl-region-after">
                     <block font-size="2.5mm">
                         <inline-container width="150mm">
                             <block font-weight="bold" text-align="left">ESTE DOCUMENTO NO ES UNA REPRESENTACIÓN IMPRESA DE UN CFDI</block>
                         </inline-container>
-
                         <inline-container text-align="right" width="47mm">
                             <block>
                                 Página
@@ -27,7 +25,6 @@
                         </inline-container>
                     </block>
                 </static-content>
-
                 <flow flow-name="xsl-region-body">
                     <!-- Header -->
                     <block-container height="30mm" margin-bottom="5mm" padding="0mm">
@@ -41,7 +38,6 @@
                                     </external-graphic>
                                 </block>
                             </inline-container>
-
                             <inline-container width="86.6mm">
                                 <block font-size="3mm" font-weight="bold" margin-top="5mm">
                                     <xsl:value-of select="factura/cfdi:Emisor/@Nombre" />
@@ -59,11 +55,9 @@
                                     <xsl:value-of select="RegimenFiscalDesc" />
                                 </block>
                                 <block margin-top="3.5mm" font-size="2.5mm">
-                                        <xsl:value-of select="DireccionEmisor" />
+                                    <xsl:value-of select="DireccionEmisor" />
                                 </block>
-                                
                             </inline-container>
-
                             <inline-container width="56.6mm" alignment-baseline="before-edge">
                                 <block-container border-color="black" border-style="solid" border-width=".4mm" height="23mm" fox:border-radius="2mm" font-size="2.4mm">
                                     <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
@@ -89,15 +83,13 @@
                             </inline-container>
                         </block>
                     </block-container>
-
                     <!-- Información del Receptor -->
-                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" height="20mm" fox:border-radius="2mm" font-size="2.4mm">
+                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" height="24mm" fox:border-radius="2mm" font-size="2.4mm">
                         <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
                             <inline-container>
                                 <block margin-left="3mm">INFORMACIÓN DEL RECEPTOR</block>
                             </inline-container>
                         </block>
-
                         <block>
                             <inline-container>
                                 <block margin-left="3mm">
@@ -108,7 +100,6 @@
                                 </block>
                             </inline-container>
                         </block>
-
                         <block>
                             <inline-container>
                                 <block margin-left="3mm">
@@ -119,7 +110,6 @@
                                 </block>
                             </inline-container>
                         </block>
-
                         <block>
                             <inline-container>
                                 <block margin-left="3mm">
@@ -134,6 +124,22 @@
                         </block>
                         <block>
                             <inline-container>
+                                <block>
+                                    <inline-container>
+                                        <block margin-left="3mm">
+                                            <inline font-weight="bold">
+                                        Regimen fiscal:
+                                    </inline>
+                                            <xsl:value-of select="factura/cfdi:Receptor/@regimenFiscalReceptor" />
+                                    -
+                                            <xsl:value-of select="RegimenFiscalReceptorDesc" />
+                                        </block>
+                                    </inline-container>
+                                </block>
+                            </inline-container>
+                        </block>
+                        <block>
+                            <inline-container>
                                 <block margin-left="3mm">
                                     <inline font-weight="bold">
                                         Dirección:
@@ -143,8 +149,6 @@
                             </inline-container>
                         </block>
                     </block-container>
-
-
                     <!-- Conceptos -->
                     <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm">
                         <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
@@ -170,7 +174,6 @@
                                 <block>Importe</block>
                             </inline-container>
                         </block>
-
                         <table>
                             <table-column column-width="16.3mm" />
                             <table-column column-width="18.3mm" />
@@ -227,7 +230,6 @@
                             </table-body>
                         </table>
                     </block-container>
-
                     <!-- Subtotales y Totales -->
                     <block-container margin-bottom="3mm" text-align="right" font-size="2.5mm">
                         <block>
@@ -277,7 +279,6 @@
                             </inline-container>
                         </block>
                     </block-container>
-
                     <!-- Forma de Pago -->
                     <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm">
                         <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
@@ -290,7 +291,6 @@
                                 </block>
                             </inline-container>
                         </block>
-
                         <block text-align="left">
                             <inline-container margin-left="3mm" width="122mm">
                                 <block>
@@ -311,7 +311,6 @@
                                 </block>
                             </inline-container>
                         </block>
-
                         <block text-align="left">
                             <inline-container margin-left="3mm" width="122mm">
                                 <block>
@@ -327,7 +326,6 @@
                                 </block>
                             </inline-container>
                         </block>
-
                         <block text-align="left">
                             <inline-container margin-left="3mm" width="122mm">
                                 <block>
@@ -346,7 +344,6 @@
                                 </block>
                             </inline-container>
                         </block>
-
                         <block text-align="left">
                             <inline-container margin-left="3mm" width="122mm">
                                 <block>
@@ -369,14 +366,14 @@
                         </block>
                         <block text-align="left">
                             <inline-container margin-left="3mm" width="122mm">
-                                    <block>
-                                        <inline padding-right="3mm" font-weight="bold">Tipo Relacion</inline>
-                                        <inline>
-                                            <xsl:value-of select="TipoRelacion" />
-                                        </inline>
-                                    </block>
+                                <block>
+                                    <inline padding-right="3mm" font-weight="bold">Tipo Relacion</inline>
+                                    <inline>
+                                        <xsl:value-of select="TipoRelacion" />
+                                    </inline>
+                                </block>
                             </inline-container>
-                             <inline-container width="75mm">
+                            <inline-container width="75mm">
                                 <block>
                                     <inline padding-right="3mm" font-weight="bold">Relacion</inline>
                                     <inline>
@@ -386,7 +383,6 @@
                             </inline-container>
                         </block>
                     </block-container>
-
                     <block id="last-item" />
                 </flow>
             </page-sequence>

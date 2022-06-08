@@ -10,13 +10,11 @@
             </layout-master-set>
             <page-sequence master-reference="letter">
                 <title>Invoice</title>
-
                 <static-content flow-name="xsl-region-after">
                     <block font-size="2.5mm">
                         <inline-container width="150mm">
                             <block font-weight="bold" text-align="left">ESTE DOCUMENTO ES UNA REPRESENTACIÓN IMPRESA DE UN CFDI</block>
                         </inline-container>
-
                         <inline-container text-align="right" width="47mm">
                             <block>
                                 Página
@@ -27,7 +25,6 @@
                         </inline-container>
                     </block>
                 </static-content>
-
                 <flow flow-name="xsl-region-body">
                     <!-- Header -->
                     <block-container height="30mm" margin-bottom="5mm" padding="0mm">
@@ -41,7 +38,6 @@
                                     </external-graphic>
                                 </block>
                             </inline-container>
-
                             <inline-container width="86.6mm">
                                 <block font-size="3mm" font-weight="bold" margin-top="5mm">
                                     <xsl:value-of select="factura/cfdi:Emisor/@Nombre" />
@@ -59,10 +55,9 @@
                                     <xsl:value-of select="RegimenFiscalDesc" />
                                 </block>
                                 <block margin-top="3.5mm" font-size="2.5mm">
-                                        <xsl:value-of select="DireccionEmisor" />
+                                    <xsl:value-of select="DireccionEmisor" />
                                 </block>
                             </inline-container>
-
                             <inline-container width="56.6mm" alignment-baseline="before-edge">
                                 <block-container border-color="black" border-style="solid" border-width=".4mm" height="23mm" fox:border-radius="2mm" font-size="2.4mm">
                                     <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
@@ -88,15 +83,13 @@
                             </inline-container>
                         </block>
                     </block-container>
-
                     <!-- Información del Receptor -->
-                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" height="20mm" fox:border-radius="2mm" font-size="2.4mm">
+                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" height="24mm" fox:border-radius="2mm" font-size="2.4mm">
                         <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
                             <inline-container>
                                 <block margin-left="3mm">INFORMACIÓN DEL RECEPTOR</block>
                             </inline-container>
                         </block>
-
                         <block>
                             <inline-container>
                                 <block margin-left="3mm">
@@ -107,7 +100,6 @@
                                 </block>
                             </inline-container>
                         </block>
-
                         <block>
                             <inline-container>
                                 <block margin-left="3mm">
@@ -118,7 +110,6 @@
                                 </block>
                             </inline-container>
                         </block>
-
                         <block>
                             <inline-container>
                                 <block margin-left="3mm">
@@ -133,6 +124,26 @@
                         </block>
                         <block>
                             <inline-container>
+                                <block>
+                                    <inline-container>
+                                        <block>
+                                            <inline-container>
+                                                <block margin-left="3mm">
+                                                    <inline font-weight="bold">
+                                        Regimen fiscal:
+                                    </inline>
+                                                    <xsl:value-of select="factura/cfdi:Receptor/@regimenFiscalReceptor" />
+                                    -
+                                                    <xsl:value-of select="RegimenFiscalReceptorDesc" />
+                                                </block>
+                                            </inline-container>
+                                        </block>
+                                    </inline-container>
+                                </block>
+                            </inline-container>
+                        </block>
+                        <block>
+                            <inline-container>
                                 <block margin-left="3mm">
                                     <inline font-weight="bold">
                                         Dirección:
@@ -142,169 +153,167 @@
                             </inline-container>
                         </block>
                     </block-container>
-
                     <!-- Pago -->
-                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm">          
-                    <xsl:for-each select="factura/*[local-name()='Complemento']/*[local-name()='Pagos']/*[local-name()='Pago']">
-                     <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
-                            <inline-container width="35.1mm">
-                                <block>FECHA DE PAGO</block>
-                            </inline-container>
-                            <inline-container width="64.3mm">
-                                <block>FORMA DE PAGO</block>
-                            </inline-container>
-                            <inline-container width="23.4mm">
-                                <block>MONEDA</block>
-                            </inline-container>
-                            <inline-container width="32.3mm">
-                                <block>TIPO CAMBIO</block>
-                            </inline-container>
-                            <inline-container width="39.9mm">
-                                <block>MONTO PAGADO</block>
-                            </inline-container>
-                        </block>
-                    <table>
-                     <table-body>
-                        <table-row >
-                            <table-cell border-right="solid">
-                                 <block >
+                    <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm">
+                        <xsl:for-each select="factura/*[local-name()='Complemento']/*[local-name()='Pagos']/*[local-name()='Pago']">
+                            <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
+                                <inline-container width="35.1mm">
+                                    <block>FECHA DE PAGO</block>
+                                </inline-container>
+                                <inline-container width="64.3mm">
+                                    <block>FORMA DE PAGO</block>
+                                </inline-container>
+                                <inline-container width="23.4mm">
+                                    <block>MONEDA</block>
+                                </inline-container>
+                                <inline-container width="32.3mm">
+                                    <block>TIPO CAMBIO</block>
+                                </inline-container>
+                                <inline-container width="39.9mm">
+                                    <block>MONTO PAGADO</block>
+                                </inline-container>
+                            </block>
+                            <table>
+                                <table-body>
+                                    <table-row >
+                                        <table-cell border-right="solid">
+                                            <block >
                                  </block>
-                            </table-cell>
-                        </table-row >
-                            <table-row text-align="center">
-                                <table-cell border-right="solid">
-                                    <block margin-top="0.5mm" margin-bottom="0.5mm">
-                                        <xsl:value-of select="@FechaPago" />
-                                    </block>
-                                </table-cell>
-                                <table-cell border-right="solid">
-                                    <block margin-top="0.5mm" margin-bottom="0.5mm">
-                                        <xsl:value-of select="@FormaDePagoP" />
+                                        </table-cell>
+                                    </table-row >
+                                    <table-row text-align="center">
+                                        <table-cell border-right="solid">
+                                            <block margin-top="0.5mm" margin-bottom="0.5mm">
+                                                <xsl:value-of select="@FechaPago" />
+                                            </block>
+                                        </table-cell>
+                                        <table-cell border-right="solid">
+                                            <block margin-top="0.5mm" margin-bottom="0.5mm">
+                                                <xsl:value-of select="@FormaDePagoP" />
                                         -
-                                        <xsl:value-of select="../../../../FormaPagoDesc" />
-                                    </block>
-                                </table-cell>
-                                <table-cell border-right="solid">
-                                    <block margin-top="0.5mm" margin-bottom="0.5mm">
-                                        <xsl:value-of select="@MonedaP" />
-                                    </block>
-                                </table-cell>
-                                <table-cell border-right="solid">
-                                    <block margin-top="0.5mm" margin-bottom="0.5mm"></block>
-                                </table-cell>
-                                <table-cell>
-                                    <block margin-top="0.5mm" margin-bottom="0.5mm">
+                                                <xsl:value-of select="../../../../FormaPagoDesc" />
+                                            </block>
+                                        </table-cell>
+                                        <table-cell border-right="solid">
+                                            <block margin-top="0.5mm" margin-bottom="0.5mm">
+                                                <xsl:value-of select="@MonedaP" />
+                                            </block>
+                                        </table-cell>
+                                        <table-cell border-right="solid">
+                                            <block margin-top="0.5mm" margin-bottom="0.5mm"></block>
+                                        </table-cell>
+                                        <table-cell>
+                                            <block margin-top="0.5mm" margin-bottom="0.5mm">
                                         $
-                                        <xsl:value-of select="format-number(@Monto, '###,##0.00')" />
-                                    </block>
-                                </table-cell>
-                            </table-row>
-                        </table-body>
-                    </table>
-                    <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm">
+                                                <xsl:value-of select="format-number(@Monto, '###,##0.00')" />
+                                            </block>
+                                        </table-cell>
+                                    </table-row>
+                                </table-body>
+                            </table>
+                            <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm">
                             DOCUMENTOS RELACIONADOS AL PAGO 
                     </block>
-                    <table border="solid">
-                       <table-column column-width="10.5mm" />
-                       <table-column column-width="46.5mm" />
-                       <table-column column-width="20.5mm" />
-                       <table-column column-width="20.5mm" />
-                       <table-column column-width="24.5mm" />
-                       <table-column column-width="24.5mm" />
-                       <table-column column-width="24.5mm" />
-                       <table-column column-width="24.5mm" />
-                        <table-body>
-                             <table-row border="solid" background-color="#005499"  color="white" text-align="center">
-                                <table-cell border-right="solid" border="solid">
-                                    <block>
+                            <table border="solid">
+                                <table-column column-width="10.5mm" />
+                                <table-column column-width="46.5mm" />
+                                <table-column column-width="20.5mm" />
+                                <table-column column-width="20.5mm" />
+                                <table-column column-width="24.5mm" />
+                                <table-column column-width="24.5mm" />
+                                <table-column column-width="24.5mm" />
+                                <table-column column-width="24.5mm" />
+                                <table-body>
+                                    <table-row border="solid" background-color="#005499"  color="white" text-align="center">
+                                        <table-cell border-right="solid" border="solid">
+                                            <block>
                                         Serie:
                                     </block>
-                                </table-cell>
-                                <table-cell border-right="solid" border="solid">
-                                    <block>
+                                        </table-cell>
+                                        <table-cell border-right="solid" border="solid">
+                                            <block>
                                         Id documento:
                                     </block>
-                                </table-cell>
-                                <table-cell border-right="solid" border="solid">
-                                    <block>
+                                        </table-cell>
+                                        <table-cell border-right="solid" border="solid">
+                                            <block>
                                         No. Parcialidad:
                                     </block>
-                                </table-cell>
-                                <table-cell border-right="solid" border="solid">
-                                    <block>
+                                        </table-cell>
+                                        <table-cell border-right="solid" border="solid">
+                                            <block>
                                         Método Pago:
                                     </block>
-                                </table-cell>
-                                <table-cell border-right="solid" border="solid">
-                                    <block>
+                                        </table-cell>
+                                        <table-cell border-right="solid" border="solid">
+                                            <block>
                                         Moneda:
                                     </block>
-                                </table-cell>
-                                <table-cell border-right="solid" border="solid">
-                                    <block>
+                                        </table-cell>
+                                        <table-cell border-right="solid" border="solid">
+                                            <block>
                                         Saldo anterior: $
                                     </block>
-                                </table-cell>
-                                <table-cell border-right="solid" border="solid">
-                                    <block>
+                                        </table-cell>
+                                        <table-cell border-right="solid" border="solid">
+                                            <block>
                                         Importe pagado: $
                                     </block>
-                                </table-cell>
-                                <table-cell border-right="solid" border="solid">
-                                    <block>
+                                        </table-cell>
+                                        <table-cell border-right="solid" border="solid">
+                                            <block>
                                         Saldo insoluto: $
                                     </block>
-                                </table-cell>
-                             </table-row> 
-                            <xsl:for-each select="./*[local-name()='DoctoRelacionado']">
-                                <table-row border="solid" text-align="center">
-                                    <table-cell border-right="solid" border="solid">
-                                        <block >
-	                                        <xsl:value-of text-align="center" select="@Serie" />
-	                                     </block>
-                                    </table-cell>
-                                    <table-cell border-right="solid" border="solid">
-                                       <block >
-                                            <xsl:value-of text-align="center" select="translate(@IdDocumento,'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')"/>
-	                                    </block>
-                                    </table-cell>
-                                    <table-cell border-right="solid" border="solid">
-                                        <block >
-                                            <xsl:value-of text-align="center" select="@NumParcialidad" />
-                                        </block>
-                                    </table-cell>
-                                    <table-cell border-right="solid" border="solid">
-                                        <block >
-                                            <xsl:value-of text-align="center" select="@MetodoDePagoDR" />
-	                                    </block>
-                                    </table-cell>
-                                    <table-cell border-right="solid" border="solid">
-                                        <block >
-                                            <xsl:value-of text-align="center" select="@MonedaDR" />
-	                                    </block>
-                                    </table-cell>
-                                     <table-cell border-right="solid" border="solid">
-                                        <block >
-	                                    <xsl:value-of text-align="center" select="format-number(@ImpSaldoAnt, '###,##0.00')" />
-	                                    </block>
-                                    </table-cell>
-                                     <table-cell border-right="solid" border="solid">
-                                       <block >
-	                                    <xsl:value-of text-align="center" select="format-number(@ImpPagado, '###,##0.00')" />
-	                                    </block>
-                                    </table-cell>
-                                    <table-cell border-right="solid" border="solid">
-                                        <block >
-	                                    <xsl:value-of text-align="center" select="format-number(@ImpSaldoInsoluto, '###,##0.00')" />
-	                                    </block>
-                                    </table-cell>
-                                </table-row> 
-                            </xsl:for-each>
-                        </table-body>
-                    </table>
-                    </xsl:for-each>
+                                        </table-cell>
+                                    </table-row>
+                                    <xsl:for-each select="./*[local-name()='DoctoRelacionado']">
+                                        <table-row border="solid" text-align="center">
+                                            <table-cell border-right="solid" border="solid">
+                                                <block >
+                                                    <xsl:value-of text-align="center" select="@Serie" />
+                                                </block>
+                                            </table-cell>
+                                            <table-cell border-right="solid" border="solid">
+                                                <block >
+                                                    <xsl:value-of text-align="center" select="translate(@IdDocumento,'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')"/>
+                                                </block>
+                                            </table-cell>
+                                            <table-cell border-right="solid" border="solid">
+                                                <block >
+                                                    <xsl:value-of text-align="center" select="@NumParcialidad" />
+                                                </block>
+                                            </table-cell>
+                                            <table-cell border-right="solid" border="solid">
+                                                <block >
+                                                    <xsl:value-of text-align="center" select="@MetodoDePagoDR" />
+                                                </block>
+                                            </table-cell>
+                                            <table-cell border-right="solid" border="solid">
+                                                <block >
+                                                    <xsl:value-of text-align="center" select="@MonedaDR" />
+                                                </block>
+                                            </table-cell>
+                                            <table-cell border-right="solid" border="solid">
+                                                <block >
+                                                    <xsl:value-of text-align="center" select="format-number(@ImpSaldoAnt, '###,##0.00')" />
+                                                </block>
+                                            </table-cell>
+                                            <table-cell border-right="solid" border="solid">
+                                                <block >
+                                                    <xsl:value-of text-align="center" select="format-number(@ImpPagado, '###,##0.00')" />
+                                                </block>
+                                            </table-cell>
+                                            <table-cell border-right="solid" border="solid">
+                                                <block >
+                                                    <xsl:value-of text-align="center" select="format-number(@ImpSaldoInsoluto, '###,##0.00')" />
+                                                </block>
+                                            </table-cell>
+                                        </table-row>
+                                    </xsl:for-each>
+                                </table-body>
+                            </table>
+                        </xsl:for-each>
                     </block-container>
-
                     <!-- Subtotales y Totales -->
                     <block-container margin-bottom="3mm" text-align="right" font-size="2.5mm">
                         <block>
@@ -330,12 +339,6 @@
                             </inline-container>
                         </block>
                     </block-container>
-
-
-                     
-
-
-
                     <!-- Forma de Pago -->
                     <block-container margin-bottom="3mm" border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm">
                         <block text-align="center" font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm" fox:border-before-start-radius="1.5mm" fox:border-before-end-radius="1.5mm">
@@ -349,7 +352,6 @@
                                 <block>FECHA DE CERTIFICACIÓN</block>
                             </inline-container>
                         </block>
-
                         <table>
                             <table-column column-width="65.5mm" />
                             <table-column column-width="64.3mm" />
@@ -375,7 +377,6 @@
                             </table-body>
                         </table>
                     </block-container>
-
                     <!-- Timbrado -->
                     <block-container>
                         <block border-color="black" border-style="solid" border-width=".4mm" fox:border-radius="2mm" font-size="2.4mm" padding-top="-0.4mm" padding-bottom="-0.4mm">
@@ -386,7 +387,6 @@
                                             <block margin-left="3mm">SELLO DIGITAL DEL CFDI</block>
                                         </inline-container>
                                     </block>
-
                                     <block>
                                         <inline-container>
                                             <block-container margin="0.7mm" margin-left="2mm" width="150mm" text-align="justify">
@@ -403,13 +403,11 @@
                                             </block-container>
                                         </inline-container>
                                     </block>
-
                                     <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.5mm" padding-top="0.5mm">
                                         <inline-container>
                                             <block margin-left="3mm">SELLO DEL SAT</block>
                                         </inline-container>
                                     </block>
-
                                     <block>
                                         <inline-container>
                                             <block-container margin="0.7mm" margin-left="2mm" width="150mm" text-align="justify">
@@ -426,7 +424,6 @@
                                             </block-container>
                                         </inline-container>
                                     </block>
-
                                     <block font-weight="bold" color="white" background-color="#005499" padding-bottom="0.7mm" padding-top="0.7mm">
                                         <inline-container>
                                             <block margin-left="3mm">CADENA ORIGINAL</block>
@@ -434,21 +431,21 @@
                                     </block>
                                     <block margin-left="3mm" margin-right="3mm" padding-bottom="0.5mm" padding-top="0.5mm" font-size="2mm">
                                         <xsl:variable name="strlen3" select="string-length(CadenaOriginal) div 5" />
-                                                <block font-size="2mm" wrap-option="no-wrap">
-                                                    <xsl:value-of select="substring(CadenaOriginal, 0, floor($strlen3))" />
-                                                </block>
-                                                <block font-size="2mm" wrap-option="no-wrap">
-                                                    <xsl:value-of select="substring(CadenaOriginal, floor($strlen3), floor($strlen3))" />
-                                                </block>
-                                                <block font-size="2mm" wrap-option="no-wrap">
-                                                    <xsl:value-of select="substring(CadenaOriginal, floor($strlen3)*2, floor($strlen3))" />
-                                                </block>
-                                                 <block font-size="2mm" wrap-option="no-wrap">
-                                                    <xsl:value-of select="substring(CadenaOriginal, floor($strlen3) * 3,  floor($strlen3))" />
-                                                </block>
-                                                <block font-size="2mm" wrap-option="no-wrap">
-                                                    <xsl:value-of select="substring(CadenaOriginal, floor($strlen3) * 4,  floor($strlen3))" />
-                                                </block>
+                                        <block font-size="2mm" wrap-option="no-wrap">
+                                            <xsl:value-of select="substring(CadenaOriginal, 0, floor($strlen3))" />
+                                        </block>
+                                        <block font-size="2mm" wrap-option="no-wrap">
+                                            <xsl:value-of select="substring(CadenaOriginal, floor($strlen3), floor($strlen3))" />
+                                        </block>
+                                        <block font-size="2mm" wrap-option="no-wrap">
+                                            <xsl:value-of select="substring(CadenaOriginal, floor($strlen3)*2, floor($strlen3))" />
+                                        </block>
+                                        <block font-size="2mm" wrap-option="no-wrap">
+                                            <xsl:value-of select="substring(CadenaOriginal, floor($strlen3) * 3,  floor($strlen3))" />
+                                        </block>
+                                        <block font-size="2mm" wrap-option="no-wrap">
+                                            <xsl:value-of select="substring(CadenaOriginal, floor($strlen3) * 4,  floor($strlen3))" />
+                                        </block>
                                     </block>
                                 </block-container>
                             </inline-container>
@@ -463,7 +460,6 @@
                             </inline-container>
                         </block>
                     </block-container>
-
                     <block id="last-item" />
                 </flow>
             </page-sequence>

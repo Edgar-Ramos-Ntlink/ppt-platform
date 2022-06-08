@@ -110,4 +110,5 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.8 Enable Json Logs
   - [x] 4.5.9 database pool setup
   - [x] 4.5.10 bug fixes
-  - [x] 4.5.11 Companies improvements
+  - [x] 4.5.11 Pdf & General fixes
+  - [x] 4.5.12 Companies improvements
