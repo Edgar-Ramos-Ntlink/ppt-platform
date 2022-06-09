@@ -15,13 +15,9 @@ public class FacturaReportDto extends ReportDto implements Serializable {
 
   private static final long serialVersionUID = -1523422223111592963L;
 
+  private String correoPromotor;
   private BigDecimal cantidad;
   private String lineaEmisor;
-  private String correoPromotor;
-  private String porcentajePromotor;
-  private String porcentajeCliente;
-  private String porcentajeConcatco;
-  private String porcentajeDespacho;
   private String claveUnidad;
   private String unidad;
   private Integer claveProdServ;

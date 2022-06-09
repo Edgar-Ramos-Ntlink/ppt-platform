@@ -49,6 +49,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -234,7 +235,7 @@ public class FacturaService {
             "IMPUESTOS RETENIDOS",
             "SUBTOTAL",
             "TOTAL",
-            "METDOD PAGO",
+            "METODO PAGO",
             "FORMA PAGO",
             "MONEDA",
             "ESTATUS",
@@ -243,7 +244,6 @@ public class FacturaService {
             "PROMOTOR",
             "CANTIDAD",
             "CLAVE UNIDAD",
-            "UNIDAD",
             "CLAVE PROD SERV",
             "DESCRIPCION",
             "VALOR UNITARIO",
@@ -278,7 +278,6 @@ public class FacturaService {
                   row.put("PROMOTOR", inv.getCorreoPromotor());
                   row.put("CANTIDAD", inv.getCantidad());
                   row.put("CLAVE UNIDAD", inv.getClaveUnidad());
-                  row.put("UNIDAD", inv.getUnidad());
                   row.put("CLAVE PROD SERV", inv.getClaveProdServ());
                   row.put("DESCRIPCION", inv.getDescripcion());
                   row.put("VALOR UNITARIO", inv.getValorUnitario());
@@ -512,6 +511,7 @@ public class FacturaService {
     facturaCustom = facturaExecutorService.stampInvoice(facturaCustom, xml);
     Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
     entityFromDto.setId(factura.getId());
+    entityFromDto.setFechaTimbrado(new Date());
     repository.save(entityFromDto);
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
     filesService.sendFileToS3(

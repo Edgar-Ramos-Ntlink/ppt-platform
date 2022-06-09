@@ -3,6 +3,9 @@ package com.business.unknow.services.services;
 import com.business.unknow.services.entities.Reporte;
 import com.business.unknow.services.repositories.ReporteRepository;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,35 +16,39 @@ public class ReportDataService {
 
   public void upsertReportData(Cfdi cfdi) {
     reporteRepository.deleteByFolio(cfdi.getFolio());
-    cfdi.getConceptos().stream()
-        .forEach(
-            concepto -> {
-              reporteRepository.save(
-                  Reporte.builder()
-                      .folio(cfdi.getFolio())
-                      .tipoDeComprobante(cfdi.getTipoDeComprobante())
-                      .impuestosTrasladados(
-                          cfdi.getImpuestos().stream()
-                              .findFirst()
-                              .get()
-                              .getTotalImpuestosTrasladados())
-                      .impuestosRetenidos(
-                          cfdi.getImpuestos().stream()
-                              .findFirst()
-                              .get()
-                              .getTotalImpuestosRetenidos())
-                      .subtotal(cfdi.getSubtotal())
-                      .total(cfdi.getTotal())
-                      .metodoPago(cfdi.getMetodoPago())
-                      .formaPago(cfdi.getFormaPago())
-                      .moneda(cfdi.getMoneda())
-                      .cantidad(concepto.getCantidad())
-                      .claveUnidad(concepto.getClaveUnidad())
-                      .descripcion(concepto.getDescripcion())
-                      .valorUnitario(concepto.getValorUnitario())
-                      .importe(concepto.getImporte())
-                      .build());
-            });
+
+    BigDecimal impTrasladados =
+        cfdi.getImpuestos().stream().findFirst().get().getTotalImpuestosTrasladados();
+    BigDecimal impRetenidos =
+        cfdi.getImpuestos().stream().findFirst().get().getTotalImpuestosRetenidos();
+
+    List<Reporte> reports =
+        cfdi.getConceptos().stream()
+            .map(
+                c -> {
+                  return reporteRepository.save(
+                      Reporte.builder()
+                          .folio(cfdi.getFolio())
+                          .tipoDeComprobante(cfdi.getTipoDeComprobante())
+                          .impuestosTrasladados(impTrasladados)
+                          .impuestosRetenidos(impRetenidos)
+                          .subtotal(cfdi.getSubtotal())
+                          .total(cfdi.getTotal())
+                          .metodoPago(cfdi.getMetodoPago())
+                          .formaPago(cfdi.getFormaPago())
+                          .moneda(cfdi.getMoneda())
+                          .cantidad(c.getCantidad())
+                          .claveUnidad(c.getClaveUnidad())
+                          .claveProdServ(c.getClaveProdServ())
+                          .descripcion(c.getDescripcion())
+                          .valorUnitario(c.getValorUnitario())
+                          .importe(c.getImporte())
+                          .build());
+                })
+            .collect(Collectors.toList());
+    for (Reporte report : reports) {
+      reporteRepository.save(report);
+    }
   }
 
   public void deleteReportData(String folio) {
