@@ -3,8 +3,10 @@ package com.business.unknow.services.repositories.rowmappers;
 import com.business.unknow.model.dto.FacturaReportDto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 
+@Slf4j
 public class FacturaReportDtoRowMapper implements RowMapper<FacturaReportDto> {
 
   @Override
@@ -12,17 +14,13 @@ public class FacturaReportDtoRowMapper implements RowMapper<FacturaReportDto> {
     return FacturaReportDto.builder()
         .folio(rs.getString("FOLIO"))
         .lineaEmisor(rs.getString("LINEA_EMISOR"))
-        .correoPromotor(rs.getString("CORREO_PROMOTOR"))
-        .porcentajeCliente(rs.getString("PORCENTAJE_CLIENTE"))
-        .porcentajeConcatco(rs.getString("PORCENTAJE_CONTACTO"))
-        .porcentajeDespacho(rs.getString("PORCENTAJE_DESPACHO"))
-        .porcentajePromotor(rs.getString("PORCENTAJE_PROMOTOR"))
         .folioFiscal(rs.getString("UUID"))
-        .fechaEmision(rs.getDate("FECHA"))
+        .fechaEmision(rs.getDate("FECHA_TIMBRADO"))
         .rfcEmisor(rs.getString("RFC_EMISOR"))
         .emisor(rs.getString("RAZON_SOCIAL_EMISOR"))
         .rfcReceptor(rs.getString("RFC_REMITENTE"))
         .receptor(rs.getString("RAZON_SOCIAL_REMITENTE"))
+        .correoPromotor(rs.getString("SOLICITANTE"))
         .tipoDocumento(rs.getString("TIPO_DOCUMENTO"))
         .packFacturacion(rs.getString("PACK_FACTURACION"))
         .tipoComprobante(rs.getString("TIPO_COMPROBANTE"))
@@ -38,7 +36,6 @@ public class FacturaReportDtoRowMapper implements RowMapper<FacturaReportDto> {
         .fechaCancelacion(rs.getDate("FECHA_CANCELADO"))
         .cantidad(rs.getBigDecimal("CANTIDAD"))
         .claveUnidad(rs.getString("CLAVE_UNIDAD"))
-        .unidad(rs.getString("UNIDAD"))
         .claveProdServ(rs.getInt("CLAVE_PROD_SERV"))
         .descripcion(rs.getString("DESCRIPCION"))
         .valorUnitario(rs.getBigDecimal("VALOR_UNITARIO"))

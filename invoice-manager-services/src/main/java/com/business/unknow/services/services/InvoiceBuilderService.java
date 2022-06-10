@@ -278,6 +278,7 @@ public class InvoiceBuilderService {
               .folioOrigen(facturaCustomIterate.getFolio())
               .folio(complement.getFolio())
               .fechaPago(pagoDto.getFechaPago())
+              .formaDePagoP(pago.getFormaDePagoP())
               .idDocumento(facturaCustomIterate.getUuid())
               .equivalenciaDR(documentoRelacionado.getEquivalenciaDR().toString())
               .monedaDr(documentoRelacionado.getMonedaDR())

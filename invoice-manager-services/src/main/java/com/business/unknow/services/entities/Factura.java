@@ -103,6 +103,9 @@ public class Factura {
   @Column(name = "FECHA_ACTUALIZACION")
   private Date fechaActualizacion;
 
+  @Column(name = "FECHA_TIMBRADO")
+  private Date fechaTimbrado;
+
   @Column(name = "FECHA_CANCELADO")
   private Date fechaCancelacion;
 

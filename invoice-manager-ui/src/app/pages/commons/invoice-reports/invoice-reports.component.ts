@@ -6,6 +6,9 @@ import { DonwloadFileService } from '../../../@core/util-services/download-file-
 import { FilesData } from '../../../@core/data/files-data';
 import { UtilsService } from '../../../@core/util-services/utils.service';
 import { Factura } from '../../../@core/models/factura';
+import { DatePipe } from '@angular/common';
+import { NotificationsService } from '../../../@core/util-services/notifications.service';
+import { NtError } from '../../../@core/models/nt-error';
 
 @Component({
     selector: 'ngx-invoice-reports',
@@ -37,7 +40,9 @@ export class InvoiceReportsComponent implements OnInit {
         private invoiceService: InvoicesData,
         private router: Router,
         private downloadService: DonwloadFileService,
+        private notificationService: NotificationsService,
         private filesService: FilesData,
+        public datepipe: DatePipe,
         private utilsService: UtilsService,
         private route: ActivatedRoute
     ) {}
@@ -245,10 +250,13 @@ export class InvoiceReportsComponent implements OnInit {
         this.invoiceService.getInvoicesReports(params).subscribe((file) => {
             this.downloadService.downloadFile(
                 file.data,
-                `facturas.xlsx`,
+                `facturas-${this.datepipe.transform(
+                    new Date(),
+                    'yyyy-MM-dd'
+                )}.xlsx`,
                 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'
             );
-        });
+        },(error:NtError)=> this.notificationService.sendNotification('warning',error.message,'Error en la descarga'));
     }
 
     public downloadComplementReports() {
@@ -260,10 +268,13 @@ export class InvoiceReportsComponent implements OnInit {
         this.invoiceService.getComplementReports(params).subscribe((file) => {
             this.downloadService.downloadFile(
                 file.data,
-                `complementos.xlsx`,
+                `complementos-${this.datepipe.transform(
+                    new Date(),
+                    'yyyy-MM-dd'
+                )}.xlsx`,
                 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'
             );
-        });
+        },(error:NtError)=> this.notificationService.sendNotification('warning',error.message,'Error en la descarga'));
     }
 
     public downloadPdf(emisor: string, receptor: string, folio: string) {

@@ -1,6 +1,7 @@
 package com.business.unknow.services.services;
 
 import static com.business.unknow.Constants.CANCEL_ACK;
+import static com.business.unknow.Constants.JSON_DATETIME_FORMAT;
 import static com.business.unknow.Constants.PDF_COMPLEMENTO_SIN_TIMBRAR;
 import static com.business.unknow.Constants.PDF_COMPLEMENTO_TIMBRAR;
 import static com.business.unknow.Constants.PDF_FACTURA_SIN_TIMBRAR;
@@ -45,13 +46,16 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -112,6 +116,8 @@ public class FacturaService {
 
   @Value("${invoce.environment}")
   private String environment;
+
+  private static final SimpleDateFormat sdf = new SimpleDateFormat(JSON_DATETIME_FORMAT);
 
   private Specification<Factura> buildSearchFilters(Map<String, String> parameters) {
     String linea = (parameters.get("lineaEmisor") == null) ? "A" : parameters.get("lineaEmisor");
@@ -234,7 +240,7 @@ public class FacturaService {
             "IMPUESTOS RETENIDOS",
             "SUBTOTAL",
             "TOTAL",
-            "METDOD PAGO",
+            "METODO PAGO",
             "FORMA PAGO",
             "MONEDA",
             "ESTATUS",
@@ -243,7 +249,6 @@ public class FacturaService {
             "PROMOTOR",
             "CANTIDAD",
             "CLAVE UNIDAD",
-            "UNIDAD",
             "CLAVE PROD SERV",
             "DESCRIPCION",
             "VALOR UNITARIO",
@@ -257,7 +262,7 @@ public class FacturaService {
                   Map<String, Object> row = new HashMap<>();
                   row.put("FOLIO", inv.getFolio());
                   row.put("FOLIO FISCAL", inv.getFolioFiscal());
-                  row.put("FECHA EMISION", inv.getFechaEmision());
+                  row.put("FECHA EMISION",Objects.nonNull(inv.getFechaEmision())?sdf.format(inv.getFechaEmision()):"");
                   row.put("RFC EMISOR", inv.getRfcEmisor());
                   row.put("EMISOR", inv.getEmisor());
                   row.put("RFC RECEPTOR", inv.getRfcReceptor());
@@ -273,12 +278,11 @@ public class FacturaService {
                   row.put("FORMA PAGO", inv.getFormaPago());
                   row.put("MONEDA", inv.getMoneda());
                   row.put("ESTATUS", inv.getStatusFactura());
-                  row.put("CANCELACION", inv.getFechaCancelacion());
+                  row.put("CANCELACION",Objects.nonNull(inv.getFechaCancelacion())? sdf.format(inv.getFechaCancelacion()):"");
                   row.put("LINEA", inv.getLineaEmisor());
                   row.put("PROMOTOR", inv.getCorreoPromotor());
                   row.put("CANTIDAD", inv.getCantidad());
                   row.put("CLAVE UNIDAD", inv.getClaveUnidad());
-                  row.put("UNIDAD", inv.getUnidad());
                   row.put("CLAVE PROD SERV", inv.getClaveProdServ());
                   row.put("DESCRIPCION", inv.getDescripcion());
                   row.put("VALOR UNITARIO", inv.getValorUnitario());
@@ -304,8 +308,7 @@ public class FacturaService {
             .map(Factura::getFolio)
             .collect(Collectors.toList());
 
-    List<String> headersOrder =
-        Arrays.asList(
+    List<String> headersOrder =  Arrays.asList(
             "FOLIO",
             "FOLIO FISCAL",
             "FECHA EMISION",
@@ -320,7 +323,7 @@ public class FacturaService {
             "IMPUESTOS RETENIDOS",
             "SUBTOTAL",
             "TOTAL",
-            "METDOD PAGO",
+            "METODO PAGO",
             "FORMA PAGO",
             "MONEDA",
             "ESTATUS",
@@ -332,38 +335,45 @@ public class FacturaService {
             "PARCIALIDAD",
             "FECHA PAGO");
 
-    var complements =
-        facturaDao.getComplementsDetailsByFolios(folios).stream()
+    List<Map<String, Object>> complements =
+        folios.stream()
             .map(
-                inv -> {
-                  Map<String, Object> row = new HashMap<>();
-                  row.put("FOLIO", inv.getFolioPago());
-                  row.put("FOLIO FISCAL", inv.getFolioFiscal());
-                  row.put("FECHA EMISION", inv.getFechaEmision());
-                  row.put("RFC EMISOR", inv.getRfcEmisor());
-                  row.put("EMISOR", inv.getEmisor());
-                  row.put("RFC RECEPTOR", inv.getRfcReceptor());
-                  row.put("RECEPTOR", inv.getReceptor());
-                  row.put("TIPO DOCUMENTO", inv.getTipoDocumento());
-                  row.put("PACK", inv.getPackFacturacion());
-                  row.put("TIPO", inv.getTipoComprobante());
-                  row.put("IMPUESTOS TRASLADADOS", inv.getImpuestosTrasladados());
-                  row.put("IMPUESTOS RETENIDOS", inv.getImpuestosRetenidos());
-                  row.put("SUBTOTAL", inv.getSubtotal());
-                  row.put("TOTAL", inv.getTotal());
-                  row.put("METODO PAGO", inv.getMetodoPago());
-                  row.put("FORMA PAGO", inv.getFormaPago());
-                  row.put("MONEDA", inv.getMoneda());
-                  row.put("ESTATUS", inv.getStatusFactura());
-                  row.put("CANCELACION", inv.getFechaCancelacion());
-                  row.put("FOLIO FISCAL PAGO", inv.getFolioFiscalPago());
-                  row.put("IMPORTE", inv.getImportePagado());
-                  row.put("SALDO ANTERIOR", inv.getSaldoAnterior());
-                  row.put("SALDO INSOLUTO", inv.getSaldoInsoluto());
-                  row.put("PARCIALIDAD", inv.getNumeroParcialidad());
-                  row.put("FECHA PAGO", inv.getFechaPago());
-                  return row;
+                folio -> {
+                  FacturaCustom complement = getFacturaByFolio(folio);
+                  return complement.getPagos().stream()
+                      .map(
+                          p -> {
+                            Map<String, Object> row = new HashMap<>();
+                            row.put("FOLIO", p.getFolioOrigen());
+                            row.put("FOLIO FISCAL", p.getIdDocumento());
+                            row.put("FECHA EMISION", Objects.nonNull(complement.getFechaTimbrado())?sdf.format(complement.getFechaTimbrado()):"");
+                            row.put("RFC EMISOR", complement.getRfcEmisor());
+                            row.put("EMISOR", complement.getRazonSocialEmisor());
+                            row.put("RFC RECEPTOR", complement.getRfcRemitente());
+                            row.put("RECEPTOR", complement.getRazonSocialRemitente());
+                            row.put("TIPO DOCUMENTO", complement.getTipoDocumento());
+                            row.put("PACK", complement.getPackFacturacion());
+                            row.put("TIPO", complement.getCfdi().getTipoDeComprobante());
+                            row.put("IMPUESTOS TRASLADADOS", BigDecimal.ZERO);
+                            row.put("IMPUESTOS RETENIDOS", BigDecimal.ZERO);
+                            row.put("SUBTOTAL", complement.getCfdi().getSubtotal());
+                            row.put("TOTAL", complement.getCfdi().getTotal());
+                            row.put("METODO PAGO", MetodosPago.PPD.name());
+                            row.put("FORMA PAGO", p.getFormaDePagoP());
+                            row.put("MONEDA", p.getMonedaDr());
+                            row.put("ESTATUS", complement.getStatusFactura());
+                            row.put("CANCELACION",Objects.nonNull(complement.getFechaCancelacion())? sdf.format(complement.getFechaCancelacion()):"");
+                            row.put("FOLIO FISCAL PAGO", complement.getUuid());
+                            row.put("IMPORTE", p.getImportePagado());
+                            row.put("SALDO ANTERIOR", p.getImporteSaldoAnterior());
+                            row.put("SALDO INSOLUTO", p.getImporteSaldoInsoluto());
+                            row.put("PARCIALIDAD", p.getNumeroParcialidad());
+                            row.put("FECHA PAGO", Objects.nonNull(p.getFechaPago())?sdf.format(p.getFechaPago()):"");
+                            return row;
+                          })
+                      .collect(Collectors.toList());
                 })
+            .flatMap(p -> p.stream())
             .collect(Collectors.toList());
 
     return downloaderService.generateBase64Report("COMPLEMENTOS", complements, headersOrder);
@@ -512,6 +522,7 @@ public class FacturaService {
     facturaCustom = facturaExecutorService.stampInvoice(facturaCustom, xml);
     Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
     entityFromDto.setId(factura.getId());
+    entityFromDto.setFechaTimbrado(new Date());
     repository.save(entityFromDto);
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
     filesService.sendFileToS3(

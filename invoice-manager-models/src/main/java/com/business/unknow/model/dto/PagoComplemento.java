@@ -28,6 +28,7 @@ public class PagoComplemento {
   private String folioOrigen;
   private String folio;
   private String equivalenciaDR;
+  private String formaDePagoP;
   private String monedaDr;
   private int numeroParcialidad;
   private BigDecimal importeSaldoAnterior;
