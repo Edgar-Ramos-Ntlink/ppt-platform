@@ -262,7 +262,11 @@ public class FacturaService {
                   Map<String, Object> row = new HashMap<>();
                   row.put("FOLIO", inv.getFolio());
                   row.put("FOLIO FISCAL", inv.getFolioFiscal());
-                  row.put("FECHA EMISION",Objects.nonNull(inv.getFechaEmision())?sdf.format(inv.getFechaEmision()):"");
+                  row.put(
+                      "FECHA EMISION",
+                      Objects.nonNull(inv.getFechaEmision())
+                          ? sdf.format(inv.getFechaEmision())
+                          : "");
                   row.put("RFC EMISOR", inv.getRfcEmisor());
                   row.put("EMISOR", inv.getEmisor());
                   row.put("RFC RECEPTOR", inv.getRfcReceptor());
@@ -278,7 +282,11 @@ public class FacturaService {
                   row.put("FORMA PAGO", inv.getFormaPago());
                   row.put("MONEDA", inv.getMoneda());
                   row.put("ESTATUS", inv.getStatusFactura());
-                  row.put("CANCELACION",Objects.nonNull(inv.getFechaCancelacion())? sdf.format(inv.getFechaCancelacion()):"");
+                  row.put(
+                      "CANCELACION",
+                      Objects.nonNull(inv.getFechaCancelacion())
+                          ? sdf.format(inv.getFechaCancelacion())
+                          : "");
                   row.put("LINEA", inv.getLineaEmisor());
                   row.put("PROMOTOR", inv.getCorreoPromotor());
                   row.put("CANTIDAD", inv.getCantidad());
@@ -308,7 +316,8 @@ public class FacturaService {
             .map(Factura::getFolio)
             .collect(Collectors.toList());
 
-    List<String> headersOrder =  Arrays.asList(
+    List<String> headersOrder =
+        Arrays.asList(
             "FOLIO",
             "FOLIO FISCAL",
             "FECHA EMISION",
@@ -346,7 +355,11 @@ public class FacturaService {
                             Map<String, Object> row = new HashMap<>();
                             row.put("FOLIO", p.getFolioOrigen());
                             row.put("FOLIO FISCAL", p.getIdDocumento());
-                            row.put("FECHA EMISION", Objects.nonNull(complement.getFechaTimbrado())?sdf.format(complement.getFechaTimbrado()):"");
+                            row.put(
+                                "FECHA EMISION",
+                                Objects.nonNull(complement.getFechaTimbrado())
+                                    ? sdf.format(complement.getFechaTimbrado())
+                                    : "");
                             row.put("RFC EMISOR", complement.getRfcEmisor());
                             row.put("EMISOR", complement.getRazonSocialEmisor());
                             row.put("RFC RECEPTOR", complement.getRfcRemitente());
@@ -362,13 +375,21 @@ public class FacturaService {
                             row.put("FORMA PAGO", p.getFormaDePagoP());
                             row.put("MONEDA", p.getMonedaDr());
                             row.put("ESTATUS", complement.getStatusFactura());
-                            row.put("CANCELACION",Objects.nonNull(complement.getFechaCancelacion())? sdf.format(complement.getFechaCancelacion()):"");
+                            row.put(
+                                "CANCELACION",
+                                Objects.nonNull(complement.getFechaCancelacion())
+                                    ? sdf.format(complement.getFechaCancelacion())
+                                    : "");
                             row.put("FOLIO FISCAL PAGO", complement.getUuid());
                             row.put("IMPORTE", p.getImportePagado());
                             row.put("SALDO ANTERIOR", p.getImporteSaldoAnterior());
                             row.put("SALDO INSOLUTO", p.getImporteSaldoInsoluto());
                             row.put("PARCIALIDAD", p.getNumeroParcialidad());
-                            row.put("FECHA PAGO", Objects.nonNull(p.getFechaPago())?sdf.format(p.getFechaPago()):"");
+                            row.put(
+                                "FECHA PAGO",
+                                Objects.nonNull(p.getFechaPago())
+                                    ? sdf.format(p.getFechaPago())
+                                    : "");
                             return row;
                           })
                       .collect(Collectors.toList());
