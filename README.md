@@ -30,3 +30,5 @@ VERSION 3.2.0
     - [x] 3.5.9 Companies module UI fix typo
     - [x] 3.5.10 CFDI40 redirect and dashboard message
     - [x] 3.5.11 Dashboard message, company doc types others 1,2,3,4 and line E
+    - [x] 3.5.12 Remove 4.0 message
+    - [x] 3.5.13 Adding line E to all functionalities
