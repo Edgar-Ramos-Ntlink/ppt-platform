@@ -24,7 +24,7 @@ public class FacturaDao {
 
   private static final String CANTIDAD_FACTURAS =
       "SELECT count(1) AS CANTIDAD "
-          + "FROM FACTURAS "
+          + "FROM FACTURAS40 "
           + "WHERE MONTH(fecha_creacion) = MONTH(CURRENT_DATE()) "
           + "AND YEAR(fecha_creacion) = YEAR(CURRENT_DATE())";
 
