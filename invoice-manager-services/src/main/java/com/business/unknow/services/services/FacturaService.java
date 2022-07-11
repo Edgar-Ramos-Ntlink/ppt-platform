@@ -6,6 +6,7 @@ import static com.business.unknow.Constants.PDF_COMPLEMENTO_SIN_TIMBRAR;
 import static com.business.unknow.Constants.PDF_COMPLEMENTO_TIMBRAR;
 import static com.business.unknow.Constants.PDF_FACTURA_SIN_TIMBRAR;
 import static com.business.unknow.Constants.PDF_FACTURA_TIMBRAR;
+import static com.business.unknow.enums.LineaEmpresa.A;
 import static com.business.unknow.enums.TipoArchivo.PDF;
 import static com.business.unknow.enums.TipoArchivo.TXT;
 import static com.business.unknow.enums.TipoArchivo.XML;
@@ -561,7 +562,7 @@ public class FacturaService {
                 : PDF_COMPLEMENTO_TIMBRAR),
         PDF.getFormat(),
         S3Buckets.CFDIS);
-    if (!"dev".equals(environment)) {
+    if (!"dev".equals(environment) && A.name().equalsIgnoreCase(facturaCustom.getLineaEmisor())) {
       sendMail(facturaCustom);
     }
     return facturaCustom;

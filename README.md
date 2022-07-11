@@ -114,3 +114,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.12 Companies improvements
   - [x] 4.5.13 Fix invoice and payment complements
   - [x] 4.5.14 Linea E functionalities
+  - [x] 4.5.15 Email stamping Contabilidad
