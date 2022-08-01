@@ -116,3 +116,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.14 Linea E functionalities
   - [x] 4.5.15 Email stamping Contabilidad
   - [x] 4.5.16 Fix Pre folio calculation
+  - [x] 4.5.17 Enable CFDI creation on promotor view
