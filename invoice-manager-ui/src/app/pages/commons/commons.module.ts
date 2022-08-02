@@ -33,6 +33,7 @@ import { MulticomplementosComponent } from './multicomplementos/multicomplemento
 import { CuentasBancariasComponent } from './cuentas-bancarias/cuentas-bancarias.component';
 import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.component';
 import { CoreModule } from '../../@core/core.module';
+import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 
 @NgModule({
     declarations: [
@@ -49,6 +50,7 @@ import { CoreModule } from '../../@core/core.module';
         CuentasBancariasComponent,
         CuentasBancariasComponent,
         CuentaBancariaComponent,
+        DevolucionesComponent,
     ],
     imports: [
         CommonModule,
