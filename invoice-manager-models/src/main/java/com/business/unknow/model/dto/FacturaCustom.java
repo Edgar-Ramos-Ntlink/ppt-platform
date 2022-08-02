@@ -30,6 +30,7 @@ public class FacturaCustom implements Serializable {
 
   private static final long serialVersionUID = -1019751668989298682L;
   private Integer id;
+  private String version;
   private String rfcEmisor;
   private String rfcRemitente;
   private String razonSocialEmisor;
