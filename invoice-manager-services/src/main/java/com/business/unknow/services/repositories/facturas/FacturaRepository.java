@@ -1,6 +1,6 @@
 package com.business.unknow.services.repositories.facturas;
 
-import com.business.unknow.services.entities.Factura;
+import com.business.unknow.services.entities.Factura40;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FacturaRepository
-    extends JpaRepository<Factura, Integer>, JpaSpecificationExecutor<Factura> {
+    extends JpaRepository<Factura40, Integer>, JpaSpecificationExecutor<Factura40> {
 
-  Page<Factura> findAll(Pageable pageable);
+  Page<Factura40> findAll(Pageable pageable);
 
-  Optional<Factura> findByFolio(String folio);
+  Optional<Factura40> findByFolio(String folio);
 
-  Page<Factura> findByPreFolio(String prefolio, Pageable pageable);
+  Page<Factura40> findByPreFolio(String prefolio, Pageable pageable);
 }

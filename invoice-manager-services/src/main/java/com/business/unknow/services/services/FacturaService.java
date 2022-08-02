@@ -14,6 +14,7 @@ import static com.business.unknow.enums.TipoDocumento.COMPLEMENTO;
 import static com.business.unknow.enums.TipoDocumento.FACTURA;
 import static com.business.unknow.enums.TipoDocumento.NOTA_CREDITO;
 
+import com.business.unknow.Constants;
 import com.business.unknow.MailConstants;
 import com.business.unknow.enums.FacturaStatus;
 import com.business.unknow.enums.MetodosPago;
@@ -27,8 +28,10 @@ import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.entities.Factura;
+import com.business.unknow.services.entities.Factura33;
+import com.business.unknow.services.entities.Factura40;
 import com.business.unknow.services.mapper.FacturaMapper;
+import com.business.unknow.services.repositories.facturas.Factura33Repository;
 import com.business.unknow.services.repositories.facturas.FacturaDao;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
@@ -111,6 +114,8 @@ public class FacturaService {
 
   @Autowired private FacturaRepository repository;
 
+  @Autowired private Factura33Repository repository33;
+
   @Autowired private CfdiMapper cfdiMapper;
 
   @Autowired private FacturaMapper mapper;
@@ -120,18 +125,18 @@ public class FacturaService {
 
   private static final SimpleDateFormat sdf = new SimpleDateFormat(JSON_DATETIME_FORMAT);
 
-  private Specification<Factura> buildSearchFilters(Map<String, String> parameters) {
+  private Specification<Factura40> buildSearchFilters(Map<String, String> parameters) {
     String linea = (parameters.get("lineaEmisor") == null) ? "A" : parameters.get("lineaEmisor");
 
     log.info("Finding facturas by {}", parameters);
 
-    return new Specification<Factura>() {
+    return new Specification<Factura40>() {
 
       private static final long serialVersionUID = -7435096122716669730L;
 
       @Override
       public Predicate toPredicate(
-          Root<Factura> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+          Root<Factura40> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
 
         predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("lineaEmisor"), linea)));
@@ -196,7 +201,7 @@ public class FacturaService {
 
   public Page<FacturaCustom> getFacturasByParametros(Map<String, String> parameters) {
 
-    Page<Factura> result;
+    Page<Factura40> result;
     int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
     int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
     if (parameters.get("prefolio") != null) {
@@ -222,7 +227,7 @@ public class FacturaService {
 
     List<String> folios =
         repository.findAll(buildSearchFilters(parameters)).stream()
-            .map(Factura::getFolio)
+            .map(Factura40::getFolio)
             .collect(Collectors.toList());
 
     List<String> headersOrder =
@@ -314,7 +319,7 @@ public class FacturaService {
 
     List<String> folios =
         repository.findAll(buildSearchFilters(parameters)).stream()
-            .map(Factura::getFolio)
+            .map(Factura40::getFolio)
             .collect(Collectors.toList());
 
     List<String> headersOrder =
@@ -415,14 +420,18 @@ public class FacturaService {
   }
 
   public FacturaCustom getFacturaBaseByFolio(String folio) {
-    return mapper.getFacturaDtoFromEntity(
-        repository
-            .findByFolio(folio)
-            .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("La factura con el folio %S no existe", folio))));
+
+    Optional<Factura40> inv40 = repository.findByFolio(folio);
+    Optional<Factura33> inv33 = repository33.findByFolio(folio);
+
+    if (inv40.isPresent() || inv33.isPresent()) {
+      return inv40.isPresent()
+          ? mapper.getFacturaDtoFromEntity(inv40.get())
+          : mapper.getFacturaDtoFromEntity33(inv33.get());
+    } else {
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND, String.format("La factura con el folio %S no existe", folio));
+    }
   }
 
   @Transactional(
@@ -434,7 +443,7 @@ public class FacturaService {
             facturaCustom, facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
     InvoiceValidator.validate(facturaCustom, facturaCustom.getFolio());
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
-    Factura save = repository.save(mapper.getEntityFromFacturaCustom(facturaCustom));
+    Factura40 save = repository.save(mapper.getEntityFromFacturaCustom(facturaCustom));
     facturaCustom.setFechaCreacion(save.getFechaCreacion());
     facturaCustom.setFechaActualizacion(save.getFechaActualizacion());
     filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
@@ -451,22 +460,45 @@ public class FacturaService {
     return facturaCustom;
   }
 
+  private void updateFacturaBase(Integer id, FacturaCustom facturaCustom)
+      throws InvoiceManagerException {
+    switch (facturaCustom.getVersion()) {
+      case Constants.CFDI_40_VERSION:
+        Factura40 entity40 = mapper.getEntityFromFacturaCustom(facturaCustom);
+        entity40.setId(id);
+        repository.save(entity40);
+        break;
+      case Constants.CFDI_33_VERSION:
+        Factura33 entity33 = mapper.getEntity33FromFacturaCustom(facturaCustom);
+        entity33.setId(id);
+        repository33.save(entity33);
+        break;
+
+      default:
+        throw new InvoiceManagerException(
+            String.format(
+                "La factura con folio %s no tiene una version definida", facturaCustom.getFolio()),
+            HttpStatus.CONFLICT.value());
+    }
+  }
+
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public FacturaCustom updateFacturaCustom(String folio, FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
     FacturaCustom entity = getFacturaBaseByFolio(folio);
     facturaServiceEvaluator.facturaStatusValidation(facturaCustom);
-    facturaCustom = invoiceBuilderService.assignDescData(facturaCustom);
-    InvoiceValidator.validate(facturaCustom, facturaCustom.getFolio());
-    Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
-    entityFromDto.setId(entity.getId());
-    repository.save(entityFromDto);
-    filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
+    updateFacturaBase(entity.getId(), facturaCustom);
+    if (Objects.nonNull(facturaCustom.getCfdi())) { // TODO remove this logic when CFDI 33 is out
+      facturaCustom = invoiceBuilderService.assignDescData(facturaCustom);
+      InvoiceValidator.validate(facturaCustom, facturaCustom.getFolio());
+      filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
+    }
     if ((FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
             || NOTA_CREDITO.getDescripcion().equals(facturaCustom.getTipoDocumento()))
         && !(entity.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())
-            || entity.getStatusFactura().equals(FacturaStatus.CANCELADA.getValor()))) {
+            || entity.getStatusFactura().equals(FacturaStatus.CANCELADA.getValor()))
+        && Objects.nonNull(facturaCustom.getCfdi())) { // TODO remove this logic when CFDI 33 is out
       facturaCustom.setCfdi(cfdiService.updateCfdi(facturaCustom.getCfdi()));
       Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
       filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
@@ -512,7 +544,7 @@ public class FacturaService {
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public void deleteFactura(String folio) throws InvoiceManagerException, NtlinkUtilException {
-    Factura fact =
+    Factura40 fact =
         repository
             .findByFolio(folio)
             .orElseThrow(
@@ -542,7 +574,7 @@ public class FacturaService {
                     filesService.getS3File(
                         S3Buckets.CFDIS, facturaCustom.getFolio().concat(XML.getFormat()))));
     facturaCustom = facturaExecutorService.stampInvoice(facturaCustom, xml);
-    Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
+    Factura40 entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
     entityFromDto.setId(factura.getId());
     entityFromDto.setFechaTimbrado(new Date());
     repository.save(entityFromDto);
@@ -639,7 +671,7 @@ public class FacturaService {
         updateFacturaCustom(facturaPadre.getFolio(), facturaPadre);
       }
     }
-    Factura entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
+    Factura40 entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
     entityFromDto.setId(entity.getId());
     repository.save(entityFromDto);
     filesService.sendFileToS3(
@@ -671,7 +703,7 @@ public class FacturaService {
               pagoDto,
               facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
       Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
-      Factura save = repository.save(mapper.getEntityFromFacturaCustom(facturaCustom));
+      Factura40 save = repository.save(mapper.getEntityFromFacturaCustom(facturaCustom));
       facturaCustom.setFechaCreacion(save.getFechaCreacion());
       facturaCustom.setFechaActualizacion(save.getFechaActualizacion());
       for (FacturaCustom fc : invoices) {
