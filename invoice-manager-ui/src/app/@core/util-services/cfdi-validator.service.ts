@@ -58,7 +58,6 @@ export class CfdiValidatorService {
         iva: boolean,
         retencion: boolean
     ): Concepto {
-        console.log(concepto);
         concepto.importe = +format(
             multiply(
                 bignumber(concepto.cantidad),
