@@ -568,6 +568,10 @@ public class FacturaService {
     return facturaCustom;
   }
 
+  public FacturaCustom reSendMail(String folio) {
+    return sendMail(getFacturaBaseByFolio(folio));
+  }
+
   public FacturaCustom sendMail(FacturaCustom facturaCustom) {
     try {
       String xml =
@@ -595,6 +599,7 @@ public class FacturaService {
       mailService.sendEmail(ImmutableList.of(facturaCustom.getSolicitante()), mailContent);
       return facturaCustom;
     } catch (Exception e) {
+      log.info("Error mandando correo {}", e);
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
           String.format(

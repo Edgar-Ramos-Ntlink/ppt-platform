@@ -58,6 +58,7 @@ export class CfdiValidatorService {
         iva: boolean,
         retencion: boolean
     ): Concepto {
+        console.log(concepto);
         concepto.importe = +format(
             multiply(
                 bignumber(concepto.cantidad),
@@ -94,8 +95,9 @@ export class CfdiValidatorService {
             messages.push('La cantidad requerida debe ser mayor a 0');
         }
         if (
-            concepto.claveProdServ === undefined || 
-            concepto.claveProdServ === '' || concepto.claveProdServ.length == 0
+            concepto.claveProdServ === undefined ||
+            concepto.claveProdServ === '' ||
+            concepto.claveProdServ.length == 0
         ) {
             messages.push(
                 'La clave producto servicio del concepto es un valor requerido.'
@@ -199,7 +201,7 @@ export class CfdiValidatorService {
             cfdi.receptor === undefined ||
             cfdi.receptor.rfc === undefined ||
             cfdi.receptor.rfc.length < 11 ||
-            cfdi.receptor.nombre.length  == 0
+            cfdi.receptor.nombre.length == 0
         ) {
             messages.push('La información del receptor es un valor solicitado');
         }
