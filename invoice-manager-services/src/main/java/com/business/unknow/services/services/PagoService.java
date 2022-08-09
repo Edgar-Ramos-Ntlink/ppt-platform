@@ -312,8 +312,9 @@ public class PagoService {
     PagoValidator.validate(pago);
 
     List<FacturaCustom> facturas = new ArrayList<>();
-    for (PagoFacturaDto pagoFact : pago.getFacturas()) {
-      FacturaCustom factura = facturaService.getFacturaByFolio(pagoFact.getFolio());
+    for (PagoFacturaDto pagoFact :
+        pago.getFacturas().stream().distinct().collect(Collectors.toList())) {
+      FacturaCustom factura = facturaService.getFacturaBaseByFolio(pagoFact.getFolio());
       facturas.add(factura);
     }
     pagoEvaluatorService.validatePaymentUpdate(pago, entity, facturas);
@@ -330,17 +331,9 @@ public class PagoService {
       }
     } else if (entity.getRevision1() && pago.getRevision2()) {
       pagoDto.setStatusPago(RevisionPagos.ACEPTADO.name());
-
-      List<String> folioFacts =
-          pago.getFacturas().stream()
-              .map(f -> f.getFolioReferencia())
-              .distinct()
-              .collect(Collectors.toList());
-
-      for (String folioCfdi : folioFacts) {
-        FacturaCustom fact = facturaService.getFacturaByFolio(folioCfdi);
+      for (FacturaCustom fact : facturas) {
         fact.setValidacionTeso(true);
-        facturaService.updateFacturaCustom(folioCfdi, fact);
+        facturaService.updateFacturaCustom(fact.getFolio(), fact);
       }
     }
     return mapper.getPagoDtoFromEntity(repository.save(mapper.getEntityFromPagoDto(pagoDto)));

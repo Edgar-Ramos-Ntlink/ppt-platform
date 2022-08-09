@@ -30,8 +30,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "FACTURAS40")
-public class Factura {
+@Table(name = "FACTURAS")
+public class Factura33 {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -103,9 +103,6 @@ public class Factura {
   @Column(name = "FECHA_ACTUALIZACION")
   private Date fechaActualizacion;
 
-  @Column(name = "FECHA_TIMBRADO")
-  private Date fechaTimbrado;
-
   @Column(name = "FECHA_CANCELADO")
   private Date fechaCancelacion;
 
@@ -122,12 +119,6 @@ public class Factura {
 
   @Column(name = "ID_CFDI")
   private Integer idCfdi;
-
-  @Column(name = "FOLIO_RELACIONADO")
-  private String folioRelacionado;
-
-  @Column(name = "FOLIO_RELACIONADO_PADRE")
-  private String folioRelacionadoPadre;
 
   @Column(name = "VALIDACION_TESO", columnDefinition = "TINYINT")
   private Boolean validacionTeso;
