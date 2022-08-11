@@ -1,9 +1,61 @@
 <div class="col-md-12">
     <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
       <nb-card-header>
-        Devoluciones
+        <div class="clearfix">
+          <strong class="float-left">Devoluciones</strong>
+          <strong class="float-right">Folio 123</strong>
+        </div>
       </nb-card-header>
       <nb-card-body>
+
+        <p class="font-weight-bold">
+          Paso 1 Cargar informacion de acredor y deudor
+        </p>
+      <div class="row">
+          <div class="col-md-5">
+              <label for="inputClients" class="label"
+                  >Cliente emisor de pago</label
+              >
+              <div class="ng-autocomplete border border-dark">
+                  <ng-autocomplete
+                      id="inputClients"
+                      [data]="clientsCat"
+                      [searchKeyword]="'razonSocial'"
+                      (selected)="selectClient($event)"
+                      placeHolder="Escribe la razon social cliente que acredita pago"
+                      historyIdentifier="Clientes"
+                      [itemTemplate]="itemTemplate"
+                      [notFoundTemplate]="notFoundTemplate"
+                  >
+                  </ng-autocomplete>
+
+                  <ng-template #itemTemplate let-item>
+                      <div>
+                          <span [innerHTML]="item.razonSocial"></span> &nbsp;
+                          | &nbsp;
+                          <small>{{ item.rfc }}</small>
+                      </div>
+                  </ng-template>
+
+                  <ng-template #notFoundTemplate let-notFound>
+                      <div>Cliente desconocido</div>
+                  </ng-template>
+              </div>
+          </div>
+          
+          <div class="col-sm-2">
+              <label for="inputPayCoin" class="label">Moneda</label>
+              <select
+                  id="inputPayCoin"
+                  style="display: block"
+                  class="select-full border border-dark"
+                  [(ngModel)]="newPayment.moneda"
+              >
+                  <option value="MXN">Peso MX</option>
+              </select>
+          </div>
+      </div>
+      <br />
 
       </nb-card-body>
     </nb-card>
