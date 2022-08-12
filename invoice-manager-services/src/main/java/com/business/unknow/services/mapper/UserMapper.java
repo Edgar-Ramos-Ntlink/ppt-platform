@@ -12,14 +12,14 @@ public interface UserMapper {
   @Mappings({
     @Mapping(target = "menu", ignore = true),
     @Mapping(target = "urlPicture", ignore = true),
-    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "name", ignore = true),
+    @Mapping(target = "roles", ignore = true),
   })
   UserDto getUserDtoFromentity(User entity);
 
   List<UserDto> getUsersDtoFromEntities(List<User> entities);
 
   @Mappings({
-    @Mapping(target = "roles", ignore = true),
     @Mapping(target = "fechaActualizacion", ignore = true),
     @Mapping(target = "id", ignore = true),
     @Mapping(target = "fechaCreacion", ignore = true)

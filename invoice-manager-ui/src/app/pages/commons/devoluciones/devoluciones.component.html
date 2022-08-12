@@ -12,50 +12,118 @@
           Paso 1 Cargar informacion de acredor y deudor
         </p>
       <div class="row">
-          <div class="col-md-5">
-              <label for="inputClients" class="label"
-                  >Cliente emisor de pago</label
-              >
-              <div class="ng-autocomplete border border-dark">
-                  <ng-autocomplete
-                      id="inputClients"
-                      [data]="clientsCat"
-                      [searchKeyword]="'razonSocial'"
-                      (selected)="selectClient($event)"
-                      placeHolder="Escribe la razon social cliente que acredita pago"
-                      historyIdentifier="Clientes"
-                      [itemTemplate]="itemTemplate"
-                      [notFoundTemplate]="notFoundTemplate"
-                  >
-                  </ng-autocomplete>
+        <div class="col-sm-6 col-md-6 col-lg-4">
+            <label for="inputPromotor" class="label">Nombre o correo promotor</label>
+            <ng-autocomplete [data]="usersCat" [searchKeyword]="'name'"
+                placeholder="Escribe el correo o alias del promotor"
+                (selected)="selectPromotor($event)"
+                [itemTemplate]="itemPromotor" [notFoundTemplate]="notFoundPromotor">
+            </ng-autocomplete>
 
-                  <ng-template #itemTemplate let-item>
-                      <div>
-                          <span [innerHTML]="item.razonSocial"></span> &nbsp;
-                          | &nbsp;
-                          <small>{{ item.rfc }}</small>
-                      </div>
-                  </ng-template>
+            <div>
+                <span></span>
+            </div>
 
-                  <ng-template #notFoundTemplate let-notFound>
-                      <div>Cliente desconocido</div>
-                  </ng-template>
-              </div>
-          </div>
+            <ng-template #itemPromotor let-item>
+                <div class="item">
+                    <span [innerHTML]="item.name"></span>
+                </div>
+            </ng-template>
+
+            <ng-template #notFoundPromotor let-notFound>
+                <span>No hay coincidencias</span>
+            </ng-template>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-4">
+            <label for="inputClients" class="label">RFC o razon social cliente</label>
+            <ng-autocomplete [data]="clientsCat" [searchKeyword]="'notas'"
+                placeholder="Escribe el RFC o razon social del cliente"
+                (selected)="selectClient($event)"
+                [itemTemplate]="itemClient" [notFoundTemplate]="notFoundClient">
+            </ng-autocomplete>
+
+            <div>
+                <span></span>
+            </div>
+
+            <ng-template #itemClient let-item>
+                <div class="item">
+                    <span [innerHTML]="item.notas"></span>
+                </div>
+            </ng-template>
+
+            <ng-template #notFoundClient let-notFound>
+                <span>No hay coincidencias</span>
+            </ng-template>
+        </div>
           
-          <div class="col-sm-2">
+          
+          <div class="col-sm-6 col-md-6 col-lg-2">
               <label for="inputPayCoin" class="label">Moneda</label>
               <select
                   id="inputPayCoin"
-                  style="display: block"
-                  class="select-full border border-dark"
-                  [(ngModel)]="newPayment.moneda"
+                  class="form-control"
+                  [(ngModel)]="return.moneda"
               >
                   <option value="MXN">Peso MX</option>
               </select>
           </div>
+
+          <div class="col-sm-6 col-md-6 col-lg-2">
+            <button class="btn btn-primary" style="width: 100%; margin-top: 28px;" [disabled]="loading">AGREGAR PAGO</button>
+          </div>
       </div>
       <br />
+      <div class="row">
+        <div class="table-responsive">
+            <table class="table table-sm">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col" class="text-center">
+                    Acciones
+                  </th>
+                  <th scope="col" class="text-center">Deposito</th>
+                  <th scope="col" class="text-center">Razon social empresa</th>
+                  <th scope="col" class="text-center">RFC empresa</th>
+                  <th scope="col" class="text-center">Folio</th>
+                  <th scope="col" class="text-center">Banco</th>
+                  <th scope="col" class="text-center">Fecha</th>
+                  <th scope="col" class="text-center">Importe</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fila of return.pagos; let i = index">
+                  <td scope="row" class="text-center">
+                    <button
+                      class="btn-sm btn-outline-danger mr-1 ml-1"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                  <td scope="row" class="text-center">
+                    {{ i + 1}}
+                  </td>
+                  <td scope="row" class="text-center">{{ fila.razonSocialEmpresa }}</td>
+                  <td scope="row" class="text-center">{{ fila.rfcEmpresa }}</td>
+                  <td scope="row" class="text-center">{{ fila.folio }}</td>
+                  <td scope="row" class="text-center">{{ fila.banco }}</td>
+                  <td scope="row" class="text-center">{{ fila.fechaPago }}</td>
+                  <td scope="row" class="text-center">
+                    {{ fila.monto | currency }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="6"></td>
+                  <td class="text-center"><p class="font-weight-bold">Total</p></td>
+                  <td class="text-center">
+                    {{ return.total | currency }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
 
       </nb-card-body>
     </nb-card>

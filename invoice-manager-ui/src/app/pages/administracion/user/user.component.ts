@@ -5,6 +5,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '../../../@core/models/user';
 import { Role } from '../../../@core/models/role';
+import { NotificationsService } from '../../../@core/util-services/notifications.service';
+import { NtError } from '../../../@core/models/nt-error';
 interface IHash {
   [key: string]: boolean;
 }
@@ -24,11 +26,11 @@ export class UserComponent implements OnInit {
   public rolesArrayUpdate: IHash = { 'PROMOTOR': false, "TESORERIA": false, "OPERADOR": false, "CONTABILIDAD": false,
     "ADMINISTRADOR": false, "BANCOS": false, "CONSULTOR": false, "OPERADOR-B": false, "LEGAL": false };
 
-  public errorMessages: string[] = [];
  
   public Params: any = { success: '', message: '', id: '*'};
 
   constructor(
+    private notificationService: NotificationsService,
     private route: ActivatedRoute,
     private userService: UsersData,
     private formBuilder: FormBuilder,
@@ -36,7 +38,6 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    this.errorMessages = [];
     this.route.paramMap.subscribe(route => {
       const id = route.get('id');
       if (id !== '*') {
@@ -89,15 +90,13 @@ export class UserComponent implements OnInit {
                 await this.userService.insertRoles(new Role(role), updateduser.id).toPromise();
             }
           }
-        }, (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
-          || `${error.statusText} : ${error.message}`))
+        }, (error: NtError) => this.notificationService.sendNotification('danger',error.message,'Error en la actualización del usuario'))
       .then(() => this.updateUserInfo(id));
   }
 
   public registry() {
     this.submitted = true;
     if (this.registerForm.invalid) { this.loading = false ; return;}
-    this.errorMessages = [];
       this.userService.insertNewUser(this.user).subscribe(
         createdUser => {
           this.Params.success = 'El usuario ha sido creado satisfactoriamente.';
@@ -107,12 +106,10 @@ export class UserComponent implements OnInit {
                 data => {
                   this.Params.success = 'El usuario ha sido creado satisfactoriamente.';
                 },
-                (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
-                  || `${error.statusText} : ${error.message}`));
+                (error: NtError) => this.notificationService.sendNotification('danger',error.message,'Error en la actualización de roles'));
             }
           }
-        }, (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
-          || `${error.statusText} : ${error.message}`));
+        }, (error: NtError) => this.notificationService.sendNotification('danger',error.message,'Error en el registro del usuario'));
   }
 
   toggle(checked: boolean, rol: string) {
@@ -125,12 +122,10 @@ export class UserComponent implements OnInit {
         this.rolesArrayUpdate[role] = false;   
     }
     this.Params.success = '';
-    this.errorMessages = [];
     this.submitted = false;
   }
 
   private updateUserInfo(id: number) {
-    this.errorMessages = [];
     this.userService.getOneUser(id).subscribe(
       userdata => {
         this.user = userdata;
@@ -141,8 +136,7 @@ export class UserComponent implements OnInit {
         }
         this.loading = false;
       },
-      (error: HttpErrorResponse) => this.errorMessages.push(error.error.message
-        || `${error.statusText} : ${error.message}`));
+      (error: NtError) => this.notificationService.sendNotification('danger',error.message,'Error en el usuario'));
   }
 
 }

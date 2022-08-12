@@ -62,7 +62,9 @@ public class UserService {
                 () ->
                     new ResponseStatusException(
                         HttpStatus.NOT_FOUND, String.format("user no existe %d", id)));
-    return mapper.getUserDtoFromentity(entity);
+    UserDto dto = mapper.getUserDtoFromentity(entity);
+    dto.setRoles(roleMapper.getRoleDtosFromEntities(rolRepository.findByUserId(entity.getId())));
+    return dto;
   }
 
   public UserDto createUser(UserDto userDto) {
@@ -114,7 +116,7 @@ public class UserService {
       user.setUrlPicture(oidcUser.getAttributes().get("picture").toString());
       if (userInfo.isPresent()) {
         user.setActivo(userInfo.get().isActivo());
-        user.setRoles(roleMapper.getRoleDtosFromEntities(userInfo.get().getRoles()));
+        user.setRoles(roleMapper.getRoleDtosFromEntities(rolRepository.findByUserId(userInfo.get().getId())));
         return setMenuItems(user);
       } else {
         throw new ResponseStatusException(
