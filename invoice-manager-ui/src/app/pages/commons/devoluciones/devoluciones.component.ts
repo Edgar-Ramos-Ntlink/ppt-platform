@@ -53,7 +53,7 @@ export class DevolucionesComponent implements OnInit {
       {razonSocialEmpresa:'ENVISION ACTION GROUP',rfcEmpresa:'EAG211209FP3',folio:'2000385673821192',banco:'INBURSA',fechaPago:'2022-05-12',monto:3300.33},
     ];
 
-    this.return.total = 53637839.44
+    this.return.total = 237839.44
   }
 
   public selectPromotor(user:User){
@@ -67,9 +67,13 @@ export class DevolucionesComponent implements OnInit {
   public selectClient(client:Client){
     this.return.rfcCliente = client.rfc;
     this.return.porcentajeContacto = client.porcentajeContacto;
+    this.return.montoContacto = (this.return.total*client.porcentajeContacto)/ 116; 
     this.return.procentajeCliente = client.porcentajeCliente;
+    this.return.montoCliente = (this.return.total*client.porcentajeCliente)/ 116; 
     this.return.porcentajeDespacho = client.porcentajeDespacho;
+    this.return.montoDespacho = (this.return.total*client.porcentajeDespacho)/ 116; 
     this.return.porcentajePromotor = client.porcentajePromotor;
+    this.return.montoPromotor = (this.return.total*client.porcentajePromotor)/ 116; 
     console.log('client:',client)
   }
 

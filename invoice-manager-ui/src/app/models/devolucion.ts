@@ -22,6 +22,10 @@ export class Devolucion {
     constructor(){
         this.moneda ='MXN';
         this.detalles = [];
+        this.porcentajeContacto = 0;
+        this.porcentajeDespacho = 0;
+        this.procentajeCliente = 0;
+        this.porcentajePromotor = 0;
     }
 
 }

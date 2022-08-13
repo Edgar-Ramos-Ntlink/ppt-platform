@@ -1,130 +1,311 @@
 <div class="col-md-12">
-    <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
-      <nb-card-header>
-        <div class="clearfix">
-          <strong class="float-left">Devoluciones</strong>
-          <strong class="float-right">Folio 123</strong>
-        </div>
-      </nb-card-header>
-      <nb-card-body>
+  <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
+    <nb-card-header>
+      <div class="clearfix">
+        <strong class="float-left">Devoluciones</strong>
+        <strong class="float-right">Folio 123</strong>
+      </div>
+    </nb-card-header>
+    <nb-card-body>
 
-        <p class="font-weight-bold">
-          Paso 1 Cargar informacion de acredor y deudor
-        </p>
       <div class="row">
         <div class="col-sm-6 col-md-6 col-lg-4">
-            <label for="inputPromotor" class="label">Nombre o correo promotor</label>
-            <ng-autocomplete [data]="usersCat" [searchKeyword]="'name'"
-                placeholder="Escribe el correo o alias del promotor"
-                (selected)="selectPromotor($event)"
-                [itemTemplate]="itemPromotor" [notFoundTemplate]="notFoundPromotor">
-            </ng-autocomplete>
+          <label for="inputPromotor" class="label">Nombre o correo promotor</label>
+          <ng-autocomplete [data]="usersCat" [searchKeyword]="'name'"
+            placeholder="Escribe el correo o alias del promotor" (selected)="selectPromotor($event)"
+            [itemTemplate]="itemPromotor" [notFoundTemplate]="notFoundPromotor">
+          </ng-autocomplete>
 
-            <div>
-                <span></span>
+          <div>
+            <span></span>
+          </div>
+
+          <ng-template #itemPromotor let-item>
+            <div class="item">
+              <span [innerHTML]="item.name"></span>
             </div>
+          </ng-template>
 
-            <ng-template #itemPromotor let-item>
-                <div class="item">
-                    <span [innerHTML]="item.name"></span>
-                </div>
-            </ng-template>
-
-            <ng-template #notFoundPromotor let-notFound>
-                <span>No hay coincidencias</span>
-            </ng-template>
+          <ng-template #notFoundPromotor let-notFound>
+            <span>No hay coincidencias</span>
+          </ng-template>
         </div>
 
         <div class="col-sm-6 col-md-6 col-lg-4">
-            <label for="inputClients" class="label">RFC o razon social cliente</label>
-            <ng-autocomplete [data]="clientsCat" [searchKeyword]="'notas'"
-                placeholder="Escribe el RFC o razon social del cliente"
-                (selected)="selectClient($event)"
-                [itemTemplate]="itemClient" [notFoundTemplate]="notFoundClient">
-            </ng-autocomplete>
+          <label for="inputClients" class="label">RFC o razon social cliente</label>
+          <ng-autocomplete [data]="clientsCat" [searchKeyword]="'notas'"
+            placeholder="Escribe el RFC o razon social del cliente" (selected)="selectClient($event)"
+            [itemTemplate]="itemClient" [notFoundTemplate]="notFoundClient">
+          </ng-autocomplete>
 
-            <div>
-                <span></span>
+          <div>
+            <span></span>
+          </div>
+
+          <ng-template #itemClient let-item>
+            <div class="item">
+              <span [innerHTML]="item.notas"></span>
             </div>
+          </ng-template>
 
-            <ng-template #itemClient let-item>
-                <div class="item">
-                    <span [innerHTML]="item.notas"></span>
-                </div>
-            </ng-template>
-
-            <ng-template #notFoundClient let-notFound>
-                <span>No hay coincidencias</span>
-            </ng-template>
+          <ng-template #notFoundClient let-notFound>
+            <span>No hay coincidencias</span>
+          </ng-template>
         </div>
-          
-          
-          <div class="col-sm-6 col-md-6 col-lg-2">
-              <label for="inputPayCoin" class="label">Moneda</label>
-              <select
-                  id="inputPayCoin"
-                  class="form-control"
-                  [(ngModel)]="return.moneda"
-              >
-                  <option value="MXN">Peso MX</option>
-              </select>
-          </div>
 
-          <div class="col-sm-6 col-md-6 col-lg-2">
-            <button class="btn btn-primary" style="width: 100%; margin-top: 28px;" [disabled]="loading">AGREGAR PAGO</button>
-          </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-2">
+          <label for="inputPayCoin" class="label">Moneda</label>
+          <select id="inputPayCoin" class="form-control" [(ngModel)]="return.moneda">
+            <option value="MXN">Peso MX</option>
+          </select>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-2">
+          <button class="btn btn-primary" style="width: 100%; margin-top: 28px;" [disabled]="loading">AGREGAR
+            PAGO</button>
+        </div>
       </div>
       <br />
       <div class="row">
         <div class="table-responsive">
-            <table class="table table-sm">
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col" class="text-center">
-                    Acciones
-                  </th>
-                  <th scope="col" class="text-center">Deposito</th>
-                  <th scope="col" class="text-center">Razon social empresa</th>
-                  <th scope="col" class="text-center">RFC empresa</th>
-                  <th scope="col" class="text-center">Folio</th>
-                  <th scope="col" class="text-center">Banco</th>
-                  <th scope="col" class="text-center">Fecha</th>
-                  <th scope="col" class="text-center">Importe</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let fila of return.pagos; let i = index">
-                  <td scope="row" class="text-center">
-                    <button
-                      class="btn-sm btn-outline-danger mr-1 ml-1"
-                    >
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </td>
-                  <td scope="row" class="text-center">
-                    {{ i + 1}}
-                  </td>
-                  <td scope="row" class="text-center">{{ fila.razonSocialEmpresa }}</td>
-                  <td scope="row" class="text-center">{{ fila.rfcEmpresa }}</td>
-                  <td scope="row" class="text-center">{{ fila.folio }}</td>
-                  <td scope="row" class="text-center">{{ fila.banco }}</td>
-                  <td scope="row" class="text-center">{{ fila.fechaPago }}</td>
-                  <td scope="row" class="text-center">
-                    {{ fila.monto | currency }}
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="6"></td>
-                  <td class="text-center"><p class="font-weight-bold">Total</p></td>
-                  <td class="text-center">
-                    {{ return.total | currency }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <table class="table table-sm">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col" class="text-center">
+                  Acciones
+                </th>
+                <th scope="col" class="text-center">Deposito</th>
+                <th scope="col" class="text-center">Razon social empresa</th>
+                <th scope="col" class="text-center">RFC empresa</th>
+                <th scope="col" class="text-center">Folio</th>
+                <th scope="col" class="text-center">Banco</th>
+                <th scope="col" class="text-center">Fecha</th>
+                <th scope="col" class="text-center">Importe</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let fila of return.pagos; let i = index">
+                <td scope="row" class="text-center">
+                  <button class="btn-sm btn-outline-danger mr-1 ml-1">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+                <td scope="row" class="text-center">
+                  {{ i + 1}}
+                </td>
+                <td scope="row" class="text-center">{{ fila.razonSocialEmpresa }}</td>
+                <td scope="row" class="text-center">{{ fila.rfcEmpresa }}</td>
+                <td scope="row" class="text-center">{{ fila.folio }}</td>
+                <td scope="row" class="text-center">{{ fila.banco }}</td>
+                <td scope="row" class="text-center">{{ fila.fechaPago }}</td>
+                <td scope="row" class="text-right">
+                  {{ fila.monto | currency }}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="6"></td>
+                <td class="text-center">
+                  <p class="font-weight-bold">Total</p>
+                </td>
+                <td class="text-right">
+                  <strong>{{ return.total | currency }} </strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      </nb-card-body>
-    </nb-card>
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row">
+            <div class="col-sm-5">
+              <strong>COMISION CLIENTE</strong>
+            </div>
+            <div class="col-sm-2">
+              <input type="number" class="form-control form-control-sm" min="0" max="16" step="0.1"
+                [(ngModel)]="return.procentajeCliente" id="inputCliente" fullWidth>
+            </div>
+            <div class="col-sm-3 text-right">
+              <strong> {{ return.montoCliente | currency }}</strong>
+            </div>
+            <div class="col-sm-1">
+              <button nbButton status="primary" shape="round" size="small"><i class="fa fa-plus"></i></button>
+            </div>
+          </div>
+          <div class="row w-75">
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col" class="text-center">
+                      ACCIONES
+                    </th>
+                    <th scope="col" class="text-center">TIPO</th>
+                    <th scope="col" class="text-center">NOTAS</th>
+                    <th scope="col" class="text-center">MONTO</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td scope="row" class="text-center">
+                      <button class="btn-sm btn-outline-danger mr-1 ml-1">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                      <button class="btn-sm btn-outline-primary mr-1 ml-1">
+                        <i class="fa fa-download"></i>
+                      </button>
+                    </td>
+                    <td scope="row" class="text-right">
+                      NOMINA
+                    </td>
+                    <td scope="row" class="text-right">
+                      Detalles en archivo adjunto
+                    </td>
+                    <td scope="row" class="text-right">
+                      $ 130544.44 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row">
+            <div class="col-sm-5">
+              <strong>COMISION PROMOTOR</strong>
+            </div>
+            <div class="col-sm-2">
+              <input type="number" class="form-control form-control-sm" min="0" max="16" step="0.1"
+                [(ngModel)]="return.porcentajePromotor" id="inputCliente" fullWidth>
+            </div>
+            <div class="col-sm-3 text-right">
+              <strong> {{ return.montoPromotor | currency }}</strong>
+            </div>
+            <div class="col-sm-1">
+              <button nbButton status="primary" shape="round" size="small"><i class="fa fa-plus"></i></button>
+            </div>
+          </div>
+
+          <div class="row w-75">
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col" class="text-center">
+                      ACCIONES
+                    </th>
+                    <th scope="col" class="text-center">TIPO</th>
+                    <th scope="col" class="text-center">NOTAS</th>
+                    <th scope="col" class="text-center">MONTO</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td scope="row" class="text-center">
+                      <button class="btn-sm btn-outline-danger mr-1 ml-1">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                      <button class="btn-sm btn-outline-primary mr-1 ml-1">
+                        <i class="fa fa-download"></i>
+                      </button>
+                    </td>
+                    <td scope="row" class="text-right">
+                      TRANSFERENCIA
+                    </td>
+                    <td scope="row" class="text-right">
+                      BBVA 1325468798
+                    </td>
+                    <td scope="row" class="text-right">
+                      $ 3544.44 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row">
+            <div class="col-sm-5">
+              <strong>COMISION JMM</strong>
+            </div>
+            <div class="col-sm-2">
+              <input type="number" class="form-control form-control-sm" min="0" max="16" step="0.1"
+                [(ngModel)]="return.porcentajeDespacho" id="inputJMM" fullWidth>
+            </div>
+            <div class="col-sm-3 text-right">
+              <strong> {{ return.montoDespacho | currency }}</strong>
+            </div>
+          
+          </div>
+
+        </div>
+        
+        <div class="col-sm-12 col-md-6">
+          <div class="row">
+            <div class="col-sm-5">
+              <strong>COMISION CONTACTO</strong>
+            </div>
+            <div class="col-sm-2">
+              <input type="number" class="form-control form-control-sm" min="0" max="16" step="0.1"
+                [(ngModel)]="return.porcentajeContacto" id="inputCliente" fullWidth>
+            </div>
+            <div class="col-sm-3 text-right">
+              <strong> {{ return.montoContacto | currency }}</strong>
+            </div>
+            <div class="col-sm-1">
+              <button nbButton status="primary" shape="round" size="small"><i class="fa fa-plus"></i></button>
+            </div>
+
+          </div>
+
+          <div class="row w-75">
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col" class="text-center">
+                      ACCIONES
+                    </th>
+                    <th scope="col" class="text-center">TIPO</th>
+                    <th scope="col" class="text-center">NOTAS</th>
+                    <th scope="col" class="text-center">MONTO</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td scope="row" class="text-center">
+                      <button class="btn-sm btn-outline-danger mr-1 ml-1">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                      <button class="btn-sm btn-outline-primary mr-1 ml-1">
+                        <i class="fa fa-download"></i>
+                      </button>
+                    </td>
+                    <td scope="row" class="text-right">
+                      EFECTIVO
+                    </td>
+                    <td scope="row" class="text-right">
+                     Insurgentes 800
+                    </td>
+                    <td scope="row" class="text-right">
+                      $ 3544.44 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </nb-card-body>
+  </nb-card>
 </div>
