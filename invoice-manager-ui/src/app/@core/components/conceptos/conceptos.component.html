@@ -1,116 +1,157 @@
 <div *ngIf="cfdi">
-  <!-- START CONCEPTOS-->
-  <p class="font-weight-bold">Conceptos factura</p>
-  <div class="clearfix" *ngIf="allowEdit">
-    <button
-      nbButton
-      status="success"
-      size="small"
-      (click)="upsertConcepto()"
-      [nbSpinner]="loading"
-      class="btn btn-success float-right"
-      [disabled]="loading"
-      nbSpinnerStatus="success"
-      nbSpinnerSize="small"
-      nbSpinnerMessage=""
-    >
-      Agregar Concepto
-    </button>
-  </div>
-  <br />
-  <!--TABLA CONCEPTOS-->
-  <div>
-    <div *ngIf="cfdi.conceptos.length > 0">
-      <!-- <p class="font-weight-bold">Conceptos factura</p> -->
-      <div class="table-responsive">
-        <table class="table table-sm">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col" *ngIf="allowEdit" class="text-center">
-                Acciones
-              </th>
-              <th scope="col" class="text-center">Producto Servicio</th>
-              <th scope="col" class="text-center">Cantidad</th>
-              <th scope="col" class="text-center">Clave Unidad</th>
-              <th scope="col" class="text-center">Unidad</th>
-              <th scope="col" class="text-center">Descripcion</th>
-              <th scope="col" class="text-center">Valor Unitario</th>
-              <th scope="col" class="text-center">Impuesto</th>
-              <th scope="col" class="text-center">Importe</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let fila of cfdi.conceptos; let i = index">
-              <td scope="row" class="text-center" *ngIf="allowEdit">
-                <button
-                  class="btn-sm btn-outline-danger mr-1 ml-1"
-                  (click)="removeConcepto(i)"
-                >
-                  <i class="fa fa-trash"></i>
-                </button>
-                <button
-                  class="btn-sm btn-outline-primary mr-1 ml-1"
-                  (click)="upsertConcepto(i)"
-                >
-                  <i class="fa fa-edit"></i>
-                </button>
-              </td>
-              <td scope="row" class="text-center">
-                {{ fila.claveProdServ }}
-              </td>
-              <td scope="row" class="text-center">{{ fila.cantidad }}</td>
-              <td scope="row" class="text-center">{{ fila.claveUnidad }}</td>
-              <td scope="row" class="text-center">{{ fila.unidad }}</td>
-              <td scope="row" class="text-center">{{ fila.descripcion }}</td>
-              <td scope="row" class="text-center">
-                {{ fila.valorUnitario | currency: cfdi.moneda:"symbol":".2-6" }}
-              </td>
-              <td scope="row" class="text-center">
-                {{
-                  calcularImpuestosTrasladados(fila.impuestos)
-                    | currency: cfdi.moneda:"symbol":".2-6"
-                }}
-              </td>
-              <td scope="row" class="text-center">
-                {{ fila.importe | currency: cfdi.moneda:"symbol":".2-6" }}
-              </td>
-            </tr>
-
-            <tr>
-              <td *ngIf="!allowEdit" colspan="6"></td>
-              <td *ngIf="allowEdit" colspan="7"></td>
-              <td class="text-center">
-                <p class="font-weight-bold">Subtotal</p>
-              </td>
-              <td class="text-center">
-                {{ cfdi.subtotal | currency: cfdi.moneda:"symbol":".2" }}
-              </td>
-            </tr>
-            <tr>
-              <td *ngIf="!allowEdit" colspan="6"></td>
-              <td *ngIf="allowEdit" colspan="7"></td>
-              <td class="text-center">
-                <p class="font-weight-bold">Impuestos Trasladados:</p>
-              </td>
-              <td class="text-center">
-                {{
-                  calcularImpuestosTrasladados(cfdi.impuestos)
-                    | currency: cfdi.moneda:"symbol":".2"
-                }}
-              </td>
-            </tr>
-
-            <tr>
-              <td *ngIf="!allowEdit" colspan="6"></td>
-              <td *ngIf="allowEdit" colspan="7"></td>
-              <td class="text-center"><p class="font-weight-bold">Total</p></td>
-              <td class="text-center">
-                {{ cfdi.total | currency: cfdi.moneda:"symbol":".2" }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <!-- START CONCEPTOS-->
+    <p class="font-weight-bold">Conceptos factura</p>
+    <div class="clearfix" *ngIf="allowEdit">
+        <button
+            nbButton
+            status="success"
+            size="small"
+            (click)="upsertConcepto()"
+            [nbSpinner]="loading"
+            class="btn btn-success float-right"
+            [disabled]="loading"
+            nbSpinnerStatus="success"
+            nbSpinnerSize="small"
+            nbSpinnerMessage=""
+        >
+            Agregar Concepto
+        </button>
     </div>
-  </div>
+    <br />
+    <!--TABLA CONCEPTOS-->
+    <div>
+        <div *ngIf="cfdi.conceptos.length > 0">
+            <!-- <p class="font-weight-bold">Conceptos factura</p> -->
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th
+                                scope="col"
+                                *ngIf="allowEdit"
+                                class="text-center"
+                            >
+                                Acciones
+                            </th>
+                            <th scope="col" class="text-center">
+                                Producto Servicio
+                            </th>
+
+                            <th scope="col" class="text-center">Cantidad</th>
+                            <th scope="col" class="text-center">
+                                Clave Unidad
+                            </th>
+
+                            <th scope="col" class="text-center">Unidad</th>
+                            <th scope="col" class="text-center">Descripcion</th>
+                            <th scope="col" class="text-center">
+                                Valor Unitario
+                            </th>
+                            <th scope="col" class="text-center">Impuesto</th>
+                            <th scope="col" class="text-center">Importe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let fila of cfdi.conceptos; let i = index">
+                            <td
+                                scope="row"
+                                class="text-center"
+                                *ngIf="allowEdit"
+                            >
+                                <button
+                                    class="btn-sm btn-outline-danger mr-1 ml-1"
+                                    (click)="removeConcepto(i)"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <button
+                                    class="btn-sm btn-outline-primary mr-1 ml-1"
+                                    (click)="upsertConcepto(i)"
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                            </td>
+                            <td scope="row" class="text-center">
+                                {{ fila.claveProdServ }} -
+                                {{ fila.claveProdServDesc }}
+                            </td>
+                            <td scope="row" class="text-center">
+                                {{ fila.cantidad }}
+                            </td>
+                            <td scope="row" class="text-center">
+                                {{ fila.claveUnidad }}
+                            </td>
+                            <td scope="row" class="text-center">
+                                {{ fila.unidad }}
+                            </td>
+                            <td scope="row" class="text-center">
+                                {{ fila.descripcion }}
+                            </td>
+                            <td scope="row" class="text-center">
+                                {{
+                                    fila.valorUnitario
+                                        | currency: cfdi.moneda:'symbol':'.2-6'
+                                }}
+                            </td>
+                            <td scope="row" class="text-center">
+                                {{
+                                    calcularImpuestosTrasladados(fila.impuestos)
+                                        | currency: cfdi.moneda:'symbol':'.2-6'
+                                }}
+                            </td>
+                            <td scope="row" class="text-center">
+                                {{
+                                    fila.importe
+                                        | currency: cfdi.moneda:'symbol':'.2-6'
+                                }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td *ngIf="!allowEdit" colspan="6"></td>
+                            <td *ngIf="allowEdit" colspan="7"></td>
+                            <td class="text-center">
+                                <p class="font-weight-bold">Subtotal</p>
+                            </td>
+                            <td class="text-center">
+                                {{
+                                    cfdi.subtotal
+                                        | currency: cfdi.moneda:'symbol':'.2'
+                                }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td *ngIf="!allowEdit" colspan="6"></td>
+                            <td *ngIf="allowEdit" colspan="7"></td>
+                            <td class="text-center">
+                                <p class="font-weight-bold">
+                                    Impuestos Trasladados:
+                                </p>
+                            </td>
+                            <td class="text-center">
+                                {{
+                                    calcularImpuestosTrasladados(cfdi.impuestos)
+                                        | currency: cfdi.moneda:'symbol':'.2'
+                                }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td *ngIf="!allowEdit" colspan="6"></td>
+                            <td *ngIf="allowEdit" colspan="7"></td>
+                            <td class="text-center">
+                                <p class="font-weight-bold">Total</p>
+                            </td>
+                            <td class="text-center">
+                                {{
+                                    cfdi.total
+                                        | currency: cfdi.moneda:'symbol':'.2'
+                                }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

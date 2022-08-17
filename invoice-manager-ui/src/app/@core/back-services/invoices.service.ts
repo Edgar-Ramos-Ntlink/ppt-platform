@@ -9,96 +9,130 @@ import { Pago } from '../models/cfdi/pago';
 import { Factura } from '../models/factura';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class InvoicesService {
+    private validationCat: Catalogo[] = [];
+    private payCat: Catalogo[] = [];
+    private formaPagoCat: Catalogo[] = [];
 
-  private validationCat: Catalogo[] = [];
-  private payCat: Catalogo[] = [];
-  private formaPagoCat: Catalogo[] = [];
-
-  constructor(private httpClient: HttpClient,
-    private catalogService: CatalogsData) {
-    this.catalogService.getStatusPago().then(cat => this.payCat = cat);
-    this.catalogService.getStatusValidacion().then(cat => this.validationCat = cat);
-    this.catalogService.getFormasPago().then(cat => this.formaPagoCat = cat);
-  }
-
-  private getHttpParams(filterParams: any): HttpParams {
-    let pageParams: HttpParams = new HttpParams();
-    for (const key in filterParams) {
-      if (filterParams[key] !== undefined) {
-        const value: string = filterParams[key].toString();
-        if (value !== null && value.length > 0 && value !== '*') {
-          pageParams = pageParams.append(key, value);
-        }
-      }
+    constructor(
+        private httpClient: HttpClient,
+        private catalogService: CatalogsData
+    ) {
+        this.catalogService.getStatusPago().then((cat) => (this.payCat = cat));
+        this.catalogService
+            .getStatusValidacion()
+            .then((cat) => (this.validationCat = cat));
+        this.catalogService
+            .getFormasPago()
+            .then((cat) => (this.formaPagoCat = cat));
     }
-    return pageParams;
-  }
 
-  public getInvoices(filterParams: any): Observable<any> {
-    return this.httpClient.get('../api/facturas',
-      { params: this.getHttpParams(filterParams) });
-  }
+    private getHttpParams(filterParams: any): HttpParams {
+        let pageParams: HttpParams = new HttpParams();
+        for (const key in filterParams) {
+            if (filterParams[key] !== undefined) {
+                const value: string = filterParams[key].toString();
+                if (value !== null && value.length > 0 && value !== '*') {
+                    pageParams = pageParams.append(key, value);
+                }
+            }
+        }
+        return pageParams;
+    }
 
-  public getInvoicesReports(filterParams: any): Observable<any> {
-    return this.httpClient.get('../api/facturas/factura-reports',
-      { params: this.getHttpParams(filterParams) });
-  }
-  public getComplementReports(filterParams: any): Observable<any> {
-    return this.httpClient.get('../api/facturas/complemento-reports',
-      { params: this.getHttpParams(filterParams) });
-  }
+    public getInvoices(filterParams: any): Observable<any> {
+        return this.httpClient.get('../api/facturas', {
+            params: this.getHttpParams(filterParams),
+        });
+    }
 
-  public getInvoiceByFolio(folio: string): Observable<any> {
-    return this.httpClient.get(`../api/facturas/${folio}`);
-  }
+    public getInvoicesReports(filterParams: any): Observable<any> {
+        return this.httpClient.get('../api/facturas/factura-reports', {
+            params: this.getHttpParams(filterParams),
+        });
+    }
+    public getComplementReports(filterParams: any): Observable<any> {
+        return this.httpClient.get('../api/facturas/complemento-reports', {
+            params: this.getHttpParams(filterParams),
+        });
+    }
 
-  public getInvoiceFiles(folio: string): Observable<any> {
-    return this.httpClient.get(`../api/facturas/${folio}/files`);
-  }
+    public getInvoiceByFolio(folio: string): Observable<any> {
+        return this.httpClient.get(`../api/facturas/${folio}`);
+    }
 
-  public getComplementosInvoice(folioPadre: string): Observable<any> {
-    return this.httpClient.get(`../api/facturas/${folioPadre}/complementos`);
-  }
+    public getInvoiceFiles(folio: string): Observable<any> {
+        return this.httpClient.get(`../api/facturas/${folio}/files`);
+    }
 
-  public timbrarFactura(folio: string, factura: Factura): Observable<any> {
-    return this.httpClient.post(`../api/facturas/${folio}/timbrar`, factura);
-  }
+    public getComplementosInvoice(folioPadre: string): Observable<any> {
+        return this.httpClient.get(
+            `../api/facturas/${folioPadre}/complementos`
+        );
+    }
 
-  public cancelarFactura(folio: string, factura: Factura): Observable<any> {
-    return this.httpClient.post(`../api/facturas/${folio}/cancelar`, factura);
-  }
+    public timbrarFactura(folio: string, factura: Factura): Observable<any> {
+        return this.httpClient.post(
+            `../api/facturas/${folio}/timbrar`,
+            factura
+        );
+    }
 
-  public insertNewInvoice(invoice: Factura): Observable<any> {
-    return this.httpClient.post('../api/facturas', invoice);
-  }
+    public cancelarFactura(folio: string, factura: Factura): Observable<any> {
+        return this.httpClient.post(
+            `../api/facturas/${folio}/cancelar`,
+            factura
+        );
+    }
 
-  public updateInvoice(invoice: Factura): Observable<any> {
-    return this.httpClient.put(
-      `../api/facturas/${invoice.cfdi.folio}`,
-      invoice
-    );
-  }
+    public insertNewInvoice(invoice: Factura): Observable<any> {
+        return this.httpClient.post('../api/facturas', invoice);
+    }
 
-  public generateInvoiceComplement(folioPadre: string, complemento: Pago): Observable<any> {
-    return this.httpClient.post(`../api/facturas/${folioPadre}/complementos`, complemento);
-  }
+    public updateInvoice(invoice: Factura): Observable<any> {
+        return this.httpClient.put(
+            `../api/facturas/${invoice.cfdi.folio}`,
+            invoice
+        );
+    }
 
-  public generateReplacement(folioFact: string, factura: Factura): Observable<any> {
-    return this.httpClient.post(`../api/facturas/${folioFact}/sustitucion`, factura);
-  }
+    public generateInvoiceComplement(
+        folioPadre: string,
+        complemento: Pago
+    ): Observable<any> {
+        return this.httpClient.post(
+            `../api/facturas/${folioPadre}/complementos`,
+            complemento
+        );
+    }
 
-  public generateCreditNote(folioFact: string, factura: Factura): Observable<any> {
-    return this.httpClient.post(`../api/facturas/${folioFact}/nota-credito`, factura);
-  }
+    public generateReplacement(
+        folioFact: string,
+        factura: Factura
+    ): Observable<any> {
+        return this.httpClient.post(
+            `../api/facturas/${folioFact}/sustitucion`,
+            factura
+        );
+    }
 
-  public getInvoiceSaldo(folio: string): Observable<any> {
-    return this.httpClient.get(`../api/facturas/${folio}/saldos`);
-  }
+    public generateCreditNote(
+        folioFact: string,
+        factura: Factura
+    ): Observable<any> {
+        return this.httpClient.post(
+            `../api/facturas/${folioFact}/nota-credito`,
+            factura
+        );
+    }
 
-  public reSendEmail(folio: string, factura: Factura): Observable<any> {
-    return this.httpClient.post(`../api/facturas/${folio}/correos`, factura);
-  }
+    public getInvoiceSaldo(folio: string): Observable<any> {
+        return this.httpClient.get(`../api/facturas/${folio}/saldos`);
+    }
+
+    public reSendEmail(folio: string): Observable<any> {
+        return this.httpClient.post(`../api/facturas/${folio}/correos`, folio);
+    }
 }

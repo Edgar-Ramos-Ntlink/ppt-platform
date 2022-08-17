@@ -31,5 +31,5 @@ export abstract class InvoicesData {
         folioFact: string,
         factura: Factura
     ): Observable<Factura>;
-    abstract reSendEmail(folio: string, factura: Factura): Observable<any>;
+    abstract reSendEmail(folio: string): Observable<any>;
 }

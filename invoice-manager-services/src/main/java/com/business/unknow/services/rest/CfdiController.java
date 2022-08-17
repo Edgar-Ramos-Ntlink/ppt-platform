@@ -2,7 +2,6 @@ package com.business.unknow.services.rest;
 
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.CfdiService;
-import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class CfdiController {
    */
   @PutMapping("/recalculate")
   public ResponseEntity<Cfdi> recalculateCfdi(@RequestBody @Valid Cfdi cfdi)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException {
     return new ResponseEntity<>(cfdiService.recalculateCfdi(cfdi), HttpStatus.OK);
   }
 }

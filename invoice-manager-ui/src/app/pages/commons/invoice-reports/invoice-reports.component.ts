@@ -247,16 +247,24 @@ export class InvoiceReportsComponent implements OnInit {
         }
         params.page = 0;
         params.size = 10000;
-        this.invoiceService.getInvoicesReports(params).subscribe((file) => {
-            this.downloadService.downloadFile(
-                file.data,
-                `facturas-${this.datepipe.transform(
-                    new Date(),
-                    'yyyy-MM-dd'
-                )}.xlsx`,
-                'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'
-            );
-        },(error:NtError)=> this.notificationService.sendNotification('warning',error.message,'Error en la descarga'));
+        this.invoiceService.getInvoicesReports(params).subscribe(
+            (file) => {
+                this.downloadService.downloadFile(
+                    file.data,
+                    `facturas-${this.datepipe.transform(
+                        new Date(),
+                        'yyyy-MM-dd'
+                    )}.xlsx`,
+                    'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'
+                );
+            },
+            (error: NtError) =>
+                this.notificationService.sendNotification(
+                    'warning',
+                    error.message,
+                    'Error en la descarga'
+                )
+        );
     }
 
     public downloadComplementReports() {
@@ -265,16 +273,24 @@ export class InvoiceReportsComponent implements OnInit {
         );
         params.page = 0;
         params.size = 10000;
-        this.invoiceService.getComplementReports(params).subscribe((file) => {
-            this.downloadService.downloadFile(
-                file.data,
-                `complementos-${this.datepipe.transform(
-                    new Date(),
-                    'yyyy-MM-dd'
-                )}.xlsx`,
-                'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'
-            );
-        },(error:NtError)=> this.notificationService.sendNotification('warning',error.message,'Error en la descarga'));
+        this.invoiceService.getComplementReports(params).subscribe(
+            (file) => {
+                this.downloadService.downloadFile(
+                    file.data,
+                    `complementos-${this.datepipe.transform(
+                        new Date(),
+                        'yyyy-MM-dd'
+                    )}.xlsx`,
+                    'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'
+                );
+            },
+            (error: NtError) =>
+                this.notificationService.sendNotification(
+                    'warning',
+                    error.message,
+                    'Error en la descarga'
+                )
+        );
     }
 
     public downloadPdf(emisor: string, receptor: string, folio: string) {
@@ -337,7 +353,7 @@ export class InvoiceReportsComponent implements OnInit {
 
     public reSendEmail(folio: string) {
         this.loading = true;
-        this.invoiceService.reSendEmail(folio, new Factura()).subscribe(
+        this.invoiceService.reSendEmail(folio).subscribe(
             (factura) => {
                 this.loading = false;
             },
