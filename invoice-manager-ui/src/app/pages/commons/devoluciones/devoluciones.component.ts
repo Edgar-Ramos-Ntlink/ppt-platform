@@ -60,7 +60,7 @@ export class DevolucionesComponent implements OnInit {
     this.return.promotor = user.email;
     this.clientsService.getClientsByPromotor(user.email)
     .pipe(
-      map((clients:Client[])=> {clients.forEach(c=>c.notas=`${c.rfc} - ${c.razonSocial}`); console.log(clients); return clients;})
+      map((clients:Client[])=> {clients.forEach(c=>c.notas=`${c.rfc} - ${c.razonSocial}`); return clients;})
     ).subscribe(clients=>this.clientsCat = clients,(error:NtError)=>this.notificationService.sendNotification('danger',error.message,'Error cargando clientes'))
   }
 
