@@ -228,6 +228,9 @@ public class PagoService {
     for (PagoFacturaDto pagoFact : pagoDto.getFacturas()) {
       FacturaCustom factura = facturaService.getFacturaByFolio(pagoFact.getFolio());
       facturas.add(factura);
+      pagoFact.setRfcEmisor(factura.getRfcEmisor());
+      pagoFact.setRfcReceptor(factura.getRfcRemitente());
+      pagoFact.setSolicitante(factura.getSolicitante());
       pagoFact.setAcredor(factura.getRazonSocialEmisor());
       pagoFact.setDeudor(factura.getRazonSocialRemitente());
       pagoFact.setTotalFactura(factura.getTotal());

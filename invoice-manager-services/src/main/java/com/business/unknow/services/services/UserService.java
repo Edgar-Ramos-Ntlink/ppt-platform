@@ -116,7 +116,8 @@ public class UserService {
       user.setUrlPicture(oidcUser.getAttributes().get("picture").toString());
       if (userInfo.isPresent()) {
         user.setActivo(userInfo.get().isActivo());
-        user.setRoles(roleMapper.getRoleDtosFromEntities(rolRepository.findByUserId(userInfo.get().getId())));
+        user.setRoles(
+            roleMapper.getRoleDtosFromEntities(rolRepository.findByUserId(userInfo.get().getId())));
         return setMenuItems(user);
       } else {
         throw new ResponseStatusException(

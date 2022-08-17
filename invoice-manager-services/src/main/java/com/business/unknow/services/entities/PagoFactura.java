@@ -49,6 +49,15 @@ public class PagoFactura {
   @Column(name = "FOLIO_REFERENCIA")
   private String folioReferencia;
 
+  @Column(name = "RFC_EMISOR")
+  private String rfcEmisor;
+
+  @Column(name = "RFC_RECEPTOR")
+  private String rfcReceptor;
+
+  @Column(name = "SOLICITANTE")
+  private String solicitante;
+
   @Column(name = "MONTO")
   private BigDecimal monto;
 
@@ -63,6 +72,9 @@ public class PagoFactura {
 
   @Column(name = "METODO_PAGO")
   private String metodoPago;
+
+  @Column(name = "FOLIO_DEVOLUCION")
+  private Integer folioDevolucion;
 
   @Temporal(TemporalType.TIMESTAMP)
   @CreatedDate
