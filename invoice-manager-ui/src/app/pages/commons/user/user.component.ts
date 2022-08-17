@@ -19,11 +19,13 @@ interface IHash {
 
 export class UserComponent implements OnInit {
 
+  
   registerForm: FormGroup;
   submitted = false;
   public loading = true;
   public user: User = new User();
-  public rolesArrayUpdate: IHash = { 'PROMOTOR': false, "TESORERIA": false, "OPERADOR": false, "CONTABILIDAD": false,
+  public isAdmin : boolean;
+  public rolesArrayUpdate: IHash = { 'PROMOTOR': true, "TESORERIA": false, "OPERADOR": false, "CONTABILIDAD": false,
     "ADMINISTRADOR": false, "BANCOS": false, "CONSULTOR": false, "OPERADOR-B": false, "LEGAL": false };
 
  
@@ -39,6 +41,8 @@ export class UserComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     this.route.paramMap.subscribe(route => {
+      const creator : User = JSON.parse(sessionStorage.getItem('user'));
+      this.isAdmin = creator.roles.map(r => r.role).includes('ADMINISTRADOR');
       const id = route.get('id');
       if (id !== '*') {
         // actualiza informacion usuario

@@ -32,6 +32,10 @@
 	        "title": "Complementos Multipago",
 	        "link": "/pages/operaciones/pago-facturas"
      	},
+		{
+			"title": "Usuarios",
+			"link": "/pages/operaciones/usuarios"
+		},
      	{
 			"title": "Pagos",
 			"link": "/pages/operaciones/pagos"

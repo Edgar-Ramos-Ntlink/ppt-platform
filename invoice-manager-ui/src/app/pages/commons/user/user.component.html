@@ -57,15 +57,15 @@
                 <thead>
                   <tr>
                     <th class="tg-nrix">
-                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['PROMOTOR']"
+                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['PROMOTOR']" [disabled]="!isAdmin"
                         (checkedChange)="toggle($event,'PROMOTOR')">PROMOTOR</nb-checkbox>
                     </th>
                     <th class="tg-0lax">
-                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['TESORERIA']"
+                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['TESORERIA']" [disabled]="!isAdmin"
                         (checkedChange)="toggle($event,'TESORERIA')">TESORERIA</nb-checkbox>
                     </th>
                     <th class="tg-0lax">
-                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['OPERADOR']"
+                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['OPERADOR']" [disabled]="!isAdmin"
                         (checkedChange)="toggle($event,'OPERADOR')">OPERADOR</nb-checkbox>
                     </th>
                   </tr>
@@ -73,28 +73,28 @@
                 <tbody>
                   <tr>
                     <td class="tg-0lax">
-                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['CONTABILIDAD']"
+                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['CONTABILIDAD']" [disabled]="!isAdmin"
                         (checkedChange)="toggle($event,'CONTABILIDAD')">CONTABILIDAD</nb-checkbox>
                     </td>
                     <td class="tg-0lax">
-                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['ADMINISTRADOR']"
+                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['ADMINISTRADOR']" [disabled]="!isAdmin"
                         (checkedChange)="toggle($event,'ADMINISTRADOR')">ADMINISTRADOR</nb-checkbox>
                     </td>
                     <td class="tg-0lax">
-                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['BANCOS']" (checkedChange)="toggle($event,'BANCOS')">
+                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['BANCOS']" [disabled]="!isAdmin" (checkedChange)="toggle($event,'BANCOS')">
                         BANCOS</nb-checkbox>
                     </td>
                   <tr>
                     <td class="tg-0lax">
-                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['CONSULTOR']"
+                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['CONSULTOR']" [disabled]="!isAdmin"
                         (checkedChange)="toggle($event,'CONSULTOR')">CONSULTOR</nb-checkbox>
                     </td>
                     <td class="tg-0lax">
-                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['OPERADOR-B']"
+                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['OPERADOR-B']" [disabled]="!isAdmin"
                         (checkedChange)="toggle($event,'OPERADOR-B')">OPERADOR-B</nb-checkbox>
                     </td>
                     <td class="tg-0lax">
-                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['LEGAL']"
+                      <nb-checkbox [(ngModel)]="rolesArrayUpdate['LEGAL']" [disabled]="!isAdmin"
                         (checkedChange)="toggle($event,'LEGAL')">LEGAL</nb-checkbox>
                     </td>
                   </tr>

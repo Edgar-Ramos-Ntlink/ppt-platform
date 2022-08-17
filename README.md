@@ -118,3 +118,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.16 Fix Pre folio calculation
   - [x] 4.5.17 Enable CFDI creation on promotor view
   - [x] 4.5.18 Tickets NTLINK-148 NTLINK-149 NTLINK-158
+  - [x] 4.5.19 habilitar modulo de clientes en operaciones, correcion de bug colonias en vista de clientes y agregar tooltip en reporte facturas

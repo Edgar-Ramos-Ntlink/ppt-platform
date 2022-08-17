@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AdministracionComponent } from './administracion.component';
-import { UsersComponent } from './users/users.component';
 import { ClientesComponent } from '../commons/clientes/clientes.component';
 import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
-import { UserComponent } from './user/user.component';
+import { UserComponent } from '../commons/user/user.component';
 import { EmpresasComponent } from '../commons/empresas/empresas.component';
 import { EmpresaComponent } from '../commons/empresa/empresa.component';
 import { CuentaBancariaComponent } from '../commons/cuenta-bancaria/cuenta-bancaria.component';
 import { CuentasBancariasComponent } from '../commons/cuentas-bancarias/cuentas-bancarias.component';
+import { UsersComponent } from '../commons/users/users.component';
 
 const routes: Routes = [{
   path: '',
