@@ -34,6 +34,7 @@ import { CuentasBancariasComponent } from './cuentas-bancarias/cuentas-bancarias
 import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.component';
 import { CoreModule } from '../../@core/core.module';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
+import { SeleccionPagosComponent } from './devoluciones/seleccion-pagos/seleccion-pagos.component';
 
 @NgModule({
     declarations: [
@@ -51,6 +52,7 @@ import { DevolucionesComponent } from './devoluciones/devoluciones.component';
         CuentasBancariasComponent,
         CuentaBancariaComponent,
         DevolucionesComponent,
+        SeleccionPagosComponent,
     ],
     imports: [
         CommonModule,
