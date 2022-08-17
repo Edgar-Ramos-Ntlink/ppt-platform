@@ -1,8 +1,6 @@
 package com.business.unknow.services.services;
 
 import com.business.unknow.model.config.MailContent;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -79,17 +77,6 @@ public class MailService {
       messageBodyPart.setContent(htmlText, "text/html; charset=UTF-8");
       multipart.addBodyPart(messageBodyPart);
 
-      InputStream is =
-          Thread.currentThread()
-              .getContextClassLoader()
-              .getResourceAsStream("images/ntlink-logo.png");
-      log.info("Loading header image from {} ", "images/ntlink-logo.png");
-      MimeBodyPart imageBody = new MimeBodyPart();
-      imageBody.setDataHandler(new DataHandler(new ByteArrayDataSource(is, "img/png")));
-      imageBody.setFileName("ntlink-logo.png");
-      imageBody.setHeader("Content-ID", "<image>");
-      multipart.addBodyPart(imageBody);
-
       if (!Objects.isNull(content.getAttachments())) {
         for (Map.Entry<String, MailContent.MailFile> attachment :
             content.getAttachments().entrySet()) {
@@ -110,7 +97,7 @@ public class MailService {
       transport.connect(host, email, password);
       transport.sendMessage(message, message.getAllRecipients());
       transport.close();
-    } catch (MessagingException | IOException e) {
+    } catch (MessagingException e) {
       log.error("Error sending mail", e);
       throw new ResponseStatusException(
           HttpStatus.INTERNAL_SERVER_ERROR,

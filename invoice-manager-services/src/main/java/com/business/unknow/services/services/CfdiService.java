@@ -18,6 +18,8 @@ public class CfdiService {
 
   @Autowired private CfdiMapper cfdiMapper;
 
+  @Autowired private CfdiAdapter cfdiAdapter;
+
   public Cfdi getCfdiByFolio(String folio) throws NtlinkUtilException {
     return filesService.getCfdiFromS3(folio);
   }
@@ -31,7 +33,7 @@ public class CfdiService {
   public Cfdi updateCfdi(Cfdi cfdi) throws InvoiceManagerException {
     CfdiValidator.validate(cfdi);
     Cfdi newCfdi = recalculateCfdi(cfdi);
-    return newCfdi;
+    return cfdiAdapter.mapCfdiNotInComprobante(newCfdi);
   }
 
   /**
@@ -44,11 +46,11 @@ public class CfdiService {
   public Cfdi recalculateCfdi(Cfdi cfdi) throws InvoiceManagerException {
     CfdiValidator.validate(cfdi);
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(cfdi);
-    return cfdiMapper.comprobanteToCfdi(comprobante);
+    return cfdiAdapter.mapCfdiNotInComprobante(cfdiMapper.comprobanteToCfdi(comprobante));
   }
 
   public Cfdi recalculateCfdiAmmounts(Cfdi cfdi) {
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(cfdi);
-    return cfdiMapper.comprobanteToCfdi(comprobante);
+    return cfdiAdapter.mapCfdiNotInComprobante(cfdiMapper.comprobanteToCfdi(comprobante));
   }
 }

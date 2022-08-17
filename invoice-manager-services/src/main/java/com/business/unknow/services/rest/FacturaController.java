@@ -91,10 +91,9 @@ public class FacturaController {
   }
 
   @PostMapping("/{folio}/correos")
-  public ResponseEntity<FacturaCustom> renviarCorreos(
-      @RequestBody @Valid FacturaCustom facturaCustom)
+  public ResponseEntity<FacturaCustom> renviarCorreos(@RequestBody @Valid String folio)
       throws InvoiceManagerException, NtlinkUtilException {
-    return new ResponseEntity<>(service.sendMail(facturaCustom), HttpStatus.OK);
+    return new ResponseEntity<>(service.reSendMail(folio), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/sustitucion")

@@ -117,3 +117,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.15 Email stamping Contabilidad
   - [x] 4.5.16 Fix Pre folio calculation
   - [x] 4.5.17 Enable CFDI creation on promotor view
+  - [x] 4.5.18 Tickets NTLINK-148 NTLINK-149 NTLINK-158
