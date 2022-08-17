@@ -16,7 +16,7 @@
       <nb-card-body>
 
         <strong>Datos generales del cliente</strong>
-
+        <p>{{formInfo.coloniaId}}</p>
         <br>
         <br>
         <div class="row">
@@ -54,7 +54,7 @@
             <div class="form-group">
               <label for="inputColonia" class="label">Seleccionar colonia</label>
               <select id="inputColonia" [(ngModel)]="formInfo.coloniaId" fullWidth
-                (selectedChange)="onLocation($event)" style="display:block;" class="form-control text-uppercase">
+                (change)="onLocation($event.target.value)" style="display:block;" class="form-control text-uppercase">
                 <option value="*">Seleccionar</option>
                 <option *ngFor="let colonia of colonias; let i = index" [value]="i" class="text-uppercase">{{colonia}}</option>
                 <option value="other">Otra</option>

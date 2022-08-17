@@ -13,7 +13,8 @@ public class CfdiAdapter {
 
   public Cfdi mapCfdiNotInComprobante(Cfdi targetCfdi) {
     if (!targetCfdi.getConceptos().isEmpty()) {
-      targetCfdi.getConceptos().stream().filter(x->x.getClaveProdServDesc()==null)
+      targetCfdi.getConceptos().stream()
+          .filter(x -> x.getClaveProdServDesc() == null)
           .forEach(
               concepto -> {
                 Optional<ClaveProductoServicioDto> prod =
