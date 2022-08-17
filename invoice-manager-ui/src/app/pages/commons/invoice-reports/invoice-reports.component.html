@@ -665,14 +665,14 @@
                                     style="min-width: 180px"
                                 >
                                     <button
-                                        type="button"
+                                        type="button" data-toggle="tooltip" data-placement="top" title="Visualizar CFDI"
                                         class="btn btn-sm btn-outline-primary"
                                         (click)="redirectToCfdi(fila.folio)"
                                     >
                                         <i class="fa fa-search"></i>
                                     </button>
                                     <button
-                                        type="button"
+                                        type="button" data-toggle="tooltip" data-placement="top" title="Descarga PDF"
                                         class="btn btn-sm btn-outline-primary"
                                         (click)="
                                             downloadPdf(
@@ -685,7 +685,7 @@
                                         <i class="fa fa-file-pdf"></i>
                                     </button>
                                     <button
-                                        type="button"
+                                        type="button" data-toggle="tooltip" data-placement="top" title="Descarga XML"
                                         class="btn btn-sm btn-outline-primary"
                                         [disabled]="fila.statusFactura !== 3"
                                         [ngClass]="{
@@ -705,7 +705,7 @@
                                         <i class="fa fa-code"></i>
                                     </button>
                                     <button
-                                        type="button"
+                                        type="button" data-toggle="tooltip" data-placement="top" title="Acuse cancelacion"
                                         class="btn btn-sm btn-outline-primary"
                                         [disabled]="fila.statusFactura !== 7"
                                         [ngClass]="{
@@ -725,7 +725,7 @@
                                         <i class="fa fa-book"></i>
                                     </button>
                                     <button
-                                        type="button"
+                                        type="button" data-toggle="tooltip" data-placement="top" title="Reenvio de email"
                                         class="btn btn-sm btn-outline-primary"
                                         [disabled]="fila.statusFactura !== 3"
                                         *ngIf="fila.lineaEmisor === 'A'"
