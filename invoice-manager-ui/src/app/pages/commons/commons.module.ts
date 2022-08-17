@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
     NbActionsModule,
     NbButtonModule,
@@ -33,6 +33,8 @@ import { MulticomplementosComponent } from './multicomplementos/multicomplemento
 import { CuentasBancariasComponent } from './cuentas-bancarias/cuentas-bancarias.component';
 import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.component';
 import { CoreModule } from '../../@core/core.module';
+import { UsersComponent } from './users/users.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
     declarations: [
@@ -40,6 +42,8 @@ import { CoreModule } from '../../@core/core.module';
         ClienteComponent,
         EmpresaComponent,
         EmpresasComponent,
+        UsersComponent,
+        UserComponent,
         PagosComponent,
         PagosFacturaComponent,
         ValidacionPagoComponent,
@@ -55,6 +59,7 @@ import { CoreModule } from '../../@core/core.module';
         CoreModule,
         AutocompleteLibModule,
         FormsModule,
+        ReactiveFormsModule,
         NbTabsetModule,
         NbActionsModule,
         NbButtonModule,
@@ -76,6 +81,8 @@ import { CoreModule } from '../../@core/core.module';
         ClienteComponent,
         EmpresaComponent,
         EmpresasComponent,
+        UsersComponent,
+        UserComponent,
         InvoiceReportsComponent,
         PagosComponent,
         PagosFacturaComponent,

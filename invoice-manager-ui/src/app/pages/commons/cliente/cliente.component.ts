@@ -56,8 +56,6 @@ export class ClienteComponent implements OnInit {
   public async loadClientInfo(id:number) {
     this.loading = true;
     try {
-      
-      
       this.clientInfo = await this.clientService.getClientById(id).toPromise();
       this.formInfo.rfc = this.clientInfo.rfc;
       const data: ZipCodeInfo = await this.catalogsService.getZipCodeInfo(this.clientInfo.cp);
@@ -67,6 +65,7 @@ export class ClienteComponent implements OnInit {
       data.colonias.forEach(element => {
         if (data.colonias[index] === this.clientInfo.localidad) {
           this.formInfo.coloniaId = index;
+          return;
         }
         index++;
       });
