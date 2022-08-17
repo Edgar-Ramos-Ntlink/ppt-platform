@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import static com.business.unknow.Constants.CFDI_40_VERSION;
 import static com.business.unknow.Constants.CFDI_DATE_PATTERN;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.COMPROBANTE;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.IMPUESTO;
@@ -73,6 +74,7 @@ public class InvoiceBuilderService {
     facturaCustom =
         facturaCustom.toBuilder()
             .cfdi(cfdi)
+            .version(CFDI_40_VERSION)
             .total(facturaCustom.getCfdi().getTotal())
             .saldoPendiente(
                 Objects.nonNull(facturaCustom.getSaldoPendiente())
@@ -148,6 +150,7 @@ public class InvoiceBuilderService {
     FacturaCustom complement =
         FacturaCustom.builder()
             .folio(folio)
+            .version(CFDI_40_VERSION)
             .preFolio(FacturaUtils.generatePreFolio(amount))
             .total(pagoDto.getMonto())
             .packFacturacion(facturaCustom.getPackFacturacion())
