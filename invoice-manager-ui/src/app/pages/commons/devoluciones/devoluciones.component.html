@@ -9,16 +9,19 @@
     <nb-card-body>
 
       <div class="row">
+        <div class="col-sm-6 col-md-6 col-lg-2">
+          <label for="inputPayCoin" class="label">Moneda</label>
+          <select id="inputPayCoin" class="form-control" [(ngModel)]="return.moneda">
+            <option value="MXN">Peso MX</option>
+          </select>
+        </div>
+
         <div class="col-sm-6 col-md-6 col-lg-4">
           <label for="inputPromotor" class="label">Nombre o correo promotor</label>
           <ng-autocomplete [data]="usersCat" [searchKeyword]="'name'"
             placeholder="Escribe el correo o alias del promotor" (selected)="selectPromotor($event)"
             [itemTemplate]="itemPromotor" [notFoundTemplate]="notFoundPromotor">
           </ng-autocomplete>
-
-          <div>
-            <span></span>
-          </div>
 
           <ng-template #itemPromotor let-item>
             <div class="item">
@@ -38,10 +41,6 @@
             [itemTemplate]="itemClient" [notFoundTemplate]="notFoundClient">
           </ng-autocomplete>
 
-          <div>
-            <span></span>
-          </div>
-
           <ng-template #itemClient let-item>
             <div class="item">
               <span [innerHTML]="item.notas"></span>
@@ -54,21 +53,26 @@
         </div>
 
 
-        <div class="col-sm-6 col-md-6 col-lg-2">
-          <label for="inputPayCoin" class="label">Moneda</label>
-          <select id="inputPayCoin" class="form-control" [(ngModel)]="return.moneda">
-            <option value="MXN">Peso MX</option>
-          </select>
-        </div>
+        
 
         <div class="col-sm-6 col-md-6 col-lg-2">
-          <button class="btn btn-primary" style="width: 100%; margin-top: 28px;" [disabled]="loading">AGREGAR
-            PAGO</button>
+          <button class="btn btn-primary w-100" style="margin-top: 28px;" [disabled]="loading" (click)="searchPayments()">BUSCAR
+            PAGOS</button>
         </div>
       </div>
+
+
+
+      <br/>
+       <div class="row">
+          <span class="badge badge-primary mr-1 ml-1 mt-1 mb-1" *ngFor="let client of return.clientes; let i = index"><p class="d-inline text-light align-bottom"> {{client.rfc}} - {{client.razonSocial}}</p> 
+            <button type="button" class="close d-inline text-light mr-1 ml-1" (click)="removeClient(i)" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button></span>
+       </div>
       <br />
       <div class="row">
-        <div class="table-responsive">
+        <div class="table-responsive" *ngIf="return.pagos.length > 0">
           <table class="table table-sm">
             <thead class="thead-dark">
               <tr>
@@ -117,7 +121,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" *ngIf="return.pagos.length > 0">
         <div class="col-sm-12 col-md-6">
           <div class="row">
             <div class="col-sm-5">
@@ -229,7 +233,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" *ngIf="return.pagos.length > 0">
         <div class="col-sm-12 col-md-6">
           <div class="row">
             <div class="col-sm-5">

@@ -37,6 +37,7 @@ import { UsersComponent } from './users/users.component';
 import { UserComponent } from './user/user.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { SeleccionPagosComponent } from './devoluciones/seleccion-pagos/seleccion-pagos.component';
+import { DetalleDevolucionComponent } from './devoluciones/detalle-devolucion/detalle-devolucion.component';
 
 @NgModule({
     declarations: [
@@ -57,6 +58,7 @@ import { SeleccionPagosComponent } from './devoluciones/seleccion-pagos/seleccio
         CuentaBancariaComponent,
         DevolucionesComponent,
         SeleccionPagosComponent,
+        DetalleDevolucionComponent,
     ],
     imports: [
         CommonModule,
@@ -94,6 +96,9 @@ import { SeleccionPagosComponent } from './devoluciones/seleccion-pagos/seleccio
         MulticomplementosComponent,
         AsignacionPagosComponent,
         CuentasBancariasComponent,
+        DevolucionesComponent,
+        SeleccionPagosComponent,
+        DetalleDevolucionComponent,
         AutocompleteLibModule,
         FormsModule,
         CommonModule,

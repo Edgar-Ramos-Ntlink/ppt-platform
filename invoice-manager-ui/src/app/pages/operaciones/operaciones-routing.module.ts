@@ -67,7 +67,6 @@ const routes: Routes = [{
     }, {
       path: 'usuarios/:id',
       component: UserComponent,
-    },
     },{
       path: 'devoluciones/:id',
       component: DevolucionesComponent,

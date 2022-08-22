@@ -1,1 +1,58 @@
-<p>seleccion-pagos works!</p>
+<nb-card>
+  <nb-card-header>
+      <div class="clearfix">
+          <p class="h6 float-left">
+              PAGOS A ASIGNAR EN DEVOLUCION
+          </p>
+      </div>
+  </nb-card-header>
+  <br />
+  <nb-card-body>
+      <div style="width: 90vw; height: 60vh">
+
+        <div class="row">
+          <div class="table-responsive" *ngIf="pagos.length > 0">
+            <table class="table table-sm">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col" class="text-center">
+                    Acciones
+                  </th>
+                  <th scope="col" class="text-center">Razón social empresa</th>
+                  <th scope="col" class="text-center">RFC empresa</th>
+                  <th scope="col" class="text-center">Folio</th>
+                  <th scope="col" class="text-center">Banco</th>
+                  <th scope="col" class="text-center">Fecha</th>
+                  <th scope="col" class="text-right">Importe</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fila of pagos; let i = index">
+                  <td scope="row" class="text-center">
+                    <nb-checkbox type="checkbox" [checked]="fila.seleccionado" class="ml-1 mr-1" status="primary"
+                    (checkedChange)="fila.seleccionado = !fila.seleccionado"></nb-checkbox>
+                    <button type="button" class="btn-sm btn-outline-primary ml-1 mr-1"><i class="fa fa-search"></i></button>
+                    <button type="button" class="btn-sm btn-outline-primary ml-1 mr-1"><i class="fa fa-file"></i></button>
+                  </td>
+                  <td scope="row" class="text-center">{{ fila.razonSocialEmpresa }}</td>
+                  <td scope="row" class="text-center">{{ fila.rfcEmpresa }}</td>
+                  <td scope="row" class="text-center">{{ fila.folio }}</td>
+                  <td scope="row" class="text-center">{{ fila.banco }}</td>
+                  <td scope="row" class="text-center">{{ fila.fechaPago }}</td>
+                  <td scope="row" class="text-right">
+                    {{ fila.monto | currency }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+  </nb-card-body>
+  <nb-card-footer>
+    <div class="clearfix">
+      <button class="btn btn-warning ml-1 mr-1 float-right" (click)="exit()">Salir</button>
+      <button class="btn btn-success ml-1 mr-1 float-right" (click)="addPayments()">Agregar pagos</button>
+    </div>
+  </nb-card-footer>
+</nb-card>

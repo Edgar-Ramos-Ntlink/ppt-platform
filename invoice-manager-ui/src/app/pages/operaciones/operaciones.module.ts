@@ -8,6 +8,8 @@ import { LineaXComponent } from './linea-x/linea-x.component';
 import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion-pagos.component';
 import { ValidacionPagoComponent } from '../commons/pagos/validacion-pago/validacion-pago.component';
 import { CoreModule } from '../../@core/core.module';
+import { SeleccionPagosComponent } from '../commons/devoluciones/seleccion-pagos/seleccion-pagos.component';
+import { DetalleDevolucionComponent } from '../commons/devoluciones/detalle-devolucion/detalle-devolucion.component';
 
 
 @NgModule({
@@ -20,7 +22,7 @@ import { CoreModule } from '../../@core/core.module';
     CommonsModule,
     CoreModule,
   ],
-  entryComponents: [AsignacionPagosComponent, ValidacionPagoComponent],
+  entryComponents: [AsignacionPagosComponent, ValidacionPagoComponent, SeleccionPagosComponent, DetalleDevolucionComponent],
   providers: [ DonwloadFileService ],
 })
 export class OperacionesModule { }

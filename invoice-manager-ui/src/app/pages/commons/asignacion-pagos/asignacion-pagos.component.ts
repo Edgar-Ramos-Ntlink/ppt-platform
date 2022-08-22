@@ -186,8 +186,6 @@ export class AsignacionPagosComponent implements OnInit {
     }
 
     sendPayment() {
-        console.log(this.newPayment);
-        console.log(this.newPayment.fechaPago);
         const filename = this.paymentForm.filename;
         this.successMesagge = '';
         this.newPayment.fechaPago = this.datepipe.transform(

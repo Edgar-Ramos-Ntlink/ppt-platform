@@ -1,11 +1,11 @@
-import { PagoFactura } from "./pago-factura";
+import { Client } from "./client";
 import { ReferenciaDevolucion } from "./referencia-devolucion";
 
 export class Devolucion {
 
     public moneda:string;
     public promotor:string;
-    public rfcCliente: string;
+    public clientes: Client[];
     public nombreCliente: string;
     public total:number;
     public porcentajeDespacho: number;
@@ -26,6 +26,8 @@ export class Devolucion {
         this.porcentajeDespacho = 0;
         this.procentajeCliente = 0;
         this.porcentajePromotor = 0;
+        this.clientes = [];
+        this.pagos = [];
     }
 
 }
