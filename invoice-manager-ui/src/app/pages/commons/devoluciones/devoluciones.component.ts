@@ -8,7 +8,7 @@ import { NtError } from '../../../@core/models/nt-error';
 import { User } from '../../../@core/models/user';
 import { NotificationsService } from '../../../@core/util-services/notifications.service';
 import { Client } from '../../../models/client';
-import { Devolucion } from '../../../models/devolucion';
+import { Devolucion, ReferenciaDevolucion } from '../../../models/devolucion';
 import { GenericPage } from '../../../models/generic-page';
 import { SeleccionPagosComponent } from './seleccion-pagos/seleccion-pagos.component';
 
@@ -91,10 +91,19 @@ export class DevolucionesComponent implements OnInit {
 
     public selectClient(client: Client) {
         this.return.clientes.push(client);
+        const mainClient = this.return.clientes[0];
+        this.return.porcentajeContacto = mainClient.porcentajeContacto;
+        this.return.porcentajeDespacho = mainClient.porcentajeDespacho;
+        this.return.porcentajePromotor = mainClient.porcentajePromotor;
+        this.return.procentajeCliente = mainClient.porcentajeCliente;
     }
 
     public removeClient(index: number) {
         this.return.clientes.splice(index, 1);
+        if (index === 0) {
+            // if there is not assigned clients then payments needs to be removed
+            this.return.pagos = [];
+        }
     }
 
     public searchPayments() {
@@ -110,24 +119,34 @@ export class DevolucionesComponent implements OnInit {
                     this.return.total = this.return.pagos
                         .map((p) => p.monto)
                         .reduce((a, b) => a + b);
-                    const client = this.return.clientes[0];
-                    this.return.porcentajeContacto = client.porcentajeContacto;
-                    this.return.montoContacto =
-                        (this.return.total * client.porcentajeContacto) / 116;
-                    this.return.procentajeCliente = client.porcentajeCliente;
-                    this.return.montoCliente =
-                        (this.return.total * client.porcentajeCliente +
-                            this.return.total * 100) /
-                        116;
-                    this.return.porcentajeDespacho = client.porcentajeDespacho;
-                    this.return.montoDespacho =
-                        (this.return.total * client.porcentajeDespacho) / 116;
-                    this.return.porcentajePromotor = client.porcentajePromotor;
-                    this.return.montoPromotor =
-                        (this.return.total * client.porcentajePromotor) / 116;
+                    this.calculateAmounts();
                 } else {
                     console.log('No result exit dialog');
                 }
             });
+    }
+
+    private calculateAmounts() {
+        this.return.montoPromotor =
+            (this.return.total * this.return.porcentajePromotor) / 116;
+        this.return.montoDespacho =
+            (this.return.total * this.return.porcentajeDespacho) / 116;
+        this.return.montoContacto =
+            (this.return.total * this.return.porcentajeContacto) / 116;
+        this.return.comisionCliente =
+            (this.return.total * this.return.procentajeCliente) / 116;
+        this.return.pasivoCliente = this.return.total / 1.16;
+        this.return.montoCliente =
+            this.return.total -
+            this.return.montoPromotor -
+            this.return.montoContacto -
+            this.return.montoDespacho;
+
+        if(!this.return.detalles.find(d=>'DESPACHO')){
+            const detail = new ReferenciaDevolucion('DESPACHO',this.return.montoDespacho);
+            detail.formaPago = 'OTRO';;
+            detail.notas = '';
+            this.return.detalles.push(detail);
+        }
     }
 }

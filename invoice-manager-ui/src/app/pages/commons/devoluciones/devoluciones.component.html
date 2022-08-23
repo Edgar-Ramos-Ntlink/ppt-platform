@@ -124,190 +124,39 @@
 
       <div class="row" *ngIf="return.pagos.length > 0">
         <div class="col-sm-12 col-md-6">
-          <div class="row">
-            <div class="col-sm-5">
-              <strong>COMISION CLIENTE</strong>
-            </div>
-            <div class="col-sm-2">
-              <input type="number" class="form-control form-control-sm" min="0" max="16" step="0.1"
-                [(ngModel)]="return.procentajeCliente" id="inputCliente" fullWidth>
-            </div>
-            <div class="col-sm-3 text-right">
-              <strong> {{ return.montoCliente | currency }}</strong>
-            </div>
-            <div class="col-sm-1">
-              <button nbButton status="primary" shape="round" size="small"><i class="fa fa-plus"></i></button>
-            </div>
+          <div class="clearfix">
+            <strong class="float-left">COMISIÓN PROMOTOR</strong>
+            <input type="number" class="form-control form-control-sm w-25 float-right" min="0" max="16" step="0.1" (input)="calculateAmounts($event)"
+            [(ngModel)]="return.porcentajePromotor" id="inputPromotor">
           </div>
-          <div class="row mr-3 ml-3">
-            <div class="table-responsive">
-              <table class="table table-sm">
-                <thead class="thead-dark">
-                  <tr>
-                    <th scope="col" class="text-center">
-                      ACCIONES
-                    </th>
-                    <th scope="col" class="text-center">TIPO</th>
-                    <th scope="col" class="text-center">NOTAS</th>
-                    <th scope="col" class="text-center">MONTO</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td scope="row" class="text-center">
-                      <button class="btn-sm btn-outline-danger mr-1 ml-1">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                      <button class="btn-sm btn-outline-primary mr-1 ml-1">
-                        <i class="fa fa-download"></i>
-                      </button>
-                    </td>
-                    <td scope="row" class="text-right">
-                      NOMINA
-                    </td>
-                    <td scope="row" class="text-right">
-                      Detalles en archivo adjunto
-                    </td>
-                    <td scope="row" class="text-right">
-                      $ 130544.44 
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <nt-detalle-devolucion type="PROMOTOR" [(return)]="return" [amount]="return.montoPromotor" [allowEdit]="true"></nt-detalle-devolucion>
         </div>
         <div class="col-sm-12 col-md-6">
-          <div class="row">
-            <div class="col-sm-5">
-              <strong>COMISION PROMOTOR</strong>
-            </div>
-            <div class="col-sm-2">
-              <input type="number" class="form-control form-control-sm" min="0" max="16" step="0.1"
-                [(ngModel)]="return.porcentajePromotor" id="inputCliente" fullWidth>
-            </div>
-            <div class="col-sm-3 text-right">
-              <strong> {{ return.montoPromotor | currency }}</strong>
-            </div>
-            <div class="col-sm-1">
-              <button nbButton status="primary" shape="round" size="small"><i class="fa fa-plus"></i></button>
-            </div>
+          <div class="clearfix">
+            <strong class="float-left">COMISIÓN CLIENTE</strong>
+            <input type="number" class="form-control form-control-sm w-25 float-right" min="0" max="16" step="0.1" (input)="calculateAmounts($event)"
+            [(ngModel)]="return.procentajeCliente" id="inputCliente">
           </div>
-
-          <div class="row ml-3 mr-3">
-            <div class="table-responsive">
-              <table class="table table-sm">
-                <thead class="thead-dark">
-                  <tr>
-                    <th scope="col" class="text-center">
-                      ACCIONES
-                    </th>
-                    <th scope="col" class="text-center">TIPO</th>
-                    <th scope="col" class="text-center">NOTAS</th>
-                    <th scope="col" class="text-center">MONTO</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td scope="row" class="text-center">
-                      <button class="btn-sm btn-outline-danger mr-1 ml-1">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                      <button class="btn-sm btn-outline-primary mr-1 ml-1">
-                        <i class="fa fa-download"></i>
-                      </button>
-                    </td>
-                    <td scope="row" class="text-right">
-                      TRANSFERENCIA
-                    </td>
-                    <td scope="row" class="text-right">
-                      BBVA 1325468798
-                    </td>
-                    <td scope="row" class="text-right">
-                      $ 3544.44 
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <nt-detalle-devolucion type="CLIENTE" [(return)]="return" [amount]="return.montoCliente" [allowEdit]="true"></nt-detalle-devolucion>
         </div>
       </div>
 
       <div class="row" *ngIf="return.pagos.length > 0">
         <div class="col-sm-12 col-md-6">
-          <div class="row">
-            <div class="col-sm-5">
-              <strong>COMISION JMM</strong>
-            </div>
-            <div class="col-sm-2">
-              <input type="number" class="form-control form-control-sm" min="0" max="16" step="0.1"
-                [(ngModel)]="return.porcentajeDespacho" id="inputJMM" fullWidth>
-            </div>
-            <div class="col-sm-3 text-right">
-              <strong> {{ return.montoDespacho | currency }}</strong>
-            </div>
-          
+          <div class="clearfix">
+            <strong class="float-left">COMISIÓN JMM</strong>
+            <strong class="float-right">{{ return.porcentajeDespacho / 100 | percent}}</strong>
           </div>
-
+          <nt-detalle-devolucion type="DESPACHO" [(return)]="return" [amount]="return.montoDespacho" [allowEdit]="false"></nt-detalle-devolucion>
         </div>
         
         <div class="col-sm-12 col-md-6">
-          <div class="row">
-            <div class="col-sm-5">
-              <strong>COMISION CONTACTO</strong>
-            </div>
-            <div class="col-sm-2">
-              <input type="number" class="form-control form-control-sm" min="0" max="16" step="0.1"
-                [(ngModel)]="return.porcentajeContacto" id="inputCliente" fullWidth>
-            </div>
-            <div class="col-sm-3 text-right">
-              <strong> {{ return.montoContacto | currency }}</strong>
-            </div>
-            <div class="col-sm-1">
-              <button nbButton status="primary" shape="round" size="small"><i class="fa fa-plus"></i></button>
-            </div>
-
+          <div class="clearfix">
+            <strong class="float-left">COMISIÓN CONTACTO</strong>
+            <input type="number" class="form-control form-control-sm w-25 float-right" min="0" max="16" step="0.1" (input)="calculateAmounts($event)"
+            [(ngModel)]="return.porcentajeContacto" id="inputContacto">
           </div>
-
-          <div class="row mr-3 ml-3">
-            <div class="table-responsive">
-              <table class="table table-sm">
-                <thead class="thead-dark">
-                  <tr>
-                    <th scope="col" class="text-center">
-                      ACCIONES
-                    </th>
-                    <th scope="col" class="text-center">TIPO</th>
-                    <th scope="col" class="text-center">NOTAS</th>
-                    <th scope="col" class="text-center">MONTO</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td scope="row" class="text-center">
-                      <button class="btn-sm btn-outline-danger mr-1 ml-1">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                      <button class="btn-sm btn-outline-primary mr-1 ml-1">
-                        <i class="fa fa-download"></i>
-                      </button>
-                    </td>
-                    <td scope="row" class="text-right">
-                      EFECTIVO
-                    </td>
-                    <td scope="row" class="text-right">
-                     Insurgentes 800
-                    </td>
-                    <td scope="row" class="text-right">
-                      $ 3544.44 
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
+          <nt-detalle-devolucion type="CONTACTO" [(return)]="return" [amount]="return.montoContacto" [allowEdit]="true"></nt-detalle-devolucion>
         </div>
       </div>
 

@@ -11,11 +11,13 @@ export class Devolucion {
     public montoDespacho: number;
     public porcentajePromotor: number;
     public montoPromotor: number;
+    public porcentajeContacto: number; 
+    public montoContacto: number;
     public procentajeCliente: number;
     public montoCliente: number;
-    public porcentajeContacto: number; 
-    public montoContacto: number; 
-    public detalles : DetalleDevolucion[];
+    public pasivoCliente: number;
+    public comisionCliente : number; 
+    public detalles : ReferenciaDevolucion[];
     public pagos: any[];
 
     constructor(){
@@ -33,25 +35,18 @@ export class Devolucion {
 
 export declare type TipoDevolucion  = 'CLIENTE' | 'PROMOTOR' | 'CONTACTO' | 'DESPACHO';
 
-export class DetalleDevolucion {
-
-    public id : number;
-    public tipo : TipoDevolucion;
-    public monto: number;
-    public porcentaje: number;
-    public pagos : ReferenciaDevolucion[];
-
-    constructor(){
-        this.pagos = [];
-        this.monto = 0;
-    }
-
-}
+export declare type FormaPagoDevolucion = 'TRANSFERENCIA' | 'EFECTIVO' | 'NOMINA' | 'PENDIENTE' | 'OTRO' ;
 
 export class ReferenciaDevolucion {
     public id: number;
-    public receptorPago: string;
-    public formaPago: string;
+    public receptorPago: TipoDevolucion;
+    public formaPago: FormaPagoDevolucion;
     public monto: number;
-    public notas : number;
+    public notas : string;
+
+    constructor(receptor?:TipoDevolucion, monto?:number){
+        this.receptorPago = receptor;
+        this.monto = monto;
+        this.formaPago = 'TRANSFERENCIA';
+    }
 }
