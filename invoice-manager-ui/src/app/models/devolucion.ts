@@ -1,5 +1,4 @@
 import { Client } from "./client";
-import { ReferenciaDevolucion } from "./referencia-devolucion";
 
 export class Devolucion {
 
@@ -16,7 +15,7 @@ export class Devolucion {
     public montoCliente: number;
     public porcentajeContacto: number; 
     public montoContacto: number; 
-    public detalles : ReferenciaDevolucion[];
+    public detalles : DetalleDevolucion[];
     public pagos: any[];
 
     constructor(){
@@ -30,4 +29,29 @@ export class Devolucion {
         this.pagos = [];
     }
 
+}
+
+export declare type TipoDevolucion  = 'CLIENTE' | 'PROMOTOR' | 'CONTACTO' | 'DESPACHO';
+
+export class DetalleDevolucion {
+
+    public id : number;
+    public tipo : TipoDevolucion;
+    public monto: number;
+    public porcentaje: number;
+    public pagos : ReferenciaDevolucion[];
+
+    constructor(){
+        this.pagos = [];
+        this.monto = 0;
+    }
+
+}
+
+export class ReferenciaDevolucion {
+    public id: number;
+    public receptorPago: string;
+    public formaPago: string;
+    public monto: number;
+    public notas : number;
 }

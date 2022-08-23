@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { DetalleDevolucion, Devolucion, ReferenciaDevolucion, TipoDevolucion } from '../../../../models/devolucion';
 
 @Component({
   selector: 'nt-detalle-devolucion',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetalleDevolucionComponent implements OnInit {
 
+  @Input() public tipo: TipoDevolucion;
+  @Input() public devolucion : Devolucion;
+
+  public detalle: DetalleDevolucion;
+
   constructor() { }
 
   ngOnInit(): void {
+    this.detalle = this.devolucion.detalles.find(d=>this.tipo === d.tipo);
   }
 
 }

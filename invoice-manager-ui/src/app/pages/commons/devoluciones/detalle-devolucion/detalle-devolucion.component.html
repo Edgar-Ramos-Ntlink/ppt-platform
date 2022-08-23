@@ -1,1 +1,52 @@
-<p>detalle-devolucion works!</p>
+<div *ngIf="detalle">
+        <strong>COMISIÓN {{tipo}}</strong>
+        <div class="clearfix">
+        
+          <input type="number" class="form-control form-control-sm float-left" min="0" max="16" step="0.1"
+            [(ngModel)]="detalle.porcentaje" id="inputCliente" fullWidth>
+        
+          <button class="float-rigth" nbButton status="primary" shape="round" size="small"><i class="fa fa-plus"></i></button>
+        
+      </div>
+      <div class="row mr-2 ml-2">
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col" class="text-center">
+                  ACCIONES
+                </th>
+                <th scope="col" class="text-center">TIPO</th>
+                <th scope="col" class="text-center">NOTAS</th>
+                <th scope="col" class="text-center">MONTO</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td scope="row" class="text-center">
+                  <button class="btn-sm btn-outline-danger mr-1 ml-1">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  <button class="btn-sm btn-outline-primary mr-1 ml-1">
+                    <i class="fa fa-download"></i>
+                  </button>
+                </td>
+                <td scope="row" class="text-right">
+                  NOMINA
+                </td>
+                <td scope="row" class="text-right">
+                  Detalles en archivo adjunto
+                </td>
+                <td scope="row" class="text-right">
+                  $ 130544.44 
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Monto comisión</strong></td>
+                <td><strong>{{detalle.monto}}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+</div>

@@ -1,5 +1,5 @@
-<div class="col-md-12">
-  <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
+
+  <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant" class="vh-100">
     <nb-card-header>
       <div class="clearfix">
         <strong class="float-left">Devoluciones</strong>
@@ -36,7 +36,7 @@
 
         <div class="col-sm-6 col-md-6 col-lg-4">
           <label for="inputClients" class="label">RFC o razon social cliente</label>
-          <ng-autocomplete [data]="clientsCat" [searchKeyword]="'notas'"
+          <ng-autocomplete [data]="clientsCat" [searchKeyword]="'notas'" [disabled] = "!return.promotor"
             placeholder="Escribe el RFC o razon social del cliente" (selected)="selectClient($event)"
             [itemTemplate]="itemClient" [notFoundTemplate]="notFoundClient">
           </ng-autocomplete>
@@ -56,7 +56,8 @@
         
 
         <div class="col-sm-6 col-md-6 col-lg-2">
-          <button class="btn btn-primary w-100" style="margin-top: 28px;" [disabled]="loading" (click)="searchPayments()">BUSCAR
+          <button class="btn w-100" style="margin-top: 28px;" [disabled]="loading || return.clientes.length == 0" 
+          [ngClass]="{'btn-primary': return.clientes.length > 0 , 'btn-secondary': return.clientes.length == 0}" (click)="searchPayments()">BUSCAR
             PAGOS</button>
         </div>
       </div>
@@ -312,4 +313,3 @@
 
     </nb-card-body>
   </nb-card>
-</div>

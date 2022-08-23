@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NbDialogService } from '@nebular/theme';
-import { e } from 'mathjs';
 import { map } from 'rxjs/operators';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { UsersData } from '../../../@core/data/users-data';
