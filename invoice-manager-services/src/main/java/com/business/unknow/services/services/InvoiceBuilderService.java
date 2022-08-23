@@ -73,6 +73,7 @@ public class InvoiceBuilderService {
     facturaCustom =
         facturaCustom.toBuilder()
             .cfdi(cfdi)
+            .version(Constants.CFDI_40_VERSION)
             .total(facturaCustom.getCfdi().getTotal())
             .saldoPendiente(
                 Objects.nonNull(facturaCustom.getSaldoPendiente())
@@ -148,6 +149,7 @@ public class InvoiceBuilderService {
     FacturaCustom complement =
         FacturaCustom.builder()
             .folio(folio)
+            .version(Constants.CFDI_40_VERSION)
             .preFolio(FacturaUtils.generatePreFolio(amount))
             .total(pagoDto.getMonto())
             .packFacturacion(facturaCustom.getPackFacturacion())
@@ -321,7 +323,7 @@ public class InvoiceBuilderService {
 
   private Cfdi buildCfdiComplement(FacturaCustom facturaCustom) {
     return Cfdi.builder()
-        .version(facturaCustom.getCfdi().getVersion())
+        .version(Constants.CFDI_40_VERSION)
         .fecha(CFDI_DATE_PATTERN)
         .serie(Constants.ComplementoPpdDefaults.SERIE)
         .folio(FacturaUtils.generateFolio())
