@@ -1,6 +1,10 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
-import { NbDialogService } from '@nebular/theme';
+import { NbDialogRef, NbDialogService } from '@nebular/theme';
+import { select, Store } from '@ngrx/store';
+import { NotificationsService } from '../../../../@core/util-services/notifications.service';
 import { Devolucion, ReferenciaDevolucion, TipoDevolucion } from '../../../../models/devolucion';
+import { AppState } from '../../../../reducers';
+import { returnDetailsSelector, returnSelector } from '../../commons.selectors';
 
 @Component({
   selector: 'nt-detalle-devolucion',
@@ -10,25 +14,45 @@ import { Devolucion, ReferenciaDevolucion, TipoDevolucion } from '../../../../mo
 export class DetalleDevolucionComponent implements OnInit {
 
   @Input() public type: TipoDevolucion;
-  @Input() public return : Devolucion;
   @Input() public amount : number;
   @Input() public allowEdit : boolean;
 
+  public return : Devolucion = new Devolucion();
   public pagos: ReferenciaDevolucion[] = [];
+  public pendingAmount:number = 0;
   
-  constructor( private dialogService: NbDialogService) { }
+  constructor( private dialogService: NbDialogService,
+    private notification : NotificationsService,
+    private store: Store<AppState>) { }
 
   ngOnInit(): void {
-    this.return.detalles.filter(d=>this.type === d.receptorPago)
-    .forEach(e=>this.pagos.push(e));
+    this.store.pipe(select(returnSelector))
+    .subscribe(result => {
+      this.return = result;
+      this.pagos =[... result.detalles.filter(d=>this.type === d.receptorPago)];
+      this.pendingAmount = this.amount - this.pagos.map(p=>p.monto).reduce((a,b)=>a+b,0);
+      console.log(`Amount ${this.type} : ${this.amount}`)
+    })
   }
 
   public addReturnPayment(dialog:TemplateRef<any>){
    
-    this.dialogService
-                    .open(dialog, { context: new ReferenciaDevolucion(this.type,+this.amount.toFixed(2)) })
-                    .onClose.subscribe((result:ReferenciaDevolucion) => {this.return.pagos.push(result); this.pagos.push(result)})
+      this.dialogService
+                    .open(dialog, { context: new ReferenciaDevolucion(this.type,+this.pendingAmount.toFixed(2)) })
+                    .onClose.subscribe((result:ReferenciaDevolucion) => {
+                      if(result){
+                        this.pagos.push(result);
+                        this.pendingAmount = this.amount - this.pagos.map(p=>p.monto).reduce((a,b)=>a+b,0);
+                      }});
+  }
 
+
+  public closeDialog(ref:NbDialogRef<any>, data ?: ReferenciaDevolucion){
+    if(data){
+      ref.close(data);
+    } else {
+      ref.close(undefined)
+    }
   }
 
 }

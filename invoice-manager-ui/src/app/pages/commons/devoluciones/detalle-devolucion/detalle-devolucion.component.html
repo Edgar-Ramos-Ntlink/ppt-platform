@@ -35,7 +35,7 @@
         
         <tr>
           <td>
-            <button class="btn btn-sm rounded-circle" [ngClass]="{'btn-primary': allowEdit , 'btn-secondary':!allowEdit}" [disabled]="!allowEdit"
+            <button class="btn btn-sm rounded-circle" [ngClass]="{'btn-primary': allowEdit && pendingAmount > 0.01 , 'btn-secondary':!allowEdit || pendingAmount < 0.01  }" [disabled]="!allowEdit || pendingAmount < 0.01"
             (click)="addReturnPayment(dialog)" data-toggle="tooltip"  title="Agregar detalles devolución">
             <i class="fa fa-plus"></i></button>
           </td>
@@ -69,11 +69,12 @@
     </nb-card-header>
     <br />
     <nb-card-body>
-      <div style="width: 70vw; height: 60vh">
-        <div class="row">
-          <div class="col-sm-3 col-md-2">
-            <label for="inputPaymentType" class="label">Tipo de pago</label>
-            <select
+      <div>
+        
+          <div class="form-group row">
+            <label for="inputPaymentType" class="label col-sm-3 col-form-label">Tipo de pago</label>
+            <div class="col-sm-9">
+              <select
               id="inputPaymentType"
               class="form-control"
               [(ngModel)]="data.formaPago"
@@ -83,22 +84,26 @@
               <option value="NOMINA">Pago múltiple (nómina)</option>
               <option value="PENDIENTE">Guardar saldo (pago pendiente)</option>
             </select>
+            </div>
           </div>
-          <div class="col-sm-5 col-md-6">
-            <label for="inputPaymentType" class="label">Notas</label>
-            <textarea type="text" class="form-control" fullWidth [(ngModel)]="data.notas"></textarea>
+          <div class="form-group row">
+            <label for="inputNotes" class="label col-sm-3 col-form-label">Notas</label>
+            <div class="col-sm-9">
+              <textarea type="text" id="inputNotes" class="form-control" fullWidth [(ngModel)]="data.notas"></textarea>
+            </div>
           </div>
-          <div class="col-sm-5 col-md-6">
-            <label for="inputPaymentType" class="label">Monto</label>
-            <input type="number" class="form-control" fullWidth [(ngModel)]="data.monto"/>
+          <div class="form-group row">
+            <label for="inputAmount" class="col-sm-3 label">Monto</label>
+            <div class="col-sm-9">
+              <input type="number" id="inputAmount" class="form-control" fullWidth [(ngModel)]="data.monto"/>
+            </div>
           </div>
-        </div>
       </div>
     </nb-card-body>
     <nb-card-footer>
       <div class="clearfix">
-        <button class="btn btn-warning btn-sm ml-1 mr-1 float-right" (click)="ref.close(undefined)">Salir</button>
-        <button class="btn btn-success btn-sm ml-1 mr-1 float-right" (click)="ref.close(data)">Agregar
+        <button class="btn btn-warning btn-sm ml-1 mr-1 float-right" (click)="closeDialog(ref)">Salir</button>
+        <button class="btn btn-success btn-sm ml-1 mr-1 float-right" (click)="closeDialog(ref, data)">Agregar
           devolución</button>
       </div>
     </nb-card-footer>

@@ -38,6 +38,8 @@ import { UserComponent } from './user/user.component';
 import { DevolucionesComponent } from './devoluciones/devoluciones.component';
 import { SeleccionPagosComponent } from './devoluciones/seleccion-pagos/seleccion-pagos.component';
 import { DetalleDevolucionComponent } from './devoluciones/detalle-devolucion/detalle-devolucion.component';
+import { StoreModule } from '@ngrx/store';
+import * as fromCommons from './reducers';
 
 @NgModule({
     declarations: [
@@ -81,6 +83,7 @@ import { DetalleDevolucionComponent } from './devoluciones/detalle-devolucion/de
         NbIconModule,
         NbSpinnerModule,
         NbTreeGridModule,
+        StoreModule.forFeature(fromCommons.COMMONS_FEATURE_KEY, fromCommons.commonsReducer),
     ],
     exports: [
         ClientesComponent,

@@ -1,15 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NbDialogService } from '@nebular/theme';
+import { select, Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { UsersData } from '../../../@core/data/users-data';
 import { NtError } from '../../../@core/models/nt-error';
 import { User } from '../../../@core/models/user';
 import { NotificationsService } from '../../../@core/util-services/notifications.service';
+import { ReturnsUtilsService } from '../../../@core/util-services/returns-utils.service';
 import { Client } from '../../../models/client';
 import { Devolucion, ReferenciaDevolucion } from '../../../models/devolucion';
 import { GenericPage } from '../../../models/generic-page';
+import { AppState } from '../../../reducers';
+import { updateReturn } from '../commons.actions';
+import { returnSelector } from '../commons.selectors';
 import { SeleccionPagosComponent } from './seleccion-pagos/seleccion-pagos.component';
 
 @Component({
@@ -22,23 +27,35 @@ export class DevolucionesComponent implements OnInit {
 
     public usersCat: User[] = [];
     public clientsCat: Client[] = [];
-    public return: Devolucion = new Devolucion();
+    public return: Devolucion;
 
     constructor(
         private notificationService: NotificationsService,
         private dialogService: NbDialogService,
+        private returnUtils: ReturnsUtilsService,
         private usersService: UsersData,
         private clientsService: ClientsData,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private store: Store<AppState>
     ) {}
 
     ngOnInit(): void {
         this.route.paramMap.subscribe((route) => {
+            this.store.dispatch(updateReturn({return: new Devolucion()}))
             const id = route.get('id');
             if (id !== '*') {
                 this.loadReturnInfo(+id);
             } else {
-                this.usersService
+                this.loadPromotorInfo();
+            }
+        });
+
+        this.store.pipe(select(returnSelector)).subscribe(result => this.return = result)
+    }
+
+
+    private loadPromotorInfo(){
+        this.usersService
                     .getUsers(0, 1000, { status: '1' })
                     .pipe(
                         map((p: GenericPage<User>) => {
@@ -58,16 +75,14 @@ export class DevolucionesComponent implements OnInit {
                                 'Error cargando promotores'
                             )
                     );
-            }
-        });
     }
 
-    public loadReturnInfo(id: number) {
+    private loadReturnInfo(id: number) {
         console.log('Recovering return info for', id);
     }
 
     public selectPromotor(user: User) {
-        this.return.promotor = user.email;
+        this.store.dispatch(updateReturn({return:{...this.return,promotor: user.email}}));
         this.clientsService
             .getClientsByPromotor(user.email)
             .pipe(
@@ -90,20 +105,25 @@ export class DevolucionesComponent implements OnInit {
     }
 
     public selectClient(client: Client) {
-        this.return.clientes.push(client);
-        const mainClient = this.return.clientes[0];
-        this.return.porcentajeContacto = mainClient.porcentajeContacto;
-        this.return.porcentajeDespacho = mainClient.porcentajeDespacho;
-        this.return.porcentajePromotor = mainClient.porcentajePromotor;
-        this.return.procentajeCliente = mainClient.porcentajeCliente;
+        const r : Devolucion = JSON.parse(JSON.stringify(this.return));
+        r.clientes.push(client);
+        const mainClient = r.clientes[0];
+        r.porcentajeContacto = mainClient.porcentajeContacto;
+        r.porcentajeDespacho = mainClient.porcentajeDespacho;
+        r.porcentajePromotor = mainClient.porcentajePromotor;
+        r.procentajeCliente = mainClient.porcentajeCliente;
+        this.store.dispatch(updateReturn({return : r}))
     }
 
     public removeClient(index: number) {
-        this.return.clientes.splice(index, 1);
+        let r : Devolucion = JSON.parse(JSON.stringify(this.return));
+        r.clientes.splice(index, 1);
         if (index === 0) {
             // if there is not assigned clients then payments needs to be removed
-            this.return.pagos = [];
+            r.pagos = [];
+            r = this.returnUtils.calculateAmounts(r);
         }
+        this.store.dispatch(updateReturn({return : r}));
     }
 
     public searchPayments() {
@@ -113,40 +133,23 @@ export class DevolucionesComponent implements OnInit {
                     devolucion: this.return,
                 },
             })
-            .onClose.subscribe((result: any[]) => {
+            .onClose.subscribe((result: Devolucion) => {
                 if (result) {
-                    result.forEach((p) => this.return.pagos.push(p));
-                    this.return.total = this.return.pagos
-                        .map((p) => p.monto)
-                        .reduce((a, b) => a + b);
-                    this.calculateAmounts();
-                } else {
-                    console.log('No result exit dialog');
+                    this.store.dispatch(updateReturn({return : result}));
                 }
             });
     }
 
-    private calculateAmounts() {
-        this.return.montoPromotor =
-            (this.return.total * this.return.porcentajePromotor) / 116;
-        this.return.montoDespacho =
-            (this.return.total * this.return.porcentajeDespacho) / 116;
-        this.return.montoContacto =
-            (this.return.total * this.return.porcentajeContacto) / 116;
-        this.return.comisionCliente =
-            (this.return.total * this.return.procentajeCliente) / 116;
-        this.return.pasivoCliente = this.return.total / 1.16;
-        this.return.montoCliente =
-            this.return.total -
-            this.return.montoPromotor -
-            this.return.montoContacto -
-            this.return.montoDespacho;
-
-        if(!this.return.detalles.find(d=>'DESPACHO')){
-            const detail = new ReferenciaDevolucion('DESPACHO',this.return.montoDespacho);
-            detail.formaPago = 'OTRO';;
-            detail.notas = '';
-            this.return.detalles.push(detail);
-        }
+    public removePayment(index: number){
+        let r : Devolucion = JSON.parse(JSON.stringify(this.return));
+        r.pagos.splice(index,1);
+        r = this.returnUtils.calculateAmounts(r);
+        console.log('return',r)
+        this.store.dispatch(updateReturn({return : r}));
     }
+
+    public refreshAmounts(value:number){
+        this.returnUtils.calculateAmounts(JSON.parse(JSON.stringify(this.return)))
+    }
+
 }
