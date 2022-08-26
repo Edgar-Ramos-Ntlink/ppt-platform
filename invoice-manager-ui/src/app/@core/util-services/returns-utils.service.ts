@@ -1,11 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Devolucion, ReferenciaDevolucion } from '../../models/devolucion';
+import { AbstractControl } from '@angular/forms';
+import {
+    Devolucion,
+    ReferenciaDevolucion,
+    TipoDevolucion,
+} from '../../models/devolucion';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ReturnsUtilsService {
     constructor() {}
+
 
     public calculateAmounts(devolucion: Devolucion): Devolucion {
         devolucion.total = devolucion.pagos
@@ -43,5 +49,27 @@ export class ReturnsUtilsService {
         }
 
         return devolucion;
+    }
+
+    public getAmountByType(type: TipoDevolucion, dev: Devolucion): number {
+        let amount = 0;
+        switch (type) {
+            case 'PROMOTOR':
+                amount = dev.montoPromotor;
+                break;
+            case 'CLIENTE':
+                amount = dev.montoCliente;
+                break;
+            case 'CONTACTO':
+                amount = dev.montoContacto;
+                break;
+            case 'DESPACHO':
+                amount = dev.montoDespacho;
+                break;
+            default : 
+                amount = 0;
+                break;
+        }
+        return amount;
     }
 }

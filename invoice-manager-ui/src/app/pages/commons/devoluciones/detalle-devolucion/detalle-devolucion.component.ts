@@ -2,6 +2,7 @@ import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { NbDialogRef, NbDialogService } from '@nebular/theme';
 import { select, Store } from '@ngrx/store';
 import { NotificationsService } from '../../../../@core/util-services/notifications.service';
+import { ReturnsUtilsService } from '../../../../@core/util-services/returns-utils.service';
 import { Devolucion, ReferenciaDevolucion, TipoDevolucion } from '../../../../models/devolucion';
 import { AppState } from '../../../../reducers';
 import { returnDetailsSelector, returnSelector } from '../../commons.selectors';
@@ -22,6 +23,7 @@ export class DetalleDevolucionComponent implements OnInit {
   public pendingAmount:number = 0;
   
   constructor( private dialogService: NbDialogService,
+    private returnUtils : ReturnsUtilsService,
     private notification : NotificationsService,
     private store: Store<AppState>) { }
 
@@ -29,9 +31,9 @@ export class DetalleDevolucionComponent implements OnInit {
     this.store.pipe(select(returnSelector))
     .subscribe(result => {
       this.return = result;
+      this.amount = this.returnUtils.getAmountByType(this.type,result);
       this.pagos =[... result.detalles.filter(d=>this.type === d.receptorPago)];
       this.pendingAmount = this.amount - this.pagos.map(p=>p.monto).reduce((a,b)=>a+b,0);
-      console.log(`Amount ${this.type} : ${this.amount}`)
     })
   }
 

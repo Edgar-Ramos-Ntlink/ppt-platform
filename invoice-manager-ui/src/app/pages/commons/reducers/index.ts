@@ -1,3 +1,4 @@
+import { state } from '@angular/animations';
 import { createReducer, on
 } from '@ngrx/store';
 import { Devolucion } from '../../../models/devolucion';
@@ -19,4 +20,13 @@ export const commonsReducer = createReducer(
     return {
       return : action.return
     }
-  }));
+  }),
+  on(CommonsActions.addClientReturn,(state,action) =>{
+    
+    const dev = {...state.return};
+    dev.clientes.push(action.client);
+    return {
+      return :dev
+    }
+  })
+  );

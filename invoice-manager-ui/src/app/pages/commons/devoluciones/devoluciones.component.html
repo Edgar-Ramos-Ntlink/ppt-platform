@@ -122,43 +122,56 @@
         </div>
       </div>
 
-      <div class="row" *ngIf="return.pagos.length > 0">
+      <form *ngIf="return.pagos.length > 0" [formGroup]="returnForm">
+      <div class="row">
+        
         <div class="col-sm-12 col-md-6">
           <div class="clearfix">
             <strong class="float-left">COMISIÓN PROMOTOR</strong>
-            <input type="number" class="form-control form-control-sm w-25 float-right" min="0" max="16" step="0.1" (input)="refreshAmounts($event.target.value)"
-            [ngModel]="return.porcentajePromotor" id="inputPromotor">
+            <input type="number" class="form-control form-control-sm w-25 float-right" min="0" max="16" step="0.1" (input)="refreshAmounts($event.target.value,'PROMOTOR')"
+            [ngClass]="{
+              'border border-danger': promotor.invalid && (promotor.dirty || promotor.touched),
+              'border border-success': promotor.valid && (promotor.dirty || promotor.touched)
+            }" formControlName="promotor" id="inputPromotor">
           </div>
-          <nt-detalle-devolucion type="PROMOTOR" [(return)]="return" [amount]="return.montoPromotor" [allowEdit]="true"></nt-detalle-devolucion>
+          <nt-detalle-devolucion type="PROMOTOR" [allowEdit]="true"></nt-detalle-devolucion>
         </div>
         <div class="col-sm-12 col-md-6">
           <div class="clearfix">
             <strong class="float-left">COMISIÓN CLIENTE</strong>
-            <input type="number" class="form-control form-control-sm w-25 float-right" min="0" max="16" step="0.1" (input)="refreshAmounts($event.target.value)"
-            [ngModel]="return.procentajeCliente" id="inputCliente">
+            <input type="number" class="form-control form-control-sm w-25 float-right" min="0" max="16" step="0.1" (input)="refreshAmounts($event.target.value,'CLIENTE')"
+            [ngClass]="{
+              'border border-danger': cliente.invalid && (cliente.dirty || cliente.touched),
+              'border border-success': cliente.valid && (cliente.dirty || cliente.touched)
+            }"
+            formControlName="cliente" id="inputCliente">
           </div>
-          <nt-detalle-devolucion type="CLIENTE" [(return)]="return" [amount]="return.montoCliente" [allowEdit]="true"></nt-detalle-devolucion>
+          <nt-detalle-devolucion type="CLIENTE"  [allowEdit]="true"></nt-detalle-devolucion>
         </div>
       </div>
 
-      <div class="row" *ngIf="return.pagos.length > 0">
+      <div class="row">
         <div class="col-sm-12 col-md-6">
           <div class="clearfix">
             <strong class="float-left">COMISIÓN JMM</strong>
             <strong class="float-right">{{ return.porcentajeDespacho / 100 | percent}}</strong>
           </div>
-          <nt-detalle-devolucion type="DESPACHO" [(return)]="return" [amount]="return.montoDespacho" [allowEdit]="false"></nt-detalle-devolucion>
+          <nt-detalle-devolucion type="DESPACHO" [allowEdit]="false"></nt-detalle-devolucion>
         </div>
         
         <div class="col-sm-12 col-md-6">
           <div class="clearfix">
             <strong class="float-left">COMISIÓN CONTACTO</strong>
-            <input type="number" class="form-control form-control-sm w-25 float-right" min="0" max="16" step="0.1" (input)="refreshAmounts($event.target.value)"
-            [ngModel]="return.porcentajeContacto" id="inputContacto">
+            <input type="number" class="form-control form-control-sm w-25 float-right" min="0" max="16" step="0.1" (input)="refreshAmounts($event.target.value,'CONTACTO')"
+            [ngClass]="{
+              'border border-danger': contacto.invalid && (contacto.dirty || contacto.touched),
+              'border border-success': contacto.valid && (contacto.dirty || contacto.touched)
+            }"
+            formControlName="contacto" id="inputContacto">
           </div>
-          <nt-detalle-devolucion type="CONTACTO" [(return)]="return" [amount]="return.montoContacto" [allowEdit]="true"></nt-detalle-devolucion>
+          <nt-detalle-devolucion type="CONTACTO" [amount]="return.montoContacto" [allowEdit]="true"></nt-detalle-devolucion>
         </div>
       </div>
-
+    </form>
     </nb-card-body>
   </nb-card>
