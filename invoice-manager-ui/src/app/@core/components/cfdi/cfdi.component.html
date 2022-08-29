@@ -64,6 +64,7 @@
         <nt-emisor
             *ngIf="cfdi.emisor && cfdi.emisor.rfc !== undefined"
             [emisor]="cfdi.emisor"
+            [allowEdit]="allowEdit || cfdi.tipoDeComprobante === 'E'"
             [direccion]="factura.direccionEmisor"
         ></nt-emisor>
 
@@ -169,7 +170,7 @@
                     </select>
                 </div>
                 <div class="col-md-2" *ngIf="cfdi.moneda === 'USD'">
-                    <label for="payChangeType" class="label"
+                    <label for="inputChangeType" class="label"
                         >Tipo de Cambio</label
                     >
                     <input
