@@ -121,3 +121,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.19 habilitar modulo de clientes en operaciones, correcion de bug colonias en vista de clientes y agregar tooltip en reporte facturas
   - [x] 4.5.20 set Version during  invoice creation
   - [x] 4.5.21 fiscal regimen bugfix correction and enable emisor edition
+  - [x] 4.5.22 Permitir edicion  de CFDIs a administradores en modulo contabilidad
