@@ -156,7 +156,6 @@ public class EmpresaService {
   }
 
   public List<Map<String, String>> getFlatCompanyDetails(List<Empresa> empresas) {
-    List<Map<String, String>> result = new ArrayList<>();
     return empresas.stream()
         .map(
             e -> {

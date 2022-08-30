@@ -64,7 +64,7 @@ public class InvoiceBuilderService {
   @Autowired private CatalogService catalogService;
 
   public FacturaCustom assignFacturaData(FacturaCustom facturaCustom, int amount)
-      throws NtlinkUtilException, InvoiceManagerException {
+      throws NtlinkUtilException {
     String folio =
         facturaCustom.getFolio() == null ? FacturaUtils.generateFolio() : facturaCustom.getFolio();
     Cfdi cfdi = cfdiService.recalculateCfdiAmmounts(facturaCustom.getCfdi());
@@ -151,7 +151,7 @@ public class InvoiceBuilderService {
             .folio(folio)
             .version(Constants.CFDI_40_VERSION)
             .preFolio(FacturaUtils.generatePreFolio(amount))
-            .total(pagoDto.getMonto())
+            .total(BigDecimal.ZERO)
             .packFacturacion(facturaCustom.getPackFacturacion())
             .saldoPendiente(BigDecimal.ZERO)
             .lineaEmisor(facturaCustom.getLineaEmisor())
@@ -184,11 +184,6 @@ public class InvoiceBuilderService {
     Cfdi cfdi = facturaCustom.getCfdi();
     cfdi.setComplemento(ImmutableList.of());
     complement.setPagos(new ArrayList<>());
-    BigDecimal iva =
-        pagoDto
-            .getMonto()
-            .multiply(BigDecimal.valueOf(IVA_IMPUESTO_16))
-            .divide(BigDecimal.valueOf(IVA_BASE_16), 4, RoundingMode.HALF_UP);
     Pago pago =
         Pago.builder()
             .fechaPago(DATE_TIME_FORMAT.format(pagoDto.getFechaPago()))

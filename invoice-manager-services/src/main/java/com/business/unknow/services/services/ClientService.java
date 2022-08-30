@@ -34,7 +34,7 @@ public class ClientService {
   @Autowired private ClientMapper mapper;
 
   @Autowired private DownloaderService downloaderService;
-  private ContactoHelper contactoHelper = new ContactoHelper();
+  private final ContactoHelper contactoHelper = new ContactoHelper();
 
   private Page<Client> findClientByParams(Map<String, String> parameters) {
 

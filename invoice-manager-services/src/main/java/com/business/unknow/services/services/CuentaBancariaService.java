@@ -174,7 +174,7 @@ public class CuentaBancariaService {
                   () ->
                       new ResponseStatusException(
                           HttpStatus.BAD_REQUEST,
-                          String.format("Esta Empresa no existe", cuentaDto.getRfc())));
+                          String.format("Esta Empresa no existe %s", cuentaDto.getRfc())));
       cuentaDto.setLinea(empresa.getTipo());
       cuentaDto.setRazonSocial(empresa.getRazonSocial());
       CuentaBancaria cuentaBancaria =
