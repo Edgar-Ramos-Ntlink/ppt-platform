@@ -220,9 +220,6 @@ public class FacturaService {
 
   public ResourceFileDto getFacturaReportsByParams(Map<String, String> parameters)
       throws IOException {
-    int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
-    int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-    // TODO CREATE REPORTS TABLE IN BD
     parameters.put("tipoDocumento", "Factura");
 
     List<String> folios =
@@ -311,10 +308,6 @@ public class FacturaService {
 
   public ResourceFileDto getComplementoReportsByParams(Map<String, String> parameters)
       throws IOException {
-    int page = (parameters.get("page") == null) ? 0 : Integer.valueOf(parameters.get("page"));
-    int size = (parameters.get("size") == null) ? 10 : Integer.valueOf(parameters.get("size"));
-    // TODO CREATE REPORTS TABLE IN BD
-
     parameters.put("tipoDocumento", "Complemento");
 
     List<String> folios =
@@ -776,7 +769,6 @@ public class FacturaService {
       throws InvoiceManagerException, NtlinkUtilException {
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
     FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
-    // TODO:REFACTOR ATTRIBUTE NAME TO COMPROBANTE
     facturaPdf.setCfdi(comprobante);
     facturaPdf.setLogotipo(
         filesService
@@ -784,7 +776,6 @@ public class FacturaService {
                 S3Buckets.EMPRESAS, facturaCustom.getRfcEmisor(), "LOGO")
             // TODO REFACTOR CODE TO STOP USING  DEPRECATED METHOD
             .getData());
-    byte[] pdf = FacturaUtils.generateFacturaPdf(facturaPdf, template);
-    return pdf;
+    return FacturaUtils.generateFacturaPdf(facturaPdf, template);
   }
 }
