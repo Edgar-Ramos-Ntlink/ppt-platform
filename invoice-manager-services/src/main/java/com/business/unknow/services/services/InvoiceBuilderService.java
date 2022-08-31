@@ -264,7 +264,6 @@ public class InvoiceBuilderService {
                   saldoAnterior
                       .subtract(pagoFacturaDto.getMonto())
                       .setScale(2, RoundingMode.HALF_UP))
-              // TODO:VALIDATE objetoImpDR value
               .objetoImpDR(PAGO_IMPUESTOS_GRAL)
               .impuestosDR(impuestosDR)
               .build();

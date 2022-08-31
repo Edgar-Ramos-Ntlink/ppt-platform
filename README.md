@@ -122,4 +122,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.20 set Version during  invoice creation
   - [x] 4.5.21 fiscal regimen bugfix correction and enable emisor edition
   - [x] 4.5.22 Permitir edicion  de CFDIs a administradores en modulo contabilidad
-  - [x] 4.5.23 NTLINKDEV-194 & NTLINKDEV-197
+  - [x] 4.5.23 Se repar issue de total de pago de complemento para cancelacion 

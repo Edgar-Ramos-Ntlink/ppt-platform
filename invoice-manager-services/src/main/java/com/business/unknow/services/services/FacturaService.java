@@ -220,7 +220,6 @@ public class FacturaService {
 
   public ResourceFileDto getFacturaReportsByParams(Map<String, String> parameters)
       throws IOException {
-    // TODO CREATE REPORTS TABLE IN BD
     parameters.put("tipoDocumento", "Factura");
 
     List<String> folios =
@@ -309,8 +308,6 @@ public class FacturaService {
 
   public ResourceFileDto getComplementoReportsByParams(Map<String, String> parameters)
       throws IOException {
-    // TODO CREATE REPORTS TABLE IN BD
-
     parameters.put("tipoDocumento", "Complemento");
 
     List<String> folios =
@@ -772,7 +769,6 @@ public class FacturaService {
       throws InvoiceManagerException, NtlinkUtilException {
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
     FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
-    // TODO:REFACTOR ATTRIBUTE NAME TO COMPROBANTE
     facturaPdf.setCfdi(comprobante);
     facturaPdf.setLogotipo(
         filesService
