@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
+import { Factura } from "../../models/factura";
 
 @Component({
   selector: "nt-invoice-status",
@@ -6,7 +7,8 @@ import { Component, Input, OnInit } from "@angular/core";
   styleUrls: ["./invoice-status.component.scss"],
 })
 export class InvoiceStatusComponent implements OnInit {
-  @Input() public status: string;
+  @Input() public factura: Factura;
+  @Input() public isAdmin: boolean;
 
   constructor() {}
 

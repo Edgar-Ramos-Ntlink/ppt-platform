@@ -40,6 +40,7 @@ export class Factura {
 
     public motivo: string;
     public folioSustituto: string;
+    public version: string;
 
     constructor() {
         this.tipoDocumento = 'Factura';

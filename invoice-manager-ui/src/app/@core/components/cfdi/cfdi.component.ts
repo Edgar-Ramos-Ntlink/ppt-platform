@@ -82,6 +82,12 @@ export class CfdiComponent implements OnInit {
         this.store.dispatch(updateCfdi({ cfdi }));
     }
 
+    updateLugarExpedicion(lugarExpedicion : string){
+        const cfdi = { ...this.cfdi };
+        cfdi.lugarExpedicion = lugarExpedicion;
+        this.store.dispatch(updateCfdi({ cfdi }));
+    }
+
     updateCfdi() {
         this.loading = true;
         const fact: Factura = JSON.parse(JSON.stringify(this.factura));
@@ -136,13 +142,16 @@ export class CfdiComponent implements OnInit {
         this.invoiceService
             .getInvoiceByFolio(folio)
             .toPromise()
-            .then((fact) =>
-                this.router.navigate([`./pages/promotor/precfdi/${fact.folio}`])
-            );
+            .then((fact) =>{
+            const url = this.router.url;
+            const redirectUrl = `.${url.substring(0,url.lastIndexOf('/'))}/${fact.folio}`
+            this.router.navigate([redirectUrl])
+    });
     }
 
     public goToRelacionado(folio: String) {
-        console.log(folio);
-        this.router.navigate([`./pages/operaciones/revision/${folio}`]);
+        const url = this.router.url;
+        const redirectUrl = `.${url.substring(0,url.lastIndexOf('/'))}/${folio}`
+        this.router.navigate([redirectUrl]);
     }
 }
