@@ -105,7 +105,7 @@
                         </option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="inputPayMethod" class="label"
                         >Metodo de Pago</label
                     >
@@ -122,7 +122,7 @@
                             Factura pagada (PUE)
                         </option>
                         <option value="PPD" class="text-uppercase">
-                            Factura pago por definir(PPD)
+                            Factura por definir(PPD)
                         </option>
                     </select>
                 </div>
@@ -148,6 +148,18 @@
                             {{ payType.nombre }}
                         </option>
                     </select>
+                </div>
+                <div class="col-md-1">
+                    <label for="inputLugarExpedicion" class="label"
+                        >Lugar Expedición</label
+                    >
+                    <input
+                        id="inputLugarExpedicion"
+                        class="form-control text-uppercase"
+                        type="text"
+                        [disabled]="!allowEdit"
+                        [(ngModel)]="cfdi.lugarExpedicion"
+                    />
                 </div>
                 <div class="col-md-2">
                     <label for="inputCoin" class="label">Moneda</label>
