@@ -401,11 +401,11 @@ public class FacturaService {
 
   public FacturaCustom getFacturaByFolio(String folio) {
     try {
-        FacturaCustom base = getFacturaBaseByFolio(folio);
+      FacturaCustom base = getFacturaBaseByFolio(folio);
       InputStream is =
           filesService.getS3InputStream(S3Buckets.CFDIS, String.format("%s.json", folio));
-        FacturaCustom result =  new ObjectMapper().readValue(is.readAllBytes(), FacturaCustom.class);
-        result.setVersion(base.getVersion());
+      FacturaCustom result = new ObjectMapper().readValue(is.readAllBytes(), FacturaCustom.class);
+      result.setVersion(base.getVersion());
       return result;
     } catch (IOException e) {
       throw new ResponseStatusException(
@@ -416,8 +416,8 @@ public class FacturaService {
   public FacturaCustom getFacturaBaseByFolio(String folio) {
     Optional<Factura40> inv40 = repository.findByFolio(folio);
     Optional<Factura33> inv33 = repository33.findByFolio(folio);
-    if(inv33.isPresent() && inv33.get().getLineaEmisor().equals("A")){
-        return mapper.getFacturaDtoFromEntity33(inv33.get());
+    if (inv33.isPresent() && inv33.get().getLineaEmisor().equals("A")) {
+      return mapper.getFacturaDtoFromEntity33(inv33.get());
     } else if (inv40.isPresent()) {
       return mapper.getFacturaDtoFromEntity(inv40.get());
     } else {
@@ -640,7 +640,8 @@ public class FacturaService {
     timbradoServiceEvaluator.invoiceCancelValidation(facturaCustom);
     if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
         && MetodosPago.PPD.name().equals(facturaCustom.getMetodoPago())) {
-      if (Objects.nonNull(facturaCustom.getPagos()) && facturaCustom.getPagos().stream().anyMatch(a -> a.isValido())) {
+      if (Objects.nonNull(facturaCustom.getPagos())
+          && facturaCustom.getPagos().stream().anyMatch(a -> a.isValido())) {
         throw new InvoiceManagerException(
             String.format(
                 "La Factura %s no se puede cancelar un complemento no esta cancelado",
