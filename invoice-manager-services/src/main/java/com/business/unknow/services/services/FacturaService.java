@@ -413,14 +413,15 @@ public class FacturaService {
   }
 
   public FacturaCustom getFacturaBaseByFolio(String folio) {
+
     Optional<Factura40> inv40 = repository.findByFolio(folio);
-    if (inv40.isPresent() && !"A".equals(inv40.get().getLineaEmisor())) {
-      return mapper.getFacturaDtoFromEntity(inv40.get());
+    Optional<Factura33> inv33 = repository33.findByFolio(folio);
+
+    if (inv40.isPresent() || inv33.isPresent()) {
+      return inv40.isPresent()
+          ? mapper.getFacturaDtoFromEntity(inv40.get())
+          : mapper.getFacturaDtoFromEntity33(inv33.get());
     } else {
-        Optional<Factura33> inv33 = repository33.findByFolio(folio);
-        if(inv33.isPresent()){
-           return mapper.getFacturaDtoFromEntity33(inv33.get());
-        }
       throw new ResponseStatusException(
           HttpStatus.NOT_FOUND, String.format("La factura con el folio %S no existe", folio));
     }
