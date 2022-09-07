@@ -9,15 +9,16 @@
             <nb-card-header>
                 <div class="clearfix" *ngIf="factura">
                     <p class="h6 float-left" *ngIf="folio !== '*'">
-                        CFDI No {{ factura?.folio }}
+                        PERFOLIO : {{ factura?.preFolio }} - FOLIO : {{ factura?.folio }}
                     </p>
                     <p *ngIf="folio == '*'" class="h6 float-left">
                         Registro Cfdi contabilidad
                     </p>
                     <nt-invoice-status
                         class="float-right"
-                        *ngIf="!!factura?.statusFactura"
-                        [status]="factura.statusFactura"
+                        *ngIf="folio !== '*'"
+                        [factura]="factura"
+                        [isAdmin] = "isAdministrator"
                     >
                     </nt-invoice-status>
                 </div>
@@ -420,6 +421,12 @@
                     "
                 ></ngx-generar-complemento>
             </nb-card-body>
+            <nb-card-footer>
+                <div class="clearfix">
+                    <strong class="float-left"> Promotor : {{factura?.solicitante}}</strong>
+                    <strong class="float-right"> Fecha solicitud : {{factura?.fechaCreacion}}</strong>
+                </div>
+            </nb-card-footer>
         </nb-card>
     </div>
 </div>

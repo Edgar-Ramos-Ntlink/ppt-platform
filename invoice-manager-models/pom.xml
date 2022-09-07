@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.business.unknow</groupId>
         <artifactId>invoice-manager-platform</artifactId>
-        <version>4.5.23</version>
+        <version>4.5.24</version>
     </parent>
     <artifactId>invoice-manager-models</artifactId>
     <name>invoice-manager-models</name>

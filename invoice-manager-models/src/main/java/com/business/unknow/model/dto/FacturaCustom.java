@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -98,5 +99,5 @@ public class FacturaCustom implements Serializable {
   private String tipoRelacion;
   private String relacion;
   private String selloSat;
-  private List<PagoComplemento> pagos;
+  private @Builder.Default List<PagoComplemento> pagos = new ArrayList<>();
 }
