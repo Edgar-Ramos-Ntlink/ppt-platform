@@ -124,3 +124,12 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.22 Permitir edicion  de CFDIs a administradores en modulo contabilidad
   - [x] 4.5.23 Se repar issue de total de pago de complemento para cancelacion
   - [x] 4.5.24 Cambios en vista CFDI (se agerga prefolio, UUID, version, promotor y fecha de cracion), se corrige null pointer cancelacion PPD, se habilita lugar de expedicion y se corrigen redireccion entre CFDI relacionados plataforma
+  - [x] 4.5.25 Solucion de multiples bugs
+    - Enable stamp complements on accounting module 
+    - Fix base factura fields bugs 
+    - Redirect when factura is replaced 
+    - Asign stamp status on complements 
+    - Fix payments validations on  Tesoreria 
+    - Fix payments data when payment is created 
+    - Allow edition on invoice status 1,2 and 4 
+    - fix name assignation on pre-cfdi
