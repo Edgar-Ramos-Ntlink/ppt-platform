@@ -1,33 +1,32 @@
-<div class="ml-2 mr-2" *ngIf="factura?.folio">
+<div class="ml-2 mr-2" *ngIf="status">
   <h6 class="d-inline p-2">
-    <span class="badge badge-primary" *ngIf="factura?.statusFactura == '1'"
+    <span class="badge badge-primary" *ngIf="status == '1'"
     >Validación operaciones</span
   >
-  <span class="badge badge-primary" *ngIf="factura?.statusFactura == '2'">
+  <span class="badge badge-primary" *ngIf="status == '2'">
     Validación tesoreria
   </span>
-  <span class="badge badge-success" *ngIf="factura?.statusFactura == '3'">Timbrada</span>
+  <span class="badge badge-success" *ngIf="status == '3'">Timbrada</span>
 
-  <span class="badge badge-primary" *ngIf="factura?.statusFactura == '4'"> Por Timbrar </span>
+  <span class="badge badge-primary" *ngIf="status == '4'"> Por Timbrar </span>
 
-  <span class="badge badge-warning" *ngIf="factura?.statusFactura == '5'"
+  <span class="badge badge-warning" *ngIf="status == '5'"
     >Rechazo tesoreria</span
   >
 
-  <span class="badge badge-warning" *ngIf="factura?.statusFactura == '6'"
+  <span class="badge badge-warning" *ngIf="status == '6'"
     >Rechazo Operaciones</span
   >
 
-  <span class="badge badge-danger" *ngIf="factura?.statusFactura == '7'">Cancelada</span>
+  <span class="badge badge-danger" *ngIf="status == '7'">Cancelada</span>
 
-  <span class="badge badge-primary" *ngIf="factura?.statusFactura == '8'"
+  <span class="badge badge-primary" *ngIf="status == '8'"
     >Por Timbrar Contabilidad</span
   >
 
-  <span class="badge badge-warning" *ngIf="factura?.statusFactura == '9'"
+  <span class="badge badge-warning" *ngIf="status == '9'"
     >Rechazo Contabilidad</span
   >
   </h6>
-  <h6 class="d-inline p-2"> Version : {{factura?.version}}</h6>
 </div>
 

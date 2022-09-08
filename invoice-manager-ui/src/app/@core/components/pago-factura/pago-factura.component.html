@@ -42,7 +42,7 @@
                 (change)="onPaymentBankSelected($event.target.value)"
             >
                 <option value="*">Seleccionar</option>
-                <option *ngFor="let cuenta of cuentas" [value]="cuenta.id">
+                <option *ngFor="let cuenta of cuentas" [value]="cuenta.cuenta">
                     {{ cuenta.banco }} -- {{ cuenta.cuenta }} --
                     {{ cuenta.clabe }}
                 </option>

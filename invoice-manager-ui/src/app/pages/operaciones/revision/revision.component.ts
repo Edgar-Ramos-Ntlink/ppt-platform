@@ -122,10 +122,10 @@ export class RevisionComponent implements OnInit {
     public aceptarFactura() {
         const fact = JSON.parse(JSON.stringify(this.factura));
         fact.validacionOper = true;
-        if (fact.metodoPago === 'PUE') {
+        if (fact.metodoPago === 'PUE' && fact.validacionTeso == false) {
             fact.statusFactura = '2';
         }
-        if (fact.metodoPago === 'PPD') {
+        if (fact.metodoPago === 'PPD' || (fact.metodoPago === 'PUE' && fact.validacionTeso == true)) {
             fact.statusFactura = '4';
         }
         this.loading = true;

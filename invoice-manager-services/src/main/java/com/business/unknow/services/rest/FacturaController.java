@@ -118,7 +118,6 @@ public class FacturaController {
       throws InvoiceManagerException, NtlinkUtilException {
     FacturaCustom facturaCustom = service.createComplemento(folio, pago);
 
-    return new ResponseEntity<>(
-        service.stamp(facturaCustom.getFolio(), facturaCustom), HttpStatus.OK);
+    return new ResponseEntity<>(facturaCustom, HttpStatus.OK);
   }
 }

@@ -88,7 +88,7 @@ export class PagoFacturaComponent implements OnInit {
                 .subscribe((cuentas) => {
                     if (cuentas.length > 0) {
                         this.cuentas = cuentas;
-                        this.paymentForm.bankAccount = cuentas[0].id;
+                        this.paymentForm.bankAccount = cuentas[0].cuenta;
                         this.newPayment.banco = cuentas[0].banco;
                         this.newPayment.cuenta = cuentas[0].cuenta;
                     }
@@ -96,8 +96,8 @@ export class PagoFacturaComponent implements OnInit {
         }
     }
 
-    onPaymentBankSelected(clave: string) {
-        this.newPayment.banco = clave;
+    onPaymentBankSelected(cuenta:string) {
+        this.newPayment.cuenta = cuenta;
     }
 
     fileUploadListener(event: any): void {

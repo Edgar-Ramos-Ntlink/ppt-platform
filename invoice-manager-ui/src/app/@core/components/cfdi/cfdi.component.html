@@ -97,17 +97,17 @@
                     >
                         <option value="*">SELECCIONAR</option>
                         <option value="I" class="text-uppercase">
-                            Factura Ingreso
+                            Ingreso
                         </option>
                         <option value="E" class="text-uppercase">
-                            Factura Egreso(Nota credito)
+                            Egreso(Nota credito)
                         </option>
                         <option value="P" class="text-uppercase">
                             Complemento(pago)
                         </option>
                     </select>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label for="inputPayMethod" class="label"
                         >Metodo de Pago</label
                     >
@@ -184,7 +184,7 @@
                         </option>
                     </select>
                 </div>
-                <div class="col-md-2" *ngIf="cfdi.moneda === 'USD'">
+                <div class="col-md-1" *ngIf="cfdi.moneda === 'USD'">
                     <label for="inputChangeType" class="label"
                         >Tipo de Cambio</label
                     >
