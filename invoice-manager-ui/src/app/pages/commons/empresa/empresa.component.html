@@ -20,7 +20,7 @@
                 <button
                     type="button"
                     class="btn btn-outline-success float-right ml-2 mr-2"
-                    *ngIf="!companyInfo.activo && companyInfo.id"
+                    *ngIf="!companyInfo.activo && companyInfo.id && module !== 'operaciones'"
                     (click)="activateCompany()"
                 >
                     Activar
@@ -29,7 +29,7 @@
                 <button
                     type="button"
                     class="btn btn-outline-danger float-right ml-2 mr-2"
-                    *ngIf="companyInfo.activo && companyInfo.id"
+                    *ngIf="companyInfo.activo && companyInfo.id && module !== 'operaciones'"
                     (click)="deactivateCompany()"
                 >
                 Desactivar

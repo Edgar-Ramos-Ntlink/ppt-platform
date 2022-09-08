@@ -314,7 +314,7 @@ public class PagoService {
     List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact :
         pago.getFacturas().stream().distinct().collect(Collectors.toList())) {
-      FacturaCustom factura = facturaService.getFacturaBaseByFolio(pagoFact.getFolio());
+      FacturaCustom factura = facturaService.getFacturaBaseByFolio(pagoFact.getFolioReferencia());
       facturas.add(factura);
     }
     pagoEvaluatorService.validatePaymentUpdate(pago, entity, facturas);

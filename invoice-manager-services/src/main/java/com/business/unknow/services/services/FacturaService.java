@@ -406,6 +406,11 @@ public class FacturaService {
           filesService.getS3InputStream(S3Buckets.CFDIS, String.format("%s.json", folio));
       FacturaCustom result = new ObjectMapper().readValue(is.readAllBytes(), FacturaCustom.class);
       result.setVersion(base.getVersion());
+      result.getCfdi().setVersion(base.getVersion());
+      result.setStatusFactura(base.getStatusFactura());
+      result.setValidacionTeso(base.getValidacionTeso());
+      result.setValidacionOper(base.getValidacionOper());
+      result.setTipoDocumento(base.getTipoDocumento());
       return result;
     } catch (IOException e) {
       throw new ResponseStatusException(
@@ -755,9 +760,9 @@ public class FacturaService {
               String.format("The type of document %s not valid", facturaCustom.getTipoDocumento()),
               HttpStatus.BAD_REQUEST.value());
       }
-      createFacturaCustom(facturaCustom);
+      FacturaCustom replacedInvoice = createFacturaCustom(facturaCustom);
       updateFacturaCustom(dto.getFolio(), dto);
-      return dto;
+      return replacedInvoice;
     } else {
       throw new InvoiceManagerException(
           "El tipo de documento en la relacion no es de tipo factura",

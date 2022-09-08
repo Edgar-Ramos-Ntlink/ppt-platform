@@ -21,11 +21,10 @@ export class ComplementosPagoComponent implements OnInit {
             .subscribe((fact) => (this.factura = fact));
     }
 
-    public redirectToChildCfdi(folio: string) {
-        this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
-    }
 
     public redirectToCfdi(folio: string) {
-        this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
+        const url = this.router.url;
+        const redirectUrl = `.${url.substring(0,url.lastIndexOf('/'))}/${folio}`
+        this.router.navigate([redirectUrl]);
     }
 }

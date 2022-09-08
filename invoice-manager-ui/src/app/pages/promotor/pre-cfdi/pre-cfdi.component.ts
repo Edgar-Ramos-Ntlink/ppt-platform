@@ -128,7 +128,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
         const emisor = new Emisor();
         emisor.rfc = companyInfo.rfc.toUpperCase();
-        emisor.nombre = companyInfo.razonSocial.toUpperCase();
+        emisor.nombre = companyInfo.nombre.toUpperCase();
         emisor.regimenFiscal = companyInfo.regimenFiscal || '*';
 
         let invoice = JSON.parse(JSON.stringify(this.factura));

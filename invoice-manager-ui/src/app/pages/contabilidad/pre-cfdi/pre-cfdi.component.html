@@ -17,8 +17,7 @@
                     <nt-invoice-status
                         class="float-right"
                         *ngIf="folio !== '*'"
-                        [factura]="factura"
-                        [isAdmin] = "isAdministrator"
+                        [status]="factura?.statusFactura"
                     >
                     </nt-invoice-status>
                 </div>
@@ -220,14 +219,11 @@
                 </div>
 
                 <div *ngIf="!loading">
-                    <nt-cfdi
-                        [allowEdit]="
-                            factura?.tipoDocumento === 'Factura' &&
-                            (factura?.folio === undefined ||
+                    <nt-cfdi [allowEdit]="factura?.folio === undefined ||
                                 factura?.statusFactura == 1 ||
                                 factura?.statusFactura == 2 ||
-                                factura?.statusFactura == 8) || isAdministrator
-                        "
+                                factura?.statusFactura == 4 ||
+                                factura?.statusFactura == 8 || isAdministrator"
                     >
                     </nt-cfdi>
                 </div>
@@ -284,7 +280,7 @@
                         class="mr-2 ml-2 float-right"
                         [nbSpinner]="loading"
                         [disabled]="loading"
-                        *ngIf="factura?.statusFactura == '8'"
+                        *ngIf="factura?.statusFactura == '8' || factura?.statusFactura == '4'"
                         nbSpinnerStatus="success"
                         nbSpinnerSize="small"
                         nbSpinnerMessage=""
@@ -417,7 +413,7 @@
                     *ngIf="
                         factura?.statusFactura == '3' &&
                         factura?.lineaEmisor !== 'A' &&
-                        factura?.folio !== '*'
+                        factura?.folio !== '*' && factura?.tipoDocumento === 'Factura'
                     "
                 ></ngx-generar-complemento>
             </nb-card-body>

@@ -10,8 +10,7 @@
                       <nt-invoice-status
                         class="float-right"
                         *ngIf="folio !== '*'"
-                        [factura]="factura"
-                        isAdmin = "false"
+                        [status]="factura?.statusFactura"
                     ></nt-invoice-status>
                     
                     <button nbButton status="success" size="small" (click)="revalidateInvoice()" [nbSpinner]="loading"
@@ -82,7 +81,7 @@
             factura?.tipoDocumento !== 'Complemento' &&
             (factura?.folio === undefined ||
               factura?.statusFactura == 1 ||
-              factura?.statusFactura == 2)">
+              factura?.statusFactura == 2 )">
                 </nt-cfdi>
 
                 <div class="row" *ngIf="

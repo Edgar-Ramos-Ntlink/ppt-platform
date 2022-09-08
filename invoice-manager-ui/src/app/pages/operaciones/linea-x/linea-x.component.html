@@ -17,8 +17,7 @@
                     <nt-invoice-status
                         class="float-right"
                         *ngIf="folio !== '*'"
-                        [factura]="factura"
-                        isAdmin = "false"
+                        [status]="factura?.statusFactura"
                     ></nt-invoice-status>
 
                     <button

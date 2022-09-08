@@ -14,20 +14,16 @@
                     <nt-invoice-status
                         class="float-right"
                         *ngIf="folio !== '*'"
-                        [factura]="factura"
-                        isAdmin = "false"
+                        [status]="factura?.statusFactura"
                     ></nt-invoice-status>
                 </div>
             </nb-card-header>
             <nb-card-body>
                 <nt-cfdi
-                    [allowEdit]="
-                        factura?.tipoDocumento !== 'Complemento' &&
-                        (factura?.folio === undefined ||
+                    [allowEdit]="factura?.folio === undefined ||
                             factura?.statusFactura == 1 ||
-                            factura?.statusFactura == 2)
-                    "
-                >
+                            factura?.statusFactura == 2 ||
+                            factura?.statusFactura == 4">
                 </nt-cfdi>
                 <br />
                 <div
