@@ -14,7 +14,6 @@ import static com.business.unknow.Constants.DATE_TIME_FORMAT;
 import static com.business.unknow.Constants.IVA_BASE_16;
 import static com.business.unknow.Constants.IVA_IMPUESTO_16;
 import static com.business.unknow.enums.FacturaStatus.POR_TIMBRAR;
-import static com.business.unknow.enums.FacturaStatus.VALIDACION_TESORERIA;
 import static com.mx.ntlink.models.generated.CTipoFactor.TASA;
 
 import com.business.unknow.Constants;

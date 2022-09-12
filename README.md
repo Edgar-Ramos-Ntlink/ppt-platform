@@ -133,3 +133,4 @@ Para desarrollar este proyecto es necesario
     - Fix payments data when payment is created 
     - Allow edition on invoice status 1,2 and 4 
     - fix name assignation on pre-cfdi
+  - [x] 4.5.26 Enable lock and unlock logic on companies only for legal and admin areas and account creation validation

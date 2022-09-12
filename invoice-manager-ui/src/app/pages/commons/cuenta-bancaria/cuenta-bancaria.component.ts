@@ -78,15 +78,7 @@ export class CuentaBancariaComponent implements OnInit {
     });
   }
 
-  public async update() {
-
-    try{
-      this.cuenta = await this.accountsService.updateCuenta(this.cuenta).toPromise();
-      this.notificationService.sendNotification('info','Se actualizado la cuenta satisfactoriamente.');
-    } catch(error){
-        this.notificationService.sendNotification('danger', error?.message,'Error');
-    }
-  }
+  
 
   public async getAccountInfo(rfc: string, cuenta: string) {
     try{
@@ -106,10 +98,30 @@ export class CuentaBancariaComponent implements OnInit {
 
   public async registry() {
     try{
-      this.cuenta = await this.accountsService.insertCuenta(this.cuenta).toPromise();
-      this.notificationService.sendNotification('info','La cuenta ha sido creada satisfactoriamente.');
+      const errors = this.validateAccount(this.cuenta);
+      if(errors.length>0){
+        errors.forEach(e=>this.notificationService.sendNotification('warning',e,'Dato requerido'));
+      }else {
+        this.cuenta = await this.accountsService.insertCuenta(this.cuenta).toPromise();
+        this.notificationService.sendNotification('info','La cuenta ha sido creada satisfactoriamente.');
+      }
     } catch( error){
       this.notificationService.sendNotification('danger', error?.message,'Error');
+    }
+  }
+
+  public async update() {
+
+    try{
+      const errors = this.validateAccount(this.cuenta);
+      if(errors.length>0){
+        errors.forEach(e=>this.notificationService.sendNotification('warning',e,'Dato requerido'));
+      }else {
+      this.cuenta = await this.accountsService.updateCuenta(this.cuenta).toPromise();
+      this.notificationService.sendNotification('info','Se actualizado la cuenta satisfactoriamente.');
+      }
+    } catch(error){
+        this.notificationService.sendNotification('danger', error?.message,'Error');
     }
   }
 
@@ -207,5 +219,23 @@ export class CuentaBancariaComponent implements OnInit {
   public downloadFile(file: ResourceFile){
     const path: string =  `/recursos/${file.tipoRecurso}/referencias/${file.referencia}/files/${file.tipoArchivo}`;
     this.downloadService.dowloadResourceFile(path,`${file.referencia}_${file.tipoArchivo}`);
+  }
+
+
+  private validateAccount(cuenta : Cuenta) : string[] {
+    const errors = [];
+    if(cuenta.banco === undefined || cuenta.banco === '' || cuenta.banco == null ){
+      errors.push('El banco es un valor requerido')
+    }
+    if(cuenta.cuenta === undefined || cuenta.cuenta === '' || cuenta.cuenta == null ){
+      errors.push('El numero de cuenta es un valor requerido')
+    }
+    if(cuenta.clabe === undefined || cuenta.clabe === '' || cuenta.clabe == null ){
+      errors.push('El numero de CLABE es un valor requerido')
+    }
+    if(cuenta.sucursal === undefined || cuenta.sucursal === '' || cuenta.sucursal == null ){
+      errors.push('La sucursal es un valor requerido')
+    }
+    return errors;
   }
 }
