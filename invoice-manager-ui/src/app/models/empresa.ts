@@ -73,7 +73,7 @@ export class Empresa {
     public ingresos: IngresoEmpresa[];
 
     constructor(rfc?:string,nombre?:string) {
-        this.activo = false;
+        this.activo = true;
         this.bloqueada = true;
         this.operativa = false;
         this.estatus = 'INACTIVO';

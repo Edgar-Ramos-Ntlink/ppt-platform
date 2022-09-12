@@ -350,7 +350,7 @@ export class EmpresaComponent implements OnInit {
             this.loading = true;
             this.upsertDatafile('EMPRESAS', this.formInfo.doctType, rfc);
 
-            this.sleep(1).then(() => this.loadDocuments(rfc));
+            this.sleep(2).then(() => this.loadDocuments(rfc));
         } catch (error) {
             this.notificationService.sendNotification('danger',error?.message, 'Error');
         }
@@ -416,7 +416,7 @@ export class EmpresaComponent implements OnInit {
 
     public async unlockCompany() {
         const company = { ...this.companyInfo };
-        company.bloqueada = true;
+        company.bloqueada = false;
         this.loading = true;
         try {
             this.companyInfo = await this.empresaService
@@ -452,9 +452,9 @@ export class EmpresaComponent implements OnInit {
         this.loading = false;
     }
 
-    public async lockAndUpdateCompany() {
+    public async lockCompany() {
         const company = { ...this.companyInfo };
-        company.bloqueada = false;
+        company.bloqueada = true;
         this.loading = true;
         try {
             this.companyInfo = await this.empresaService
