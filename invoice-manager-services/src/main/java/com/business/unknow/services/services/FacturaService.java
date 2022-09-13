@@ -147,46 +147,58 @@ public class FacturaService {
                   criteriaBuilder.like(
                       root.get("solicitante"), "%" + parameters.get("solicitante") + "%")));
         }
-        if (parameters.get("emisor") != null) {
+        if(parameters.containsKey("rfcEmisor")){
+            predicates.add(
+                    criteriaBuilder.and(
+                            criteriaBuilder.equal(
+                                    root.get("rfcEmisor"), parameters.get("rfcEmisor"))));
+        }
+        if(parameters.containsKey("rfcRemitente")){
+              predicates.add(
+                      criteriaBuilder.and(
+                              criteriaBuilder.equal(
+                                      root.get("rfcRemitente"), parameters.get("rfcRemitente"))));
+        }
+        if (parameters.containsKey("emisor")) {
           predicates.add(
               criteriaBuilder.and(
                   criteriaBuilder.like(
                       root.get("razonSocialEmisor"), "%" + parameters.get("emisor") + "%")));
         }
-        if (parameters.get("remitente") != null) {
+        if (parameters.containsKey("remitente")) {
           predicates.add(
               criteriaBuilder.and(
                   criteriaBuilder.like(
                       root.get("razonSocialRemitente"), "%" + parameters.get("remitente") + "%")));
         }
 
-        if (parameters.get("status") != null) {
+        if (parameters.containsKey("status")) {
           predicates.add(
               criteriaBuilder.and(
                   criteriaBuilder.equal(root.get("statusFactura"), parameters.get("status"))));
         }
 
-        if (parameters.get("tipoDocumento") != null) {
+        if (parameters.containsKey("tipoDocumento")) {
           predicates.add(
               criteriaBuilder.and(
                   criteriaBuilder.equal(
                       root.get("tipoDocumento"), parameters.get("tipoDocumento"))));
         }
 
-        if (parameters.get("metodoPago") != null) {
+        if (parameters.containsKey("metodoPago")) {
           predicates.add(
               criteriaBuilder.and(
                   criteriaBuilder.equal(root.get("metodoPago"), parameters.get("metodoPago"))));
         }
 
-        if (parameters.get("saldoPendiente") != null) {
+        if (parameters.containsKey("saldoPendiente")) {
           BigDecimal saldo = new BigDecimal(parameters.get("saldoPendiente"));
           predicates.add(
               criteriaBuilder.and(
                   criteriaBuilder.greaterThanOrEqualTo(root.get("saldoPendiente"), saldo)));
         }
 
-        if (parameters.get("since") != null && parameters.get("to") != null) {
+        if (parameters.containsKey("since") && parameters.containsKey("to")) {
           java.sql.Date start = java.sql.Date.valueOf(LocalDate.parse(parameters.get("since")));
           java.sql.Date end =
               java.sql.Date.valueOf(LocalDate.parse(parameters.get("to")).plusDays(1));

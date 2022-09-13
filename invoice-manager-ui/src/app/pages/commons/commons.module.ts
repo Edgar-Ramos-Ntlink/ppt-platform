@@ -29,7 +29,6 @@ import { ValidacionPagoComponent } from './pagos/validacion-pago/validacion-pago
 import { InvoiceReportsComponent } from './invoice-reports/invoice-reports.component';
 import { AsignacionPagosComponent } from './asignacion-pagos/asignacion-pagos.component';
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
-import { MulticomplementosComponent } from './multicomplementos/multicomplementos.component';
 import { CuentasBancariasComponent } from './cuentas-bancarias/cuentas-bancarias.component';
 import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.component';
 import { CoreModule } from '../../@core/core.module';
@@ -49,7 +48,6 @@ import { UserComponent } from './user/user.component';
         ValidacionPagoComponent,
         InvoiceReportsComponent,
         AsignacionPagosComponent,
-        MulticomplementosComponent,
         CuentasBancariasComponent,
         CuentasBancariasComponent,
         CuentaBancariaComponent,
@@ -87,7 +85,6 @@ import { UserComponent } from './user/user.component';
         PagosComponent,
         PagosFacturaComponent,
         ValidacionPagoComponent,
-        MulticomplementosComponent,
         AsignacionPagosComponent,
         CuentasBancariasComponent,
         AutocompleteLibModule,

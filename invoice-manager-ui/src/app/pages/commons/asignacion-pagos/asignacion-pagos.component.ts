@@ -21,6 +21,9 @@ import { Router } from '@angular/router';
 import { Factura } from '../../../@core/models/factura';
 import { DatePipe } from '@angular/common';
 import { Empresa } from '../../../models/empresa';
+import { NtError } from '../../../@core/models/nt-error';
+import { NotificationsService } from '../../../@core/util-services/notifications.service';
+import { UsersData } from '../../../@core/data/users-data';
 
 @Component({
     selector: 'ngx-asignacion-pagos',
@@ -29,82 +32,108 @@ import { Empresa } from '../../../models/empresa';
 })
 export class AsignacionPagosComponent implements OnInit {
     public module: string = 'promotor';
-
     public page: GenericPage<any>;
-    public user: User;
     public fileInput: any;
     public paymentForm = { payType: '*', bankAccount: '*', filename: '' };
     public newPayment: PagoBase = new PagoBase();
-    public payErrorMessages: string[] = [];
-    public successMesagge: string;
+
 
     public payTypeCat: Catalogo[] = [];
     public cuentas: Cuenta[];
     public loading: boolean = false;
 
+    public usersCat: User[] = [];
     public clientsCat: Client[] = [];
     public companiesCat: Empresa[] = [];
 
+    public promotor: User;
     public selectedClient: Client;
     public selectedCompany: Empresa;
 
-    public filterParams = { solicitante: '', emisor: '', remitente: '' };
+    public filterParams = { solicitante: '', rfcEmisor: '', rfcRemitente: '', status : 3, tipoDocumento : 'Factura', metodoPago : 'PPD' };
     constructor(
-        protected ref: NbDialogRef<AsignacionPagosComponent>,
         private paymentsService: PaymentsData,
-        public datepipe: DatePipe,
         private clientsService: ClientsData,
+        private usersService: UsersData,
+        public datepipe: DatePipe,
         private invoiceService: InvoicesData,
         private accountsService: CuentasData,
         private fileService: FilesData,
         private router: Router,
-        private paymentValidator: PagosValidatorService
+        private paymentValidator: PagosValidatorService,
+        private notificationService: NotificationsService,
+        protected ref: NbDialogRef<AsignacionPagosComponent>
     ) {}
 
     ngOnInit() {
         this.module = this.router.url.split('/')[2];
-        this.successMesagge = '';
+        if(this.module === 'promotor'){
+            this.selectPromotor(JSON.parse(sessionStorage.getItem('user')));
+        } else {
+            this.loadPromotorInfo();
+        }
+        
         this.newPayment.moneda = 'MXN';
         this.loading = false;
         this.page = new GenericPage();
-        this.filterParams = { solicitante: '', emisor: '', remitente: '' };
-
+        this.filterParams = { solicitante: '', rfcEmisor: '', rfcRemitente: '', status : 3 ,tipoDocumento : 'Factura', metodoPago : 'PPD'};
         this.paymentsService
             .getFormasPago()
-            .subscribe((payTypes) => (this.payTypeCat = payTypes));
-        if (this.module === 'promotor') {
-            this.filterParams.solicitante = sessionStorage.getItem('email');
-            this.clientsService
-                .getClientsByPromotor(this.filterParams.solicitante)
-                .subscribe((clients) => {
-                    this.clientsCat = clients;
-                });
-        } else {
-            this.clientsService
-                .getClients({ page: '0', size: '50' })
-                .pipe(
-                    map(
-                        (clientsPage: GenericPage<Client>) =>
-                            clientsPage.content
+            .subscribe((payTypes) => (this.payTypeCat = payTypes));       
+    }
+
+    private loadPromotorInfo() {
+        this.usersService
+            .getUsers(0, 1000, { status: '1' })
+            .pipe(
+                map((p: GenericPage<User>) => {
+                    const users = p.content;
+                    users.forEach((u) => (u.name = `${u.alias} - ${u.email}`));
+                    return users;
+                })
+            )
+            .subscribe(
+                (users) => (this.usersCat = users),
+                (error: NtError) =>
+                    this.notificationService.sendNotification(
+                        'danger',
+                        error.message,
+                        'Error cargando promotores'
                     )
-                )
-                .subscribe((clients) => {
-                    this.clientsCat = clients;
-                });
-        }
+            );
     }
 
-    exit() {
-        this.ref.close();
+    
+    public selectPromotor(user: User) {
+        this.promotor = user;
+        this.clientsService
+            .getClientsByPromotor(user.email)
+            .pipe(
+                map((clients: Client[]) => {
+                    clients.forEach(
+                        (c) => (c.notas = `${c.rfc} - ${c.razonSocial}`)
+                    );
+                    return clients;
+                })
+            )
+            .subscribe(
+                (clients) => (this.clientsCat = clients),
+                (error: NtError) =>
+                    this.notificationService.sendNotification(
+                        'danger',
+                        error.message,
+                        'Error cargando clientes'
+                    )
+            );
     }
 
-    selectClient(cliente: Client) {
+    public selectClient(cliente: Client) {
         this.selectedClient = cliente;
-        this.filterParams.remitente = cliente.razonSocial;
-
+        this.filterParams.rfcRemitente = cliente.rfc;
         this.invoiceService
             .getInvoices({
-                remitente: cliente.razonSocial,
+                rfcRemitente: cliente.rfc,
+                solicitante: this.promotor.email,
                 page: 0,
                 size: 10000,
             })
@@ -127,12 +156,17 @@ export class AsignacionPagosComponent implements OnInit {
                         companies.find((c) => c.rfc === rfc)
                     );
                 }
-            });
+            },(error: NtError) =>
+                this.notificationService.sendNotification(
+                    'danger',
+                    error.message,
+                    'Error cargando empresas'
+                ));
     }
 
     onCompanySelected(company: any) {
         this.selectedCompany = this.companiesCat.find((c) => c.rfc === company);
-        this.filterParams.emisor = this.selectedCompany.razonSocial;
+        this.filterParams.rfcEmisor = this.selectedCompany.rfc;
         this.updateDataTable(0, 100);
     }
 
@@ -152,15 +186,19 @@ export class AsignacionPagosComponent implements OnInit {
                 .getCuentasByCompany(this.selectedCompany.rfc)
                 .subscribe((cuentas) => {
                     this.cuentas = cuentas;
-                    this.paymentForm.bankAccount = cuentas[0].id;
+                    this.paymentForm.bankAccount = cuentas[0].cuenta;
                     this.newPayment.banco = cuentas[0].banco;
                     this.newPayment.cuenta = cuentas[0].cuenta;
                 });
         }
     }
 
-    onPaymentBankSelected(clave: string) {
-        this.newPayment.banco = clave;
+    onPaymentBankSelected(cuenta: string) {
+        if(cuenta !== '*'){
+            this.newPayment.cuenta = cuenta;
+            this.newPayment.banco = this.cuentas.find(c=>c.cuenta === cuenta).banco || 'Sin Banco'
+        }
+        console.log(this.newPayment)
     }
 
     fileUploadListener(event: any): void {
@@ -179,7 +217,7 @@ export class AsignacionPagosComponent implements OnInit {
                     this.newPayment.documento = reader.result.toString();
                 };
                 reader.onerror = (error) => {
-                    this.payErrorMessages.push('Error parsing image file');
+                    this.notificationService.sendNotification('warning','Error cargando archivo');
                 };
             }
         }
@@ -189,12 +227,10 @@ export class AsignacionPagosComponent implements OnInit {
         console.log(this.newPayment);
         console.log(this.newPayment.fechaPago);
         const filename = this.paymentForm.filename;
-        this.successMesagge = '';
         this.newPayment.fechaPago = this.datepipe.transform(
             this.newPayment.fechaPago,
             'yyyy-MM-dd HH:mm:ss'
         );
-        this.payErrorMessages = [];
         const payment = { ...this.newPayment };
         console.log('Validating :', payment);
         for (const f of this.page.content) {
@@ -213,9 +249,9 @@ export class AsignacionPagosComponent implements OnInit {
             this.module !== 'promotor'
                 ? (payment.solicitante = this.page.content[0].solicitante)
                 : sessionStorage.getItem('email');
-        this.payErrorMessages =
+        const errors =
             this.paymentValidator.validatePagoSimple(payment);
-        if (this.payErrorMessages.length === 0) {
+        if (errors.length === 0) {
             this.loading = true;
             payment.acredor = this.selectedCompany.razonSocial;
             payment.deudor = this.selectedClient.razonSocial;
@@ -233,19 +269,21 @@ export class AsignacionPagosComponent implements OnInit {
                     this.fileService
                         .insertResourceFile(resourceFile)
                         .subscribe((response) => console.log(response));
-                    this.successMesagge = 'Pago creado correctamente';
+                        e=> this.notificationService.sendNotification('success','Pago creado correctamente');
                     this.updateDataTable();
                     this.loading = false;
                 },
-                (error: HttpErrorResponse) => {
+                (error: NtError) => {
                     this.loading = false;
-                    this.payErrorMessages.push(
-                        error.error.message ||
-                            `${error.statusText} : ${error.message}`
+                    this.notificationService.sendNotification(
+                        'danger',
+                        error.message,
+                        'Error en la creacion del pago'
                     );
                 }
             );
         } else {
+            errors.forEach(e=> this.notificationService.sendNotification('warning',e,'Error de validacion'))
             this.newPayment.facturas = [];
         }
     }
@@ -257,7 +295,15 @@ export class AsignacionPagosComponent implements OnInit {
 
         this.invoiceService.getInvoices(params).subscribe(
             (result: GenericPage<any>) => (this.page = result),
-            (error) => console.log(error)
+            (error:NtError) => this.notificationService.sendNotification(
+                'danger',
+                error.message,
+                'Error cargando informacion de facturas'
+            )
         );
     }
+
+    public exit() {
+        this.ref.close();
+      }
 }

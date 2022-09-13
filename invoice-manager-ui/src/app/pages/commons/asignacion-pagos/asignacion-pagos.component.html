@@ -13,37 +13,54 @@
                 Paso 1 Cargar informacion de acredor y deudor
             </p>
             <div class="row">
-                <div class="col-md-5">
-                    <label for="inputClients" class="label"
-                        >Cliente emisor de pago</label
-                    >
-                    <div class="ng-autocomplete border border-dark">
-                        <ng-autocomplete
-                            id="inputClients"
-                            [data]="clientsCat"
-                            [searchKeyword]="'razonSocial'"
-                            (selected)="selectClient($event)"
-                            placeHolder="Escribe la razon social cliente que acredita pago"
-                            historyIdentifier="Clientes"
-                            [itemTemplate]="itemTemplate"
-                            [notFoundTemplate]="notFoundTemplate"
-                        >
-                        </ng-autocomplete>
-
-                        <ng-template #itemTemplate let-item>
-                            <div>
-                                <span [innerHTML]="item.razonSocial"></span>
-                                &nbsp; | &nbsp;
-                                <small>{{ item.rfc }}</small>
-                            </div>
-                        </ng-template>
-
-                        <ng-template #notFoundTemplate let-notFound>
-                            <div>Cliente desconocido</div>
-                        </ng-template>
-                    </div>
+                <div class="col-sm-3 col-md-3 col-lg-1">
+                    <label for="inputPayCoin" class="label">Moneda</label>
+                    <select
+                        id="inputPayCoin"
+                        style="display: block"
+                        class="select-full border border-dark"
+                        [(ngModel)]="newPayment.moneda">
+                        <option value="MXN">Peso MX</option>
+                    </select>
                 </div>
-                <div class="col-md-5">
+        
+                <div class="col-sm-6 col-md-6 col-lg-3" *ngIf= "module != 'promotor'">
+                  <label for="inputPromotor" class="label">Nombre o correo promotor</label>
+                  <ng-autocomplete [data]="usersCat" [searchKeyword]="'name'" 
+                    placeholder="Escribe el correo o alias del promotor" (selected)="selectPromotor($event)"
+                    [itemTemplate]="itemPromotor" [notFoundTemplate]="notFoundPromotor">
+                  </ng-autocomplete>
+        
+                  <ng-template #itemPromotor let-item>
+                    <div class="item">
+                      <span [innerHTML]="item.name"></span>
+                    </div>
+                  </ng-template>
+        
+                  <ng-template #notFoundPromotor let-notFound>
+                    <span>No hay coincidencias</span>
+                  </ng-template>
+                </div>
+        
+                <div class="col-sm-6 col-md-6 col-lg-4">
+                  <label for="inputClients" class="label">RFC o razon social Cliente emisor pago</label>
+                  <ng-autocomplete [data]="clientsCat" [searchKeyword]="'notas'" 
+                    placeholder="Escribe el RFC o razon social del cliente" (selected)="selectClient($event)"
+                    [itemTemplate]="itemClient" [notFoundTemplate]="notFoundClient">
+                  </ng-autocomplete>
+        
+                  <ng-template #itemClient let-item>
+                    <div class="item">
+                      <span [innerHTML]="item.notas"></span>
+                    </div>
+                  </ng-template>
+        
+                  <ng-template #notFoundClient let-notFound>
+                    <span>No hay coincidencias</span>
+                  </ng-template>
+                </div>
+        
+                <div class="col-sm-6 col-md-6 col-lg-4">
                     <label for="inputCompany" class="label"
                         >Empresa receptora de pago</label
                     >
@@ -64,18 +81,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-2">
-                    <label for="inputPayCoin" class="label">Moneda</label>
-                    <select
-                        id="inputPayCoin"
-                        style="display: block"
-                        class="select-full border border-dark"
-                        [(ngModel)]="newPayment.moneda"
-                    >
-                        <option value="MXN">Peso MX</option>
-                    </select>
-                </div>
-            </div>
+                
+              </div>
+    
             <br />
             <p
                 class="font-weight-bold"
@@ -128,7 +136,7 @@
                         <option value="*">Seleccionar</option>
                         <option
                             *ngFor="let cuenta of cuentas"
-                            [value]="cuenta.id"
+                            [value]="cuenta.cuenta"
                         >
                             {{ cuenta.banco }} -- {{ cuenta.cuenta }} --
                             {{ cuenta.clabe }}
@@ -231,6 +239,7 @@
                                     <th class="text-center">Saldo a pagar</th>
                                     <th class="text-center">Total Factura</th>
                                     <th class="text-center">Pre-Folio</th>
+                                    <th class="text-center">Folio</th>
                                     <th class="text-center">
                                         Razón Social Empresa
                                     </th>
@@ -288,6 +297,7 @@
                                         {{ fila.total | currency }}
                                     </td>
                                     <td scope="row">{{ fila.preFolio }}</td>
+                                    <td scope="row">{{ fila.folio }}</td>
                                     <td scope="row">
                                         {{ fila.razonSocialEmisor }}
                                     </td>
@@ -296,7 +306,9 @@
                                     </td>
                                     <td scope="row">{{ fila.metodoPago }}</td>
                                     <td scope="row">
-                                        {{ fila.statusFactura }}
+                                        <nt-invoice-status
+                                        [status]="fila?.statusFactura"
+                                    ></nt-invoice-status>
                                     </td>
                                 </tr>
                             </tbody>
@@ -377,45 +389,27 @@
                     </div>
                 </div>
             </div>
-            <div class="row d-flex justify-content-center">
-                <div
-                    class="alert alert-success"
-                    role="alert"
-                    *ngIf="successMesagge.length > 0"
-                >
-                    {{ successMesagge }}
-                </div>
-            </div>
-            <br />
-            <div
-                class="alert alert-warning"
-                *ngIf="payErrorMessages.length > 0"
-                role="alert"
-            >
-                <p *ngFor="let message of payErrorMessages">{{ message }}</p>
-            </div>
-
-            <div
-                class="row d-flex justify-content-center"
-                *ngIf="successMesagge.length === 0"
-            >
-                <button
+            
+                
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="clearfix">
+            <button class="float-right"
                     nbButton
                     status="primary"
                     size="medium"
                     (click)="sendPayment()"
                     [nbSpinner]="loading"
-                    [disabled]="loading"
+                    [disabled]="loading || newPayment.fechaPago == undefined || newPayment.monto < 1"
                     nbSpinnerStatus="primary"
                     nbSpinnerSize="small"
                     nbSpinnerMessage=""
                 >
                     Enviar Pago
                 </button>
-            </div>
+                <button class="btn btn-warning" (click)="exit()">Salir</button>
         </div>
-    </nb-card-body>
-    <nb-card-footer>
-        <button class="btn btn-warning" (click)="exit()">Salir</button>
+        
     </nb-card-footer>
 </nb-card>
