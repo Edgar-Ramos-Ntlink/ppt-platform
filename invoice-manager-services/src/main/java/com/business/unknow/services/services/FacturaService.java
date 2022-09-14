@@ -494,7 +494,9 @@ public class FacturaService {
   public FacturaCustom updateFacturaCustom(String folio, FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
     FacturaCustom entity = getFacturaBaseByFolio(folio);
-    facturaServiceEvaluator.facturaStatusValidation(facturaCustom); // TODO verify if this method can be moved outside of updateFacturaCustom method, this is causing multiple status changed randomly
+    facturaServiceEvaluator.facturaStatusValidation(
+        facturaCustom); // TODO verify if this method can be moved outside of updateFacturaCustom
+    // method, this is causing multiple status changed randomly
     updateFacturaBase(entity.getId(), facturaCustom);
     if (Objects.nonNull(facturaCustom.getCfdi())) { // TODO remove this logic when CFDI 33 is out
       facturaCustom = invoiceBuilderService.assignDescData(facturaCustom);
@@ -551,14 +553,14 @@ public class FacturaService {
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public void deleteFactura(String folio) throws InvoiceManagerException, NtlinkUtilException {
-      Optional<Factura40> inv40 = repository.findByFolio(folio);
-      Optional<Factura33> inv33 = repository33.findByFolio(folio);
-      if (inv33.isPresent() && inv33.get().getLineaEmisor().equals("A")) {
-          repository33.delete(inv33.get());
-      } else if (inv40.isPresent()) {
-          repository.delete(inv40.get());
-          reportDataService.deleteReportData(folio);
-      }
+    Optional<Factura40> inv40 = repository.findByFolio(folio);
+    Optional<Factura33> inv33 = repository33.findByFolio(folio);
+    if (inv33.isPresent() && inv33.get().getLineaEmisor().equals("A")) {
+      repository33.delete(inv33.get());
+    } else if (inv40.isPresent()) {
+      repository.delete(inv40.get());
+      reportDataService.deleteReportData(folio);
+    }
   }
 
   @Transactional(
@@ -715,8 +717,8 @@ public class FacturaService {
               pagoDto,
               facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
       facturaCustom.setStatusFactura(status.getValor());
-      if(FacturaStatus.POR_TIMBRAR.equals(status)){
-          facturaCustom.setValidacionTeso(Boolean.TRUE);
+      if (FacturaStatus.POR_TIMBRAR.equals(status)) {
+        facturaCustom.setValidacionTeso(Boolean.TRUE);
       }
       Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
       Factura40 save = repository.save(mapper.getEntityFromFacturaCustom(facturaCustom));

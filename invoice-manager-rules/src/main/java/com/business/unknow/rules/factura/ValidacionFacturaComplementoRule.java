@@ -18,14 +18,20 @@ public class ValidacionFacturaComplementoRule {
 
   @Condition
   public boolean condition(@Fact("facturaCustom") FacturaCustom facturaCustom) {
-    if (facturaCustom.getTipoDocumento().equals(TipoDocumento.COMPLEMENTO.getDescripcion()) && facturaCustom.getStatusFactura()<3) { // TODO verify if there is a better way to handle this
+    if (facturaCustom.getTipoDocumento().equals(TipoDocumento.COMPLEMENTO.getDescripcion())
+        && facturaCustom.getStatusFactura()
+            < 3) { // TODO verify if there is a better way to handle this
       return true;
     }
     return false;
   }
 
   @Action
-  public void execute(@Fact("facturaCustom") FacturaCustom facturaDto) { // TODO verify  this rules, since in every update on the CFDI this is causing the status was changed in every factura update
+  public void execute(
+      @Fact("facturaCustom")
+          FacturaCustom
+              facturaDto) { // TODO verify  this rules, since in every update on the CFDI this is
+    // causing the status was changed in every factura update
     if (facturaDto.getValidacionOper() && facturaDto.getValidacionTeso()) {
       facturaDto.setStatusFactura(POR_TIMBRAR.getValor());
     } else if (facturaDto.getValidacionOper() && !facturaDto.getValidacionTeso()) {
