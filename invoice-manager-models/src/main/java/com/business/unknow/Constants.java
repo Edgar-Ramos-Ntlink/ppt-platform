@@ -18,6 +18,7 @@ public class Constants {
 
   public static final String CANCEL_ACK = "CANCEL_ACK";
 
+  public static final String MXN = "MXN";
   public static final String CFDI_40_VERSION = "4.0";
   public static final String CFDI_33_VERSION = "3.3";
   public static final String CFDI_DATE_PATTERN = "%fecha-timbrado%";

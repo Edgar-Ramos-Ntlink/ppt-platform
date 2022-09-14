@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import com.business.unknow.Constants;
 import com.business.unknow.enums.FacturaStatus;
 import com.business.unknow.enums.FormaPago;
 import com.business.unknow.enums.MetodosPago;
@@ -378,7 +379,7 @@ public class PagoService {
               fact.getFolio(),
               Optional.empty(),
               Optional.of(
-                  fact.getCfdi().getMoneda().equals(entity.getMoneda())
+                  Constants.MXN.equals(entity.getMoneda())
                       ? pagoFactOpt.get().getMonto().negate()
                       : pagoFactOpt
                           .get()
