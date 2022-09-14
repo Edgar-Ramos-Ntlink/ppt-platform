@@ -23,7 +23,7 @@ public class ValidacionFacturaPpdRule {
                 .equals(facturaCustom.getStatusFactura())
             || FacturaStatus.RECHAZO_TESORERIA.getValor().equals(facturaCustom.getStatusFactura()))
         && facturaCustom.getTipoDocumento().equals(TipoDocumento.FACTURA.getDescripcion())
-        && facturaCustom.getMetodoPago().equals(MetodosPago.PPD.name())) {
+        && facturaCustom.getMetodoPago().equals(MetodosPago.PPD.name()) && facturaCustom.getStatusFactura()<3) { // TODO verify if there is a better way to handle this
       return true;
     }
     return false;

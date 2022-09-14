@@ -42,7 +42,7 @@ export class PaymentsService {
                 'TRANSFERENCIA',
                 'Transferencia electrónica de fondos'
             ),
-            new Catalogo('DINERO_DIGITAL_BANCARIO', 'Deposito bancario'),
+            new Catalogo('DEPOSITO', 'Deposito bancario'),
         ];
         // custom rule to allow set credito despacho on invoices
         if (

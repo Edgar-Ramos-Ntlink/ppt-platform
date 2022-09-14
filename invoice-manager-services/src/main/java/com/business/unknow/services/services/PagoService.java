@@ -253,7 +253,7 @@ public class PagoService {
           "Generando complemento para : {}",
           factPpd.stream().map(f -> f.getFolio()).collect(Collectors.toList()));
       FacturaCustom facturaCustomComeplemento =
-          facturaService.generateComplemento(facturas, pagoDto);
+          facturaService.generateComplemento(facturas, pagoDto, FacturaStatus.VALIDACION_TESORERIA);
       pagoDto
           .getFacturas()
           .forEach(a -> a.setFolioReferencia(facturaCustomComeplemento.getFolio()));
@@ -345,7 +345,7 @@ public class PagoService {
     PagoDto entity = getPaymentById(idPago);
     List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : entity.getFacturas()) {
-      FacturaCustom factura = facturaService.getFacturaByFolio(pagoFact.getFolio());
+      FacturaCustom factura = facturaService.getFacturaBaseByFolio(pagoFact.getFolio());
       facturas.add(factura);
     }
     pagoEvaluatorService.deletepaymentValidation(entity, facturas);
