@@ -21,7 +21,9 @@ public class ValidacionNotaCreditoRule {
                 .getValor()
                 .equals(facturaCustom.getStatusFactura())
             || FacturaStatus.RECHAZO_TESORERIA.getValor().equals(facturaCustom.getStatusFactura()))
-        && facturaCustom.getTipoDocumento().equals(TipoDocumento.NOTA_CREDITO.getDescripcion())) {
+        && facturaCustom.getTipoDocumento().equals(TipoDocumento.NOTA_CREDITO.getDescripcion())
+        && facturaCustom.getStatusFactura()
+            < 3) { // TODO verify if there is a better way to handle this
       return true;
     }
     return false;

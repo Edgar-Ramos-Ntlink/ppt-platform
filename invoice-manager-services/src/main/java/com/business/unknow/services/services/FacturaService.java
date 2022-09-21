@@ -147,46 +147,56 @@ public class FacturaService {
                   criteriaBuilder.like(
                       root.get("solicitante"), "%" + parameters.get("solicitante") + "%")));
         }
-        if (parameters.get("emisor") != null) {
+        if (parameters.containsKey("rfcEmisor")) {
+          predicates.add(
+              criteriaBuilder.and(
+                  criteriaBuilder.equal(root.get("rfcEmisor"), parameters.get("rfcEmisor"))));
+        }
+        if (parameters.containsKey("rfcRemitente")) {
+          predicates.add(
+              criteriaBuilder.and(
+                  criteriaBuilder.equal(root.get("rfcRemitente"), parameters.get("rfcRemitente"))));
+        }
+        if (parameters.containsKey("emisor")) {
           predicates.add(
               criteriaBuilder.and(
                   criteriaBuilder.like(
                       root.get("razonSocialEmisor"), "%" + parameters.get("emisor") + "%")));
         }
-        if (parameters.get("remitente") != null) {
+        if (parameters.containsKey("remitente")) {
           predicates.add(
               criteriaBuilder.and(
                   criteriaBuilder.like(
                       root.get("razonSocialRemitente"), "%" + parameters.get("remitente") + "%")));
         }
 
-        if (parameters.get("status") != null) {
+        if (parameters.containsKey("status")) {
           predicates.add(
               criteriaBuilder.and(
                   criteriaBuilder.equal(root.get("statusFactura"), parameters.get("status"))));
         }
 
-        if (parameters.get("tipoDocumento") != null) {
+        if (parameters.containsKey("tipoDocumento")) {
           predicates.add(
               criteriaBuilder.and(
                   criteriaBuilder.equal(
                       root.get("tipoDocumento"), parameters.get("tipoDocumento"))));
         }
 
-        if (parameters.get("metodoPago") != null) {
+        if (parameters.containsKey("metodoPago")) {
           predicates.add(
               criteriaBuilder.and(
                   criteriaBuilder.equal(root.get("metodoPago"), parameters.get("metodoPago"))));
         }
 
-        if (parameters.get("saldoPendiente") != null) {
+        if (parameters.containsKey("saldoPendiente")) {
           BigDecimal saldo = new BigDecimal(parameters.get("saldoPendiente"));
           predicates.add(
               criteriaBuilder.and(
                   criteriaBuilder.greaterThanOrEqualTo(root.get("saldoPendiente"), saldo)));
         }
 
-        if (parameters.get("since") != null && parameters.get("to") != null) {
+        if (parameters.containsKey("since") && parameters.containsKey("to")) {
           java.sql.Date start = java.sql.Date.valueOf(LocalDate.parse(parameters.get("since")));
           java.sql.Date end =
               java.sql.Date.valueOf(LocalDate.parse(parameters.get("to")).plusDays(1));
@@ -484,7 +494,9 @@ public class FacturaService {
   public FacturaCustom updateFacturaCustom(String folio, FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
     FacturaCustom entity = getFacturaBaseByFolio(folio);
-    facturaServiceEvaluator.facturaStatusValidation(facturaCustom);
+    facturaServiceEvaluator.facturaStatusValidation(
+        facturaCustom); // TODO verify if this method can be moved outside of updateFacturaCustom
+    // method, this is causing multiple status changed randomly
     updateFacturaBase(entity.getId(), facturaCustom);
     if (Objects.nonNull(facturaCustom.getCfdi())) { // TODO remove this logic when CFDI 33 is out
       facturaCustom = invoiceBuilderService.assignDescData(facturaCustom);
@@ -541,16 +553,14 @@ public class FacturaService {
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public void deleteFactura(String folio) throws InvoiceManagerException, NtlinkUtilException {
-    Factura40 fact =
-        repository
-            .findByFolio(folio)
-            .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("La factura con el folio %s no existe", folio)));
-    repository.delete(fact);
-    reportDataService.deleteReportData(fact.getFolio());
+    Optional<Factura40> inv40 = repository.findByFolio(folio);
+    Optional<Factura33> inv33 = repository33.findByFolio(folio);
+    if (inv33.isPresent() && inv33.get().getLineaEmisor().equals("A")) {
+      repository33.delete(inv33.get());
+    } else if (inv40.isPresent()) {
+      repository.delete(inv40.get());
+      reportDataService.deleteReportData(folio);
+    }
   }
 
   @Transactional(
@@ -688,7 +698,8 @@ public class FacturaService {
 
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
-  public FacturaCustom generateComplemento(List<FacturaCustom> invoices, PagoDto pagoDto)
+  public FacturaCustom generateComplemento(
+      List<FacturaCustom> invoices, PagoDto pagoDto, FacturaStatus status)
       throws InvoiceManagerException, NtlinkUtilException {
     // TODO :MOVE THIS VALIDATION TO A RULE
     if (invoices.stream()
@@ -705,6 +716,10 @@ public class FacturaService {
               invoices,
               pagoDto,
               facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
+      facturaCustom.setStatusFactura(status.getValor());
+      if (FacturaStatus.POR_TIMBRAR.equals(status)) {
+        facturaCustom.setValidacionTeso(Boolean.TRUE);
+      }
       Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
       Factura40 save = repository.save(mapper.getEntityFromFacturaCustom(facturaCustom));
       facturaCustom.setFechaCreacion(save.getFechaCreacion());
@@ -729,7 +744,8 @@ public class FacturaService {
     PagoFacturaDto pagoFactura =
         PagoFacturaDto.builder().folio(folio).monto(pagoDto.getMonto()).build();
     pagoDto.setFacturas(ImmutableList.of(pagoFactura));
-    return generateComplemento(ImmutableList.of(getFacturaByFolio(folio)), pagoDto);
+    return generateComplemento(
+        ImmutableList.of(getFacturaByFolio(folio)), pagoDto, FacturaStatus.POR_TIMBRAR);
   }
 
   public FacturaCustom postRelacion(FacturaCustom dto, TipoDocumento tipoDocumento)

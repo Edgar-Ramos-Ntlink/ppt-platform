@@ -95,6 +95,14 @@ public class CatalogService {
     paymentFormMappings =
         formaPagoRepository.findAll().stream()
             .collect(Collectors.toMap(FormaPago::getId, e -> catalogsMapper.getDtoFromEntity(e)));
+    // TODO REVIEW COMPLEMENTS LOGIC
+    FormaPagoDto dto =
+        FormaPagoDto.builder()
+            .id("03")
+            .shortDescripcion("DEPOSITO")
+            .descripcion("Transferencia electronica - deposito")
+            .build();
+    paymentFormMappings.put("03", dto);
     log.info("Mappings paymentFormMappings loaded {}", paymentFormMappings.size());
     taxRegimeMappings =
         regimanFiscalRepository.findAll().stream()

@@ -1,39 +1,46 @@
 <div class="row">
     <div class="col-md-12">
         <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
-            <nb-card-header class="">Datos empresa
-                <button type="button" class="btn btn-outline-primary float-right ml-2 mr-2"
-                    *ngIf="companyInfo.id && !companyInfo?.bloqueada && module !=='operaciones'"
-                    (click)="unlockCompany()">
-                    <i class="fa fa-unlock"> </i> Habilitar edición
-                </button>
+            <nb-card-header>
+                <div class="clearfix">
+                    <strong class="float-left">DATOS EMPRESA
+                        <small id="emailHelp" class="form-text text-danger" *ngIf="companyInfo?.bloqueada">Esta empresa se encuentra bloqueda para otras areas</small>
+                    </strong>
+                    <button type="button" class="btn btn-outline-success float-right  ml-2 mr-2" *ngIf="companyInfo.id"
+                        (click)="updateCompany()">
+                        <i class="fa fa-sync"> </i> Actualizar
+                    </button>
 
-                <button type="button" class="btn btn-outline-primary float-right  ml-2 mr-2"
-                    *ngIf="companyInfo.id && companyInfo?.bloqueada && module !=='operaciones'"
-                    (click)="lockAndUpdateCompany()">
-                    <i class="fa fa-lock"> </i> Bloquear y actualizar
-                </button>
+                    <button type="button" class="btn btn-outline-primary float-right ml-2 mr-2"
+                        *ngIf="companyInfo.id && companyInfo?.bloqueada && (module === 'legal' ||  module == 'administracion')"
+                        (click)="unlockCompany()">
+                        <i class="fa fa-unlock"> </i> Desbloquear
+                    </button>
 
-                <button type="button" *ngIf="companyInfo.id == undefined" (click)="insertNewCompany()"  class="btn btn-outline-success float-right  ml-2 mr-2">
-                    Dar de alta
-                </button>
-                <button
-                    type="button"
-                    class="btn btn-outline-success float-right ml-2 mr-2"
-                    *ngIf="!companyInfo.activo && companyInfo.id && module !== 'operaciones'"
-                    (click)="activateCompany()"
-                >
-                    Activar
-                </button>
+                    <button type="button" class="btn btn-outline-primary float-right  ml-2 mr-2"
+                        *ngIf="companyInfo.id && !companyInfo?.bloqueada && (module === 'legal' ||  module == 'administracion')"
+                        (click)="lockCompany()">
+                        <i class="fa fa-lock"> </i> Bloquear
+                    </button>
 
-                <button
-                    type="button"
-                    class="btn btn-outline-danger float-right ml-2 mr-2"
-                    *ngIf="companyInfo.activo && companyInfo.id && module !== 'operaciones'"
-                    (click)="deactivateCompany()"
-                >
-                Desactivar
-                </button>
+
+                    <button type="button" *ngIf="companyInfo.id == undefined" (click)="insertNewCompany()"
+                        class="btn btn-outline-success float-right  ml-2 mr-2">
+                        Dar de alta
+                    </button>
+                    <button type="button" class="btn btn-outline-success float-right ml-2 mr-2"
+                        *ngIf="!companyInfo.activo && companyInfo.id && (module === 'legal' ||  module == 'administracion')"
+                        (click)="activateCompany()">
+                        Activar
+                    </button>
+
+                    <button type="button" class="btn btn-outline-danger float-right ml-2 mr-2"
+                        *ngIf="companyInfo.activo && companyInfo.id && (module === 'legal' ||  module == 'administracion')"
+                        (click)="deactivateCompany()">
+                        Desactivar
+                    </button>
+                </div>
+
             </nb-card-header>
             <nb-card-body>
                 <nb-tabset fullWidth>
@@ -44,9 +51,8 @@
                                 <div class="form-group">
                                     <label for="inputRFC" class="label">RFC</label>
                                     <input type="text" [(ngModel)]="companyInfo.rfc" class="form-control text-uppercase"
-                                        fullWidth id="inputRFC" placeholder="RFC Empresa" [disabled]="
-                                            companyInfo.id !== undefined ||
-                                            !companyInfo.bloqueada || module === 'operaciones'
+                                        fullWidth id="inputRFC" placeholder="RFC Empresa" [disabled]="!companyInfo.activo || 
+                                            companyInfo.id !== undefined || module !== 'legal'
                                         " />
                                 </div>
                             </div>
@@ -55,8 +61,8 @@
                                     <label for="inputSocialReason" class="label">Razón Social</label>
                                     <input type="text" [(ngModel)]="companyInfo.razonSocial"
                                         class="form-control text-uppercase" fullWidth
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                        id="inputSocialReason" placeholder="Razón Social" />
+                                        [disabled]="!companyInfo.activo  || module !== 'legal'" id="inputSocialReason"
+                                        placeholder="Razón Social" />
                                 </div>
                             </div>
 
@@ -65,8 +71,8 @@
                                     <label for="inputShortName" class="label">Nombre Corto</label>
                                     <input type="text" [(ngModel)]="companyInfo.nombre"
                                         class="form-control text-uppercase" fullWidth
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                        id="inputShortName" placeholder="Nombre corto" />
+                                        [disabled]="!companyInfo.activo  || module !== 'legal'" id="inputShortName"
+                                        placeholder="Nombre corto" />
                                 </div>
                             </div>
                         </div>
@@ -74,8 +80,7 @@
                             <div class="col-sm-3">
                                 <label for="inputPais" class="label">País</label>
                                 <select id="inputPais" selected="0" fullWidth class="form-control text-uppercase"
-                                    style="display: block"
-                                    [disabled]="!companyInfo.bloqueada || module === 'operaciones'">
+                                    style="display: block" [disabled]="!companyInfo.activo || !companyInfo.activo || module !== 'legal'">
                                     <option value="0">MEXICO</option>
                                 </select>
                             </div>
@@ -84,7 +89,7 @@
                                     <label for="inputZipCode" class="label">Código Postal</label>
                                     <input type="text" [(ngModel)]="companyInfo.cp"
                                         (ngModelChange)="zipCodeInfo($event)"
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
+                                        [disabled]="!companyInfo.activo || module !== 'legal'"
                                         class="form-control text-uppercase" fullWidth id="inputZipCode"
                                         placeholder="00300" />
                                 </div>
@@ -92,7 +97,7 @@
                             <div class="col-sm-6">
                                 <label for="inputColonia" class="label">Seleccionar colonia</label>
                                 <select id="inputColonia" fullWidth class="form-control text-uppercase"
-                                    *ngIf="companyInfo.bloqueada && module !== 'operaciones'"
+                                    *ngIf="!companyInfo.bloqueada && module === 'legal'"
                                     [(ngModel)]="formInfo.coloniaId" (change)="onLocation($event.target.value)"
                                     style="display: block">
                                     <option value="*">Seleccionar</option>
@@ -104,17 +109,15 @@
                                     </option>
                                 </select>
                                 <input type="text" [(ngModel)]="companyInfo.colonia" class="form-control text-uppercase"
-                                    fullWidth [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                    *ngIf="!companyInfo.bloqueada ||  module === 'operaciones'" id="inputLocalidad"
-                                    placeholder="Colonia" />
+                                    fullWidth [disabled]="!companyInfo.activo || module !== 'legal'"
+                                    *ngIf="companyInfo.bloqueada" id="inputLocalidad" placeholder="Colonia" />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="inputState" class="label">Estado</label>
                                 <input type="text" [(ngModel)]="companyInfo.estado" class="form-control text-uppercase"
-                                    fullWidth id="inputState"
-                                    [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
+                                    fullWidth id="inputState" [disabled]="!companyInfo.activo || module !== 'legal'"
                                     placeholder="Estado" />
                             </div>
                             <div class="col-sm-4">
@@ -122,7 +125,7 @@
                                     <label for="inputCity" class="label">Municipio/Delegación</label>
                                     <input type="text" [(ngModel)]="companyInfo.municipio"
                                         class="form-control text-uppercase" fullWidth id="inputCity"
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
+                                        [disabled]="!companyInfo.activo || module !== 'legal'"
                                         placeholder="Municipio/Delegación" />
                                 </div>
                             </div>
@@ -130,7 +133,7 @@
                                 <label for="Operativa" class="label">Operativa</label>
                                 <select selected="true" id="operativa" style="display: block" fullWidth
                                     class="form-control text-uppercase"
-                                    [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
+                                    [disabled]="!companyInfo.activo || module !== 'legal'"
                                     [(ngModel)]="companyInfo.operativa" (change)="
                                         onOperativaSelected($event.target.value)
                                     ">
@@ -145,8 +148,7 @@
                                     <label for="inputCalle" class="label">Calle</label>
                                     <input type="text" [(ngModel)]="companyInfo.calle"
                                         class="form-control text-uppercase" fullWidth id="inputCalle"
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                        placeholder="Calle" />
+                                        [disabled]="!companyInfo.activo || module !== 'legal'" placeholder="Calle" />
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -154,8 +156,8 @@
                                     <label for="inputExterior" class="label">No exterior</label>
                                     <input type="text" [(ngModel)]="companyInfo.noExterior"
                                         class="form-control text-uppercase" fullWidth
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                        id="inputExterior" placeholder="No exterior" />
+                                        [disabled]="!companyInfo.activo || module !== 'legal'" id="inputExterior"
+                                        placeholder="No exterior" />
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -163,8 +165,8 @@
                                     <label for="inputInterior" class="label">No interior</label>
                                     <input type="text" [(ngModel)]="companyInfo.noInterior"
                                         class="form-control text-uppercase" fullWidth
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                        id="inputInterior" placeholder="No interior" />
+                                        [disabled]="!companyInfo.activo || module !== 'legal'" id="inputInterior"
+                                        placeholder="No interior" />
                                 </div>
                             </div>
                         </div>
@@ -174,8 +176,8 @@
                                 <label for="inputGiro" class="label">Giro Empresa</label>
                                 <select id="inputGiro" fullWidth class="form-control text-uppercase" (change)="
                                         onGiroSelection($event.target.value)
-                                    " [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                    style="display: block" [(ngModel)]="companyInfo.giro">
+                                    " [disabled]="!companyInfo.activo || module !== 'legal'" style="display: block"
+                                    [(ngModel)]="companyInfo.giro">
                                     <option value="*">Seleccionar</option>
                                     <option *ngFor="let giro of girosCat" [(value)]="giro.id">
                                         {{ giro.nombre }}
@@ -186,7 +188,7 @@
                                 <label for="inputCompanyType" class="label">Linea Empresa</label>
                                 <select selected="*" id="inputCompanyType" style="display: block" fullWidth
                                     class="form-control text-uppercase"
-                                    [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
+                                    [disabled]="!companyInfo.activo || module !== 'legal'"
                                     [(ngModel)]="companyInfo.tipo" (change)="
                                         onLineaSelected($event.target.value)
                                     ">
@@ -209,7 +211,7 @@
                                 <label for="inputPayType" class="label">Regimen Fiscal</label>
                                 <select selected="1" id="inputPayType" style="display: block" fullWidth
                                     class="form-control text-uppercase" [(ngModel)]="companyInfo.regimenFiscal"
-                                    [disabled]="!companyInfo.bloqueada || module === 'operaciones'" (change)="
+                                    [disabled]="!companyInfo.activo || module !== 'legal'" (change)="
                                         onRegimenFiscalSelected(
                                             $event.target.value
                                         )
@@ -235,8 +237,8 @@
                                     <input type="text" [(ngModel)]="
                                             companyInfo.representanteLegal
                                         " class="form-control text-uppercase" fullWidth id="inputRepresentante"
-                                        placeholder="Nombre representante legal" 
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"/>
+                                        placeholder="Nombre representante legal"
+                                        [disabled]="!companyInfo.activo || module !== 'legal'" />
                                 </div>
                             </div>
 
@@ -246,8 +248,8 @@
                                     <input type="text" [(ngModel)]="
                                             companyInfo.estatusJuridico
                                         " class="form-control text-uppercase" fullWidth
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                        id="estatusJuridico" placeholder="Estatus Juridico" />
+                                        [disabled]="!companyInfo.activo || module !== 'legal'" id="estatusJuridico"
+                                        placeholder="Estatus Juridico" />
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -256,13 +258,13 @@
                                     <input type="text" [(ngModel)]="
                                             companyInfo.estatusJuridico2
                                         " class="form-control text-uppercase" fullWidth
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                        id="estatusJuridico2" placeholder="Estatus Juridico 2" />
+                                        [disabled]="!companyInfo.activo || module !== 'legal'" id="estatusJuridico2"
+                                        placeholder="Estatus Juridico 2" />
                                 </div>
                             </div>
                         </div>
 
-                        <div *ngIf="companyInfo.id">
+                        <div *ngIf="companyInfo.id && (isAdministrator || module === 'legal')">
                             <!-- STOCK-HOLDERS -->
                             <div class="row" *ngIf="
                                     companyInfo.id &&
@@ -277,8 +279,7 @@
                                                         stockHolderDialog,
                                                         undefined,
                                                         'ACCIONISTA'
-                                                    )" *ngIf="companyInfo.id !== undefined &&
-                                                companyInfo.bloqueada && module !== 'operaciones'"
+                                                    )"
                                                 class="btn btn-primary float-right ml-2 mr-2">
                                                 Nuevo Accionista
                                             </button>
@@ -291,7 +292,7 @@
                                         No hay accionistas para la empresa
                                     </div>
 
-                                    <div class="table-responsive" *ngIf="accionistas.length > 0">
+                                    <div class="table-responsive" *ngIf="accionistas.length > 0 ">
                                         <table class="table table-sm">
                                             <thead class="thead-dark">
                                                 <tr>
@@ -311,40 +312,16 @@
                                                         let fila of accionistas
                                                     ">
                                                     <td scope="row" class="text-center">
-                                                        <button class="btn d-inline mr-2 ml-2" [ngClass]="{
-                                                                'btn-outline-secondary':
-                                                                    fila.area !==
-                                                                        module &&
-                                                                    !isAdministrator,
-                                                                'btn-outline-danger':
-                                                                    fila.area ===
-                                                                        module ||
-                                                                    isAdministrator
-                                                            }" (click)="
+                                                        <button class="btn btn-outline-danger d-inline mr-2 ml-2" [disabled]="!companyInfo.activo"
+                                                        (click)="
                                                                 deleteDetail(
                                                                     fila.id
                                                                 )
-                                                            " [disabled]="
-                                                                fila.area !=
-                                                                    module &&
-                                                                !isAdministrator
                                                             ">
                                                             <i class="fa fa-trash"></i>
                                                         </button>
-                                                        <button class="btn d-inline mr-2 ml-2" [ngClass]="{
-                                                                'btn-outline-secondary':
-                                                                    fila.area !==
-                                                                        module &&
-                                                                    !isAdministrator,
-                                                                'btn-outline-primary':
-                                                                    fila.area ===
-                                                                        module ||
-                                                                    isAdministrator
-                                                            }" [disabled]="
-                                                                fila.area !=
-                                                                    module &&
-                                                                !isAdministrator
-                                                            " (click)="
+                                                        <button class="btn btn-outline-primary d-inline mr-2 ml-2"  [disabled]="!companyInfo.activo"
+                                                        (click)="
                                                                 openDetallesDialog(
                                                                     stockHolderDialog,
                                                                     fila
@@ -352,20 +329,8 @@
                                                             ">
                                                             <i class="fa fa-search"></i>
                                                         </button>
-                                                        <button class="btn d-inline mr-2 ml-2" [ngClass]="{
-                                                                'btn-outline-secondary':
-                                                                    fila.area !==
-                                                                        module &&
-                                                                    !isAdministrator,
-                                                                'btn-outline-primary':
-                                                                    fila.area ===
-                                                                        module ||
-                                                                    isAdministrator
-                                                            }" [disabled]="
-                                                                fila.area !=
-                                                                    module &&
-                                                                !isAdministrator
-                                                            " (click)="
+                                                        <button class="btn btn-outline-primary d-inline mr-2 ml-2" [disabled]="!companyInfo.activo"
+                                                        (click)="
                                                                 downloadDocumentDetail(
                                                                     fila
                                                                 )
@@ -406,8 +371,7 @@
                                                         stockHolderDialog,
                                                         undefined,
                                                         'APODERADO'
-                                                    )" *ngIf="companyInfo.id !== undefined &&
-                                                    companyInfo.bloqueada && module !== 'operaciones'"
+                                                    )"
                                                 class="btn btn-primary float-right ml-2 mr-2">
                                                 Nuevo Apoderado
                                             </button>
@@ -440,40 +404,15 @@
                                                         let fila of apoderados
                                                     ">
                                                     <td scope="row" class="text-center">
-                                                        <button class="btn d-inline mr-2 ml-2" [ngClass]="{
-                                                                'btn-outline-secondary':
-                                                                    fila.area !==
-                                                                        module &&
-                                                                    !isAdministrator,
-                                                                'btn-outline-danger':
-                                                                    fila.area ===
-                                                                        module ||
-                                                                    isAdministrator
-                                                            }" (click)="
+                                                        <button class="btn btn-outline-danger d-inline mr-2 ml-2" [disabled]="!companyInfo.activo"
+                                                        (click)="
                                                                 deleteDetail(
                                                                     fila.id
-                                                                )
-                                                            " [disabled]="
-                                                                fila.area !=
-                                                                    module &&
-                                                                !isAdministrator
-                                                            ">
+                                                                )">
                                                             <i class="fa fa-trash"></i>
                                                         </button>
-                                                        <button class="btn d-inline mr-2 ml-2" [ngClass]="{
-                                                                'btn-outline-secondary':
-                                                                    fila.area !==
-                                                                        module &&
-                                                                    !isAdministrator,
-                                                                'btn-outline-primary':
-                                                                    fila.area ===
-                                                                        module ||
-                                                                    isAdministrator
-                                                            }" [disabled]="
-                                                                fila.area !=
-                                                                    module &&
-                                                                !isAdministrator
-                                                            " (click)="
+                                                        <button class="btn btn-outline-primary d-inline mr-2 ml-2" [disabled]="!companyInfo.activo"
+                                                        (click)="
                                                                 openDetallesDialog(
                                                                     stockHolderDialog,
                                                                     fila
@@ -481,20 +420,8 @@
                                                             ">
                                                             <i class="fa fa-search"></i>
                                                         </button>
-                                                        <button class="btn d-inline mr-2 ml-2" [ngClass]="{
-                                                                'btn-outline-secondary':
-                                                                    fila.area !==
-                                                                        module &&
-                                                                    !isAdministrator,
-                                                                'btn-outline-primary':
-                                                                    fila.area ===
-                                                                        module ||
-                                                                    isAdministrator
-                                                            }" [disabled]="
-                                                                fila.area !=
-                                                                    module &&
-                                                                !isAdministrator
-                                                            " (click)="
+                                                        <button class="btn btn-outline-primary d-inline mr-2 ml-2"  [disabled]="!companyInfo.activo"
+                                                        (click)="
                                                                 downloadDocumentDetail(
                                                                     fila
                                                                 )
@@ -533,10 +460,8 @@
                                         <div class="row">
                                             <div class="col-sm-3">
                                                 <label for="inputDocType" class="label">Tipo Documento</label>
-                                                <select selected="*" id="inputDocType" style="display: block" fullWidth
-                                                    class="form-control text-uppercase" [disabled]="
-                                                        !companyInfo.bloqueada
-                                                    " [(ngModel)]="
+                                                <select selected="*" id="inputDocType" style="display: block" fullWidth [disabled]="!companyInfo.activo"
+                                                    class="form-control text-uppercase" [(ngModel)]="
                                                         formInfo.doctType
                                                     ">
                                                     <option value="*">
@@ -598,9 +523,7 @@
                                                 <div class="input-group">
                                                     <div class="custom-file" id="documentFile">
                                                         <input type="file" class="custom-file-input" id="documentFile"
-                                                            [disabled]="
-                                                                !companyInfo.bloqueada ||
-                                                                formInfo.doctType ==
+                                                            [disabled]="!companyInfo.activo || formInfo.doctType ==
                                                                     '*'
                                                             " accept=".pdf,.xls,.xlsx,.doc, .docx,image/*" (change)="
                                                                 fileDataUploadListener(
@@ -622,9 +545,7 @@
                                             <div class="row float-right" style="margin-right: 1px">
                                                 <button type="button" (click)="
                                                         fileDocumentUpload()
-                                                    " [disabled]="
-                                                        !companyInfo.bloqueada ||
-                                                        dataFile.data ==
+                                                    " [disabled]="!companyInfo.activo || dataFile.data ==
                                                             undefined
                                                     " [ngClass]="{
                                                         'btn-secondary':
@@ -673,7 +594,7 @@
                                                             let fila of legalDocuments
                                                         ">
                                                         <td scope="row" class="text-center">
-                                                            <button class="btn d-inline btn-outline-primary" (click)="
+                                                            <button class="btn d-inline btn-outline-primary" [disabled]="!companyInfo.activo" (click)="
                                                                     downloadFile(
                                                                         fila
                                                                     )
@@ -708,8 +629,7 @@
                                     <label for="inputEmail" class="label">Correo Empresa</label>
                                     <input type="email" [(ngModel)]="companyInfo.correo"
                                         class="form-control text-lowercase" fullWidth id="inputEmail"
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                        placeholder="Email" />
+                                        [disabled]="!companyInfo.activo || companyInfo.bloqueada" placeholder="Email" />
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -718,8 +638,7 @@
                                     <div class="input-group">
                                         <input name="fiel-hide" type="password" class="input form-control"
                                             id="fiel-hide-mail-pass" [(ngModel)]="companyInfo.pwCorreo"
-                                            class="form-control"
-                                            [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
+                                            class="form-control" [disabled]="!companyInfo.activo || companyInfo.bloqueada"
                                             placeholder="Contraseña correo" aria-label="password"
                                             aria-describedby="basic-addon1" *ngIf="!formInfo.showEmailPass" />
                                         <div class="input-group-append">
@@ -731,9 +650,9 @@
 
                                         <input name="fiel-show" type="text" class="input form-control"
                                             id="fiel-show-mail-pass" [(ngModel)]="companyInfo.pwCorreo"
-                                            [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                            placeholder="Contraseña correo" aria-label="password"
-                                            aria-describedby="basic-addon1" *ngIf="formInfo.showEmailPass" />
+                                            [disabled]="!companyInfo.activo || companyInfo.bloqueada" placeholder="Contraseña correo"
+                                            aria-label="password" aria-describedby="basic-addon1"
+                                            *ngIf="formInfo.showEmailPass" />
                                         <div class="input-group-append">
                                             <button class="input-group-text" (click)="toogleEmailPass()"
                                                 *ngIf="formInfo.showEmailPass">
@@ -746,9 +665,8 @@
                             <div class="col-sm-4">
                                 <label for="dominioCorreo" class="label">Dominio Correo</label>
                                 <input type="text" [(ngModel)]="companyInfo.dominioCorreo"
-                                    class="form-control text-lowercase" fullWidth
-                                    [disabled]="!companyInfo.bloqueada || module === 'operaciones'" id="dominioCorreo"
-                                    placeholder="@tiendalocal" />
+                                    class="form-control text-lowercase" fullWidth [disabled]="!companyInfo.activo || companyInfo.bloqueada"
+                                    id="dominioCorreo" placeholder="@tiendalocal" />
                             </div>
                         </div>
                         <div class="row">
@@ -757,8 +675,7 @@
                                     <label for="noCert" class="label">No de certificado</label>
                                     <input type="text" [(ngModel)]="companyInfo.noCertificado"
                                         class="form-control text-lowercase" fullWidth id="noCert"
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                        placeholder="0000000000" />
+                                        [disabled]="!companyInfo.activo || companyInfo.bloqueada" placeholder="0000000000" />
                                 </div>
                             </div>
                         </div>
@@ -772,8 +689,7 @@
                                         <label for="inputWeb" class="label">Sitio web</label>
                                         <input type="text" [(ngModel)]="companyInfo.web"
                                             class="form-control text-lowercase" fullWidth id="inputWeb"
-                                            [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                            placeholder="www.mi-empresa.com" />
+                                            [disabled]="!companyInfo.activo || companyInfo.bloqueada" placeholder="www.mi-empresa.com" />
                                     </div>
                                 </div>
                                 <label for="logoFile" class="label">Logotipo Empresa</label>
@@ -783,7 +699,7 @@
                                         <div class="input-group">
                                             <div class="custom-file" id="logoFile">
                                                 <input type="file" class="custom-file-input" id="inputLogoFile"
-                                                    accept="image/*" [disabled]="
+                                                    accept="image/*" [disabled]="!companyInfo.activo || 
                                                         companyInfo.bloqueada
                                                     " (change)="
                                                         logoUploadListener(
@@ -817,7 +733,7 @@
                             companyInfo.id &&
                             (isAdministrator ||
                                 module === 'tesoreria' ||
-                                module == 'bancos')
+                                module === 'bancos')
                         ">
                         <div class="row">
                             <div class="col-md-12">
@@ -832,7 +748,7 @@
                                             (isAdministrator ||
                                                 module == 'bancos')
                                         ">
-                                        <button type="button" (click)="
+                                        <button type="button" [disabled]="!companyInfo.activo" (click)="
                                                 openAccountDialog(
                                                     companyInfo.rfc,
                                                     '*'
@@ -883,10 +799,10 @@
                                                                 fila.area ===
                                                                     module ||
                                                                 isAdministrator
-                                                        }" [disabled]="
-                                                            fila.area !=
+                                                        }" [disabled]="!companyInfo.activo || 
+                                                            (fila.area !=
                                                                 module &&
-                                                            !isAdministrator
+                                                            !isAdministrator)
                                                         " (click)="
                                                             deleteAccount(
                                                                 fila.id
@@ -903,10 +819,10 @@
                                                                 fila.area ===
                                                                     module ||
                                                                 isAdministrator
-                                                        }" [disabled]="
-                                                            fila.area !=
+                                                        }" [disabled]="!companyInfo.activo || 
+                                                            (fila.area !=
                                                                 module &&
-                                                            !isAdministrator
+                                                            !isAdministrator)
                                                         " (click)="
                                                             openAccountDialog(
                                                                 companyInfo.rfc,
@@ -954,7 +870,7 @@
                             companyInfo.id &&
                             (isAdministrator || module === 'contabilidad')
                         ">
-                        <p class="font-weight-bold">Datos Fiscales</p>
+                        <p class="font-weight-bold">Datos Fiscales {{companyInfo.bloqueada}}</p>
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
@@ -962,8 +878,8 @@
                                     <input type="text" [(ngModel)]="
                                             companyInfo.registroPatronal
                                         " class="form-control text-uppercase" fullWidth
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                        id="registroPatronal" placeholder="Registro Patronal" />
+                                        [disabled]="!companyInfo.activo || companyInfo.bloqueada" id="registroPatronal"
+                                        placeholder="Registro Patronal" />
                                 </div>
                             </div>
 
@@ -974,24 +890,23 @@
                                     <div class="input-group">
                                         <input name="fiel-hide" type="password" class="input form-control"
                                             id="fiel-hide" [(ngModel)]="companyInfo.fiel"
-                                            [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                            placeholder="Firma Electrónica Avanzada" aria-label="password"
-                                            aria-describedby="basic-addon1" *ngIf="!formInfo.showFiel" />
+                                            [disabled]="!companyInfo.activo || companyInfo.bloqueada" placeholder="Firma Electrónica Avanzada"
+                                            aria-label="password" aria-describedby="basic-addon1"
+                                            *ngIf="!formInfo.showFiel" />
                                         <div class="input-group-append">
                                             <button class="input-group-text" (click)="toogleFiel()"
-                                                *ngIf="!formInfo.showFiel">
+                                                [disabled]="!companyInfo.activo || companyInfo.bloqueada" *ngIf="!formInfo.showFiel">
                                                 <i class="fa fa-eye" id="hide_eye"></i>
                                             </button>
                                         </div>
 
                                         <input name="fiel-show" type="text" class="input form-control" id="fiel-show"
-                                            [(ngModel)]="companyInfo.fiel"
-                                            [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
+                                            [(ngModel)]="companyInfo.fiel" [disabled]="!companyInfo.activo || companyInfo.bloqueada"
                                             placeholder="Firma Electrónica Avanzada" aria-label="password"
                                             aria-describedby="basic-addon1" *ngIf="formInfo.showFiel" />
                                         <div class="input-group-append">
                                             <button class="input-group-text" (click)="toogleFiel()"
-                                                *ngIf="formInfo.showFiel">
+                                                [disabled]="!companyInfo.activo || companyInfo.bloqueada" *ngIf="formInfo.showFiel">
                                                 <i class="fa fa-eye-slash" id="hide_eye"></i>
                                             </button>
                                         </div>
@@ -1003,9 +918,8 @@
                                 <div class="form-group">
                                     <label for="Actividad" class="label">Actividad SAT</label>
                                     <input type="text" [(ngModel)]="companyInfo.actividadSAT"
-                                        class="form-control text-uppercase" fullWidth
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'" id="Actividad"
-                                        placeholder="Actividad Sat" />
+                                        class="form-control text-uppercase" fullWidth [disabled]="!companyInfo.activo || companyInfo.bloqueada"
+                                        id="Actividad" placeholder="Actividad Sat" />
                                 </div>
                             </div>
                         </div>
@@ -1014,8 +928,8 @@
                             <div class="col-4">
                                 <label for="expiracionCertificado" class="label">Expiración Sellos</label>
                                 <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpicker" fullWidth
-                                    style="display: block" id="expiracionCertificado"
-                                    [disabled]="!companyInfo.bloqueada || module === 'operaciones'" [(ngModel)]="
+                                    style="display: block" id="expiracionCertificado" [disabled]="!companyInfo.activo || companyInfo.bloqueada"
+                                    [(ngModel)]="
                                         companyInfo.expiracionCertificado
                                     " />
                                 <nb-datepicker #expirationpicker></nb-datepicker>
@@ -1023,8 +937,7 @@
                             <div class="col-4">
                                 <label for="expiracionFiel" class="label">Expiración Fiel</label>
                                 <input nbInput placeholder="Hasta" [nbDatepicker]="expirationpickerFiel" fullWidth
-                                    style="display: block" id="expiracionFiel"
-                                    [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
+                                    style="display: block" id="expiracionFiel" [disabled]="!companyInfo.activo || companyInfo.bloqueada"
                                     [(ngModel)]="companyInfo.expiracionFiel" />
                                 <nb-datepicker #expirationpickerFiel></nb-datepicker>
                             </div>
@@ -1032,8 +945,7 @@
                                 <label for="inputOperaciones" class="label">Inicio Operaciones</label>
                                 <input nbInput placeholder="Inicio actividades" [nbDatepicker]="startOperationsPicker"
                                     fullWidth style="display: block" id="inputOperaciones"
-                                    [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                    [(ngModel)]="companyInfo.inicioActividades" />
+                                    [disabled]="!companyInfo.activo || companyInfo.bloqueada" [(ngModel)]="companyInfo.inicioActividades" />
                                 <nb-datepicker #startOperationsPicker></nb-datepicker>
                             </div>
                         </div>
@@ -1042,24 +954,21 @@
                             <div class="col-4">
                                 <label for="impuestoEstatal" class="label">Impuesto Estatal</label>
                                 <input type="text" [(ngModel)]="companyInfo.impuestoEstatal"
-                                    class="form-control text-uppercase" fullWidth
-                                    [disabled]="!companyInfo.bloqueada || module === 'operaciones'" id="impuestoEstatal"
-                                    placeholder="Impuesto Estatal" />
+                                    class="form-control text-uppercase" fullWidth [disabled]="!companyInfo.activo || companyInfo.bloqueada"
+                                    id="impuestoEstatal" placeholder="Impuesto Estatal" />
                             </div>
                             <div class="col-4">
                                 <label for="entidadRegistroPatronal" class="label">Entidad registro patronal</label>
                                 <input type="text" [(ngModel)]="
                                         companyInfo.entidadRegistroPatronal
-                                    " class="form-control text-uppercase" fullWidth
-                                    [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
+                                    " class="form-control text-uppercase" fullWidth [disabled]="!companyInfo.activo || companyInfo.bloqueada"
                                     id="entidadRegistroPatronal" placeholder="Entidad registro patronal" />
                             </div>
                             <div class="col-4">
                                 <label for="entidadImpuestoPatronal" class="label">Entidad/Impuesto Estatal</label>
                                 <input type="text" [(ngModel)]="
                                         companyInfo.entidadImpuestoPatronal
-                                    " class="form-control text-uppercase" fullWidth
-                                    [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
+                                    " class="form-control text-uppercase" fullWidth [disabled]="!companyInfo.activo || companyInfo.bloqueada"
                                     id="entidadImpuestoPatronal" placeholder="Entidad/Impuesto Estatal" />
                             </div>
                         </div>
@@ -1070,8 +979,7 @@
                                     <label for="noCert" class="label">No de certificado</label>
                                     <input type="text" [(ngModel)]="companyInfo.noCertificado"
                                         class="form-control text-uppercase" fullWidth id="noCert"
-                                        [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
-                                        placeholder="0000000000" />
+                                        [disabled]="!companyInfo.activo || companyInfo.bloqueada" placeholder="0000000000" />
                                 </div>
                             </div>
                         </div>
@@ -1085,10 +993,9 @@
                                         </p>
                                     </div>
                                     <div class="row float-right" style="margin-right: 1px">
-                                        <button type="button" (click)="openAnualDataDialog(dataDialog)" 
-                                        *ngIf="companyInfo.id !== undefined &&
-                                                companyInfo.bloqueada && module !== 'operaciones'"
-                                        class="btn btn-primary float-right ml-2 mr-2">
+                                        <button type="button" (click)="openAnualDataDialog(dataDialog)" *ngIf="companyInfo.id !== undefined &&
+                                                companyInfo.bloqueada && module !== 'operaciones'" [disabled]="!companyInfo.activo"
+                                            class="btn btn-primary float-right ml-2 mr-2">
                                             Nuevo Ingreso
                                         </button>
                                     </div>
@@ -1116,14 +1023,14 @@
                                         <tbody>
                                             <tr *ngFor="let fila of ingresos">
                                                 <td scope="row" class="text-center">
-                                                    <button class="btn d-inline mr-2 ml-2 btn-outline-danger" (click)="
+                                                    <button class="btn d-inline mr-2 ml-2 btn-outline-danger"  [disabled]="!companyInfo.activo" (click)="
                                                             deleteAnualData(
                                                                 fila.id
                                                             )
                                                         ">
                                                         <i class="fa fa-trash"></i>
                                                     </button>
-                                                    <button class="btn d-inline mr-2 ml-2 btn-outline-primary" (click)="
+                                                    <button class="btn d-inline mr-2 ml-2 btn-outline-primary" [disabled]="!companyInfo.activo" (click)="
                                                             downloadDocumentData(
                                                                 fila
                                                             )
@@ -1160,8 +1067,7 @@
                                     <div class="col-sm-3">
                                         <label for="inputDocType" class="label">Tipo Documento</label>
                                         <select selected="*" id="inputDocType" style="display: block" fullWidth
-                                            class="form-control text-uppercase"
-                                            [disabled]="!companyInfo.bloqueada || module === 'operaciones'"
+                                            class="form-control text-uppercase" [disabled]="!companyInfo.activo || companyInfo.bloqueada"
                                             [(ngModel)]="formInfo.doctType">
                                             <option value="*">
                                                 Seleccionar
@@ -1190,7 +1096,7 @@
                                         <div class="input-group">
                                             <div class="custom-file" id="documentContaFile">
                                                 <input type="file" class="custom-file-input" id="documentContaFile"
-                                                    [disabled]="
+                                                    [disabled]="!companyInfo.activo || 
                                                         companyInfo.bloqueada ||
                                                         formInfo.doctType == '*'
                                                     " accept=".pdf,.cer,.key" (change)="
@@ -1210,7 +1116,7 @@
                                 <div class="clearfix">
                                     <div class="row float-right" style="margin-right: 1px">
                                         <button type="button" (click)="fileDocumentUpload()" style="margin-left: 25px"
-                                            [disabled]="
+                                            [disabled]="!companyInfo.activo || 
                                                 companyInfo.bloqueada ||
                                                 dataFile.data == undefined
                                             " [ngClass]="{
@@ -1255,7 +1161,7 @@
                                                     let fila of contableDocuments
                                                 ">
                                                 <td scope="row" class="text-center">
-                                                    <button class="btn d-inline btn-outline-primary" (click)="
+                                                    <button class="btn d-inline btn-outline-primary" [disabled]="!companyInfo.activo" (click)="
                                                             downloadFile(fila)
                                                         ">
                                                         <i class="fa fa-download"></i>
@@ -1285,7 +1191,7 @@
                                         </p>
                                     </div>
                                     <div class="row float-right" style="margin-right: 1px">
-                                        <button type="button" (click)="
+                                        <button type="button" [disabled]="!companyInfo.activo" (click)="
                                                 openDetallesDialog(
                                                     detailDialog,
                                                     undefined,
@@ -1334,10 +1240,10 @@
                                                             deleteDetail(
                                                                 fila.id
                                                             )
-                                                        " [disabled]="
-                                                            fila.area !=
+                                                        " [disabled]="!companyInfo.activo || 
+                                                            (fila.area !=
                                                                 module &&
-                                                            !isAdministrator
+                                                            !isAdministrator)
                                                         ">
                                                         <i class="fa fa-trash"></i>
                                                     </button>
@@ -1350,10 +1256,10 @@
                                                                 fila.area ===
                                                                     module ||
                                                                 isAdministrator
-                                                        }" [disabled]="
-                                                            fila.area !=
+                                                        }" [disabled]="!companyInfo.activo || 
+                                                            (fila.area !=
                                                                 module &&
-                                                            !isAdministrator
+                                                            !isAdministrator)
                                                         " (click)="
                                                             openDetallesDialog(
                                                                 detailDialog,
@@ -1391,7 +1297,7 @@
                                         </p>
                                     </div>
                                     <div class="row float-right" style="margin-right: 1px">
-                                        <button type="button" (click)="
+                                        <button type="button"  [disabled]="!companyInfo.activo" (click)="
                                                 openDetallesDialog(
                                                     detailDialog,
                                                     undefined,
@@ -1436,7 +1342,7 @@
                                                             deleteDetail(
                                                                 fila.id
                                                             )
-                                                        " [disabled]="
+                                                        " [disabled]="!companyInfo.activo || 
                                                             fila.area !=
                                                                 module &&
                                                             !isAdministrator
@@ -1452,7 +1358,7 @@
                                                                 fila.area ===
                                                                     module ||
                                                                 isAdministrator
-                                                        }" [disabled]="
+                                                        }" [disabled]="!companyInfo.activo || 
                                                             fila.area !=
                                                                 module &&
                                                             !isAdministrator

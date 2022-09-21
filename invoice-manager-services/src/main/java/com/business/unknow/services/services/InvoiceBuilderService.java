@@ -13,7 +13,6 @@ import static com.business.unknow.Constants.ComplementoPpdDefaults.TIPO_FACTOR;
 import static com.business.unknow.Constants.DATE_TIME_FORMAT;
 import static com.business.unknow.Constants.IVA_BASE_16;
 import static com.business.unknow.Constants.IVA_IMPUESTO_16;
-import static com.business.unknow.enums.FacturaStatus.POR_TIMBRAR;
 import static com.business.unknow.enums.FacturaStatus.VALIDACION_TESORERIA;
 import static com.mx.ntlink.models.generated.CTipoFactor.TASA;
 
@@ -165,8 +164,8 @@ public class InvoiceBuilderService {
             .razonSocialEmisor(facturaCustom.getRazonSocialEmisor())
             .razonSocialRemitente(facturaCustom.getRazonSocialRemitente())
             .validacionTeso(false)
-            .validacionOper(false)
-            .statusFactura(POR_TIMBRAR.getValor())
+            .validacionOper(true)
+            .statusFactura(VALIDACION_TESORERIA.getValor())
             .cfdi(cfdi)
             .solicitante(facturaCustom.getSolicitante())
             .tipoDocumento(TipoDocumento.COMPLEMENTO.getDescripcion())

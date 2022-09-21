@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import com.business.unknow.Constants;
 import com.business.unknow.enums.FacturaStatus;
 import com.business.unknow.enums.FormaPago;
 import com.business.unknow.enums.MetodosPago;
@@ -253,7 +254,7 @@ public class PagoService {
           "Generando complemento para : {}",
           factPpd.stream().map(f -> f.getFolio()).collect(Collectors.toList()));
       FacturaCustom facturaCustomComeplemento =
-          facturaService.generateComplemento(facturas, pagoDto);
+          facturaService.generateComplemento(facturas, pagoDto, FacturaStatus.VALIDACION_TESORERIA);
       pagoDto
           .getFacturas()
           .forEach(a -> a.setFolioReferencia(facturaCustomComeplemento.getFolio()));
@@ -345,7 +346,7 @@ public class PagoService {
     PagoDto entity = getPaymentById(idPago);
     List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : entity.getFacturas()) {
-      FacturaCustom factura = facturaService.getFacturaByFolio(pagoFact.getFolio());
+      FacturaCustom factura = facturaService.getFacturaBaseByFolio(pagoFact.getFolio());
       facturas.add(factura);
     }
     pagoEvaluatorService.deletepaymentValidation(entity, facturas);
@@ -378,7 +379,7 @@ public class PagoService {
               fact.getFolio(),
               Optional.empty(),
               Optional.of(
-                  fact.getCfdi().getMoneda().equals(entity.getMoneda())
+                  Constants.MXN.equals(entity.getMoneda())
                       ? pagoFactOpt.get().getMonto().negate()
                       : pagoFactOpt
                           .get()

@@ -129,7 +129,10 @@ Para desarrollar este proyecto es necesario
     - Fix base factura fields bugs 
     - Redirect when factura is replaced 
     - Asign stamp status on complements 
-    - Fix payments validations on  Tesoreria 
+    - Fix payments validations on Tesoreria 
     - Fix payments data when payment is created 
     - Allow edition on invoice status 1,2 and 4 
     - fix name assignation on pre-cfdi
+  - [x] 4.5.26 Enable lock and unlock logic on companies only for legal and admin areas and account creation validation
+  - [x] 4.5.27 Multicomplementos upgrades, payments upgrades, fix complement generation, fix status invoice updates
+  - [x] 4.5.28 Fix null pointer on payment delete
