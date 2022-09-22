@@ -178,7 +178,7 @@ export class ClienteComponent implements OnInit {
     try {
 
       this.clientInfo = await this.clientService.updateClient(client).toPromise();
-      this.notificationService.sendNotification('info',  'Cliente activado exitosamente');
+      this.notificationService.sendNotification('info',  'Cliente desactivado exitosamente');
     } catch (error) {
       let msg = error.error.message || `${error.statusText} : ${error.message}`;
       this.notificationService.sendNotification('danger', 'Error', msg);

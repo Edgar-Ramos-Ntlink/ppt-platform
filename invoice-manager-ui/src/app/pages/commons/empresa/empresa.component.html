@@ -4,9 +4,9 @@
             <nb-card-header>
                 <div class="clearfix">
                     <strong class="float-left">DATOS EMPRESA
-                        <small id="emailHelp" class="form-text text-danger" *ngIf="companyInfo?.bloqueada">Esta empresa se encuentra bloqueda para otras areas</small>
+                        <small id="emailHelp" class="form-text text-danger" *ngIf="companyInfo?.bloqueada">Esta empresa se encuentra bloqueda, consulte el area de legal para solicitar su edicion</small>
                     </strong>
-                    <button type="button" class="btn btn-outline-success float-right  ml-2 mr-2" *ngIf="companyInfo.id"
+                    <button type="button" class="btn btn-outline-success float-right  ml-2 mr-2" *ngIf="companyInfo.id && (!companyInfo?.bloqueada || module === 'legal' ||  module == 'administracion')"
                         (click)="updateCompany()">
                         <i class="fa fa-sync"> </i> Actualizar
                     </button>

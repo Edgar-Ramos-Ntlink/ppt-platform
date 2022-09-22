@@ -5,7 +5,7 @@ import { RevisionComponent } from './revision/revision.component';
 import { CommonsModule } from '../commons/commons.module';
 import { DonwloadFileService } from '../../@core/util-services/download-file-service';
 import { LineaXComponent } from './linea-x/linea-x.component';
-import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion-pagos.component';
+import { MulticomplementosComponent } from '../commons/multicomplementos/multicomplementos.component';
 import { ValidacionPagoComponent } from '../commons/pagos/validacion-pago/validacion-pago.component';
 import { CoreModule } from '../../@core/core.module';
 
@@ -20,7 +20,7 @@ import { CoreModule } from '../../@core/core.module';
     CommonsModule,
     CoreModule,
   ],
-  entryComponents: [AsignacionPagosComponent, ValidacionPagoComponent],
+  entryComponents: [MulticomplementosComponent, ValidacionPagoComponent],
   providers: [ DonwloadFileService ],
 })
 export class OperacionesModule { }

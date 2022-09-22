@@ -462,7 +462,7 @@ export class EmpresaComponent implements OnInit {
                 .toPromise();
             this.notificationService.sendNotification(
                 'success',
-                'La empresa ha sido bloqueda y actualizada',
+                'La empresa ha sido bloqueda',
                 'Empresa bloqueda'
             );
         } catch (error) {

@@ -7,7 +7,7 @@ import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 
 import { DonwloadFileService } from '../../@core/util-services/download-file-service';
 import { CommonsModule } from '../commons/commons.module';
-import { AsignacionPagosComponent } from '../commons/asignacion-pagos/asignacion-pagos.component';
+import { MulticomplementosComponent } from '../commons/multicomplementos/multicomplementos.component';
 import { CoreModule } from '../../@core/core.module';
 
 
@@ -21,7 +21,7 @@ import { CoreModule } from '../../@core/core.module';
     CoreModule,
   ],
   entryComponents: [
-    AsignacionPagosComponent,
+    MulticomplementosComponent,
   ],
   providers: [ DonwloadFileService ],
 })

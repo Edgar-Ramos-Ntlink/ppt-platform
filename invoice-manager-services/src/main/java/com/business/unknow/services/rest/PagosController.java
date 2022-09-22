@@ -104,7 +104,6 @@ public class PagosController {
   public ResponseEntity<Void> deletePago(@PathVariable(name = "idPago") Integer idPago)
       throws InvoiceManagerException, NtlinkUtilException {
     pagoService.deletePago(idPago);
-    pagoService.delePagoFacturas(idPago);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }
