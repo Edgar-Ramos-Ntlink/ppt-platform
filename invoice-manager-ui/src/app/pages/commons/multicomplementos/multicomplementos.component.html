@@ -1,0 +1,414 @@
+<nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
+    <nb-card-header>
+        <div class="clearfix">
+            <p class="h6 float-left">
+                Multicomplementos de pago facturas PPD
+            </p>
+        </div>
+    </nb-card-header>
+    <br />
+    <nb-card-body>
+        <div >
+            <p class="font-weight-bold">
+                Paso 1 Cargar informacion de acredor y deudor
+            </p>
+            <div class="row">
+                <div class="col-sm-3 col-md-3 col-lg-1">
+                    <label for="inputPayCoin" class="label">Moneda</label>
+                    <select
+                        id="inputPayCoin"
+                        style="display: block"
+                        class="select-full border border-dark"
+                        [(ngModel)]="newPayment.moneda">
+                        <option value="MXN">Peso MX</option>
+                    </select>
+                </div>
+        
+                <div class="col-sm-6 col-md-6 col-lg-3" *ngIf= "module != 'promotor'">
+                  <label for="inputPromotor" class="label">Nombre o correo promotor</label>
+                  <ng-autocomplete [data]="usersCat" [searchKeyword]="'name'" 
+                    placeholder="Escribe el correo o alias del promotor" (selected)="selectPromotor($event)"
+                    [itemTemplate]="itemPromotor" [notFoundTemplate]="notFoundPromotor">
+                  </ng-autocomplete>
+        
+                  <ng-template #itemPromotor let-item>
+                    <div class="item">
+                      <span [innerHTML]="item.name"></span>
+                    </div>
+                  </ng-template>
+        
+                  <ng-template #notFoundPromotor let-notFound>
+                    <span>No hay coincidencias</span>
+                  </ng-template>
+                </div>
+        
+                <div class="col-sm-6 col-md-6 col-lg-4">
+                  <label for="inputClients" class="label">RFC o razon social Cliente emisor pago</label>
+                  <ng-autocomplete [data]="clientsCat" [searchKeyword]="'notas'" 
+                    placeholder="Escribe el RFC o razon social del cliente" (selected)="selectClient($event)"
+                    [itemTemplate]="itemClient" [notFoundTemplate]="notFoundClient">
+                  </ng-autocomplete>
+        
+                  <ng-template #itemClient let-item>
+                    <div class="item">
+                      <span [innerHTML]="item.notas"></span>
+                    </div>
+                  </ng-template>
+        
+                  <ng-template #notFoundClient let-notFound>
+                    <span>No hay coincidencias</span>
+                  </ng-template>
+                </div>
+        
+                <div class="col-sm-6 col-md-6 col-lg-4">
+                    <label for="inputCompany" class="label"
+                        >Empresa receptora de pago</label
+                    >
+                    <div class="form-inline">
+                        <select
+                            id="inputCompany"
+                            style="display: block"
+                            class="select-full border border-dark"
+                            (change)="onCompanySelected($event.target.value)"
+                        >
+                            <option value="*">Seleccionar</option>
+                            <option
+                                *ngFor="let company of companiesCat"
+                                [(value)]="company.rfc"
+                            >
+                                {{ company.rfc }}-{{ company.razonSocial }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                
+              </div>
+    
+            <br />
+            <p
+                class="font-weight-bold"
+                *ngIf="
+                    page.empty === false && selectedClient && selectedCompany
+                "
+            >
+                Paso 2 Cargar informacion del pago
+            </p>
+
+            <div
+                class="row"
+                *ngIf="
+                    page.empty === false && selectedClient && selectedCompany
+                "
+            >
+                <div class="col-sm-3">
+                    <label for="inputPayType" class="label"
+                        >Forma de Pago</label
+                    >
+                    <select
+                        selected="1"
+                        id="inputPayType"
+                        style="display: block"
+                        class="select-full border border-dark"
+                        [(ngModel)]="paymentForm.payType"
+                        (change)="onPaymentTypeSelected($event.target.value)"
+                    >
+                        <option value="*">Seleccionar</option>
+                        <option
+                            *ngFor="let payType of payTypeCat"
+                            [value]="payType.id"
+                        >
+                            {{ payType.nombre }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-sm-7">
+                    <label for="inputPayType" class="label"
+                        >Cuenta Receptora(Banco -- No cuenta -- CLABE)</label
+                    >
+                    <select
+                        selected="1"
+                        id="inputPayType"
+                        style="display: block"
+                        class="select-full border border-dark"
+                        [(ngModel)]="paymentForm.bankAccount"
+                        (change)="onPaymentBankSelected($event.target.value)"
+                    >
+                        <option value="*">Seleccionar</option>
+                        <option
+                            *ngFor="let cuenta of cuentas"
+                            [value]="cuenta.cuenta"
+                        >
+                            {{ cuenta.banco }} -- {{ cuenta.cuenta }} --
+                            {{ cuenta.clabe }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <label for="payAmmount" class="label">Monto Pago</label>
+                    <input
+                        id="payAmmount"
+                        class="form-control"
+                        fullWidth
+                        type="number"
+                        min="0"
+                        placeholder="Monto"
+                        [(ngModel)]="newPayment.monto"
+                    />
+                </div>
+            </div>
+
+            <div
+                class="row"
+                *ngIf="
+                    page.empty === false && selectedClient && selectedCompany
+                "
+            >
+                <div class="col-md-4">
+                    <label for="payAmmount" class="label">Fecha de pago</label>
+                    <input
+                        nbInput
+                        placeholder="Fecha de pago"
+                        [nbDatepicker]="formpicker"
+                        fullWidth
+                        style="display: block"
+                        class="select-full border border-dark"
+                        [(ngModel)]="newPayment.fechaPago"
+                    />
+                    <nb-datepicker #formpicker></nb-datepicker>
+                </div>
+                <div class="form-group col-md-8">
+                    <label for="payFile" class="label"
+                        >Comprobante de pago</label
+                    >
+                    <div class="input-group">
+                        <div class="custom-file" id="payFile">
+                            <input
+                                #fileInput
+                                type="file"
+                                class="custom-file-input"
+                                id="inputGroupFile01"
+                                accept="image/*"
+                                (change)="fileUploadListener($event)"
+                                style="display: block"
+                                aria-describedby="inputGroupFileAddon01"
+                            />
+                            <label
+                                class="custom-file-label"
+                                for="inputGroupFile01"
+                                >{{ paymentForm.filename }}</label
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br />
+            <p
+                class="font-weight-bold"
+                *ngIf="
+                    page.empty === false && selectedClient && selectedCompany
+                "
+            >
+                Paso 3 Seleccionar factura con saldo pendiente
+            </p>
+            <br />
+
+            <div
+                *ngIf="page.empty === true && selectedClient && selectedCompany"
+                class="alert alert-primary"
+                role="alert"
+            >
+                No hay facturas con saldo pendiente
+            </div>
+
+            <div
+                class="row"
+                *ngIf="page.empty == false && selectedClient && selectedCompany"
+            >
+                <div class="col-md-12">
+                    <div class="table-responsive slide_1">
+                        <table class="table table-sm table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th
+                                        class="text-center"
+                                        style="width: 170px"
+                                    >
+                                        Saldo a pagar
+                                    </th>
+                                    <th class="text-center">Saldo a pagar</th>
+                                    <th class="text-center">Total Factura</th>
+                                    <th class="text-center">Pre-Folio</th>
+                                    <th class="text-center">Folio</th>
+                                    <th class="text-center">
+                                        Razón Social Empresa
+                                    </th>
+                                    <th class="text-center">
+                                        Razón Social Cliente
+                                    </th>
+                                    <th class="text-center">Método Pago</th>
+                                    <th class="text-center">Estatus factura</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let fila of page.content">
+                                    <td
+                                        scope="row p-1"
+                                        class="text-center"
+                                        style="min-width: 160px"
+                                    >
+                                        <small
+                                            *ngIf="
+                                                fila.saldoPendiente ===
+                                                    undefined ||
+                                                fila.saldoPendiente < 0.01 ||
+                                                fila.statusFactura != '3'
+                                            "
+                                            id="emailHelp"
+                                            class="form-text text-muted"
+                                            >Sin saldo pendiente o factura no
+                                            timbrada.</small
+                                        >
+                                        <input
+                                            type="number"
+                                            class="form-control border"
+                                            id="inputImporte"
+                                            placeholder="Importe a pagar MXN"
+                                            *ngIf="
+                                                fila.saldoPendiente > 0.01 &&
+                                                fila.statusFactura == '3'
+                                            "
+                                            [ngClass]="{
+                                                'border-primary':
+                                                    fila.saldoPendiente >=
+                                                    fila.pagoMonto,
+                                                'border-danger':
+                                                    fila.saldoPendiente <
+                                                    fila.pagoMonto
+                                            }"
+                                            [(ngModel)]="fila.pagoMonto"
+                                            name="monto"
+                                        />
+                                    </td>
+                                    <td scope="row">
+                                        {{ fila.saldoPendiente | currency }}
+                                    </td>
+                                    <td scope="row">
+                                        {{ fila.total | currency }}
+                                    </td>
+                                    <td scope="row">{{ fila.preFolio }}</td>
+                                    <td scope="row">{{ fila.folio }}</td>
+                                    <td scope="row">
+                                        {{ fila.razonSocialEmisor }}
+                                    </td>
+                                    <td scope="row">
+                                        {{ fila.razonSocialRemitente }}
+                                    </td>
+                                    <td scope="row">{{ fila.metodoPago }}</td>
+                                    <td scope="row">
+                                        <nt-invoice-status
+                                        [status]="fila?.statusFactura"
+                                    ></nt-invoice-status>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="clearfix">
+                            <ul
+                                class="pagination float-right"
+                                *ngIf="page.totalElements > 1"
+                            >
+                                <li
+                                    class="page-item"
+                                    *ngIf="page.first == false"
+                                >
+                                    <button
+                                        class="btn btn-sm page-link"
+                                        (click)="updateDataTable(0, page.size)"
+                                    >
+                                        <i class="nb-arrow-left"></i>
+                                    </button>
+                                </li>
+                                <li
+                                    class="page-item"
+                                    *ngIf="page.first == false"
+                                >
+                                    <button
+                                        class="btn btn-sm page-link"
+                                        (click)="
+                                            updateDataTable(
+                                                page.number - 1,
+                                                page.size
+                                            )
+                                        "
+                                    >
+                                        {{ page.number }}
+                                    </button>
+                                </li>
+                                <li class="page-item active">
+                                    <a class="page-link"
+                                        ><strong>{{
+                                            page.number + 1
+                                        }}</strong></a
+                                    >
+                                </li>
+                                <li
+                                    class="page-item"
+                                    *ngIf="page.last == false"
+                                >
+                                    <button
+                                        class="btn btn-sm page-link"
+                                        (click)="
+                                            updateDataTable(
+                                                page.number + 1,
+                                                page.size
+                                            )
+                                        "
+                                    >
+                                        {{ page.number + 2 }}
+                                    </button>
+                                </li>
+                                <li
+                                    class="page-item"
+                                    *ngIf="page.last == false"
+                                >
+                                    <button
+                                        class="btn btn-sm page-link"
+                                        (click)="
+                                            updateDataTable(
+                                                page.totalPages - 1,
+                                                page.size
+                                            )
+                                        "
+                                    >
+                                        <i class="nb-arrow-right"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+                
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="clearfix">
+            <button class="float-right"
+                    nbButton
+                    status="primary"
+                    size="medium"
+                    (click)="sendPayment()"
+                    [nbSpinner]="loading"
+                    [disabled]="loading || newPayment.fechaPago == undefined || newPayment.monto < 1"
+                    nbSpinnerStatus="primary"
+                    nbSpinnerSize="small"
+                    nbSpinnerMessage=""
+                >
+                    Enviar Pago
+                </button>
+        </div>
+        
+    </nb-card-footer>
+</nb-card>
