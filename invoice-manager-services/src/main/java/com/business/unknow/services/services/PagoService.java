@@ -8,6 +8,7 @@ import com.business.unknow.enums.RevisionPagos;
 import com.business.unknow.enums.TipoArchivo;
 import com.business.unknow.enums.TipoDocumento;
 import com.business.unknow.model.dto.FacturaCustom;
+import com.business.unknow.model.dto.PagoComplemento;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
@@ -366,19 +367,25 @@ public class PagoService {
                 .collect(Collectors.toList());
 
         for (PagoFacturaDto pago : pagos) {
-          FacturaCustom fact = facturaService.getFacturaBaseByFolio(pago.getFolio());
+          FacturaCustom fact = facturaService.getFacturaByFolio(pago.getFolio());
           log.info(
               "Removing Complement references of {} from PPD parent {}",
               mainFact.getFolio(),
               pago.getFolio());
           fact.setSaldoPendiente(fact.getSaldoPendiente().add(entity.getMonto()));
-          fact.getPagos()
-              .removeIf(
-                  a ->
-                      a.getFolio().equals(mainFact.getFolio())
-                          && a.getFechaPago().equals(entity.getFechaPago())
-                          && a.getFolioOrigen().equals(fact.getFolio()));
-          facturaService.updateFacturaCustom(fact.getFolio(), fact);
+
+          Optional<PagoComplemento> pagoComplemento =
+              fact.getPagos().stream()
+                  .filter(p -> p.getFolio().equals(mainFact.getFolio()))
+                  .findAny();
+          if (pagoComplemento.isPresent()) {
+            fact.getPagos().remove(pagoComplemento.get());
+            facturaService.updateFacturaCustom(fact.getFolio(), fact);
+          } else {
+            throw new InvoiceManagerException(
+                "Incosistencias en los complementos de pago de la factura origen, no se elimino el complemento",
+                HttpStatus.CONFLICT.value());
+          }
         }
         // deleting all complement references
         facturaService.deleteFactura(mainFact.getFolio());
