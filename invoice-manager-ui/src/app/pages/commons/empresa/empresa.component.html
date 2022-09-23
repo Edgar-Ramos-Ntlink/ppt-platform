@@ -6,19 +6,19 @@
                     <strong class="float-left">DATOS EMPRESA
                         <small id="emailHelp" class="form-text text-danger" *ngIf="companyInfo?.bloqueada">Esta empresa se encuentra bloqueda, consulte el area de legal para solicitar su edicion</small>
                     </strong>
-                    <button type="button" class="btn btn-outline-success float-right  ml-2 mr-2" *ngIf="companyInfo.id && (!companyInfo?.bloqueada || module === 'legal' ||  module == 'administracion')"
+                    <button type="button" class="btn btn-outline-success float-right  ml-2 mr-2" *ngIf="companyInfo.id && companyInfo.activo && (!companyInfo?.bloqueada || module === 'legal' ||  module == 'administracion')"
                         (click)="updateCompany()">
                         <i class="fa fa-sync"> </i> Actualizar
                     </button>
 
                     <button type="button" class="btn btn-outline-primary float-right ml-2 mr-2"
-                        *ngIf="companyInfo.id && companyInfo?.bloqueada && (module === 'legal' ||  module == 'administracion')"
+                        *ngIf="companyInfo.id && companyInfo.activo && companyInfo?.bloqueada && (module === 'legal' ||  module == 'administracion')"
                         (click)="unlockCompany()">
                         <i class="fa fa-unlock"> </i> Desbloquear
                     </button>
 
                     <button type="button" class="btn btn-outline-primary float-right  ml-2 mr-2"
-                        *ngIf="companyInfo.id && !companyInfo?.bloqueada && (module === 'legal' ||  module == 'administracion')"
+                        *ngIf="companyInfo.id && companyInfo.activo && !companyInfo?.bloqueada && (module === 'legal' ||  module == 'administracion')"
                         (click)="lockCompany()">
                         <i class="fa fa-lock"> </i> Bloquear
                     </button>
@@ -460,7 +460,7 @@
                                         <div class="row">
                                             <div class="col-sm-3">
                                                 <label for="inputDocType" class="label">Tipo Documento</label>
-                                                <select selected="*" id="inputDocType" style="display: block" fullWidth [disabled]="!companyInfo.activo"
+                                                <select selected="*" id="inputDocType" style="display: block" fullWidth
                                                     class="form-control text-uppercase" [(ngModel)]="
                                                         formInfo.doctType
                                                     ">
@@ -523,7 +523,7 @@
                                                 <div class="input-group">
                                                     <div class="custom-file" id="documentFile">
                                                         <input type="file" class="custom-file-input" id="documentFile"
-                                                            [disabled]="!companyInfo.activo || formInfo.doctType ==
+                                                            [disabled]="formInfo.doctType ==
                                                                     '*'
                                                             " accept=".pdf,.xls,.xlsx,.doc, .docx,image/*" (change)="
                                                                 fileDataUploadListener(
@@ -545,7 +545,7 @@
                                             <div class="row float-right" style="margin-right: 1px">
                                                 <button type="button" (click)="
                                                         fileDocumentUpload()
-                                                    " [disabled]="!companyInfo.activo || dataFile.data ==
+                                                    " [disabled]="dataFile.data ==
                                                             undefined
                                                     " [ngClass]="{
                                                         'btn-secondary':
@@ -1067,7 +1067,7 @@
                                     <div class="col-sm-3">
                                         <label for="inputDocType" class="label">Tipo Documento</label>
                                         <select selected="*" id="inputDocType" style="display: block" fullWidth
-                                            class="form-control text-uppercase" [disabled]="!companyInfo.activo || companyInfo.bloqueada"
+                                            class="form-control text-uppercase" [disabled]="companyInfo.bloqueada"
                                             [(ngModel)]="formInfo.doctType">
                                             <option value="*">
                                                 Seleccionar
@@ -1096,8 +1096,7 @@
                                         <div class="input-group">
                                             <div class="custom-file" id="documentContaFile">
                                                 <input type="file" class="custom-file-input" id="documentContaFile"
-                                                    [disabled]="!companyInfo.activo || 
-                                                        companyInfo.bloqueada ||
+                                                    [disabled]="companyInfo.bloqueada ||
                                                         formInfo.doctType == '*'
                                                     " accept=".pdf,.cer,.key" (change)="
                                                         fileDataUploadListener(
@@ -1116,8 +1115,7 @@
                                 <div class="clearfix">
                                     <div class="row float-right" style="margin-right: 1px">
                                         <button type="button" (click)="fileDocumentUpload()" style="margin-left: 25px"
-                                            [disabled]="!companyInfo.activo || 
-                                                companyInfo.bloqueada ||
+                                            [disabled]=" companyInfo.bloqueada ||
                                                 dataFile.data == undefined
                                             " [ngClass]="{
                                                 'btn-secondary':

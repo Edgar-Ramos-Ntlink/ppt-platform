@@ -201,7 +201,8 @@ public class FacturaService {
           java.sql.Date end =
               java.sql.Date.valueOf(LocalDate.parse(parameters.get("to")).plusDays(1));
           predicates.add(
-              criteriaBuilder.and(criteriaBuilder.between(root.get("fechaCreacion"), start, end)));
+              criteriaBuilder.and(
+                  criteriaBuilder.between(root.get("fechaActualizacion"), start, end)));
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -421,6 +422,8 @@ public class FacturaService {
       result.setValidacionTeso(base.getValidacionTeso());
       result.setValidacionOper(base.getValidacionOper());
       result.setTipoDocumento(base.getTipoDocumento());
+      result.setFechaActualizacion(base.getFechaActualizacion());
+      result.setFechaCreacion(base.getFechaCreacion());
       return result;
     } catch (IOException e) {
       throw new ResponseStatusException(

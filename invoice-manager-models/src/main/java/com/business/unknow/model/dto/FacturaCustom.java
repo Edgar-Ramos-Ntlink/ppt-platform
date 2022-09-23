@@ -1,6 +1,6 @@
 package com.business.unknow.model.dto;
 
-import static com.business.unknow.Constants.JSON_DATE_FORMAT;
+import static com.business.unknow.Constants.JSON_DAY_FORMAT;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -53,14 +53,14 @@ public class FacturaCustom implements Serializable {
   private BigDecimal impuestosRetenidos;
   private BigDecimal impuestosTrasladados;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATE_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
   private Date fechaCreacion;
+
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
+  private Date fechaActualizacion;
 
   private String statusCancelacion;
   private Date fechaCancelacion;
-
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATE_FORMAT)
-  private Date fechaActualizacion;
 
   private Date fechaTimbrado;
   private Integer statusCancelado;

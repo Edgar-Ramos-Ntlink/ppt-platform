@@ -105,7 +105,11 @@ export class EmpresaComponent implements OnInit {
             .then(
                 (giros: Catalogo[]) => (this.girosCat = giros),
                 (error: NtError) => {
-                    this.notificationService.sendNotification('danger', error.message, 'Error');
+                    this.notificationService.sendNotification(
+                        'danger',
+                        error.message,
+                        'Error'
+                    );
                 }
             )
             .then(() =>
@@ -133,18 +137,27 @@ export class EmpresaComponent implements OnInit {
                     : new Date(`${this.companyInfo.expiracionCertificado}`);
 
             // recovering ZIPCODE INFO
-           this.catalogsService.getZipCodeInfo(this.companyInfo.cp).then((cpInfo:ZipCodeInfo)=>{
-            this.colonias = cpInfo.colonias;
-            let index = 0;
-            cpInfo.colonias.forEach((element) => {
-                if (cpInfo.colonias[index] === this.companyInfo.colonia) {
-                    this.formInfo.coloniaId = index;
+            this.catalogsService.getZipCodeInfo(this.companyInfo.cp).then(
+                (cpInfo: ZipCodeInfo) => {
+                    this.colonias = cpInfo.colonias;
+                    let index = 0;
+                    cpInfo.colonias.forEach((element) => {
+                        if (
+                            cpInfo.colonias[index] === this.companyInfo.colonia
+                        ) {
+                            this.formInfo.coloniaId = index;
+                        }
+                        index++;
+                    });
+                },
+                (error: NtError) => {
+                    this.notificationService.sendNotification(
+                        'danger',
+                        error.message,
+                        'Error cargando  codigo postal'
+                    );
                 }
-                index++;
-            });
-           },(error:NtError)=>{
-                this.notificationService.sendNotification('danger', error.message, 'Error cargando  codigo postal');
-            });
+            );
             this.observaciones =
                 this.companyInfo.detalles.filter(
                     (d) => d.tipo === 'OBSERVACION'
@@ -194,8 +207,12 @@ export class EmpresaComponent implements OnInit {
                 .getResourceFile(rfc, 'EMPRESAS', 'LOGO')
                 .subscribe(
                     (logo) => (this.logo = logo),
-                    (error:NtError) => {
-                        this.notificationService.sendNotification('danger', error.message, 'Error');
+                    (error: NtError) => {
+                        this.notificationService.sendNotification(
+                            'danger',
+                            error.message,
+                            'Error'
+                        );
                     }
                 );
         }
@@ -291,8 +308,12 @@ export class EmpresaComponent implements OnInit {
                                 this.loading = false;
                                 this.loadCompanyInfo(this.companyInfo.rfc);
                             },
-                            (error:NtError) => {
-                                this.notificationService.sendNotification('danger',error.message, 'Error');
+                            (error: NtError) => {
+                                this.notificationService.sendNotification(
+                                    'danger',
+                                    error.message,
+                                    'Error'
+                                );
                             }
                         );
                 };
@@ -332,7 +353,11 @@ export class EmpresaComponent implements OnInit {
             console.error(error);
             this.formInfo.fileDataName = '';
             this.formInfo.doctType = '*';
-            this.notificationService.sendNotification('danger',error?.message, 'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
     }
 
@@ -352,7 +377,11 @@ export class EmpresaComponent implements OnInit {
 
             this.sleep(2).then(() => this.loadDocuments(rfc));
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message, 'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
         this.loading = false;
     }
@@ -372,7 +401,11 @@ export class EmpresaComponent implements OnInit {
                 this.dataFile.data = reader.result.toString();
             };
             reader.onerror = (error) => {
-                this.notificationService.sendNotification('danger','Error al cargar el archivo', 'Error');
+                this.notificationService.sendNotification(
+                    'danger',
+                    'Error al cargar el archivo',
+                    'Error'
+                );
             };
         }
     }
@@ -388,15 +421,24 @@ export class EmpresaComponent implements OnInit {
                     .insertNewCompany(this.companyInfo)
                     .toPromise();
                 this.notificationService.sendNotification(
-                    'info','La empresa ha sido creada correctamente'
+                    'info',
+                    'La empresa ha sido creada correctamente'
                 );
             } else {
                 for (const msg of errorMessages) {
-                    this.notificationService.sendNotification('warning',msg, 'Falta información');
+                    this.notificationService.sendNotification(
+                        'warning',
+                        msg,
+                        'Falta información'
+                    );
                 }
             }
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message, 'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
     }
 
@@ -410,7 +452,11 @@ export class EmpresaComponent implements OnInit {
                 'La empresa ha sido actualizada correctamente'
             );
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message, 'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
     }
 
@@ -428,7 +474,11 @@ export class EmpresaComponent implements OnInit {
                 'Empresa desbloqueda'
             );
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message, 'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
         this.loading = false;
     }
@@ -447,7 +497,11 @@ export class EmpresaComponent implements OnInit {
                 'Empresa inactiva'
             );
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message, 'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
         this.loading = false;
     }
@@ -466,7 +520,11 @@ export class EmpresaComponent implements OnInit {
                 'Empresa bloqueda'
             );
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message, 'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
         this.loading = false;
     }
@@ -503,7 +561,7 @@ export class EmpresaComponent implements OnInit {
                 this.notificationService.sendNotification(
                     'warning',
                     'Falta logo empresa',
-                    'Es necesario la carga del logo para activar la empresa',
+                    'Es necesario la carga del logo para activar la empresa'
                 );
             }
 
@@ -518,21 +576,23 @@ export class EmpresaComponent implements OnInit {
                 );
             }
 
-            if (cert && key && logo && this.companyInfo.noCertificado) {
-                const company = { ...this.companyInfo };
-                company.activo = true;
-                company.bloqueada = true;
-                company.estatus = 'ACTIVA';
-                this.companyInfo = await this.empresaService
-                    .updateCompany(this.companyInfo.rfc, company)
-                    .toPromise();
-                this.notificationService.sendNotification(
-                    'info',
-                    'La empresa ha sido activada satisfactoriamente'
-                );
-            }
+            const company = { ...this.companyInfo };
+            company.activo = true;
+            company.bloqueada = true;
+            company.estatus = 'ACTIVA';
+            this.companyInfo = await this.empresaService
+                .updateCompany(this.companyInfo.rfc, company)
+                .toPromise();
+            this.notificationService.sendNotification(
+                'info',
+                'La empresa ha sido activada satisfactoriamente'
+            );
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message, 'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
         this.loading = false;
     }
@@ -570,7 +630,11 @@ export class EmpresaComponent implements OnInit {
                 this.loadCompanyInfo(this.companyInfo.rfc);
             }
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message, 'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
         this.loading = false;
     }
@@ -588,7 +652,11 @@ export class EmpresaComponent implements OnInit {
             );
             this.loadCompanyInfo(this.companyInfo.rfc);
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message, 'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
         this.loading = false;
     }
@@ -610,7 +678,11 @@ export class EmpresaComponent implements OnInit {
             );
             this.loadCompanyInfo(this.companyInfo.rfc);
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message, 'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
         this.loading = false;
     }
@@ -675,7 +747,11 @@ export class EmpresaComponent implements OnInit {
                 }
             }
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message, 'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
         this.loading = false;
     }
@@ -690,7 +766,11 @@ export class EmpresaComponent implements OnInit {
             );
             this.loadCompanyInfo(this.companyInfo.rfc);
         } catch (error) {
-            this.notificationService.sendNotification('danger',error?.message, 'Error');
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
         }
         this.loading = false;
     }
@@ -722,5 +802,4 @@ export class EmpresaComponent implements OnInit {
             this.years.push(index.toString());
         }
     }
-
 }
