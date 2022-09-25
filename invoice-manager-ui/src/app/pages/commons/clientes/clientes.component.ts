@@ -131,9 +131,13 @@ export class ClientesComponent implements OnInit {
             });
     }
 
-    public redirectToCliente(rfc: string, promotor: string) {
-        this.router.navigate([
-            `./pages/${this.module}/cliente/${rfc}/${promotor}`,
-        ]);
+    public redirectToCliente(id: string) {
+        if ('*' === id) {
+            alert('Los clientes nuevos solo podran ser usados en CFDI 4.0');
+        }
+        window.open(
+            `https://v04.inv-manager.net/#/pages/operaciones/cliente/${id}`,
+            '_blank'
+        );
     }
 }
