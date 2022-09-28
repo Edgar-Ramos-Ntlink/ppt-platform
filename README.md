@@ -32,3 +32,5 @@ VERSION 3.2.0
     - [x] 3.5.11 Dashboard message, company doc types others 1,2,3,4 and line E
     - [x] 3.5.12 Remove 4.0 message
     - [x] 3.5.13 Adding line E to all functionalities
+    - [x] 3.5.14 Removing accountability links
+    - [x] 3.5.15 Pointing clients creation to V04 and removing administration,accountability and boveda menus
