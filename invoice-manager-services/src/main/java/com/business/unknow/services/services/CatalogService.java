@@ -251,7 +251,7 @@ public class CatalogService {
     }
   }
 
-  public String getPaymentFormByValue(String value) {
+  public Optional<String> getPaymentFormByValue(String value) {
     for (String key : paymentFormMappings.keySet()) {
       FormaPagoDto formaPagoDto = paymentFormMappings.get(key);
       if (formaPagoDto.getShortDescripcion().equalsIgnoreCase(value)) {
