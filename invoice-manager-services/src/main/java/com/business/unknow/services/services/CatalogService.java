@@ -255,13 +255,14 @@ public class CatalogService {
     for (String key : paymentFormMappings.keySet()) {
       FormaPagoDto formaPagoDto = paymentFormMappings.get(key);
       if (formaPagoDto.getShortDescripcion().equalsIgnoreCase(value)) {
-        return formaPagoDto.getId();
-      } else if ("DEPOSITO".equals(value)) {
-        // TODO REVIEW COMPLEMENTS LOGIC
-        return "03";
+        return Optional.of(formaPagoDto.getId());
       }
     }
-    return null;
+    if ("DEPOSITO".equals(value)) {
+      // TODO REVIEW COMPLEMENTS LOGIC FOR BANK DEPOSITS
+      return Optional.of("03");
+    }
+    return Optional.empty();
   }
   /**
    * Gets Tax Regime by key

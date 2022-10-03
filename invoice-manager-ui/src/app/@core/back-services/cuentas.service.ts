@@ -42,7 +42,6 @@ export class CuentasService {
   }
 
   public updateCuenta(cuenta: Cuenta): Observable<Object> {
-    console.log("333  "+cuenta.toString());
     return this.httpClient.put(`../api/cuentas/${cuenta.id}`, cuenta);
   }
 

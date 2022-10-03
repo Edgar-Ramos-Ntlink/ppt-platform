@@ -56,11 +56,11 @@ public class FacturaCustom implements Serializable {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
   private Date fechaCreacion;
 
-  private String statusCancelacion;
-  private Date fechaCancelacion;
-
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
   private Date fechaActualizacion;
+
+  private String statusCancelacion;
+  private Date fechaCancelacion;
 
   private Date fechaTimbrado;
   private Integer statusCancelado;

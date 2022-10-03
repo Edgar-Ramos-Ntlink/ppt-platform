@@ -112,13 +112,9 @@
                             >
                             </ng-autocomplete>
 
-                            <div>
-                                <span></span>
-                            </div>
-
                             <ng-template #itemTemplate let-item>
                                 <div class="item">
-                                    <span [innerHTML]="item.razonSocial"></span>
+                                    <span [innerHTML]="item.razonSocial" class="d-inline"> </span> - <p class="d-inline">{{item.correoPromotor}}</p>
                                 </div>
                             </ng-template>
 
@@ -335,7 +331,7 @@
                 ></ngx-generar-complemento>
             </nb-card-body>
             <nb-card-footer>
-                <div class="clearfix">
+                <div class="clearfix" *ngIf="factura?.folio">
                     <strong class="float-left"> Promotor : {{factura?.solicitante}}</strong>
                     <strong class="float-right"> Fecha solicitud : {{factura?.fechaCreacion}}</strong>
                 </div>

@@ -1,14 +1,14 @@
-<nb-card>
+<nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
     <nb-card-header>
         <div class="clearfix">
             <p class="h6 float-left">
-                Asignacion múltiple de pagos facturas PPD
+                Multicomplementos de pago facturas PPD
             </p>
         </div>
     </nb-card-header>
     <br />
     <nb-card-body>
-        <div style="width: 90vw; height: 60vh">
+        <div >
             <p class="font-weight-bold">
                 Paso 1 Cargar informacion de acredor y deudor
             </p>
@@ -408,7 +408,6 @@
                 >
                     Enviar Pago
                 </button>
-                <button class="btn btn-warning" (click)="exit()">Salir</button>
         </div>
         
     </nb-card-footer>
