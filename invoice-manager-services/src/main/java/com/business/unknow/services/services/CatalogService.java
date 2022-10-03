@@ -95,14 +95,6 @@ public class CatalogService {
     paymentFormMappings =
         formaPagoRepository.findAll().stream()
             .collect(Collectors.toMap(FormaPago::getId, e -> catalogsMapper.getDtoFromEntity(e)));
-    // TODO REVIEW COMPLEMENTS LOGIC
-    FormaPagoDto dto =
-        FormaPagoDto.builder()
-            .id("03")
-            .shortDescripcion("DEPOSITO")
-            .descripcion("Transferencia electronica - deposito")
-            .build();
-    paymentFormMappings.put("03", dto);
     log.info("Mappings paymentFormMappings loaded {}", paymentFormMappings.size());
     taxRegimeMappings =
         regimanFiscalRepository.findAll().stream()
@@ -259,14 +251,18 @@ public class CatalogService {
     }
   }
 
-  public String getPaymentFormByValue(String value) {
+  public Optional<String> getPaymentFormByValue(String value) {
     for (String key : paymentFormMappings.keySet()) {
       FormaPagoDto formaPagoDto = paymentFormMappings.get(key);
       if (formaPagoDto.getShortDescripcion().equalsIgnoreCase(value)) {
-        return formaPagoDto.getId();
+        return Optional.of(formaPagoDto.getId());
       }
     }
-    return null;
+    if ("DEPOSITO".equals(value)) {
+      // TODO REVIEW COMPLEMENTS LOGIC FOR BANK DEPOSITS
+      return Optional.of("03");
+    }
+    return Optional.empty();
   }
   /**
    * Gets Tax Regime by key

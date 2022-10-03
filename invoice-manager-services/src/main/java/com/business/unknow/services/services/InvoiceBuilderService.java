@@ -184,10 +184,20 @@ public class InvoiceBuilderService {
     Cfdi cfdi = facturaCustom.getCfdi();
     cfdi.setComplemento(ImmutableList.of());
     complement.setPagos(new ArrayList<>());
+
+    String formaPago =
+        catalogService
+            .getPaymentFormByValue(pagoDto.getFormaPago())
+            .orElseThrow(
+                () ->
+                    new InvoiceManagerException(
+                        String.format(
+                            "No hay una foma de pago asignable a %s", pagoDto.getFormaPago()),
+                        HttpStatus.CONFLICT.value()));
     Pago pago =
         Pago.builder()
             .fechaPago(DATE_TIME_FORMAT.format(pagoDto.getFechaPago()))
-            .formaDePagoP(catalogService.getPaymentFormByValue(pagoDto.getFormaPago()))
+            .formaDePagoP(formaPago)
             .monedaP(pagoDto.getMoneda())
             .monto(pagoDto.getMonto().setScale(2, RoundingMode.HALF_UP))
             .tipoCambioP(pagoDto.getTipoDeCambio().toString())

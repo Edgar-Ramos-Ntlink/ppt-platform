@@ -6,16 +6,13 @@ import { map } from 'rxjs/operators';
 import { ClientsData } from '../../../@core/data/clients-data';
 import { Client } from '../../../models/client';
 import { User } from '../../../@core/models/user';
-import { Contribuyente } from '../../../models/contribuyente';
 import { Cuenta } from '../../../models/cuenta';
 import { CuentasData } from '../../../@core/data/cuentas-data';
 import { FilesData } from '../../../@core/data/files-data';
 import { PagosValidatorService } from '../../../@core/util-services/pagos-validator.service';
 import { PaymentsData } from '../../../@core/data/payments-data';
 import { ResourceFile } from '../../../models/resource-file';
-import { HttpErrorResponse } from '@angular/common/http';
 import { PagoFactura } from '../../../models/pago-factura';
-import { NbDialogRef } from '@nebular/theme';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { Router } from '@angular/router';
 import { Factura } from '../../../@core/models/factura';
@@ -26,11 +23,11 @@ import { NotificationsService } from '../../../@core/util-services/notifications
 import { UsersData } from '../../../@core/data/users-data';
 
 @Component({
-    selector: 'ngx-asignacion-pagos',
-    templateUrl: './asignacion-pagos.component.html',
-    styleUrls: ['./asignacion-pagos.component.scss'],
+    selector: 'nt-multicomplementos',
+    templateUrl: './multicomplementos.component.html',
+    styleUrls: ['./multicomplementos.component.scss'],
 })
-export class AsignacionPagosComponent implements OnInit {
+export class MulticomplementosComponent implements OnInit {
     public module: string = 'promotor';
     public page: GenericPage<any>;
     public fileInput: any;
@@ -61,20 +58,21 @@ export class AsignacionPagosComponent implements OnInit {
         private fileService: FilesData,
         private router: Router,
         private paymentValidator: PagosValidatorService,
-        private notificationService: NotificationsService,
-        protected ref: NbDialogRef<AsignacionPagosComponent>
+        private notificationService: NotificationsService
     ) {}
 
     ngOnInit() {
+        this.loading = true;
         this.module = this.router.url.split('/')[2];
         if(this.module === 'promotor'){
             this.selectPromotor(JSON.parse(sessionStorage.getItem('user')));
+            this.loading = false;
         } else {
             this.loadPromotorInfo();
         }
         
         this.newPayment.moneda = 'MXN';
-        this.loading = false;
+        
         this.page = new GenericPage();
         this.filterParams = { solicitante: '', rfcEmisor: '', rfcRemitente: '', status : 3 ,tipoDocumento : 'Factura', metodoPago : 'PPD'};
         this.paymentsService
@@ -82,8 +80,10 @@ export class AsignacionPagosComponent implements OnInit {
             .subscribe((payTypes) => (this.payTypeCat = payTypes));       
     }
 
-    private loadPromotorInfo() {
-        this.usersService
+    private  async loadPromotorInfo() {
+
+        try {
+            this.usersCat = await this.usersService
             .getUsers(0, 1000, { status: '1' })
             .pipe(
                 map((p: GenericPage<User>) => {
@@ -91,16 +91,15 @@ export class AsignacionPagosComponent implements OnInit {
                     users.forEach((u) => (u.name = `${u.alias} - ${u.email}`));
                     return users;
                 })
+            ).toPromise();
+        } catch( error) {
+            this.notificationService.sendNotification(
+                'danger',
+                error.message,
+                'Error cargando promotores'
             )
-            .subscribe(
-                (users) => (this.usersCat = users),
-                (error: NtError) =>
-                    this.notificationService.sendNotification(
-                        'danger',
-                        error.message,
-                        'Error cargando promotores'
-                    )
-            );
+        }
+        this.loading = false;
     }
 
     
@@ -198,7 +197,6 @@ export class AsignacionPagosComponent implements OnInit {
             this.newPayment.cuenta = cuenta;
             this.newPayment.banco = this.cuentas.find(c=>c.cuenta === cuenta).banco || 'Sin Banco'
         }
-        console.log(this.newPayment)
     }
 
     fileUploadListener(event: any): void {
@@ -224,15 +222,12 @@ export class AsignacionPagosComponent implements OnInit {
     }
 
     sendPayment() {
-        console.log(this.newPayment);
-        console.log(this.newPayment.fechaPago);
         const filename = this.paymentForm.filename;
         this.newPayment.fechaPago = this.datepipe.transform(
             this.newPayment.fechaPago,
             'yyyy-MM-dd HH:mm:ss'
         );
         const payment = { ...this.newPayment };
-        console.log('Validating :', payment);
         for (const f of this.page.content) {
             if (f.pagoMonto !== undefined && f.pagoMonto > 0) {
                 payment.facturas.push(
@@ -269,9 +264,13 @@ export class AsignacionPagosComponent implements OnInit {
                     this.fileService
                         .insertResourceFile(resourceFile)
                         .subscribe((response) => console.log(response));
-                        e=> this.notificationService.sendNotification('success','Pago creado correctamente');
-                    this.updateDataTable();
+                    this.newPayment = new PagoBase();
+                    this.selectClient = undefined;
+                    this.selectedCompany = undefined;
+                    this.page = new GenericPage();
                     this.loading = false;
+                    this.notificationService.sendNotification('success','Pago creado correctamente');
+                    
                 },
                 (error: NtError) => {
                     this.loading = false;
@@ -303,7 +302,4 @@ export class AsignacionPagosComponent implements OnInit {
         );
     }
 
-    public exit() {
-        this.ref.close();
-      }
 }

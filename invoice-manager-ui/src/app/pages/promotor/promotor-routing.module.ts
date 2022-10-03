@@ -5,7 +5,7 @@ import { ClientesComponent } from '../commons/clientes/clientes.component';
 import { PreCfdiComponent } from './pre-cfdi/pre-cfdi.component';
 import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
-import { PagosFacturaComponent } from '../commons/pagos-facturas/pagos-facturas.component';
+import { MulticomplementosComponent } from '../commons/multicomplementos/multicomplementos.component';
 
 const routes: Routes = [{
   path: '',
@@ -25,7 +25,7 @@ const routes: Routes = [{
       component: InvoiceReportsComponent,
     }, {
       path: 'pago-facturas',
-      component: PagosFacturaComponent,
+      component: MulticomplementosComponent,
     },
   ]}];
 
