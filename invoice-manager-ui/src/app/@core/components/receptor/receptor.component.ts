@@ -35,8 +35,8 @@ export class ReceptorComponent implements OnInit {
             .then((reg) => (this.regimenes = reg));
     }
 
-    public addressChange(address) {
-        this.store.dispatch(updateReceptorAddress({ address }));
+    public addressChange(address:string) {
+        this.store.dispatch(updateReceptorAddress({ address}));
     }
 
     public updateRegimenFiscal(value: string) {
@@ -45,7 +45,7 @@ export class ReceptorComponent implements OnInit {
     }
 
     public updateRazonSocial(value: string) {
-        const receptor = { ...this.receptor, nombre: value };
+        const receptor = { ...this.receptor, nombre: value.trim().toUpperCase() };
         this.store.dispatch(updateReceptor({ receptor }));
     }
 

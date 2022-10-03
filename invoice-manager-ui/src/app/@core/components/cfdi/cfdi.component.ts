@@ -45,21 +45,34 @@ export class CfdiComponent implements OnInit {
         this.store
             .pipe(select(invoice))
             .subscribe((fact) => (this.factura = fact));
-        this.store.pipe(select(cfdi)).subscribe((cfdi) => (this.cfdi = cfdi));
+        this.store.pipe(select(cfdi)).subscribe((cfdi) => {
+            this.cfdi = cfdi;
+        });
     }
 
     initVariables() {
         this.catalogsService
             .getFormasPago()
-            .then((cat) => (this.payTypeCat = cat));
-        this.loading = false;
+            .then((cat) => {this.payTypeCat = cat;
+                if(this.cfdi?.metodoPago){
+                    this.onPayMethodChange(this.cfdi.metodoPago);
+                }
+                this.loading = false;
+            });
+        
     }
 
     onPayMethodChange(clave: string) {
         const invoice = JSON.parse(JSON.stringify(this.factura));
         if (clave === 'PPD') {
             invoice.cfdi.formaPago = '99';
+            this.catalogsService
+            .getFormasPago()
+            .then((cat) => (this.payTypeCat = cat.filter(c=>c.id == '99')));
         } else {
+            this.catalogsService
+            .getFormasPago()
+            .then((cat) => (this.payTypeCat = cat.filter(c=>c.id != '99')));
             invoice.cfdi.formaPago = '01';
         }
         invoice.cfdi.metodoPago = clave;

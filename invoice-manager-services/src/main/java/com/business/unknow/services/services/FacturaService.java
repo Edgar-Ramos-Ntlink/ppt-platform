@@ -14,7 +14,6 @@ import static com.business.unknow.enums.TipoDocumento.COMPLEMENTO;
 import static com.business.unknow.enums.TipoDocumento.FACTURA;
 import static com.business.unknow.enums.TipoDocumento.NOTA_CREDITO;
 
-import com.business.unknow.Constants;
 import com.business.unknow.MailConstants;
 import com.business.unknow.enums.FacturaStatus;
 import com.business.unknow.enums.MetodosPago;
@@ -28,10 +27,8 @@ import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.business.unknow.services.entities.Factura33;
 import com.business.unknow.services.entities.Factura40;
 import com.business.unknow.services.mapper.FacturaMapper;
-import com.business.unknow.services.repositories.facturas.Factura33Repository;
 import com.business.unknow.services.repositories.facturas.FacturaDao;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
@@ -113,9 +110,6 @@ public class FacturaService {
   @Autowired private FacturaDao facturaDao;
 
   @Autowired private FacturaRepository repository;
-
-  @Autowired private Factura33Repository repository33;
-
   @Autowired private CfdiMapper cfdiMapper;
 
   @Autowired private FacturaMapper mapper;
@@ -432,16 +426,15 @@ public class FacturaService {
   }
 
   public FacturaCustom getFacturaBaseByFolio(String folio) {
-    Optional<Factura40> inv40 = repository.findByFolio(folio);
-    Optional<Factura33> inv33 = repository33.findByFolio(folio);
-    if (inv33.isPresent() && inv33.get().getLineaEmisor().equals("A")) {
-      return mapper.getFacturaDtoFromEntity33(inv33.get());
-    } else if (inv40.isPresent()) {
-      return mapper.getFacturaDtoFromEntity(inv40.get());
-    } else {
-      throw new ResponseStatusException(
-          HttpStatus.NOT_FOUND, String.format("La factura con el folio %S no existe", folio));
-    }
+    Factura40 inv40 =
+        repository
+            .findByFolio(folio)
+            .orElseThrow(
+                () ->
+                    new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("La factura con el folio %S no existe", folio)));
+    return mapper.getFacturaDtoFromEntity(inv40);
   }
 
   @Transactional(
@@ -470,26 +463,10 @@ public class FacturaService {
     return facturaCustom;
   }
 
-  private void updateFacturaBase(Integer id, FacturaCustom facturaCustom)
-      throws InvoiceManagerException {
-    switch (facturaCustom.getVersion()) {
-      case Constants.CFDI_40_VERSION:
-        Factura40 entity40 = mapper.getEntityFromFacturaCustom(facturaCustom);
-        entity40.setId(id);
-        repository.save(entity40);
-        break;
-      case Constants.CFDI_33_VERSION:
-        Factura33 entity33 = mapper.getEntity33FromFacturaCustom(facturaCustom);
-        entity33.setId(id);
-        repository33.save(entity33);
-        break;
-
-      default:
-        throw new InvoiceManagerException(
-            String.format(
-                "La factura con folio %s no tiene una version definida", facturaCustom.getFolio()),
-            HttpStatus.CONFLICT.value());
-    }
+  private void updateFacturaBase(Integer id, FacturaCustom facturaCustom) {
+    Factura40 entity40 = mapper.getEntityFromFacturaCustom(facturaCustom);
+    entity40.setId(id);
+    repository.save(entity40);
   }
 
   @Transactional(
@@ -557,10 +534,7 @@ public class FacturaService {
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public void deleteFactura(String folio) throws InvoiceManagerException, NtlinkUtilException {
     Optional<Factura40> inv40 = repository.findByFolio(folio);
-    Optional<Factura33> inv33 = repository33.findByFolio(folio);
-    if (inv33.isPresent() && inv33.get().getLineaEmisor().equals("A")) {
-      repository33.delete(inv33.get());
-    } else if (inv40.isPresent()) {
+    if (inv40.isPresent()) {
       repository.delete(inv40.get());
       reportDataService.deleteReportData(folio);
     }
