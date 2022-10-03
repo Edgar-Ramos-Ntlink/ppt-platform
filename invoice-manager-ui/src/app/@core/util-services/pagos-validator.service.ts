@@ -44,6 +44,9 @@ export class PagosValidatorService {
         if (pago.formaPago === undefined || pago.formaPago === '*') {
             messages.push('El tipo de pago es requerido.');
         }
+        if(pago.formaPago === 'CREDITO' && factura.metodoPago === 'PPD'){
+            messages.push("Las facturas PPD no pueden solicitar credito despacho")
+        }
         if (
             (pago.formaPago === 'CHEQUE' ||
                 pago.formaPago === 'TRANSFERENCIA' ||
