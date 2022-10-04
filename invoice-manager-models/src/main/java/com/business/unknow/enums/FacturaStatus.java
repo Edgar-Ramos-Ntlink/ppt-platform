@@ -25,4 +25,13 @@ public enum FacturaStatus {
   public String getDescripcion() {
     return descripcion;
   }
+
+  public static FacturaStatus getStatusByValue(Integer value) {
+    for (FacturaStatus status : values()) {
+      if (status.getValor().equals(value)) {
+        return status;
+      }
+    }
+    return FacturaStatus.VALIDACION_OPERACIONES;
+  }
 }

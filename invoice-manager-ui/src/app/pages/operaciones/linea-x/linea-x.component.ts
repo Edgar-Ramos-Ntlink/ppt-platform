@@ -356,14 +356,7 @@ export class LineaXComponent implements OnInit {
         try {
             const fact = { ...factura };
 
-            let client: Client = await this.clientsService
-                .getClientsByPromotorAndRfc(
-                    this.factura.solicitante,
-                    this.factura.cfdi.receptor.rfc
-                )
-                .toPromise();
-
-            if (client.activo) {
+           
                 this.dialogService
                     .open(dialog, { context: fact })
                     .onClose.subscribe((invoice) => {
@@ -395,14 +388,7 @@ export class LineaXComponent implements OnInit {
                             this.loading = false;
                         }
                     });
-            } else {
-                this.notificationService.sendNotification(
-                    'danger',
-                    'El cliente que solicita la factura se encuentra inactivo',
-                    'Cliente inactivo'
-                );
-                this.loading = false;
-            }
+            
         } catch (error) {
             this.notificationService.sendNotification(
                 'danger',
