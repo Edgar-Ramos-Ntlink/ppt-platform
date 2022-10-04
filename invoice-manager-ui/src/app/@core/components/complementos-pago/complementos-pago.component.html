@@ -13,7 +13,8 @@
             <thead class="thead-dark">
                 <tr>
                     <th class="text-center">Acciones</th>
-                    <th class="text-center">Folio</th>
+                    <th class="text-center">Folio PPD</th>
+                    <th class="text-center">Folio Complemento</th>
                     <th class="text-center">UUID</th>
                     <th class="text-center">Fecha pago</th>
                     <th class="text-center">Parcialidad</th>
@@ -49,6 +50,9 @@
                         >
                             <i class="fa fa-search"></i>
                         </button>
+                    </td>
+                    <td scope="row" class="text-center">
+                        {{ complemento.folioOrigen }}
                     </td>
                     <td scope="row" class="text-center">
                         {{ complemento.folio }}

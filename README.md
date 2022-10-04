@@ -139,3 +139,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.29 Multicomplments view simplification,Fix on multicomplements payment delete, disable regimen fiscal, inactive client validation, allow on line-x search all client promotors, minor UI fixes
   - [x] 4.5.30 Correccion en el borrado de complementos pago
   - [x] 4.5.31 Removing CFDI 33 invoice references and fix payform cfdi logic selection
+  - [x] 4.5.32 Fix complement creation from PPD 3.3, enable update complements, adding folio PPD on complements view and minor UI fixes

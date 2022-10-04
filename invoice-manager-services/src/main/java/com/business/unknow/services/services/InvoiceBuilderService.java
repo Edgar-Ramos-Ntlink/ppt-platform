@@ -32,6 +32,7 @@ import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import com.mx.ntlink.cfdi.modelos.Concepto;
 import com.mx.ntlink.cfdi.modelos.Impuesto;
+import com.mx.ntlink.cfdi.modelos.Receptor;
 import com.mx.ntlink.cfdi.modelos.complementos.pagos.DocumentoRelacionado;
 import com.mx.ntlink.cfdi.modelos.complementos.pagos.ImpuestosDR;
 import com.mx.ntlink.cfdi.modelos.complementos.pagos.ImpuestosP;
@@ -141,7 +142,7 @@ public class InvoiceBuilderService {
   }
 
   public FacturaCustom assignComplementData(
-      FacturaCustom facturaCustom, List<FacturaCustom> facturaCustoms, PagoDto pagoDto, int amount)
+      FacturaCustom facturaCustom, List<FacturaCustom> parentInvoices, PagoDto pagoDto, int amount)
       throws InvoiceManagerException {
     String folio = FacturaUtils.generateFolio();
     Cfdi cfdi = buildCfdiComplement(facturaCustom);
@@ -170,19 +171,14 @@ public class InvoiceBuilderService {
             .solicitante(facturaCustom.getSolicitante())
             .tipoDocumento(TipoDocumento.COMPLEMENTO.getDescripcion())
             .build();
-    Pagos pagos = assignComplementPaymentData(facturaCustom, facturaCustoms, pagoDto, complement);
+    Pagos pagos = assignComplementPaymentData(parentInvoices, pagoDto, complement);
     complement.getCfdi().setComplemento(ImmutableList.of(pagos));
     return complement;
   }
 
-  private Pagos assignComplementPaymentData(
-      FacturaCustom facturaCustom,
-      List<FacturaCustom> facturaCustoms,
-      PagoDto pagoDto,
-      FacturaCustom complement)
+  public Pagos assignComplementPaymentData(
+      List<FacturaCustom> facturaCustoms, PagoDto pagoDto, FacturaCustom complement)
       throws InvoiceManagerException {
-    Cfdi cfdi = facturaCustom.getCfdi();
-    cfdi.setComplemento(ImmutableList.of());
     complement.setPagos(new ArrayList<>());
 
     String formaPago =
@@ -326,21 +322,41 @@ public class InvoiceBuilderService {
   }
 
   private Cfdi buildCfdiComplement(FacturaCustom facturaCustom) {
-    return Cfdi.builder()
-        .version(Constants.CFDI_40_VERSION)
-        .fecha(CFDI_DATE_PATTERN)
-        .serie(Constants.ComplementoPpdDefaults.SERIE)
-        .folio(FacturaUtils.generateFolio())
-        .subtotal(BigDecimal.ZERO)
-        .moneda(Constants.ComplementoPpdDefaults.MONEDA)
-        .total(BigDecimal.ZERO)
-        .tipoDeComprobante(COMPROBANTE)
-        .lugarExpedicion(facturaCustom.getCfdi().getLugarExpedicion())
-        .exportacion(facturaCustom.getCfdi().getExportacion())
-        .receptor(facturaCustom.getCfdi().getReceptor())
-        .emisor(facturaCustom.getCfdi().getEmisor())
-        .conceptos(ImmutableList.of(buildConceptoComplement()))
-        .build();
+    Cfdi cfdi =
+        Cfdi.builder()
+            .version(Constants.CFDI_40_VERSION)
+            .fecha(CFDI_DATE_PATTERN)
+            .serie(Constants.ComplementoPpdDefaults.SERIE)
+            .folio(FacturaUtils.generateFolio())
+            .subtotal(BigDecimal.ZERO)
+            .moneda(Constants.ComplementoPpdDefaults.MONEDA)
+            .total(BigDecimal.ZERO)
+            .tipoDeComprobante(COMPROBANTE)
+            .lugarExpedicion(facturaCustom.getCfdi().getLugarExpedicion())
+            .exportacion(facturaCustom.getCfdi().getExportacion())
+            .receptor(facturaCustom.getCfdi().getReceptor())
+            .emisor(facturaCustom.getCfdi().getEmisor())
+            .conceptos(ImmutableList.of(buildConceptoComplement()))
+            .build();
+
+    Receptor receptor = cfdi.getReceptor();
+    if (Objects.isNull(receptor.getUsoCfdi()) || "*".equals(receptor.getUsoCfdi())) {
+      receptor.setUsoCfdi("G03");
+    }
+    if (Objects.isNull(receptor.getRegimenFiscalReceptor())
+        || "*".equals(receptor.getRegimenFiscalReceptor())) {
+      receptor.setRegimenFiscalReceptor("601");
+    }
+    if (Objects.isNull(receptor.getDomicilioFiscalReceptor())
+        || receptor.getDomicilioFiscalReceptor().isEmpty()) {
+      receptor.setDomicilioFiscalReceptor("00000");
+    }
+    if (Objects.isNull(cfdi.getLugarExpedicion())
+        || facturaCustom.getCfdi().getLugarExpedicion().isEmpty()) {
+      facturaCustom.getCfdi().setLugarExpedicion("00000");
+    }
+
+    return cfdi;
   }
 
   private Concepto buildConceptoComplement() {
