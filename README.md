@@ -140,3 +140,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.30 Correccion en el borrado de complementos pago
   - [x] 4.5.31 Removing CFDI 33 invoice references and fix payform cfdi logic selection
   - [x] 4.5.32 Fix complement creation from PPD 3.3, enable update complements, adding folio PPD on complements view and minor UI fixes
+  - [x] 4.5.33 Setup max and min memory jvm heap,adding logs when a mail is sent, removing dead code and enable payments visualization

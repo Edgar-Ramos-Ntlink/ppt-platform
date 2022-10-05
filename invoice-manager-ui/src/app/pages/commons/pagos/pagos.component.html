@@ -154,18 +154,20 @@
               <tr *ngFor="let fila of page.content" [style.background]="cal(fila)">
                 <td scope="row" *ngIf="vista==='validacion-pagos'">
                   <div class="d-flex flex-row" >
-                    <button class="btn btn-sm ml-1 mr-1" *ngIf="module === 'tesoreria'"
+                    <button class="btn btn-sm ml-1 mr-1" *ngIf="module === 'tesoreria'" 
+                      data-toggle="tooltip" data-placement="top" title="Rechazar pago"
                       [ngClass]="{'btn-outline-secondary': fila.revision1 && fila.revision2, 'btn-outline-danger': !fila.revision1 || !fila.revision2}"
                       (click)="openDialog(fila)"><i class="fa fa-times-circle"></i></button>
                     <button class="btn btn-sm ml-1 mr-1" *ngIf="module === 'tesoreria'"
+                    data-toggle="tooltip" data-placement="top" title="Validacion 1"
                       [ngClass]="{'btn-outline-secondary': fila.revision1, 'btn-outline-success': !fila.revision1}"
                       (click)="validar1(fila)" [disabled]="fila.revision1"><i class="fa fa-check-circle"></i></button>
                     <button class="btn btn-sm ml-1 mr-1" *ngIf="module === 'tesoreria'"
+                    data-toggle="tooltip" data-placement="top" title="Validacion 2"
                       [ngClass]="{'btn-outline-secondary': !fila.revision1 || fila.revision2, 'btn-outline-success': fila.revision1 && !fila.revision2}"
                       (click)="validar2(fila)" [disabled]="!fila.revision1 || fila.revision2"><i
                         class="fa fa-check-circle"></i></button>
-                    <button type="button" (click)="openComprobante(fila.id)" [disabled]="fila.formaPago !== 'TRANSFERENCIA' && fila.formaPago !== 'DEPOSITO'"
-                    [ngClass]="{'btn-outline-secondary': fila.formaPago !== 'TRANSFERENCIA' && fila.formaPago !== 'DEPOSITO' , 'btn-outline-primary': fila.formaPago == 'TRANSFERENCIA' || fila.formaPago == 'DEPOSITO'}"
+                    <button type="button" (click)="openComprobante(fila.id)" data-toggle="tooltip" data-placement="top" title="Ver comprobante pago"
                         class="btn btn-sm btn-outline-primary ml-1 mr-1"><i class="fa fa-file"></i></button>
                   </div>
                 </td>
@@ -173,6 +175,7 @@
                   <div class="d-flex flex-row">
                     <button
                         type="button"
+                        data-toggle="tooltip" data-placement="top" title="Borrar pago"
                         class="btn btn-sm mr-1 ml-1"
                         [ngClass]="{
                             'btn-outline-secondary':
@@ -185,10 +188,11 @@
                     >
                         <i class="fa fa-trash"></i>
                     </button>
-                    <button type="button" (click)="openComprobante(fila.id)" [disabled]="fila.formaPago !== 'TRANSFERENCIA' && fila.formaPago !== 'DEPOSITO'"
-                    [ngClass]="{'btn-outline-secondary': fila.formaPago !== 'TRANSFERENCIA' && fila.formaPago !== 'DEPOSITO' , 'btn-outline-primary': fila.formaPago == 'TRANSFERENCIA' || fila.formaPago == 'DEPOSITO'}"
+                    <button type="button" (click)="openComprobante(fila.id)"
+                        data-toggle="tooltip" data-placement="top" title="Ver comprobante pago"
                         class="btn btn-sm btn-outline-primary ml-1 mr-1"><i class="fa fa-file"></i></button>
                     <button class="btn btn-sm" [disabled]="fila.statusPago === 'RECHAZADO'"
+                      data-toggle="tooltip" data-placement="top" title="Rechazar pago"
                       [ngClass]="{'btn-outline-secondary': fila.statusPago === 'RECHAZADO', 'btn-outline-danger': fila.statusPago !== 'RECHAZADO' }"
                       (click)="openDialog(fila)"><i class="fa fa-times-circle"></i></button>
                   </div>

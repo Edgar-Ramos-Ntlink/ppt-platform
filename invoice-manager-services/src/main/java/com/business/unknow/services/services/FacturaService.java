@@ -128,7 +128,7 @@ public class FacturaService {
 
     log.info("Finding facturas by {}", parameters);
 
-    return new Specification<Factura40>() {
+    return new Specification<>() {
 
       private static final long serialVersionUID = -7435096122716669730L;
 
@@ -670,11 +670,11 @@ public class FacturaService {
     return facturaCustom;
   }
 
-  public FacturaCustom reSendMail(String folio) {
-    return sendMail(getFacturaBaseByFolio(folio));
+  public void reSendMail(String folio) {
+    sendMail(getFacturaBaseByFolio(folio));
   }
 
-  public FacturaCustom sendMail(FacturaCustom facturaCustom) {
+  public void sendMail(FacturaCustom facturaCustom) {
     try {
       String xml =
           filesService.getS3File(S3Buckets.CFDIS, facturaCustom.getFolio().concat(XML.getFormat()));
@@ -699,13 +699,10 @@ public class FacturaService {
               .attachments(files)
               .build();
       mailService.sendEmail(ImmutableList.of(facturaCustom.getSolicitante()), mailContent);
-      return facturaCustom;
     } catch (Exception e) {
-      log.info("Error mandando correo {}", e);
-      throw new ResponseStatusException(
-          HttpStatus.CONFLICT,
-          String.format(
-              "Error mandando Correo para la factura con folio %s", facturaCustom.getFolio()));
+      log.error(
+          "Error enviando la el correo de la factura con folio : {}", facturaCustom.getFolio());
+      log.error("Error mandando correo {}", e);
     }
   }
 
