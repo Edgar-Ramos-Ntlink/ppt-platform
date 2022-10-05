@@ -52,8 +52,7 @@ public class FacturaController {
   }
 
   @GetMapping("/{folio}")
-  public ResponseEntity<FacturaCustom> getFactura(@PathVariable String folio)
-      throws NtlinkUtilException {
+  public ResponseEntity<FacturaCustom> getFactura(@PathVariable String folio) {
     return new ResponseEntity<>(service.getFacturaByFolio(folio), HttpStatus.OK);
   }
 
@@ -91,9 +90,9 @@ public class FacturaController {
   }
 
   @PostMapping("/{folio}/correos")
-  public ResponseEntity<FacturaCustom> renviarCorreos(@RequestBody @Valid String folio)
-      throws InvoiceManagerException, NtlinkUtilException {
-    return new ResponseEntity<>(service.reSendMail(folio), HttpStatus.OK);
+  public ResponseEntity<Void> renviarCorreos(@RequestBody @Valid String folio) {
+    service.reSendMail(folio);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/sustitucion")

@@ -32,8 +32,7 @@ export class CuentasBancariasComponent implements OnInit {
   listEmpresasMatch: any[];
   empresasRfc: any[];
   empresasRazonSocial: any[];
-  
-  public errorMessages: string[] = [];
+
   constructor(
     private router: Router,
     private utilsService: UtilsService,
@@ -47,7 +46,6 @@ export class CuentasBancariasComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.errorMessages = [];
     this.module = this.router.url.split('/')[2];
     this.route.queryParams
       .subscribe(params => {

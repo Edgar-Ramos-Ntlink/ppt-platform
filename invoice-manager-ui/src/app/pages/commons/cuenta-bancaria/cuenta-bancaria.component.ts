@@ -26,7 +26,6 @@ export class CuentaBancariaComponent implements OnInit {
   public accountDocs : ResourceFile[] = [];
 
   public filterParams: any = { banco: '', empresa: '', cuenta: '', clabe:'', empresarazon:''};
-  public Params: any = { success: '', message: ''};
 
   public formInfo = { giro: '*', linea: 'A', fileDataName: '', doctType: '*'};
 
@@ -35,7 +34,6 @@ export class CuentaBancariaComponent implements OnInit {
 
   public module: string = 'bancos';
 
-  public errorMessages: string[] = [];
   public loading = true;
   public clear = false;
 
@@ -58,7 +56,6 @@ export class CuentaBancariaComponent implements OnInit {
   ngOnInit() {
     this.cuenta = new Cuenta();
     this.loading = true;
-    this.errorMessages = [];
     this.module = this.router.url.split('/')[2];
       this.route.paramMap.subscribe(route => {
         const empresa = route.get('empresa');

@@ -354,7 +354,8 @@ export class InvoiceReportsComponent implements OnInit {
     public reSendEmail(folio: string) {
         this.loading = true;
         this.invoiceService.reSendEmail(folio).subscribe(
-            (factura) => {
+            () => {
+                this.notificationService.sendNotification('success', `Se ha enviado correctamente el correo de la factura con folio ${folio}`,'Envio de correo exitoso')
                 this.loading = false;
             },
             (error) => {

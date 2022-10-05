@@ -26,21 +26,7 @@
             </nb-card-header>
 
             <nb-card-body>
-                <div
-                    class="alert alert-warning"
-                    *ngIf="errorMessages.length > 0"
-                    role="alert"
-                >
-                    <p *ngFor="let message of errorMessages">{{ message }}</p>
-                </div>
-                <p
-                    class="alert alert-success"
-                    *ngIf="Params.success.length > 0"
-                    role="alert"
-                >
-                    {{ Params.success }}
-                </p>
-
+    
                 <div class="row slide_1" *ngIf="cuenta.rfc !== undefined">
                     <div class="col-6">
                         <label for="inputBanco" class="label">Banco</label>

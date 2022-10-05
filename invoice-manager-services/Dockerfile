@@ -9,4 +9,4 @@ HEALTHCHECK --interval=5m --timeout=3s CMD curl -f http://localhost:8443/actuato
 ARG JAR_FILE
 COPY ${JAR_FILE} app.jar
 COPY keystore.p12 keystore.p12
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=dev","-jar","/app.jar"]
+ENTRYPOINT ["java","-Dspring.profiles.active=prod","-XX:+UseG1GC","-Xms512M","-Xmx1024M","-jar","/app.jar"]
