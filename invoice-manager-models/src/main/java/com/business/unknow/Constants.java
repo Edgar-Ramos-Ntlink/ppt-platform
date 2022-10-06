@@ -56,6 +56,7 @@ public class Constants {
     public static final String MONEDA = "XXX";
     public static final String SERIE = "PFPC";
     public static final String METODO_PAGO = "PPD";
+    public static final String FORMA_PAGO = "99";
     public static final String COMPROBANTE = "P";
     public static final String EXPORTACION = "01";
     public static final String PAGO_CLAVE = "84111506";

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api")
@@ -54,7 +55,13 @@ public class ClientController {
   public ResponseEntity<ClientDto> clintePorPromotorYRfc(
       @PathVariable String promotor, @PathVariable String rfc) {
     return new ResponseEntity<>(
-        service.getClientsByPromotorAndClient(promotor, rfc), HttpStatus.OK);
+        service
+            .getClientsByPromotorAndClient(promotor, rfc)
+            .orElseThrow(
+                () ->
+                    new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "El promotor no tiene el rfc selecionado")),
+        HttpStatus.OK);
   }
 
   @PostMapping("/clientes")

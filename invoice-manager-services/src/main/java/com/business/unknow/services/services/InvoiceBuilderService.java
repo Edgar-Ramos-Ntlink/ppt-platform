@@ -19,6 +19,7 @@ import static com.mx.ntlink.models.generated.CTipoFactor.TASA;
 import com.business.unknow.Constants;
 import com.business.unknow.enums.FacturaStatus;
 import com.business.unknow.enums.MetodosPago;
+import com.business.unknow.enums.PackFacturarionEnum;
 import com.business.unknow.enums.TipoComprobante;
 import com.business.unknow.enums.TipoDocumento;
 import com.business.unknow.model.dto.FacturaCustom;
@@ -26,11 +27,16 @@ import com.business.unknow.model.dto.PagoComplemento;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
 import com.business.unknow.model.error.InvoiceManagerException;
+import com.business.unknow.services.entities.Client;
+import com.business.unknow.services.entities.Empresa;
+import com.business.unknow.services.repositories.ClientRepository;
+import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.util.FacturaUtils;
 import com.google.common.collect.ImmutableList;
 import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import com.mx.ntlink.cfdi.modelos.Concepto;
+import com.mx.ntlink.cfdi.modelos.Emisor;
 import com.mx.ntlink.cfdi.modelos.Impuesto;
 import com.mx.ntlink.cfdi.modelos.Receptor;
 import com.mx.ntlink.cfdi.modelos.complementos.pagos.DocumentoRelacionado;
@@ -50,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +70,10 @@ public class InvoiceBuilderService {
   @Autowired private CfdiService cfdiService;
 
   @Autowired private CatalogService catalogService;
+
+  @Autowired private ClientRepository clientRepo;
+
+  @Autowired private EmpresaRepository companyRepo;
 
   public FacturaCustom assignFacturaData(FacturaCustom facturaCustom, int amount)
       throws NtlinkUtilException {
@@ -142,18 +153,28 @@ public class InvoiceBuilderService {
   }
 
   public FacturaCustom assignComplementData(
-      FacturaCustom facturaCustom, List<FacturaCustom> parentInvoices, PagoDto pagoDto, int amount)
+      List<FacturaCustom> parentInvoices, PagoDto pagoDto, String prefolio)
       throws InvoiceManagerException {
     String folio = FacturaUtils.generateFolio();
+
+    FacturaCustom facturaCustom =
+        parentInvoices.stream()
+            .findFirst()
+            .orElseThrow(
+                () ->
+                    new InvoiceManagerException(
+                        "No hay facturas relacionadas al complemento de pago",
+                        HttpStatus.CONFLICT.value()));
+
     Cfdi cfdi = buildCfdiComplement(facturaCustom);
     cfdi.setFolio(folio);
     FacturaCustom complement =
         FacturaCustom.builder()
             .folio(folio)
             .version(Constants.CFDI_40_VERSION)
-            .preFolio(FacturaUtils.generatePreFolio(amount))
+            .preFolio(prefolio)
             .total(BigDecimal.ZERO)
-            .packFacturacion(facturaCustom.getPackFacturacion())
+            .packFacturacion(PackFacturarionEnum.NTLINK.name())
             .saldoPendiente(BigDecimal.ZERO)
             .lineaEmisor(facturaCustom.getLineaEmisor())
             .rfcEmisor(facturaCustom.getRfcEmisor())
@@ -321,7 +342,87 @@ public class InvoiceBuilderService {
     return pagos;
   }
 
-  private Cfdi buildCfdiComplement(FacturaCustom facturaCustom) {
+  private Cfdi buildCfdiComplement(FacturaCustom fact) throws InvoiceManagerException {
+
+    Empresa company =
+        companyRepo
+            .findByRfc(fact.getRfcEmisor())
+            .orElseThrow(
+                () ->
+                    new InvoiceManagerException(
+                        String.format(
+                            "La empresa con RFC %s no existe en el sistema", fact.getRfcEmisor()),
+                        HttpStatus.CONTINUE.value()));
+    String companyAddress =
+        String.format(
+            "%s %s, %s, %s, %s CP : %s",
+            company.getCalle(),
+            company.getNoExterior(),
+            company.getColonia(),
+            company.getMunicipio(),
+            company.getEstado(),
+            company.getCp());
+    fact.setDireccionEmisor(companyAddress.toUpperCase());
+    Emisor emisor =
+        Emisor.builder()
+            .rfc(company.getRfc())
+            .nombre(company.getNombre())
+            .regimenFiscal(company.getRegimenFiscal())
+            .direccion(companyAddress.toUpperCase())
+            .build();
+
+    Receptor receptor = fact.getCfdi().getReceptor(); // DEFAULT in case no info found below
+    receptor.setUsoCfdi("G03");
+    Optional<Client> client =
+        clientRepo.findByCorreoPromotorAndClient(fact.getSolicitante(), fact.getRfcRemitente());
+    if (client.isPresent()) { // LINE A
+      String address =
+          String.format(
+                  "%s %s, %s, %s, %s CP : %s",
+                  client.get().getCalle(),
+                  client.get().getNoExterior(),
+                  client.get().getColonia(),
+                  client.get().getMunicipio(),
+                  client.get().getEstado(),
+                  client.get().getCp())
+              .toUpperCase();
+      receptor =
+          Receptor.builder()
+              .nombre(client.get().getRazonSocial())
+              .rfc(client.get().getRfc())
+              .domicilioFiscalReceptor(client.get().getCp())
+              .regimenFiscalReceptor(client.get().getRegimenFiscal())
+              .direccion(address)
+              .usoCfdi("G03")
+              .build();
+      fact.setDireccionReceptor(address);
+    } else { // LINE B,C,D and E
+      Optional<Empresa> clientCompany = companyRepo.findByRfc(fact.getRfcRemitente());
+      if (clientCompany.isPresent()) {
+        String address =
+            String.format(
+                    "%s %s, %s, %s, %s CP : %s",
+                    clientCompany.get().getCalle(),
+                    clientCompany.get().getNoExterior(),
+                    clientCompany.get().getColonia(),
+                    clientCompany.get().getMunicipio(),
+                    clientCompany.get().getEstado(),
+                    clientCompany.get().getCp())
+                .toUpperCase();
+
+        receptor =
+            Receptor.builder()
+                .nombre(clientCompany.get().getRazonSocial())
+                .rfc(clientCompany.get().getRfc())
+                .domicilioFiscalReceptor(clientCompany.get().getCp())
+                .regimenFiscalReceptor(clientCompany.get().getRegimenFiscal())
+                .direccion(address)
+                .usoCfdi("G03")
+                .build();
+        fact.setDireccionReceptor(address);
+      }
+    }
+
     Cfdi cfdi =
         Cfdi.builder()
             .version(Constants.CFDI_40_VERSION)
@@ -332,30 +433,14 @@ public class InvoiceBuilderService {
             .moneda(Constants.ComplementoPpdDefaults.MONEDA)
             .total(BigDecimal.ZERO)
             .tipoDeComprobante(COMPROBANTE)
-            .lugarExpedicion(facturaCustom.getCfdi().getLugarExpedicion())
-            .exportacion(facturaCustom.getCfdi().getExportacion())
-            .receptor(facturaCustom.getCfdi().getReceptor())
-            .emisor(facturaCustom.getCfdi().getEmisor())
+            .metodoPago(Constants.ComplementoPpdDefaults.METODO_PAGO)
+            .formaPago(Constants.ComplementoPpdDefaults.FORMA_PAGO)
+            .lugarExpedicion(company.getCp())
+            .exportacion("01")
+            .receptor(receptor)
+            .emisor(emisor)
             .conceptos(ImmutableList.of(buildConceptoComplement()))
             .build();
-
-    Receptor receptor = cfdi.getReceptor();
-    if (Objects.isNull(receptor.getUsoCfdi()) || "*".equals(receptor.getUsoCfdi())) {
-      receptor.setUsoCfdi("G03");
-    }
-    if (Objects.isNull(receptor.getRegimenFiscalReceptor())
-        || "*".equals(receptor.getRegimenFiscalReceptor())) {
-      receptor.setRegimenFiscalReceptor("601");
-    }
-    if (Objects.isNull(receptor.getDomicilioFiscalReceptor())
-        || receptor.getDomicilioFiscalReceptor().isEmpty()) {
-      receptor.setDomicilioFiscalReceptor("00000");
-    }
-    if (Objects.isNull(cfdi.getLugarExpedicion())
-        || facturaCustom.getCfdi().getLugarExpedicion().isEmpty()) {
-      facturaCustom.getCfdi().setLugarExpedicion("00000");
-    }
-
     return cfdi;
   }
 

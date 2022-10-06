@@ -26,6 +26,7 @@ import com.business.unknow.model.dto.PagoComplemento;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
+import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Factura40;
 import com.business.unknow.services.mapper.FacturaMapper;
@@ -422,6 +423,7 @@ public class FacturaService {
       result.setTipoDocumento(base.getTipoDocumento());
       result.setFechaActualizacion(base.getFechaActualizacion());
       result.setFechaCreacion(base.getFechaCreacion());
+      result.setId(base.getId());
       return result;
     } catch (IOException e) {
       throw new ResponseStatusException(
@@ -481,27 +483,24 @@ public class FacturaService {
     facturaServiceEvaluator.facturaStatusValidation(
         facturaCustom); // TODO verify if this method can be moved outside of updateFacturaCustom
     // method, this is causing multiple status changed randomly
-    updateFacturaBase(entity.getId(), facturaCustom);
     facturaCustom = invoiceBuilderService.assignDescData(facturaCustom);
     InvoiceValidator.validate(facturaCustom, facturaCustom.getFolio());
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
     if (!entity.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())
         && !entity.getStatusFactura().equals(FacturaStatus.CANCELADA.getValor())) {
-
-      byte[] pdf =
-          getPdfFromFactura(
-              facturaCustom,
-              COMPLEMENTO.getDescripcion().equals(facturaCustom.getTipoDocumento())
-                  ? PDF_COMPLEMENTO_TIMBRAR
-                  : PDF_FACTURA_SIN_TIMBRAR);
-      filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
       switch (TipoDocumento.findByDesc(facturaCustom.getTipoDocumento())) {
         case NOTA_CREDITO:
         case FACTURA:
           facturaCustom.setCfdi(cfdiService.updateCfdi(facturaCustom.getCfdi()));
           reportDataService.upsertReportData(facturaCustom.getCfdi());
+          byte[] pdf = getPdfFromFactura(facturaCustom, PDF_FACTURA_SIN_TIMBRAR);
+          filesService.sendFileToS3(
+              facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
+          filesService.sendXmlToS3(
+              facturaCustom.getFolio(), cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi()));
           break;
         case COMPLEMENTO:
+          facturaCustom.setMetodoPago(MetodosPago.PPD.name());
           try {
             ObjectMapper objMapper = new ObjectMapper();
             String payments =
@@ -567,8 +566,13 @@ public class FacturaService {
                     });
 
             facturaCustom.getCfdi().setComplemento(ImmutableList.of(pagos));
-            facturaCustom.getCfdi().setFormaPago(null);
-            facturaCustom.getCfdi().setMetodoPago(null);
+            byte[] complementPDF = getPdfFromFactura(facturaCustom, PDF_COMPLEMENTO_SIN_TIMBRAR);
+            filesService.sendFileToS3(
+                facturaCustom.getFolio(), complementPDF, PDF.getFormat(), S3Buckets.CFDIS);
+            Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
+            comprobante.setMetodoPago(null);
+            comprobante.setFormaPago(null);
+            filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
           } catch (IOException e) {
             log.error("Error en la actualizacion del complemento", e);
             throw new InvoiceManagerException(
@@ -583,10 +587,8 @@ public class FacturaService {
               facturaCustom.getFolio(),
               facturaCustom.getTipoDocumento());
       }
-
-      Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
-      filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
     }
+    updateFacturaBase(entity.getId(), facturaCustom);
     return facturaCustom;
   }
 
@@ -628,26 +630,19 @@ public class FacturaService {
 
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
-  public FacturaCustom stamp(String folio, FacturaCustom facturaCustom)
-      throws InvoiceManagerException, NtlinkUtilException {
-    FacturaCustom factura = getFacturaBaseByFolio(facturaCustom.getFolio());
-    InvoiceValidator.validate(facturaCustom, folio);
+  public FacturaCustom stamp(String folio) throws InvoiceManagerException, NtlinkUtilException {
+    FacturaCustom factura = getFacturaByFolio(folio);
+    InvoiceValidator.validate(factura, folio);
     List<PagoDto> pagosFactura = new ArrayList<>();
-    if (FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())) {
+    if (FACTURA.getDescripcion().equals(factura.getTipoDocumento())) {
       pagosFactura = pagoService.findPagosByFolio(folio);
     }
-    timbradoServiceEvaluator.facturaTimbradoValidation(facturaCustom, pagosFactura);
+    timbradoServiceEvaluator.facturaTimbradoValidation(factura, pagosFactura);
     String xml =
         new String(
             Base64.getDecoder()
-                .decode(
-                    filesService.getS3File(
-                        S3Buckets.CFDIS, facturaCustom.getFolio().concat(XML.getFormat()))));
-    facturaCustom = facturaExecutorService.stampInvoice(facturaCustom, xml);
-    Factura40 entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
-    entityFromDto.setId(factura.getId());
-    entityFromDto.setFechaTimbrado(new Date());
-    repository.save(entityFromDto);
+                .decode(filesService.getS3File(S3Buckets.CFDIS, folio.concat(XML.getFormat()))));
+    FacturaCustom facturaCustom = facturaExecutorService.stampInvoice(factura, xml);
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
     filesService.sendFileToS3(
         facturaCustom.getFolio(),
@@ -664,6 +659,10 @@ public class FacturaService {
                 : PDF_COMPLEMENTO_TIMBRAR),
         PDF.getFormat(),
         S3Buckets.CFDIS);
+    Factura40 entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
+    entityFromDto.setId(factura.getId());
+    entityFromDto.setFechaTimbrado(new Date());
+    repository.save(entityFromDto);
     if (A.name().equalsIgnoreCase(facturaCustom.getLineaEmisor())) {
       sendMail(facturaCustom);
     }
@@ -690,15 +689,31 @@ public class FacturaService {
               facturaCustom.getFolio().concat(PDF.getFormat()), mailPdf);
       MailContent mailContent =
           MailContent.builder()
-              .subject(MailConstants.STAMP_INVOICE_SUBJECT)
+              .subject(
+                  String.format(
+                      MailConstants.STAMP_INVOICE_SUBJECT,
+                      facturaCustom.getTipoDocumento(),
+                      facturaCustom.getFolio()))
               .bodyText(
                   String.format(
                       MailConstants.STAMP_INVOICE_BODY_MESSAGE,
                       facturaCustom.getRazonSocialRemitente(),
+                      facturaCustom.getTipoDocumento(),
                       facturaCustom.getFolio()))
               .attachments(files)
               .build();
-      mailService.sendEmail(ImmutableList.of(facturaCustom.getSolicitante()), mailContent);
+
+      List<String> recipients = new ArrayList<>();
+      recipients.add(facturaCustom.getSolicitante());
+      Optional<ClientDto> clientOpt =
+          clientService.getClientsByPromotorAndClient(
+              facturaCustom.getSolicitante(), facturaCustom.getRfcRemitente());
+      if (clientOpt.isPresent()
+          && Objects.nonNull(clientOpt.get().getCorreoContacto())
+          && !clientOpt.get().getCorreoContacto().isEmpty()) {
+        recipients.add(clientOpt.get().getCorreoContacto());
+      }
+      mailService.sendEmail(recipients, mailContent);
     } catch (Exception e) {
       log.error(
           "Error enviando la el correo de la factura con folio : {}", facturaCustom.getFolio());
@@ -763,40 +778,38 @@ public class FacturaService {
       throws InvoiceManagerException, NtlinkUtilException {
     // TODO :MOVE THIS VALIDATION TO A RULE
     if (parentInvoices.stream()
-        .anyMatch(a -> !a.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor()))) {
+            .allMatch(a -> !a.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor()))
+        && !parentInvoices.isEmpty()) {
       throw new InvoiceManagerException(
-          "Una factura no esta timbrada", HttpStatus.BAD_REQUEST.value());
+          "Todas las facturas padre deben estar timbradas ", HttpStatus.BAD_REQUEST.value());
     }
-    Optional<FacturaCustom> referenceInvoice = parentInvoices.stream().findFirst();
 
-    if (referenceInvoice.isPresent()) {
-      FacturaCustom facturaCustom =
-          invoiceBuilderService.assignComplementData(
-              referenceInvoice.get(),
-              parentInvoices,
-              pagoDto,
-              facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
-      facturaCustom.setStatusFactura(status.getValor());
-      if (FacturaStatus.POR_TIMBRAR.equals(status)) {
-        facturaCustom.setValidacionTeso(Boolean.TRUE);
-      }
-      Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
-      Factura40 save = repository.save(mapper.getEntityFromFacturaCustom(facturaCustom));
-      facturaCustom.setFechaCreacion(save.getFechaCreacion());
-      facturaCustom.setFechaActualizacion(save.getFechaActualizacion());
-      for (FacturaCustom fc : parentInvoices) {
-        updateFacturaCustom(fc.getFolio(), fc);
-      }
-      filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
-      filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
-      facturaCustom = invoiceBuilderService.assignDescData(facturaCustom);
-      byte[] pdf = getPdfFromFactura(facturaCustom, PDF_COMPLEMENTO_SIN_TIMBRAR);
-      filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
-      return facturaCustom;
-    } else {
-      throw new InvoiceManagerException(
-          "Debe tener por lo menos un pago", HttpStatus.BAD_REQUEST.value());
+    String prefolio =
+        FacturaUtils.generatePreFolio(
+            facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
+
+    FacturaCustom facturaCustom =
+        invoiceBuilderService.assignComplementData(parentInvoices, pagoDto, prefolio);
+    facturaCustom.setStatusFactura(status.getValor());
+    if (FacturaStatus.POR_TIMBRAR.equals(status)) {
+      facturaCustom.setValidacionTeso(Boolean.TRUE);
     }
+
+    Factura40 save = repository.save(mapper.getEntityFromFacturaCustom(facturaCustom));
+    facturaCustom.setFechaCreacion(save.getFechaCreacion());
+    facturaCustom.setFechaActualizacion(save.getFechaActualizacion());
+    for (FacturaCustom fc : parentInvoices) {
+      updateFacturaCustom(fc.getFolio(), fc);
+    }
+    Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
+    comprobante.setMetodoPago(null);
+    comprobante.setFormaPago(null);
+    filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
+    filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
+    facturaCustom = invoiceBuilderService.assignDescData(facturaCustom);
+    byte[] pdf = getPdfFromFactura(facturaCustom, PDF_COMPLEMENTO_SIN_TIMBRAR);
+    filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
+    return facturaCustom;
   }
 
   public FacturaCustom createComplemento(String folio, PagoDto pagoDto)

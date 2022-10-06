@@ -134,13 +134,12 @@ public class ClientService {
     return mapper.getClientDtosFromEntities(repository.findByCorreoPromotor(promotor));
   }
 
-  public ClientDto getClientsByPromotorAndClient(String promotor, String rfc) {
+  public Optional<ClientDto> getClientsByPromotorAndClient(String promotor, String rfc) {
     Optional<Client> entity = repository.findByCorreoPromotorAndClient(promotor, rfc);
     if (entity.isPresent()) {
-      return mapper.getClientDtoFromEntity(entity.get());
+      return Optional.of(mapper.getClientDtoFromEntity(entity.get()));
     } else {
-      throw new ResponseStatusException(
-          HttpStatus.NOT_FOUND, "El promotor no tiene el rfc selecionado");
+      return Optional.empty();
     }
   }
 

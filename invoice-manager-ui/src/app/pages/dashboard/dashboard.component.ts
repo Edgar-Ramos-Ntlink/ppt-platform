@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit {
                                 title: e.NOMBRE_CORTO,
                                 imageSrc: `/api/empresas/${e.RFC}/logo`,
                                 description: e.GIRO,
-                                linkUrl: e.PAGINA_WEB,
+                                linkUrl: (e.PAGINA_WEB !== null && e.PAGINA_WEB !== undefined) ? e.PAGINA_WEB : 'NO URL'
                             }
                         )
                     );

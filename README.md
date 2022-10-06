@@ -51,7 +51,7 @@ El poryecto fue realizado pricnipalmente con Java 11 y Angular 8
 
 * PASO 1 Compilar interfaz grafica
   ``` sh
-  npm run build:prod
+  npm run build
   ```
 * Compila los modulos del proyecto (package copia los archivos estaticos creados por angular) y genera la imagen de docker
   ```sh
@@ -141,3 +141,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.31 Removing CFDI 33 invoice references and fix payform cfdi logic selection
   - [x] 4.5.32 Fix complement creation from PPD 3.3, enable update complements, adding folio PPD on complements view and minor UI fixes
   - [x] 4.5.33 Setup max and min memory jvm heap,adding logs when a mail is sent, removing dead code and enable payments visualization
+  - [x] 4.6.0  Fix dashboard load bug, recover payment complement data from companies and clients, by default from parent invoice, fix mail sent to clients
