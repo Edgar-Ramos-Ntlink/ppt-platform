@@ -424,6 +424,8 @@ public class FacturaService {
       result.setFechaActualizacion(base.getFechaActualizacion());
       result.setFechaCreacion(base.getFechaCreacion());
       result.setId(base.getId());
+      result.setFechaTimbrado(
+          result.getFechaTimbrado() != null ? result.getFechaTimbrado() : base.getFechaTimbrado());
       return result;
     } catch (IOException e) {
       throw new ResponseStatusException(
