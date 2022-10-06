@@ -33,7 +33,7 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
       Pageable pageable);
 
   @Query("select c from Client c where lower(c.rfc) = lower(:rfc)")
-  Optional<Client> findByRfc(@Param("rfc") String rfc);
+  List<Client> findByRfc(@Param("rfc") String rfc);
 
   List<Client> findByCorreoPromotor(String promotor);
 

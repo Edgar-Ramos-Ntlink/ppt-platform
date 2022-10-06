@@ -79,7 +79,7 @@ public class FacturaController {
   public ResponseEntity<FacturaCustom> timbrarFactura(
       @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
-    return new ResponseEntity<>(service.stamp(folio, facturaCustom), HttpStatus.OK);
+    return new ResponseEntity<>(service.stamp(folio), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/cancelar")

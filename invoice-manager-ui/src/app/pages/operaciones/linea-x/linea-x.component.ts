@@ -355,8 +355,6 @@ export class LineaXComponent implements OnInit {
     public async timbrarFactura(factura: Factura, dialog: TemplateRef<any>) {
         try {
             const fact = { ...factura };
-
-           
                 this.dialogService
                     .open(dialog, { context: fact })
                     .onClose.subscribe((invoice) => {
