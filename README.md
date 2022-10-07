@@ -143,3 +143,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.33 Setup max and min memory jvm heap,adding logs when a mail is sent, removing dead code and enable payments visualization
   - [x] 4.6.0  Fix dashboard load bug, recover payment complement data from companies and clients, by default from parent invoice, fix mail sent to clients
   - [x] 4.6.1  Fix Stamp date in Complement csv export from the tables
+  - [x] 4.6.2  Fix payment complement on line A
