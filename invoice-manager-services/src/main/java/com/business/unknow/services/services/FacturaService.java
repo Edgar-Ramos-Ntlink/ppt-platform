@@ -200,8 +200,7 @@ public class FacturaService {
           java.sql.Date end =
               java.sql.Date.valueOf(LocalDate.parse(parameters.get("to")).plusDays(1));
           predicates.add(
-              criteriaBuilder.and(
-                  criteriaBuilder.between(root.get("fechaActualizacion"), start, end)));
+              criteriaBuilder.and(criteriaBuilder.between(root.get("fechaCreacion"), start, end)));
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -801,6 +800,9 @@ public class FacturaService {
     facturaCustom.setFechaCreacion(save.getFechaCreacion());
     facturaCustom.setFechaActualizacion(save.getFechaActualizacion());
     for (FacturaCustom fc : parentInvoices) {
+      // Updating missing data on parent invoice
+      fc.getCfdi().setEmisor(facturaCustom.getCfdi().getEmisor());
+      fc.getCfdi().setReceptor(facturaCustom.getCfdi().getReceptor());
       updateFacturaCustom(fc.getFolio(), fc);
     }
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());

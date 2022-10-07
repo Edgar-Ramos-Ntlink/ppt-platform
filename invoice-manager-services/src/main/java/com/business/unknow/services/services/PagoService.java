@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -353,8 +354,14 @@ public class PagoService {
             .distinct()
             .collect(Collectors.toList());
     for (String folio : mainFactFolios) {
-      FacturaCustom f = facturaService.getFacturaBaseByFolio(folio);
-      facturas.add(f);
+      if (Objects.nonNull(folio)) {
+        FacturaCustom f = facturaService.getFacturaBaseByFolio(folio);
+        facturas.add(f);
+      } else {
+        throw new InvoiceManagerException(
+            "El pago tiene inconsistencias en las referencias del complemento de pago, contactar al area de soporte",
+            HttpStatus.CONFLICT.value());
+      }
     }
     pagoEvaluatorService.deletepaymentValidation(entity, facturas);
 
