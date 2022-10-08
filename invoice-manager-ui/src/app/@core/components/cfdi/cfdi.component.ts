@@ -45,21 +45,34 @@ export class CfdiComponent implements OnInit {
         this.store
             .pipe(select(invoice))
             .subscribe((fact) => (this.factura = fact));
-        this.store.pipe(select(cfdi)).subscribe((cfdi) => (this.cfdi = cfdi));
+        this.store.pipe(select(cfdi)).subscribe((cfdi) => {
+            this.cfdi = cfdi;
+        });
     }
 
     initVariables() {
         this.catalogsService
             .getFormasPago()
-            .then((cat) => (this.payTypeCat = cat));
-        this.loading = false;
+            .then((cat) => {this.payTypeCat = cat;
+                if(this.cfdi?.metodoPago){
+                    this.onPayMethodChange(this.cfdi.metodoPago);
+                }
+                this.loading = false;
+            });
+        
     }
 
     onPayMethodChange(clave: string) {
         const invoice = JSON.parse(JSON.stringify(this.factura));
         if (clave === 'PPD') {
             invoice.cfdi.formaPago = '99';
+            this.catalogsService
+            .getFormasPago()
+            .then((cat) => (this.payTypeCat = cat.filter(c=>c.id == '99')));
         } else {
+            this.catalogsService
+            .getFormasPago()
+            .then((cat) => (this.payTypeCat = cat.filter(c=>c.id != '99')));
             invoice.cfdi.formaPago = '01';
         }
         invoice.cfdi.metodoPago = clave;
@@ -79,6 +92,12 @@ export class CfdiComponent implements OnInit {
         if (moneda === 'MXN') {
             cfdi.tipoCambio = 1.0;
         }
+        this.store.dispatch(updateCfdi({ cfdi }));
+    }
+
+    updateLugarExpedicion(lugarExpedicion : string){
+        const cfdi = { ...this.cfdi };
+        cfdi.lugarExpedicion = lugarExpedicion;
         this.store.dispatch(updateCfdi({ cfdi }));
     }
 
@@ -136,13 +155,16 @@ export class CfdiComponent implements OnInit {
         this.invoiceService
             .getInvoiceByFolio(folio)
             .toPromise()
-            .then((fact) =>
-                this.router.navigate([`./pages/promotor/precfdi/${fact.folio}`])
-            );
+            .then((fact) =>{
+            const url = this.router.url;
+            const redirectUrl = `.${url.substring(0,url.lastIndexOf('/'))}/${fact.folio}`
+            this.router.navigate([redirectUrl])
+    });
     }
 
     public goToRelacionado(folio: String) {
-        console.log(folio);
-        this.router.navigate([`./pages/operaciones/revision/${folio}`]);
+        const url = this.router.url;
+        const redirectUrl = `.${url.substring(0,url.lastIndexOf('/'))}/${folio}`
+        this.router.navigate([redirectUrl]);
     }
 }

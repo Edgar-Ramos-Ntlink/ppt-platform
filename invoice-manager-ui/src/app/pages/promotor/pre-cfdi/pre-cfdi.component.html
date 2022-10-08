@@ -4,15 +4,14 @@
             <nb-card-header>
                 <div class="clearfix" *ngIf="factura">
                     <p class="h6 float-left" *ngIf="folio !== '*'">
-                        Solicitud No {{ factura?.folio }}
-                      </p>
+                     PREFOLIO : {{ factura?.preFolio }} - FOLIO : {{ factura?.folio }}
+                    </p>
                       <p *ngIf="folio == '*'" class="h6 float-left">Solicitud Pre Cfdi</p>
                       <nt-invoice-status
                         class="float-right"
-                        *ngIf="!!factura?.statusFactura"
-                        [status]="factura.statusFactura"
-                      >
-                      </nt-invoice-status>
+                        *ngIf="folio !== '*'"
+                        [status]="factura?.statusFactura"
+                    ></nt-invoice-status>
                     
                     <button nbButton status="success" size="small" (click)="revalidateInvoice()" [nbSpinner]="loading"
                         class="float-right ml-1 mr-1" [disabled]="loading" nbSpinnerStatus="success"
@@ -82,7 +81,7 @@
             factura?.tipoDocumento !== 'Complemento' &&
             (factura?.folio === undefined ||
               factura?.statusFactura == 1 ||
-              factura?.statusFactura == 2)">
+              factura?.statusFactura == 2 )">
                 </nt-cfdi>
 
                 <div class="row" *ngIf="

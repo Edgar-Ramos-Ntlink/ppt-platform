@@ -96,6 +96,7 @@ public class MailService {
       Transport transport = session.getTransport("smtp");
       transport.connect(host, email, password);
       transport.sendMessage(message, message.getAllRecipients());
+      log.info("A mail was sent to {}, with subject {}", recipients, content.getSubject());
       transport.close();
     } catch (MessagingException e) {
       log.error("Error sending mail", e);

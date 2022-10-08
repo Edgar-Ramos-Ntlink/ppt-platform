@@ -128,7 +128,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
 
         const emisor = new Emisor();
         emisor.rfc = companyInfo.rfc.toUpperCase();
-        emisor.nombre = companyInfo.razonSocial.toUpperCase();
+        emisor.nombre = companyInfo.nombre.toUpperCase();
         emisor.regimenFiscal = companyInfo.regimenFiscal || '*';
 
         let invoice = JSON.parse(JSON.stringify(this.factura));
@@ -151,7 +151,6 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                 `El cliente ${client.razonSocial} no se encuentra activo, solicite su activación al equipo de operaciones`,
                 'Cliente inactivo'
             );
-            return;
         }
 
         if (
@@ -164,13 +163,12 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                 `El cliente ${client.razonSocial} no cuenta con regimen fiscal, delo de alta antes de continuar`,
                 'Informacion faltante'
             );
-            return;
         }
         let receptor = new Receptor();
         receptor.rfc = client.rfc.toUpperCase();
         receptor.nombre = client.razonSocial.toUpperCase();
-        receptor.domicilioFiscalReceptor = client.cp;
-        receptor.regimenFiscalReceptor = client.regimenFiscal;
+        receptor.domicilioFiscalReceptor = client.cp || '00000';
+        receptor.regimenFiscalReceptor = client.regimenFiscal || '*';
 
         let address = this.cfdiValidator.generateAddress(client);
         this.store.dispatch(updateReceptor({ receptor }));

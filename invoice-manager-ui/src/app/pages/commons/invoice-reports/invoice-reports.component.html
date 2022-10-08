@@ -35,6 +35,7 @@
                             <option value="*">Todos</option>
                             <option value="Factura">Factura</option>
                             <option value="Complemento">Complemento</option>
+                            <option value="NotaDeCredito">Nota de Crédito</option>
                         </select>
                     </div>
 
@@ -229,6 +230,7 @@
                             <option value="*">Todos</option>
                             <option value="Factura">Factura</option>
                             <option value="Complemento">Complemento</option>
+                            <option value="NotaDeCredito">Nota de Crédito</option>
                         </select>
                     </div>
 
@@ -421,6 +423,7 @@
                             <option value="*">Todos</option>
                             <option value="Factura">Factura</option>
                             <option value="Complemento">Complemento</option>
+                            <option value="NotaDeCredito">Nota de Crédito</option>
                         </select>
                     </div>
 
@@ -754,7 +757,7 @@
                                 <td scope="row">{{ fila.metodoPago }}</td>
                                 <td scope="row">
                                     <nt-invoice-status
-                                        [status]="fila.statusFactura"
+                                        [status]="fila?.statusFactura"
                                     ></nt-invoice-status>
                                 </td>
                                 <td scope="row">{{ fila.total | currency }}</td>

@@ -51,7 +51,7 @@ El poryecto fue realizado pricnipalmente con Java 11 y Angular 8
 
 * PASO 1 Compilar interfaz grafica
   ``` sh
-  npm run build:prod
+  npm run build
   ```
 * Compila los modulos del proyecto (package copia los archivos estaticos creados por angular) y genera la imagen de docker
   ```sh
@@ -121,3 +121,26 @@ Para desarrollar este proyecto es necesario
   - [x] 4.5.19 habilitar modulo de clientes en operaciones, correcion de bug colonias en vista de clientes y agregar tooltip en reporte facturas
   - [x] 4.5.20 set Version during  invoice creation
   - [x] 4.5.21 fiscal regimen bugfix correction and enable emisor edition
+  - [x] 4.5.22 Permitir edicion  de CFDIs a administradores en modulo contabilidad
+  - [x] 4.5.23 Se repar issue de total de pago de complemento para cancelacion
+  - [x] 4.5.24 Cambios en vista CFDI (se agerga prefolio, UUID, version, promotor y fecha de cracion), se corrige null pointer cancelacion PPD, se habilita lugar de expedicion y se corrigen redireccion entre CFDI relacionados plataforma
+  - [x] 4.5.25 Solucion de multiples bugs
+    - Enable stamp complements on accounting module 
+    - Fix base factura fields bugs 
+    - Redirect when factura is replaced 
+    - Asign stamp status on complements 
+    - Fix payments validations on Tesoreria 
+    - Fix payments data when payment is created 
+    - Allow edition on invoice status 1,2 and 4 
+    - fix name assignation on pre-cfdi
+  - [x] 4.5.26 Enable lock and unlock logic on companies only for legal and admin areas and account creation validation
+  - [x] 4.5.27 Multicomplementos upgrades, payments upgrades, fix complement generation, fix status invoice updates
+  - [x] 4.5.28 Fix null pointer on payment delete
+  - [x] 4.5.29 Multicomplments view simplification,Fix on multicomplements payment delete, disable regimen fiscal, inactive client validation, allow on line-x search all client promotors, minor UI fixes
+  - [x] 4.5.30 Correccion en el borrado de complementos pago
+  - [x] 4.5.31 Removing CFDI 33 invoice references and fix payform cfdi logic selection
+  - [x] 4.5.32 Fix complement creation from PPD 3.3, enable update complements, adding folio PPD on complements view and minor UI fixes
+  - [x] 4.5.33 Setup max and min memory jvm heap,adding logs when a mail is sent, removing dead code and enable payments visualization
+  - [x] 4.6.0  Fix dashboard load bug, recover payment complement data from companies and clients, by default from parent invoice, fix mail sent to clients
+  - [x] 4.6.1  Fix Stamp date in Complement csv export from the tables
+  - [x] 4.6.2  Fix payment complement on line A

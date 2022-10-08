@@ -16,7 +16,7 @@ import { CuentasBancariasComponent } from '../commons/cuentas-bancarias/cuentas-
 import { CuentaBancariaComponent } from '../commons/cuenta-bancaria/cuenta-bancaria.component';
 import { UsersComponent } from '../commons/users/users.component';
 import { UserComponent } from '../commons/user/user.component';
-import { DevolucionesComponent } from '../commons/devoluciones/devoluciones.component';
+import { MulticomplementosComponent } from '../commons/multicomplementos/multicomplementos.component';
 
 const routes: Routes = [{
   path: '',
@@ -44,11 +44,8 @@ const routes: Routes = [{
       path: 'cfdi/:linea/:folio',
       component : LineaXComponent,
     }, {
-      path: 'multicomplementos',
-      component : MulticomplementosComponent,
-    }, {
       path: 'pago-facturas',
-      component: PagosFacturaComponent,
+      component: MulticomplementosComponent,
     },
     {
       path: 'pagos',

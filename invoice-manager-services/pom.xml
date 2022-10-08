@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.business.unknow</groupId>
         <artifactId>invoice-manager-platform</artifactId>
-        <version>4.5.21</version>
+        <version>4.6.2</version>
     </parent>
     <artifactId>invoice-manager-services</artifactId>
     <name>invoice-manager-services</name>
@@ -158,7 +158,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.3</version>
+            <version>2.12.6.1</version>
         </dependency>
     </dependencies>
     <dependencyManagement>

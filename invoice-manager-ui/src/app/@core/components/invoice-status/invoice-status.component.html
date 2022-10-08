@@ -1,9 +1,10 @@
 <div class="ml-2 mr-2" *ngIf="status">
-  <span class="badge badge-primary" *ngIf="status == '1'"
-    >Validacion operaciones</span
+  <h6 class="d-inline p-2">
+    <span class="badge badge-primary" *ngIf="status == '1'"
+    >Validación operaciones</span
   >
   <span class="badge badge-primary" *ngIf="status == '2'">
-    Validacion tesoreria
+    Validación tesoreria
   </span>
   <span class="badge badge-success" *ngIf="status == '3'">Timbrada</span>
 
@@ -26,5 +27,6 @@
   <span class="badge badge-warning" *ngIf="status == '9'"
     >Rechazo Contabilidad</span
   >
-  
+  </h6>
 </div>
+

@@ -52,7 +52,7 @@ export class PreCfdiComponent implements OnInit {
     public payment: Pago;
     public factura: Factura;
     public folioParam: string;
-    public soporte: boolean = false;
+    public isAdministrator: boolean = false;
     public folio: string;
 
     public formInfo = {
@@ -135,6 +135,8 @@ export class PreCfdiComponent implements OnInit {
                     this.folio = folio;
                 });
             });
+            const user = JSON.parse(sessionStorage.getItem('user'));
+            this.isAdministrator = user.roles.find((u) => u.role == 'ADMINISTRADOR') != undefined;
 
         this.store
             .pipe(select(invoice))

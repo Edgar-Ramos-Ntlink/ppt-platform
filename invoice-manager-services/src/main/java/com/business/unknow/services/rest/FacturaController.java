@@ -52,8 +52,7 @@ public class FacturaController {
   }
 
   @GetMapping("/{folio}")
-  public ResponseEntity<FacturaCustom> getFactura(@PathVariable String folio)
-      throws NtlinkUtilException {
+  public ResponseEntity<FacturaCustom> getFactura(@PathVariable String folio) {
     return new ResponseEntity<>(service.getFacturaByFolio(folio), HttpStatus.OK);
   }
 
@@ -80,7 +79,7 @@ public class FacturaController {
   public ResponseEntity<FacturaCustom> timbrarFactura(
       @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaCustom)
       throws InvoiceManagerException, NtlinkUtilException {
-    return new ResponseEntity<>(service.stamp(folio, facturaCustom), HttpStatus.OK);
+    return new ResponseEntity<>(service.stamp(folio), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/cancelar")
@@ -91,9 +90,9 @@ public class FacturaController {
   }
 
   @PostMapping("/{folio}/correos")
-  public ResponseEntity<FacturaCustom> renviarCorreos(@RequestBody @Valid String folio)
-      throws InvoiceManagerException, NtlinkUtilException {
-    return new ResponseEntity<>(service.reSendMail(folio), HttpStatus.OK);
+  public ResponseEntity<Void> renviarCorreos(@RequestBody @Valid String folio) {
+    service.reSendMail(folio);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/sustitucion")
@@ -118,7 +117,6 @@ public class FacturaController {
       throws InvoiceManagerException, NtlinkUtilException {
     FacturaCustom facturaCustom = service.createComplemento(folio, pago);
 
-    return new ResponseEntity<>(
-        service.stamp(facturaCustom.getFolio(), facturaCustom), HttpStatus.OK);
+    return new ResponseEntity<>(facturaCustom, HttpStatus.OK);
   }
 }

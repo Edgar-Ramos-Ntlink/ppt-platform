@@ -1,5 +1,6 @@
 package com.business.unknow.services.services;
 
+import com.business.unknow.Constants;
 import com.business.unknow.enums.FacturaStatus;
 import com.business.unknow.enums.FormaPago;
 import com.business.unknow.enums.MetodosPago;
@@ -7,6 +8,7 @@ import com.business.unknow.enums.RevisionPagos;
 import com.business.unknow.enums.TipoArchivo;
 import com.business.unknow.enums.TipoDocumento;
 import com.business.unknow.model.dto.FacturaCustom;
+import com.business.unknow.model.dto.PagoComplemento;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.dto.pagos.PagoFacturaDto;
@@ -28,6 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -41,6 +44,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Slf4j
@@ -256,7 +260,7 @@ public class PagoService {
           "Generando complemento para : {}",
           factPpd.stream().map(f -> f.getFolio()).collect(Collectors.toList()));
       FacturaCustom facturaCustomComeplemento =
-          facturaService.generateComplemento(facturas, pagoDto);
+          facturaService.generateComplemento(facturas, pagoDto, FacturaStatus.VALIDACION_TESORERIA);
       pagoDto
           .getFacturas()
           .forEach(a -> a.setFolioReferencia(facturaCustomComeplemento.getFolio()));
@@ -317,7 +321,7 @@ public class PagoService {
     List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact :
         pago.getFacturas().stream().distinct().collect(Collectors.toList())) {
-      FacturaCustom factura = facturaService.getFacturaBaseByFolio(pagoFact.getFolio());
+      FacturaCustom factura = facturaService.getFacturaByFolio(pagoFact.getFolioReferencia());
       facturas.add(factura);
     }
     pagoEvaluatorService.validatePaymentUpdate(pago, entity, facturas);
@@ -347,51 +351,80 @@ public class PagoService {
   public void deletePago(Integer idPago) throws InvoiceManagerException, NtlinkUtilException {
     PagoDto entity = getPaymentById(idPago);
     List<FacturaCustom> facturas = new ArrayList<>();
-    for (PagoFacturaDto pagoFact : entity.getFacturas()) {
-      FacturaCustom factura = facturaService.getFacturaByFolio(pagoFact.getFolio());
-      facturas.add(factura);
+    List<String> mainFactFolios =
+        entity.getFacturas().stream()
+            .map(f -> f.getFolioReferencia())
+            .distinct()
+            .collect(Collectors.toList());
+    for (String folio : mainFactFolios) {
+      if (Objects.nonNull(folio)) {
+        FacturaCustom f = facturaService.getFacturaBaseByFolio(folio);
+        facturas.add(f);
+      } else {
+        throw new InvoiceManagerException(
+            "El pago tiene inconsistencias en las referencias del complemento de pago, contactar al area de soporte",
+            HttpStatus.CONFLICT.value());
+      }
     }
     pagoEvaluatorService.deletepaymentValidation(entity, facturas);
 
-    for (FacturaCustom fact : facturas) {
-      Optional<PagoFacturaDto> pagoFactOpt =
-          entity.getFacturas().stream().filter(p -> p.getFolio().equals(fact.getFolio())).findAny();
-      if (MetodosPago.PPD.name().equals(fact.getMetodoPago())) {
-        for (PagoFacturaDto pagoFacturaDto : entity.getFacturas()) {
-          FacturaCustom comeplement =
-              facturaService.getFacturaBaseByFolio(pagoFacturaDto.getFolioReferencia());
-          if (TipoDocumento.COMPLEMENTO.equals(
-              TipoDocumento.findByDesc(comeplement.getTipoDocumento()))) {
-            facturaService.deleteFactura(comeplement.getFolio());
-            filesService.deleteFacturaFile(comeplement.getFolio(), TipoArchivo.PDF.name());
-            filesService.deleteFacturaFile(comeplement.getFolio(), TipoArchivo.XML.name());
-            fact.setSaldoPendiente(fact.getSaldoPendiente().add(entity.getMonto()));
-            fact.getPagos()
-                .removeIf(
-                    a ->
-                        a.getFolio().equals(comeplement.getFolio())
-                            && a.getFechaPago().equals(entity.getFechaPago())
-                            && a.getFolioOrigen().equals(fact.getFolio()));
+    for (FacturaCustom mainFact : facturas) {
+      if (TipoDocumento.COMPLEMENTO.getDescripcion().equals(mainFact.getTipoDocumento())) {
+        // removing complements data
+        List<PagoFacturaDto> pagos =
+            entity.getFacturas().stream()
+                .filter(p -> p.getFolioReferencia().equals(mainFact.getFolio()))
+                .collect(Collectors.toList());
+
+        for (PagoFacturaDto pago : pagos) {
+          FacturaCustom fact = facturaService.getFacturaByFolio(pago.getFolio());
+          log.info(
+              "Removing Complement references of {} from PPD parent {}",
+              mainFact.getFolio(),
+              pago.getFolio());
+          fact.setSaldoPendiente(fact.getSaldoPendiente().add(entity.getMonto()));
+
+          Optional<PagoComplemento> pagoComplemento =
+              fact.getPagos().stream()
+                  .filter(p -> p.getFolio().equals(mainFact.getFolio()))
+                  .findAny();
+          if (pagoComplemento.isPresent()) {
+            fact.getPagos().remove(pagoComplemento.get());
             facturaService.updateFacturaCustom(fact.getFolio(), fact);
+          } else {
+            throw new InvoiceManagerException(
+                "Incosistencias en los complementos de pago de la factura origen, no se elimino el complemento",
+                HttpStatus.CONFLICT.value());
           }
         }
+        // deleting all complement references
+        facturaService.deleteFactura(mainFact.getFolio());
+        filesService.deleteFacturaFile(mainFact.getFolio(), TipoArchivo.PDF.name());
+        filesService.deleteFacturaFile(mainFact.getFolio(), TipoArchivo.XML.name());
       } else {
-        if (pagoFactOpt.isPresent()) {
+        Optional<PagoFacturaDto> pagoFactOpt =
+            entity.getFacturas().stream()
+                .filter(p -> p.getFolio().equals(mainFact.getFolio()))
+                .findAny();
+        if (pagoFactOpt.isPresent()
+            && pagoFactOpt.get().getFolioReferencia().equals(mainFact.getFolio())) {
           facturaService.updateTotalAndSaldoFactura(
-              fact.getFolio(),
+              mainFact.getFolio(),
               Optional.empty(),
               Optional.of(
-                  fact.getCfdi().getMoneda().equals(entity.getMoneda())
+                  Constants.MXN.equals(entity.getMoneda())
                       ? pagoFactOpt.get().getMonto().negate()
                       : pagoFactOpt
                           .get()
                           .getMonto()
                           .divide(entity.getTipoDeCambio(), 2, RoundingMode.HALF_UP)
                           .negate()));
+        } else {
+          throw new ResponseStatusException(
+              HttpStatus.CONFLICT, "Existe alguna inconsistencia en las referencias de los pagos");
         }
       }
     }
-
     filesService.deleteResourceFileByResourceReferenceAndType(
         "PAGOS", idPago.toString(), TipoArchivo.IMAGEN.name());
     repository.delete(mapper.getEntityFromPagoDto(entity));

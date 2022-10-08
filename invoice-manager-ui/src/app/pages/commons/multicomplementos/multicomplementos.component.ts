@@ -1,26 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { GenericPage } from '../../../models/generic-page';
 import { PagoBase } from '../../../models/pago-base';
-import { Catalogo } from '../../../models/catalogos/catalogo';
-import { Cuenta } from '../../../models/cuenta';
-import { PaymentsData } from '../../../@core/data/payments-data';
-import { ClientsData } from '../../../@core/data/clients-data';
+import { GenericPage } from '../../../models/generic-page';
 import { InvoicesData } from '../../../@core/data/invoices-data';
+import { map } from 'rxjs/operators';
+import { ClientsData } from '../../../@core/data/clients-data';
+import { Client } from '../../../models/client';
+import { User } from '../../../@core/models/user';
+import { Cuenta } from '../../../models/cuenta';
 import { CuentasData } from '../../../@core/data/cuentas-data';
 import { FilesData } from '../../../@core/data/files-data';
-import { Router } from '@angular/router';
 import { PagosValidatorService } from '../../../@core/util-services/pagos-validator.service';
+import { PaymentsData } from '../../../@core/data/payments-data';
 import { ResourceFile } from '../../../models/resource-file';
 import { PagoFactura } from '../../../models/pago-factura';
-import { HttpErrorResponse } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { Catalogo } from '../../../models/catalogos/catalogo';
+import { Router } from '@angular/router';
 import { Factura } from '../../../@core/models/factura';
 import { DatePipe } from '@angular/common';
-import { Client } from '../../../models/client';
 import { Empresa } from '../../../models/empresa';
+import { NtError } from '../../../@core/models/nt-error';
+import { NotificationsService } from '../../../@core/util-services/notifications.service';
+import { UsersData } from '../../../@core/data/users-data';
 
 @Component({
-    selector: 'ngx-multicomplementos',
+    selector: 'nt-multicomplementos',
     templateUrl: './multicomplementos.component.html',
     styleUrls: ['./multicomplementos.component.scss'],
 })
@@ -30,57 +33,106 @@ export class MulticomplementosComponent implements OnInit {
     public fileInput: any;
     public paymentForm = { payType: '*', bankAccount: '*', filename: '' };
     public newPayment: PagoBase = new PagoBase();
-    public payErrorMessages: string[] = [];
-    public successMesagge: string;
+
 
     public payTypeCat: Catalogo[] = [];
     public cuentas: Cuenta[];
     public loading: boolean = false;
 
+    public usersCat: User[] = [];
     public clientsCat: Client[] = [];
     public companiesCat: Empresa[] = [];
 
+    public promotor: User;
     public selectedClient: Client;
     public selectedCompany: Empresa;
 
-    public filterParams = { solicitante: '', emisor: '', remitente: '' };
+    public filterParams = { solicitante: '', rfcEmisor: '', rfcRemitente: '', status : 3, tipoDocumento : 'Factura', metodoPago : 'PPD' };
     constructor(
         private paymentsService: PaymentsData,
         private clientsService: ClientsData,
+        private usersService: UsersData,
         public datepipe: DatePipe,
         private invoiceService: InvoicesData,
         private accountsService: CuentasData,
         private fileService: FilesData,
         private router: Router,
-        private paymentValidator: PagosValidatorService
+        private paymentValidator: PagosValidatorService,
+        private notificationService: NotificationsService
     ) {}
 
     ngOnInit() {
+        this.loading = true;
         this.module = this.router.url.split('/')[2];
-        this.successMesagge = '';
+        if(this.module === 'promotor'){
+            this.selectPromotor(JSON.parse(sessionStorage.getItem('user')));
+            this.loading = false;
+        } else {
+            this.loadPromotorInfo();
+        }
+        
         this.newPayment.moneda = 'MXN';
-        this.loading = false;
+        
         this.page = new GenericPage();
-        this.filterParams = { solicitante: '', emisor: '', remitente: '' };
+        this.filterParams = { solicitante: '', rfcEmisor: '', rfcRemitente: '', status : 3 ,tipoDocumento : 'Factura', metodoPago : 'PPD'};
         this.paymentsService
             .getFormasPago()
-            .subscribe((payTypes) => (this.payTypeCat = payTypes));
-
-        this.filterParams.solicitante = sessionStorage.getItem('email');
-        this.clientsService
-            .getClientsByPromotor(sessionStorage.getItem('email'))
-            .subscribe((clients) => {
-                this.clientsCat = clients;
-            });
+            .subscribe((payTypes) => (this.payTypeCat = payTypes));       
     }
 
-    selectClient(cliente: Client) {
+    private  async loadPromotorInfo() {
+
+        try {
+            this.usersCat = await this.usersService
+            .getUsers(0, 1000, { status: '1' })
+            .pipe(
+                map((p: GenericPage<User>) => {
+                    const users = p.content;
+                    users.forEach((u) => (u.name = `${u.alias} - ${u.email}`));
+                    return users;
+                })
+            ).toPromise();
+        } catch( error) {
+            this.notificationService.sendNotification(
+                'danger',
+                error.message,
+                'Error cargando promotores'
+            )
+        }
+        this.loading = false;
+    }
+
+    
+    public selectPromotor(user: User) {
+        this.promotor = user;
+        this.clientsService
+            .getClientsByPromotor(user.email)
+            .pipe(
+                map((clients: Client[]) => {
+                    clients.forEach(
+                        (c) => (c.notas = `${c.rfc} - ${c.razonSocial}`)
+                    );
+                    return clients;
+                })
+            )
+            .subscribe(
+                (clients) => (this.clientsCat = clients),
+                (error: NtError) =>
+                    this.notificationService.sendNotification(
+                        'danger',
+                        error.message,
+                        'Error cargando clientes'
+                    )
+            );
+    }
+
+    public selectClient(cliente: Client) {
         this.selectedClient = cliente;
-        this.filterParams.remitente = cliente.razonSocial;
+        this.filterParams.rfcRemitente = cliente.rfc;
         this.invoiceService
             .getInvoices({
-                remitente: cliente.razonSocial,
-                solicitante: sessionStorage.getItem('email'),
+                rfcRemitente: cliente.rfc,
+                solicitante: this.promotor.email,
                 page: 0,
                 size: 10000,
             })
@@ -103,12 +155,17 @@ export class MulticomplementosComponent implements OnInit {
                         companies.find((c) => c.rfc === rfc)
                     );
                 }
-            });
+            },(error: NtError) =>
+                this.notificationService.sendNotification(
+                    'danger',
+                    error.message,
+                    'Error cargando empresas'
+                ));
     }
 
     onCompanySelected(company: any) {
         this.selectedCompany = this.companiesCat.find((c) => c.rfc === company);
-        this.filterParams.emisor = this.selectedCompany.razonSocial;
+        this.filterParams.rfcEmisor = this.selectedCompany.rfc;
         this.updateDataTable(0, 100);
     }
 
@@ -128,15 +185,18 @@ export class MulticomplementosComponent implements OnInit {
                 .getCuentasByCompany(this.selectedCompany.rfc)
                 .subscribe((cuentas) => {
                     this.cuentas = cuentas;
-                    this.paymentForm.bankAccount = cuentas[0].id;
+                    this.paymentForm.bankAccount = cuentas[0].cuenta;
                     this.newPayment.banco = cuentas[0].banco;
                     this.newPayment.cuenta = cuentas[0].cuenta;
                 });
         }
     }
 
-    onPaymentBankSelected(clave: string) {
-        this.newPayment.banco = clave;
+    onPaymentBankSelected(cuenta: string) {
+        if(cuenta !== '*'){
+            this.newPayment.cuenta = cuenta;
+            this.newPayment.banco = this.cuentas.find(c=>c.cuenta === cuenta).banco || 'Sin Banco'
+        }
     }
 
     fileUploadListener(event: any): void {
@@ -155,7 +215,7 @@ export class MulticomplementosComponent implements OnInit {
                     this.newPayment.documento = reader.result.toString();
                 };
                 reader.onerror = (error) => {
-                    this.payErrorMessages.push('Error parsing image file');
+                    this.notificationService.sendNotification('warning','Error cargando archivo');
                 };
             }
         }
@@ -163,13 +223,11 @@ export class MulticomplementosComponent implements OnInit {
 
     sendPayment() {
         const filename = this.paymentForm.filename;
-        this.successMesagge = '';
-        this.payErrorMessages = [];
-        const payment = { ...this.newPayment };
         this.newPayment.fechaPago = this.datepipe.transform(
             this.newPayment.fechaPago,
             'yyyy-MM-dd HH:mm:ss'
         );
+        const payment = { ...this.newPayment };
         for (const f of this.page.content) {
             if (f.pagoMonto !== undefined && f.pagoMonto > 0) {
                 payment.facturas.push(
@@ -186,9 +244,9 @@ export class MulticomplementosComponent implements OnInit {
             this.module !== 'promotor'
                 ? (payment.solicitante = this.page.content[0].solicitante)
                 : sessionStorage.getItem('email');
-        this.payErrorMessages =
+        const errors =
             this.paymentValidator.validatePagoSimple(payment);
-        if (this.payErrorMessages.length === 0) {
+        if (errors.length === 0) {
             this.loading = true;
             payment.acredor = this.selectedCompany.razonSocial;
             payment.deudor = this.selectedClient.razonSocial;
@@ -206,19 +264,25 @@ export class MulticomplementosComponent implements OnInit {
                     this.fileService
                         .insertResourceFile(resourceFile)
                         .subscribe((response) => console.log(response));
-                    this.successMesagge = 'Pago creado correctamente';
-                    this.updateDataTable();
+                    this.newPayment = new PagoBase();
+                    this.selectClient = undefined;
+                    this.selectedCompany = undefined;
+                    this.page = new GenericPage();
                     this.loading = false;
+                    this.notificationService.sendNotification('success','Pago creado correctamente');
+                    
                 },
-                (error: HttpErrorResponse) => {
+                (error: NtError) => {
                     this.loading = false;
-                    this.payErrorMessages.push(
-                        error.error.message ||
-                            `${error.statusText} : ${error.message}`
+                    this.notificationService.sendNotification(
+                        'danger',
+                        error.message,
+                        'Error en la creacion del pago'
                     );
                 }
             );
         } else {
+            errors.forEach(e=> this.notificationService.sendNotification('warning',e,'Error de validacion'))
             this.newPayment.facturas = [];
         }
     }
@@ -230,7 +294,12 @@ export class MulticomplementosComponent implements OnInit {
 
         this.invoiceService.getInvoices(params).subscribe(
             (result: GenericPage<any>) => (this.page = result),
-            (error) => console.log(error)
+            (error:NtError) => this.notificationService.sendNotification(
+                'danger',
+                error.message,
+                'Error cargando informacion de facturas'
+            )
         );
     }
+
 }

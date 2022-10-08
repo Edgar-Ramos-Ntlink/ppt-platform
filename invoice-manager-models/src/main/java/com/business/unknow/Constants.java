@@ -18,6 +18,7 @@ public class Constants {
 
   public static final String CANCEL_ACK = "CANCEL_ACK";
 
+  public static final String MXN = "MXN";
   public static final String CFDI_40_VERSION = "4.0";
   public static final String CFDI_33_VERSION = "3.3";
   public static final String CFDI_DATE_PATTERN = "%fecha-timbrado%";
@@ -55,6 +56,7 @@ public class Constants {
     public static final String MONEDA = "XXX";
     public static final String SERIE = "PFPC";
     public static final String METODO_PAGO = "PPD";
+    public static final String FORMA_PAGO = "99";
     public static final String COMPROBANTE = "P";
     public static final String EXPORTACION = "01";
     public static final String PAGO_CLAVE = "84111506";

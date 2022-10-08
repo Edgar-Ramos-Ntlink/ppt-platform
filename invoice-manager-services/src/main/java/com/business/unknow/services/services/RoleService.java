@@ -67,7 +67,6 @@ public class RoleService {
                 () ->
                     new ResponseStatusException(
                         HttpStatus.NOT_FOUND, String.format("role no existe %d", id)));
-    ;
     repository.delete(rol);
   }
 

@@ -2,7 +2,6 @@ package com.business.unknow.services.services;
 
 import com.business.unknow.model.config.EmailConfig;
 import com.business.unknow.model.dto.services.NotificationDto;
-import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.config.properties.GlocalConfigs;
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
@@ -21,8 +20,7 @@ public class NotificationHandlerService {
 
   @Autowired private MailService mailService;
 
-  public void sendNotification(String notificationType, String extraDetails)
-      throws InvoiceManagerException {
+  public void sendNotification(String notificationType, String extraDetails) {
     Optional<NotificationDto> notification =
         notificationService.getNotificationByType(notificationType);
     if (notification.isPresent()) {

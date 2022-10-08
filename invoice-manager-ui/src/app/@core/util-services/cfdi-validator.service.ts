@@ -215,6 +215,12 @@ export class CfdiValidatorService {
         if (cfdi.emisor.rfc === cfdi.receptor.rfc) {
             messages.push('El emisor y receptor son la misma entidad');
         }
+        if (cfdi.receptor.regimenFiscalReceptor === undefined || cfdi.receptor.regimenFiscalReceptor === '*'){
+            messages.push('Es necesario asignar el régimen fiscal del receptor');
+        }
+        if (cfdi.lugarExpedicion === undefined || cfdi.lugarExpedicion === '00000' || cfdi.lugarExpedicion.length === 0){
+            messages.push('El código postal del lugar de expedicion es un valor requerido');
+        }
         if (
             cfdi.receptor.usoCfdi === undefined ||
             cfdi.receptor.usoCfdi === '*'
@@ -259,6 +265,12 @@ export class CfdiValidatorService {
             messages.push(
                 'Si la moneda seleccionada es MXN el tipo de cambio debe ser $1.00.'
             );
+        }
+        if(cfdi.metodoPago === 'PPD' && cfdi.formaPago !== '99'){
+            messages.push('En facturas PPD el metodo de pago debe ser siempre POR DEFINIR')
+        }
+        if(cfdi.metodoPago === 'PUE' && cfdi.formaPago === '99'){
+            messages.push('En facturas PUE el metodo de pago no puede ser POR DEFINIR')
         }
         return messages;
     }

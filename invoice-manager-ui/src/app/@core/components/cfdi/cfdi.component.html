@@ -1,4 +1,13 @@
 <div class="clearfix" *ngIf="cfdi?.folio">
+    <h6 *ngIf="factura?.uuid" class="ml-1 mr-1 float-left"> UUID : {{factura.uuid}}</h6>
+    <span
+        class="badge badge-secondary ml-1 mr-1 float-left"
+        *ngIf="factura?.cfdi"
+    >
+        <strong *ngIf="factura?.cfdi.cfdiRelacionados"
+            >CFDI RELACIONADO : {{ factura?.cfdi.cfdiRelacionados.cfdiRelacionado | json }}</strong
+        >
+    </span>
     <button
         nbButton
         status="success"
@@ -50,14 +59,7 @@
         <i class="fa fa-arrow-left"></i>
     </button>
 
-    <span
-        class="badge badge-secondary ml-1 mr-1 float-right"
-        *ngIf="factura?.cfdi"
-    >
-        <strong *ngIf="factura?.cfdi.relacionado"
-            >CFDI RELACIONADO : {{ factura?.cfdi.relacionado.relacion }}</strong
-        >
-    </span>
+    
 </div>
 <div class="row" *ngIf="cfdi">
     <div class="col-md-12">
@@ -95,10 +97,10 @@
                     >
                         <option value="*">SELECCIONAR</option>
                         <option value="I" class="text-uppercase">
-                            Factura Ingreso
+                            Ingreso
                         </option>
                         <option value="E" class="text-uppercase">
-                            Factura Egreso(Nota credito)
+                            Egreso(Nota credito)
                         </option>
                         <option value="P" class="text-uppercase">
                             Complemento(pago)
@@ -122,7 +124,7 @@
                             Factura pagada (PUE)
                         </option>
                         <option value="PPD" class="text-uppercase">
-                            Factura pago por definir(PPD)
+                            Factura por definir(PPD)
                         </option>
                     </select>
                 </div>
@@ -150,6 +152,19 @@
                     </select>
                 </div>
                 <div class="col-md-2">
+                    <label for="inputLugarExpedicion" class="label"
+                        >Lugar Expedición</label
+                    >
+                    <input
+                        id="inputLugarExpedicion"
+                        class="form-control text-uppercase"
+                        type="text"
+                        [disabled]="!allowEdit"
+                        [(ngModel)]="cfdi.lugarExpedicion"
+                        (ngModelChange)="updateLugarExpedicion($event)"
+                    />
+                </div>
+                <div class="col-md-1">
                     <label for="inputCoin" class="label">Moneda</label>
                     <select
                         id="inputCoin"
@@ -169,7 +184,7 @@
                         </option>
                     </select>
                 </div>
-                <div class="col-md-2" *ngIf="cfdi.moneda === 'USD'">
+                <div class="col-md-1" *ngIf="cfdi.moneda === 'USD'">
                     <label for="inputChangeType" class="label"
                         >Tipo de Cambio</label
                     >

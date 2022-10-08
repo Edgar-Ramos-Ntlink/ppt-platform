@@ -45,9 +45,7 @@ public class AuthenticationFilter extends GenericFilterBean {
           filterChain.doFilter(request, response);
         }
       } else {
-        if (req.getRequestURL().toString().contains("/actuator")) {
-          log.info("Actuator request : {}", req.getRequestURL().toString());
-        } else {
+        if (!req.getRequestURL().toString().contains("/actuator")) {
           HttpServletResponse resp = (HttpServletResponse) response;
           resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Usuario no autorizado.");
         }

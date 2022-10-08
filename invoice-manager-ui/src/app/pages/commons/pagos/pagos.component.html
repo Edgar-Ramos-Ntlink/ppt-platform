@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card class="inline-form-card">
-      <nb-card-header>Validación de pagos</nb-card-header>
+      <nb-card-header>PAGOS</nb-card-header>
       <nb-card-body>
-        <div class="row slide_1" *ngIf="vista==='validacion-pagos' || vista === 'pagos'">
+        <div class="row slide_1" *ngIf="vista==='validacion-pagos'">
           <div class="col-md-2">
             <label for="acredor" class="label">Razon Social Empresa</label>
             <input id="acredor" class="form-control" fullWidth type="text" placeholder="Nombre empresa"
@@ -46,7 +46,7 @@
               (click)="updateDataTable()" status="primary">BUSCAR</button>
           </div>
         </div>
-        <div class="row slide_1" *ngIf="vista==='historial-pagos'">
+        <div class="row slide_1" *ngIf="vista==='historial-pagos' || vista === 'pagos'">
           <div class=" col-md-1">
             <label for="status" class="label">Estatus</label>
             <select id="inputPayType" style="display:block;" class="form-control" [(ngModel)]="filterParams.status">
@@ -98,7 +98,6 @@
               class="btn btn-primary align-bottom" (click)="updateDataTable()" status="primary">BUSCAR</button>
           </div>
         </div>
-
       </nb-card-body>
     </nb-card>
   </div>
@@ -132,7 +131,8 @@
             <thead class="thead-dark">
               <tr>
                 <th scope="col">Acciones</th>
-                <th scope="col">Fecha captura</th>
+                <th scope="col" *ngIf="module === 'tesoreria'">Fecha captura</th>
+                <th scope="col" *ngIf="module !== 'tesoreria'">Facturas</th>
                 <th scope="col">Empresa</th>
                 <th scope="col">Cliente</th>
                 <th scope="col">Fecha pago</th>
@@ -152,40 +152,55 @@
             </thead>
             <tbody>
               <tr *ngFor="let fila of page.content" [style.background]="cal(fila)">
-                <td scope="row" *ngIf="vista==='validacion-pagos' || vista === 'pagos'">
-                  <div class="form-inline" style="width: 200px;">
-                    <button type="button" (click)="openDialog(fila)"
-                    class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
-                    &nbsp;
-                    <button class="btn-sm" *ngIf="module === 'tesoreria'"
+                <td scope="row" *ngIf="vista==='validacion-pagos'">
+                  <div class="d-flex flex-row" >
+                    <button class="btn btn-sm ml-1 mr-1" *ngIf="module === 'tesoreria'" 
+                      data-toggle="tooltip" data-placement="top" title="Rechazar pago"
                       [ngClass]="{'btn-outline-secondary': fila.revision1 && fila.revision2, 'btn-outline-danger': !fila.revision1 || !fila.revision2}"
                       (click)="openDialog(fila)"><i class="fa fa-times-circle"></i></button>
-                    &nbsp;
-                    <button class="btn-sm" *ngIf="module === 'tesoreria'"
+                    <button class="btn btn-sm ml-1 mr-1" *ngIf="module === 'tesoreria'"
+                    data-toggle="tooltip" data-placement="top" title="Validacion 1"
                       [ngClass]="{'btn-outline-secondary': fila.revision1, 'btn-outline-success': !fila.revision1}"
                       (click)="validar1(fila)" [disabled]="fila.revision1"><i class="fa fa-check-circle"></i></button>
-                    &nbsp;
-                    <button class="btn-sm" *ngIf="module === 'tesoreria'"
+                    <button class="btn btn-sm ml-1 mr-1" *ngIf="module === 'tesoreria'"
+                    data-toggle="tooltip" data-placement="top" title="Validacion 2"
                       [ngClass]="{'btn-outline-secondary': !fila.revision1 || fila.revision2, 'btn-outline-success': fila.revision1 && !fila.revision2}"
                       (click)="validar2(fila)" [disabled]="!fila.revision1 || fila.revision2"><i
                         class="fa fa-check-circle"></i></button>
-                    &nbsp;
-                    <button type="button" (click)="openComprobante(fila.id)" [disabled]="fila.formaPago !== 'TRANSFERENCIA' && fila.formaPago !== 'DEPOSITO'"
-                    [ngClass]="{'btn-outline-secondary': fila.formaPago !== 'TRANSFERENCIA' && fila.formaPago !== 'DEPOSITO' , 'btn-outline-primary': fila.formaPago == 'TRANSFERENCIA' || fila.formaPago == 'DEPOSITO'}"
-                        class="btn-sm btn-outline-primary"><i class="fa fa-file"></i></button>
+                    <button type="button" (click)="openComprobante(fila.id)" data-toggle="tooltip" data-placement="top" title="Ver comprobante pago"
+                        class="btn btn-sm btn-outline-primary ml-1 mr-1"><i class="fa fa-file"></i></button>
                   </div>
                 </td>
-                <td scope="row" *ngIf="vista==='historial-pagos'">
-                  <div class="form-inline" style="width: 50px;">
-                    <button type="button" (click)="openDialog(fila)" class="btn-sm btn-outline-primary"><i
-                        class="fa fa-search"></i></button>
-                    &nbsp;
-                    <button class="btn-sm" [disabled]="fila.statusPago === 'RECHAZADO'"
+                <td scope="row" *ngIf="vista==='historial-pagos' || vista === 'pagos'">
+                  <div class="d-flex flex-row">
+                    <button
+                        type="button"
+                        data-toggle="tooltip" data-placement="top" title="Borrar pago"
+                        class="btn btn-sm mr-1 ml-1"
+                        [ngClass]="{
+                            'btn-outline-secondary':
+                                fila.statusPago == 'ACEPTADO',
+                            'btn-outline-danger':
+                            fila.statusPago != 'ACEPTADO'
+                        }"
+                        [disabled]="fila.statusPago == 'ACEPTADO'"
+                        (click)="deletePayment(fila)"
+                    >
+                        <i class="fa fa-trash"></i>
+                    </button>
+                    <button type="button" (click)="openComprobante(fila.id)"
+                        data-toggle="tooltip" data-placement="top" title="Ver comprobante pago"
+                        class="btn btn-sm btn-outline-primary ml-1 mr-1"><i class="fa fa-file"></i></button>
+                    <button class="btn btn-sm" [disabled]="fila.statusPago === 'RECHAZADO'"
+                      data-toggle="tooltip" data-placement="top" title="Rechazar pago"
                       [ngClass]="{'btn-outline-secondary': fila.statusPago === 'RECHAZADO', 'btn-outline-danger': fila.statusPago !== 'RECHAZADO' }"
                       (click)="openDialog(fila)"><i class="fa fa-times-circle"></i></button>
                   </div>
                 </td>
-                <td scope="row">{{fila.fechaCreacion}}</td>
+                <td scope="row" *ngIf="module === 'tesoreria'">{{fila.fechaCreacion}}</td>
+                <td scope="row" *ngIf="module !== 'tesoreria'" class="d-flex flex-column">
+                  <a *ngFor="let fact of fila.facturas" href="../#/pages/promotor/precfdi/{{fact.folio}}">{{fact.folio}}</a>
+                </td>
                 <td scope="row">{{fila.acredor}}</td>
                 <td scope="row">{{fila.deudor}}</td>
                 <td scope="row" >{{fila.fechaPago.split("T", 1)}}</td>
@@ -224,7 +239,7 @@
         </div>
 
         <br>
-        
+
 
       </nb-card-body>
     </nb-card>

@@ -110,6 +110,20 @@ export class PagosComponent implements OnInit {
     });
   }
 
+  public async deletePayment(payment: PagoBase) {
+
+    try {
+        await this.paymentService.deletePayment(payment.id).toPromise();
+        this.updateDataTable();
+    } catch (error) {
+        this.notificationService.sendNotification(
+            'danger',
+            error?.message,
+            'Error en el borrado del pago'
+        );
+    }
+}
+
   public openComprobante(id:Number){
     window.open(`../api/pagos/${id}/comprobante`, "_blank");
   }

@@ -23,6 +23,7 @@
         fullWidth
         placeholder="Nombre"
         [disabled]="!allowEdit"
+        (ngModelChange)="updateRazonSocial($event)"
       />
     </div>
     <div class="col-sm-2">
@@ -54,6 +55,7 @@
         style="margin-top: 0px; margin-bottom: 0px; height: 38px"
         [(ngModel)]="direccion"
         placeholder="Direccion Emisor"
+        (ngModelChange)="addressChange($event)"
         class="form-control"
         [disabled]="!allowEdit"
       ></textarea>

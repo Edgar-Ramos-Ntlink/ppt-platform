@@ -9,15 +9,15 @@
             <nb-card-header>
                 <div class="clearfix" *ngIf="factura">
                     <p class="h6 float-left" *ngIf="folio !== '*'">
-                        CFDI No {{ factura?.folio }}
+                        PREFOLIO : {{ factura?.preFolio }} - FOLIO : {{ factura?.folio }}
                     </p>
                     <p *ngIf="folio == '*'" class="h6 float-left">
                         Registro Cfdi contabilidad
                     </p>
                     <nt-invoice-status
                         class="float-right"
-                        *ngIf="!!factura?.statusFactura"
-                        [status]="factura.statusFactura"
+                        *ngIf="folio !== '*'"
+                        [status]="factura?.statusFactura"
                     >
                     </nt-invoice-status>
                 </div>
@@ -29,11 +29,11 @@
                     <p class="font-weight-bold">Seleccion del Emisor</p>
                     <div class="row">
                         <div class="col-md-2">
-                            <label for="inputGiro" class="label"
+                            <label for="inputLinea" class="label"
                                 >Línea Emisor</label
                             >
                             <select
-                                id="inputGiro"
+                                id="inputLinea"
                                 fullWidth
                                 class="form-control"
                                 style="display: block"
@@ -98,11 +98,11 @@
                     </p>
                     <div class="row slide_2">
                         <div class="col-md-2">
-                            <label for="inputGiro" class="label"
+                            <label for="inputLinea2" class="label"
                                 >Línea Receptor</label
                             >
                             <select
-                                id="inputGiro"
+                                id="inputLinea2"
                                 fullWidth
                                 class="form-control"
                                 style="display: block"
@@ -122,11 +122,11 @@
                             *ngIf="formInfo.lineaReceptor !== 'CLIENTE'"
                         >
                             <div class="form-group">
-                                <label for="inputGiro" class="label"
+                                <label for="inputGiroReceptor" class="label"
                                     >Giro Empresa</label
                                 >
                                 <select
-                                    id="inputGiro"
+                                    id="inputGiroReceptor"
                                     fullWidth
                                     class="form-control"
                                     (change)="
@@ -151,11 +151,11 @@
                             class="col-md-5"
                             *ngIf="formInfo.lineaReceptor !== 'CLIENTE'"
                         >
-                            <label for="inputEmpresa" class="label"
+                            <label for="inputReceptor" class="label"
                                 >Empresa</label
                             >
                             <select
-                                id="inputEmpresa"
+                                id="inputReceptor"
                                 class="form-control"
                                 (change)="
                                     onReceptorSelected($event.target.value)
@@ -219,14 +219,11 @@
                 </div>
 
                 <div *ngIf="!loading">
-                    <nt-cfdi
-                        [allowEdit]="
-                            factura?.tipoDocumento === 'Factura' &&
-                            (factura?.folio === undefined ||
+                    <nt-cfdi [allowEdit]="factura?.folio === undefined ||
                                 factura?.statusFactura == 1 ||
                                 factura?.statusFactura == 2 ||
-                                factura?.statusFactura == 8)
-                        "
+                                factura?.statusFactura == 4 ||
+                                factura?.statusFactura == 8 || isAdministrator"
                     >
                     </nt-cfdi>
                 </div>
@@ -283,7 +280,7 @@
                         class="mr-2 ml-2 float-right"
                         [nbSpinner]="loading"
                         [disabled]="loading"
-                        *ngIf="factura?.statusFactura == '8'"
+                        *ngIf="factura?.statusFactura == '8' || factura?.statusFactura == '4'"
                         nbSpinnerStatus="success"
                         nbSpinnerSize="small"
                         nbSpinnerMessage=""
@@ -416,10 +413,16 @@
                     *ngIf="
                         factura?.statusFactura == '3' &&
                         factura?.lineaEmisor !== 'A' &&
-                        factura?.folio !== '*'
+                        factura?.folio !== '*' && factura?.tipoDocumento === 'Factura'
                     "
                 ></ngx-generar-complemento>
             </nb-card-body>
+            <nb-card-footer>
+                <div class="clearfix" *ngIf="factura?.folio">
+                    <strong class="float-left"> Promotor : {{factura?.solicitante}}</strong>
+                    <strong class="float-right"> Fecha solicitud : {{factura?.fechaCreacion}}</strong>
+                </div>
+            </nb-card-footer>
         </nb-card>
     </div>
 </div>
@@ -517,11 +520,11 @@
         <nb-card-body>
             <div class="row" style="width: 300 px">
                 <div class="col-sm-12">
-                    <label for="inputGiro" class="label"
+                    <label for="inputPack" class="label"
                         >Pack de facturacion</label
                     >
                     <select
-                        id="inputGiro"
+                        id="inputPack"
                         fullWidth
                         class="form-control"
                         style="display: block"

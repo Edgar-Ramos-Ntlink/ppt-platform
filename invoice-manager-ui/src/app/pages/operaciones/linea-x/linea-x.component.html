@@ -9,18 +9,16 @@
             <nb-card-header>
                 <div class="clearfix" *ngIf="factura">
                     <p class="h6 float-left" *ngIf="folio !== '*'">
-                        Línea {{ LINEAEMISOR }} Solicitud No
-                        {{ factura?.folio }}
+                        PREFOLIO : {{ factura?.preFolio }} - FOLIO : {{ factura?.folio }}
                     </p>
                     <p *ngIf="folio == '*'" class="h6 float-left">
                         Pre CFDI linea {{ LINEAEMISOR }}
                     </p>
                     <nt-invoice-status
                         class="float-right"
-                        *ngIf="!!factura?.statusFactura"
-                        [status]="factura.statusFactura"
-                    >
-                    </nt-invoice-status>
+                        *ngIf="folio !== '*'"
+                        [status]="factura?.statusFactura"
+                    ></nt-invoice-status>
 
                     <button
                         nbButton
@@ -114,13 +112,9 @@
                             >
                             </ng-autocomplete>
 
-                            <div>
-                                <span></span>
-                            </div>
-
                             <ng-template #itemTemplate let-item>
                                 <div class="item">
-                                    <span [innerHTML]="item.razonSocial"></span>
+                                    <span [innerHTML]="item.razonSocial" class="d-inline"> </span> - <p class="d-inline">{{item.correoPromotor}}</p>
                                 </div>
                             </ng-template>
 
@@ -136,7 +130,8 @@
                         factura?.tipoDocumento !== 'Complemento' &&
                         (factura?.folio === undefined ||
                             factura?.statusFactura == 1 ||
-                            factura?.statusFactura == 2)
+                            factura?.statusFactura == 2 ||
+                            factura?.statusFactura == 4)
                     "
                 >
                 </nt-cfdi>
@@ -336,6 +331,12 @@
                     "
                 ></ngx-generar-complemento>
             </nb-card-body>
+            <nb-card-footer>
+                <div class="clearfix" *ngIf="factura?.folio">
+                    <strong class="float-left"> Promotor : {{factura?.solicitante}}</strong>
+                    <strong class="float-right"> Fecha solicitud : {{factura?.fechaCreacion}}</strong>
+                </div>
+            </nb-card-footer>
         </nb-card>
     </div>
 </div>

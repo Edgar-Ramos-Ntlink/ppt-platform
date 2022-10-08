@@ -24,12 +24,10 @@ import { ClienteComponent } from './cliente/cliente.component';
 import { EmpresaComponent } from './empresa/empresa.component';
 import { EmpresasComponent } from './empresas/empresas.component';
 import { PagosComponent } from './pagos/pagos.component';
-import { PagosFacturaComponent } from './pagos-facturas/pagos-facturas.component';
 import { ValidacionPagoComponent } from './pagos/validacion-pago/validacion-pago.component';
 import { InvoiceReportsComponent } from './invoice-reports/invoice-reports.component';
-import { AsignacionPagosComponent } from './asignacion-pagos/asignacion-pagos.component';
-import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { MulticomplementosComponent } from './multicomplementos/multicomplementos.component';
+import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { CuentasBancariasComponent } from './cuentas-bancarias/cuentas-bancarias.component';
 import { CuentaBancariaComponent } from './cuenta-bancaria/cuenta-bancaria.component';
 import { CoreModule } from '../../@core/core.module';
@@ -50,10 +48,8 @@ import * as fromCommons from './reducers';
         UsersComponent,
         UserComponent,
         PagosComponent,
-        PagosFacturaComponent,
         ValidacionPagoComponent,
         InvoiceReportsComponent,
-        AsignacionPagosComponent,
         MulticomplementosComponent,
         CuentasBancariasComponent,
         CuentasBancariasComponent,
@@ -94,10 +90,8 @@ import * as fromCommons from './reducers';
         UserComponent,
         InvoiceReportsComponent,
         PagosComponent,
-        PagosFacturaComponent,
         ValidacionPagoComponent,
         MulticomplementosComponent,
-        AsignacionPagosComponent,
         CuentasBancariasComponent,
         DevolucionesComponent,
         SeleccionPagosComponent,
