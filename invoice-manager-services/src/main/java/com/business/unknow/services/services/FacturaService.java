@@ -30,6 +30,7 @@ import com.business.unknow.model.dto.services.ClientDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.Factura40;
 import com.business.unknow.services.mapper.FacturaMapper;
+import com.business.unknow.services.repositories.CfdiRepository;
 import com.business.unknow.services.repositories.facturas.FacturaDao;
 import com.business.unknow.services.repositories.facturas.FacturaRepository;
 import com.business.unknow.services.services.evaluations.FacturaEvaluatorService;
@@ -113,6 +114,8 @@ public class FacturaService {
   @Autowired private FacturaDao facturaDao;
 
   @Autowired private FacturaRepository repository;
+
+  @Autowired private CfdiRepository cfdiRepository;
   @Autowired private CfdiMapper cfdiMapper;
 
   @Autowired private PagosMapper pagosMapper;
@@ -357,12 +360,22 @@ public class FacturaService {
             .map(
                 folio -> {
                   FacturaCustom complement = getFacturaByFolio(folio);
+                  // TODO see if there is a better way to solve this temporary fix
+                  String formaPago =
+                      cfdiRepository
+                          .findByFolio(folio)
+                          .orElse(
+                              com.business.unknow.services.entities.Cfdi.builder()
+                                  .formaPago("99")
+                                  .build())
+                          .getFormaPago();
+
                   return complement.getPagos().stream()
                       .map(
                           p -> {
                             Map<String, Object> row = new HashMap<>();
-                            row.put("FOLIO", p.getFolioOrigen());
-                            row.put("FOLIO FISCAL", p.getIdDocumento());
+                            row.put("FOLIO", folio);
+                            row.put("FOLIO FISCAL", complement.getUuid());
                             row.put(
                                 "FECHA EMISION",
                                 Objects.nonNull(complement.getFechaTimbrado())
@@ -380,7 +393,11 @@ public class FacturaService {
                             row.put("SUBTOTAL", complement.getCfdi().getSubtotal());
                             row.put("TOTAL", complement.getCfdi().getTotal());
                             row.put("METODO PAGO", MetodosPago.PPD.name());
-                            row.put("FORMA PAGO", p.getFormaDePagoP());
+                            row.put(
+                                "FORMA PAGO",
+                                Objects.nonNull(p.getFormaDePagoP())
+                                    ? p.getFormaDePagoP()
+                                    : formaPago);
                             row.put("MONEDA", p.getMonedaDr());
                             row.put("ESTATUS", complement.getStatusFactura());
                             row.put(
