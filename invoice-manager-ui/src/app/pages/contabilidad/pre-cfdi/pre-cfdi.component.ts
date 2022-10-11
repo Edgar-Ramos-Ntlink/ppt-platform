@@ -54,7 +54,7 @@ export class PreCfdiComponent implements OnInit {
     public folioParam: string;
     public isAdministrator: boolean = false;
     public folio: string;
-
+    public json : string;
     public formInfo = {
         emisorRfc: '*',
         receptorRfc: '*',
@@ -140,7 +140,10 @@ export class PreCfdiComponent implements OnInit {
 
         this.store
             .pipe(select(invoice))
-            .subscribe((fact) => (this.factura = fact));
+            .subscribe((fact) => {
+                this.factura = fact;
+                this.json = JSON.stringify(this.factura,null,'\t');
+            });
     }
 
     public getInvoiceByFolio(folio: string) {
@@ -609,6 +612,52 @@ export class PreCfdiComponent implements OnInit {
                 );
             }
         );
+    }
+
+    public async jsonUpdate( dialog: TemplateRef<any>) {
+        try {
+            
+            this.dialogService
+                .open(dialog)
+                .onClose.subscribe((result) => {
+                    this.loading = true;
+                    if (result !== undefined) {
+                        const fact = JSON.parse(this.json);
+                        console.log('Updating with JSON:', fact)
+                        this.invoiceService
+                            .updateInvoice(fact)
+                            .subscribe(
+                                (invoice) => {
+                                    this.notificationService.sendNotification(
+                                        'success',
+                                        'factura Actualizada'
+                                    );
+                                    this.store.dispatch(
+                                        updateInvoice({ invoice })
+                                    );
+                                    this.loading = false;
+                                },
+                                (error: NtError) => {
+                                    this.notificationService.sendNotification(
+                                        'danger',
+                                        error?.message,
+                                        'Error'
+                                    );
+                                    this.loading = false;
+                                }
+                            );
+                    } else {
+                        this.loading = false;
+                    }
+                });
+        } catch (error) {
+            this.notificationService.sendNotification(
+                'danger',
+                error?.message,
+                'Error'
+            );
+            this.loading = false;
+        }
     }
 
     onGiroSelection(giroId: string) {

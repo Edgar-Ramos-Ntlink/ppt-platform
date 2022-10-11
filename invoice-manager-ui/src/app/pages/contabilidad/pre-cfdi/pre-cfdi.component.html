@@ -1,11 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <nb-card
-            class="col-md-12 col-lg-12"
-            [nbSpinner]="loading"
-            nbSpinnerStatus="info"
-            nbSpinnerSize="giant"
-        >
+        <nb-card class="col-md-12 col-lg-12" [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
             <nb-card-header>
                 <div class="clearfix" *ngIf="factura">
                     <p class="h6 float-left" *ngIf="folio !== '*'">
@@ -14,11 +9,7 @@
                     <p *ngIf="folio == '*'" class="h6 float-left">
                         Registro Cfdi contabilidad
                     </p>
-                    <nt-invoice-status
-                        class="float-right"
-                        *ngIf="folio !== '*'"
-                        [status]="factura?.statusFactura"
-                    >
+                    <nt-invoice-status class="float-right" *ngIf="folio !== '*'" [status]="factura?.statusFactura">
                     </nt-invoice-status>
                 </div>
             </nb-card-header>
@@ -29,16 +20,9 @@
                     <p class="font-weight-bold">Seleccion del Emisor</p>
                     <div class="row">
                         <div class="col-md-2">
-                            <label for="inputLinea" class="label"
-                                >Línea Emisor</label
-                            >
-                            <select
-                                id="inputLinea"
-                                fullWidth
-                                class="form-control"
-                                style="display: block"
-                                [(ngModel)]="formInfo.lineaEmisor"
-                            >
+                            <label for="inputLinea" class="label">Línea Emisor</label>
+                            <select id="inputLinea" fullWidth class="form-control" style="display: block"
+                                [(ngModel)]="formInfo.lineaEmisor">
                                 <option value="*">Seleccionar</option>
                                 <option value="B">Línea B</option>
                                 <option value="C">Línea C</option>
@@ -48,46 +32,24 @@
                         </div>
                         <div class="col-sm-5">
                             <div class="form-group">
-                                <label for="inputGiro" class="label"
-                                    >Giro Empresa</label
-                                >
-                                <select
-                                    id="inputGiro"
-                                    fullWidth
-                                    class="form-control"
-                                    (change)="
+                                <label for="inputGiro" class="label">Giro Empresa</label>
+                                <select id="inputGiro" fullWidth class="form-control" (change)="
                                         onGiroSelection($event.target.value)
-                                    "
-                                    style="display: block"
-                                    [(ngModel)]="formInfo.giroEmisor"
-                                >
+                                    " style="display: block" [(ngModel)]="formInfo.giroEmisor">
                                     <option value="*">Seleccionar</option>
-                                    <option
-                                        *ngFor="let giro of girosCat"
-                                        [(value)]="giro.id"
-                                    >
+                                    <option *ngFor="let giro of girosCat" [(value)]="giro.id">
                                         {{ giro.nombre }}
                                     </option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-5">
-                            <label for="inputEmpresa" class="label"
-                                >Empresa</label
-                            >
-                            <select
-                                id="inputEmpresa"
-                                class="form-control"
-                                (change)="onEmisorSelected($event.target.value)"
-                                [(ngModel)]="formInfo.empresa"
-                                style="display: block"
-                                fullWidth
-                            >
+                            <label for="inputEmpresa" class="label">Empresa</label>
+                            <select id="inputEmpresa" class="form-control"
+                                (change)="onEmisorSelected($event.target.value)" [(ngModel)]="formInfo.empresa"
+                                style="display: block" fullWidth>
                                 <option value="*">Seleccionar</option>
-                                <option
-                                    *ngFor="let company of emisoresCat"
-                                    [(value)]="company.rfc"
-                                >
+                                <option *ngFor="let company of emisoresCat" [(value)]="company.rfc">
                                     {{ company.rfc }}-{{ company.razonSocial }}
                                 </option>
                             </select>
@@ -98,16 +60,9 @@
                     </p>
                     <div class="row slide_2">
                         <div class="col-md-2">
-                            <label for="inputLinea2" class="label"
-                                >Línea Receptor</label
-                            >
-                            <select
-                                id="inputLinea2"
-                                fullWidth
-                                class="form-control"
-                                style="display: block"
-                                [(ngModel)]="formInfo.lineaReceptor"
-                            >
+                            <label for="inputLinea2" class="label">Línea Receptor</label>
+                            <select id="inputLinea2" fullWidth class="form-control" style="display: block"
+                                [(ngModel)]="formInfo.lineaReceptor">
                                 <option value="*">Seleccionar</option>
                                 <option value="CLIENTE">Clientes</option>
                                 <option value="A">Línea A</option>
@@ -117,100 +72,46 @@
                                 <option value="E">Línea E</option>
                             </select>
                         </div>
-                        <div
-                            class="col-sm-5"
-                            *ngIf="formInfo.lineaReceptor !== 'CLIENTE'"
-                        >
+                        <div class="col-sm-5" *ngIf="formInfo.lineaReceptor !== 'CLIENTE'">
                             <div class="form-group">
-                                <label for="inputGiroReceptor" class="label"
-                                    >Giro Empresa</label
-                                >
-                                <select
-                                    id="inputGiroReceptor"
-                                    fullWidth
-                                    class="form-control"
-                                    (change)="
+                                <label for="inputGiroReceptor" class="label">Giro Empresa</label>
+                                <select id="inputGiroReceptor" fullWidth class="form-control" (change)="
                                         onGiroReceptorSelection(
                                             $event.target.value
                                         )
-                                    "
-                                    style="display: block"
-                                    [(ngModel)]="formInfo.giroReceptor"
-                                >
+                                    " style="display: block" [(ngModel)]="formInfo.giroReceptor">
                                     <option value="*">Seleccionar</option>
-                                    <option
-                                        *ngFor="let giro of girosCat"
-                                        [(value)]="giro.id"
-                                    >
+                                    <option *ngFor="let giro of girosCat" [(value)]="giro.id">
                                         {{ giro.nombre }}
                                     </option>
                                 </select>
                             </div>
                         </div>
-                        <div
-                            class="col-md-5"
-                            *ngIf="formInfo.lineaReceptor !== 'CLIENTE'"
-                        >
-                            <label for="inputReceptor" class="label"
-                                >Empresa</label
-                            >
-                            <select
-                                id="inputReceptor"
-                                class="form-control"
-                                (change)="
+                        <div class="col-md-5" *ngIf="formInfo.lineaReceptor !== 'CLIENTE'">
+                            <label for="inputReceptor" class="label">Empresa</label>
+                            <select id="inputReceptor" class="form-control" (change)="
                                     onReceptorSelected($event.target.value)
-                                "
-                                [(ngModel)]="formInfo.receptorRfc"
-                                style="display: block"
-                                fullWidth
-                            >
+                                " [(ngModel)]="formInfo.receptorRfc" style="display: block" fullWidth>
                                 <option value="*">Seleccionar</option>
-                                <option
-                                    *ngFor="let company of receptoresCat"
-                                    [(value)]="company.rfc"
-                                >
+                                <option *ngFor="let company of receptoresCat" [(value)]="company.rfc">
                                     {{ company.rfc }}-{{ company.razonSocial }}
                                 </option>
                             </select>
                         </div>
-                        <div
-                            class="col-sm-5"
-                            *ngIf="formInfo.lineaReceptor === 'CLIENTE'"
-                        >
-                            <label for="inputCliente" class="label"
-                                >Razón social</label
-                            >
-                            <input
-                                id="inputCliente"
-                                class="form-control"
-                                fullWidth
-                                type="text"
-                                [(ngModel)]="formInfo.clientName"
-                                (ngModelChange)="buscarClientInfo($event)"
-                                placeholder="Nombre o razon social cliente"
-                            />
+                        <div class="col-sm-5" *ngIf="formInfo.lineaReceptor === 'CLIENTE'">
+                            <label for="inputCliente" class="label">Razón social</label>
+                            <input id="inputCliente" class="form-control" fullWidth type="text"
+                                [(ngModel)]="formInfo.clientName" (ngModelChange)="buscarClientInfo($event)"
+                                placeholder="Nombre o razon social cliente" />
                         </div>
 
-                        <div
-                            class="col-md-5"
-                            *ngIf="formInfo.lineaReceptor === 'CLIENTE'"
-                        >
-                            <label for="inputClient" class="label"
-                                >Cliente</label
-                            >
-                            <select
-                                id="inputClient"
-                                class="form-control"
-                                (change)="onClientSelected($event.target.value)"
-                                [(ngModel)]="formInfo.clientRfc"
-                                style="display: block"
-                                fullWidth
-                            >
+                        <div class="col-md-5" *ngIf="formInfo.lineaReceptor === 'CLIENTE'">
+                            <label for="inputClient" class="label">Cliente</label>
+                            <select id="inputClient" class="form-control"
+                                (change)="onClientSelected($event.target.value)" [(ngModel)]="formInfo.clientRfc"
+                                style="display: block" fullWidth>
                                 <option value="*">Seleccionar</option>
-                                <option
-                                    *ngFor="let client of clientsCat"
-                                    [(value)]="client.rfc"
-                                >
+                                <option *ngFor="let client of clientsCat" [(value)]="client.rfc">
                                     {{ client.rfc }}-{{ client.razonSocial }}
                                 </option>
                             </select>
@@ -223,199 +124,107 @@
                                 factura?.statusFactura == 1 ||
                                 factura?.statusFactura == 2 ||
                                 factura?.statusFactura == 4 ||
-                                factura?.statusFactura == 8 || isAdministrator"
-                    >
+                                factura?.statusFactura == 8 || isAdministrator">
                     </nt-cfdi>
                 </div>
 
                 <br />
 
-                <div
-                    class="form-inline"
-                    *ngIf="
+                <div class="form-inline" *ngIf="
                         !factura?.folio && factura?.cfdi.conceptos.length > 0
-                    "
-                >
-                    <button
-                        nbButton
-                        status="success"
-                        class="mr-2 ml-2"
-                        size="medium"
-                        (click)="solicitarCfdi(factura, dialog)"
-                        [nbSpinner]="loading"
-                        [disabled]="loading"
-                        nbSpinnerStatus="success"
-                        nbSpinnerSize="small"
-                        nbSpinnerMessage=""
-                    >
+                    ">
+                    <button nbButton status="success" class="mr-2 ml-2" size="medium"
+                        (click)="solicitarCfdi(factura, dialog)" [nbSpinner]="loading" [disabled]="loading"
+                        nbSpinnerStatus="success" nbSpinnerSize="small" nbSpinnerMessage="">
                         SOLICITAR CFDI
                     </button>
-                    <button
-                        type="button"
-                        class="btn btn-info mr-2 ml-2"
-                        size="medium"
-                        (click)="limpiarForma()"
-                        [nbSpinner]="loading"
-                        [disabled]="loading"
-                        nbSpinnerStatus="success"
-                        nbSpinnerSize="small"
-                        nbSpinnerMessage=""
-                    >
+                    <button type="button" class="btn btn-info mr-2 ml-2" size="medium" (click)="limpiarForma()"
+                        [nbSpinner]="loading" [disabled]="loading" nbSpinnerStatus="success" nbSpinnerSize="small"
+                        nbSpinnerMessage="">
                         LIMPIAR
                     </button>
                 </div>
 
                 <br />
 
-                <div
-                    class="clearfix"
-                    class="buttons-row"
-                    *ngIf="factura?.folio !== undefined"
-                >
-                    <button
-                        nbButton
-                        status="success"
-                        size="medium"
-                        (click)="timbrarFactura(factura, dialog)"
-                        class="mr-2 ml-2 float-right"
-                        [nbSpinner]="loading"
-                        [disabled]="loading"
-                        *ngIf="factura?.statusFactura == '8' || factura?.statusFactura == '4'"
-                        nbSpinnerStatus="success"
-                        nbSpinnerSize="small"
-                        nbSpinnerMessage=""
-                    >
+                <div class="clearfix" class="buttons-row" *ngIf="factura?.folio !== undefined">
+                    <button class="mr" nbButton status="warning" size="medium" (click)="jsonUpdate(jsonDialog)"
+                    class="mr-2 ml-2 float-right" [nbSpinner]="loading" [disabled]="loading"
+                    *ngIf="isAdministrator && factura?.folio" nbSpinnerStatus="success" nbSpinnerSize="small"
+                    nbSpinnerMessage="">
+                    JSON Update
+                    </button>
+
+                    <button nbButton status="success" size="medium" (click)="timbrarFactura(factura, dialog)"
+                        class="mr-2 ml-2 float-right" [nbSpinner]="loading" [disabled]="loading"
+                        *ngIf="factura?.statusFactura == '8' || factura?.statusFactura == '4'" nbSpinnerStatus="success"
+                        nbSpinnerSize="small" nbSpinnerMessage="">
                         Timbrar
                     </button>
-                    <button
-                        class="mr"
-                        nbButton
-                        status="success"
-                        size="medium"
-                        (click)="aceptarFactura()"
-                        class="mr-2 ml-2 float-right"
-                        [nbSpinner]="loading"
-                        [disabled]="loading"
-                        *ngIf="factura?.statusFactura == '1'"
-                        nbSpinnerStatus="success"
-                        nbSpinnerSize="small"
-                        nbSpinnerMessage=""
-                    >
+                    <button class="mr" nbButton status="success" size="medium" (click)="aceptarFactura()"
+                        class="mr-2 ml-2 float-right" [nbSpinner]="loading" [disabled]="loading"
+                        *ngIf="factura?.statusFactura == '1'" nbSpinnerStatus="success" nbSpinnerSize="small"
+                        nbSpinnerMessage="">
                         Aceptar
                     </button>
 
-                    <button
-                        class="ml"
-                        nbButton
-                        status="danger"
-                        size="medium"
-                        (click)="rechazarFactura(factura, rejectDialog)"
-                        class="mr-2 ml-2 float-right"
-                        [nbSpinner]="loading"
-                        [disabled]="loading"
-                        *ngIf="
+                    <button class="ml" nbButton status="danger" size="medium"
+                        (click)="rechazarFactura(factura, rejectDialog)" class="mr-2 ml-2 float-right"
+                        [nbSpinner]="loading" [disabled]="loading" *ngIf="
                             factura?.statusFactura == '1' ||
                             factura?.statusFactura == '2' ||
                             factura?.statusFactura == '4' ||
                             factura?.statusFactura == '8'
-                        "
-                        nbSpinnerStatus="danger"
-                        nbSpinnerSize="small"
-                        nbSpinnerMessage=""
-                    >
+                        " nbSpinnerStatus="danger" nbSpinnerSize="small" nbSpinnerMessage="">
                         Rechazar
                     </button>
 
-                    <button
-                        nbButton
-                        status="success"
-                        size="medium"
-                        (click)="revalidateInvoice()"
-                        [nbSpinner]="loading"
-                        class="float-right ml-2 mr-2"
-                        [disabled]="loading"
-                        nbSpinnerStatus="success"
-                        *ngIf="
+                    <button nbButton status="success" size="medium" (click)="revalidateInvoice()" [nbSpinner]="loading"
+                        class="float-right ml-2 mr-2" [disabled]="loading" nbSpinnerStatus="success" *ngIf="
                             factura?.statusFactura == '6' ||
                             factura?.statusFactura == '5' ||
                             factura?.statusFactura == '9'
-                        "
-                        nbSpinnerSize="small"
-                        nbSpinnerMessage=""
-                    >
-                        revalidar Factura<i
-                            class="fa fa-check"
-                            style="margin-left: 10px"
-                        ></i>
+                        " nbSpinnerSize="small" nbSpinnerMessage="">
+                        revalidar Factura<i class="fa fa-check" style="margin-left: 10px"></i>
                     </button>
 
-                    <button
-                        class="mr"
-                        nbButton
-                        status="danger"
-                        size="medium"
-                        class="mr-2 ml-2 float-right"
-                        (click)="cancelarFactura(factura, cancelDialog)"
-                        [nbSpinner]="loading"
-                        [disabled]="loading"
-                        *ngIf="factura?.statusFactura == '3'"
-                        nbSpinnerStatus="danger"
-                        nbSpinnerSize="small"
-                        nbSpinnerMessage=""
-                    >
+                    <button class="mr" nbButton status="danger" size="medium" class="mr-2 ml-2 float-right"
+                        (click)="cancelarFactura(factura, cancelDialog)" [nbSpinner]="loading" [disabled]="loading"
+                        *ngIf="factura?.statusFactura == '3'" nbSpinnerStatus="danger" nbSpinnerSize="small"
+                        nbSpinnerMessage="">
                         Cancelar
                     </button>
-                    <button
-                        class="mr"
-                        nbButton
-                        status="warning"
-                        size="medium"
-                        (click)="linkInvoice(factura)"
-                        class="mr-2 ml-2 float-right"
-                        [nbSpinner]="loading"
-                        [disabled]="loading || factura.folioRelacionado"
-                        nbSpinnerStatus="danger"
-                        nbSpinnerSize="small"
-                        nbSpinnerMessage=""
-                        *ngIf="
+                    <button class="mr" nbButton status="warning" size="medium" (click)="linkInvoice(factura)"
+                        class="mr-2 ml-2 float-right" [nbSpinner]="loading"
+                        [disabled]="loading || factura.folioRelacionado" nbSpinnerStatus="danger" nbSpinnerSize="small"
+                        nbSpinnerMessage="" *ngIf="
                             factura?.statusFactura == '3' &&
                             factura?.tipoDocumento == 'Factura' &&
                             !factura?.folioRelacionado
-                        "
-                    >
+                        ">
                         Sustituir Factura
                     </button>
 
-                    <button
-                        class="mr"
-                        nbButton
-                        status="warning"
-                        size="medium"
-                        class="mr-2 ml-2 float-right"
-                        (click)="generateCreditNoteInvoice(factura)"
-                        [nbSpinner]="loading"
-                        [disabled]="loading || factura?.folioRelacionado"
-                        nbSpinnerStatus="danger"
-                        nbSpinnerSize="small"
-                        nbSpinnerMessage=""
-                        *ngIf="
+                    <button class="mr" nbButton status="warning" size="medium" class="mr-2 ml-2 float-right"
+                        (click)="generateCreditNoteInvoice(factura)" [nbSpinner]="loading"
+                        [disabled]="loading || factura?.folioRelacionado" nbSpinnerStatus="danger" nbSpinnerSize="small"
+                        nbSpinnerMessage="" *ngIf="
                             factura?.statusFactura == '3' &&
                             factura?.tipoDocumento === 'Factura' &&
                             !factura?.folioRelacionado
-                        "
-                    >
+                        ">
                         Nota de crédito
                     </button>
                 </div>
                 <br />
 
-                <ngx-generar-complemento
-                    *ngIf="
+                <ngx-generar-complemento *ngIf="
                         factura?.statusFactura == '3' &&
                         factura?.lineaEmisor !== 'A' &&
                         factura?.folio !== '*' && factura?.tipoDocumento === 'Factura'
-                    "
-                ></ngx-generar-complemento>
+                    "></ngx-generar-complemento>
+
+                <br>
             </nb-card-body>
             <nb-card-footer>
                 <div class="clearfix" *ngIf="factura?.folio">
@@ -433,14 +242,8 @@
         <nb-card-body>
             <div class="row" style="width: 300 px">
                 <div class="col-sm-12" *ngIf="factura">
-                    <input
-                        id="statusDetail"
-                        class="form-control"
-                        fullWidth
-                        type="text"
-                        placeholder="Motivo rechazo factura"
-                        [(ngModel)]="data.statusDetail"
-                    />
+                    <input id="statusDetail" class="form-control" fullWidth type="text"
+                        placeholder="Motivo rechazo factura" [(ngModel)]="data.statusDetail" />
                 </div>
             </div>
         </nb-card-body>
@@ -462,16 +265,9 @@
         <nb-card-body>
             <div class="row" style="width: 300 px">
                 <div class="col-sm-12">
-                    <label for="inputMotivo" class="label"
-                        >Motivo cancelación</label
-                    >
-                    <select
-                        id="inputMotivo"
-                        fullWidth
-                        class="form-control"
-                        style="display: block"
-                        [(ngModel)]="data.motivo"
-                    >
+                    <label for="inputMotivo" class="label">Motivo cancelación</label>
+                    <select id="inputMotivo" fullWidth class="form-control" style="display: block"
+                        [(ngModel)]="data.motivo">
                         <option value="01">
                             Comprobante emitido con errores con relación
                         </option>
@@ -488,17 +284,9 @@
                     </select>
                 </div>
                 <div class="col-sm-12" *ngIf="data.motivo == '01'">
-                    <label for="inputCfdiRelacionado" class="label"
-                        >UUID relacionado</label
-                    >
-                    <input
-                        id="inputCfdiRelacionado"
-                        type="text"
-                        [(ngModel)]="data.folioSustituto"
-                        fullWidth
-                        class="form-control"
-                        placeholder="Folio folioSustituto"
-                    />
+                    <label for="inputCfdiRelacionado" class="label">UUID relacionado</label>
+                    <input id="inputCfdiRelacionado" type="text" [(ngModel)]="data.folioSustituto" fullWidth
+                        class="form-control" placeholder="Folio folioSustituto" />
                 </div>
             </div>
         </nb-card-body>
@@ -520,16 +308,9 @@
         <nb-card-body>
             <div class="row" style="width: 300 px">
                 <div class="col-sm-12">
-                    <label for="inputPack" class="label"
-                        >Pack de facturacion</label
-                    >
-                    <select
-                        id="inputPack"
-                        fullWidth
-                        class="form-control"
-                        style="display: block"
-                        [(ngModel)]="data.packFacturacion"
-                    >
+                    <label for="inputPack" class="label">Pack de facturacion</label>
+                    <select id="inputPack" fullWidth class="form-control" style="display: block"
+                        [(ngModel)]="data.packFacturacion">
                         <option value="NTLINK">NT LINK</option>
                     </select>
                 </div>
@@ -542,6 +323,32 @@
             &nbsp;&nbsp;
             <button class="btn btn-success" (click)="ref.close(data)">
                 Timbrar
+            </button>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>
+
+<ng-template #jsonDialog let-data let-ref="dialogRef">
+    <nb-card>
+        <nb-card-header>Editor JSON</nb-card-header>
+        <nb-card-body>
+            <div style="width: 90vw; height: 60vh">
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="jsonValue" class="label text-danger">Editor JSON usar con extrema precaucion</label>
+                    <textarea id="jsonValue" type="text" class="form-control bg-warning text-dark" [(ngModel)]="json" rows="20" 
+                        placeholder="JSON value"></textarea>
+                </div>
+            </div>
+        </div>
+        </nb-card-body>
+        <nb-card-footer>
+            <button class="btn btn-warning" (click)="ref.close(undefined)">
+                Salir
+            </button>
+            &nbsp;&nbsp;
+            <button class="btn btn-success" (click)="ref.close(true)">
+                JSON Update
             </button>
         </nb-card-footer>
     </nb-card>
