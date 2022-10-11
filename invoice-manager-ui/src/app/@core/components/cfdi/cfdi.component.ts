@@ -44,7 +44,9 @@ export class CfdiComponent implements OnInit {
         this.initVariables();
         this.store
             .pipe(select(invoice))
-            .subscribe((fact) => (this.factura = fact));
+            .subscribe((fact) => {
+                this.factura = fact;
+            });
         this.store.pipe(select(cfdi)).subscribe((cfdi) => {
             this.cfdi = cfdi;
         });
