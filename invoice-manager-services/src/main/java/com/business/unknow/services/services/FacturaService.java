@@ -630,7 +630,7 @@ public class FacturaService {
       montoPagado = montoPagado.add(pago.get());
     }
     BigDecimal saldo = total.subtract(montoPagado);
-    log.info("Factura con folio {} actualiza saldo a {}",facturaCustom.getFolio(),saldo);
+    log.info("Factura con folio {} actualiza saldo a {}", facturaCustom.getFolio(), saldo);
     InvoiceValidator.checkNotNegative(saldo, "Saldo pendiente");
     facturaCustom.setTotal(total);
     facturaCustom.setSaldoPendiente(saldo);
