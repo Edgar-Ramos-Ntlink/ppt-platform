@@ -66,7 +66,7 @@
         <nt-emisor
             *ngIf="cfdi.emisor && cfdi.emisor.rfc !== undefined"
             [emisor]="cfdi.emisor"
-            [allowEdit]="allowEdit || cfdi.tipoDeComprobante === 'E'"
+            [allowEdit]="isAdministrator && factura.statusFactura != 3 && factura.statusFactura != 7"
             [direccion]="factura.direccionEmisor"
         ></nt-emisor>
 

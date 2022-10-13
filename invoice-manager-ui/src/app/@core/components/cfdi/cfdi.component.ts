@@ -24,7 +24,7 @@ export class CfdiComponent implements OnInit {
 
     public factura: Factura;
     public cfdi: Cfdi;
-
+    public isAdministrator : boolean = false;
     public loading: boolean = false;
 
     public payTypeCat: Catalogo[] = [];
@@ -53,6 +53,8 @@ export class CfdiComponent implements OnInit {
     }
 
     initVariables() {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        this.isAdministrator = user.roles.find((u) => u.role == 'ADMINISTRADOR') != undefined;
         this.catalogsService
             .getFormasPago()
             .then((cat) => {this.payTypeCat = cat;
@@ -108,7 +110,6 @@ export class CfdiComponent implements OnInit {
         const fact: Factura = JSON.parse(JSON.stringify(this.factura));
         fact.total = this.cfdi.total;
         fact.metodoPago = this.cfdi.metodoPago;
-        fact.saldoPendiente = this.cfdi.total;
         this.invoiceService.updateInvoice(fact).subscribe(
             (invoice) => {
                 this.loading = false;
