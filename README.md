@@ -146,3 +146,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.6.2  Fix payment complement on line A
   - [x] 4.6.3  Fix complement reports(folio,UUID and payment form)
   - [x] 4.6.4 Addinng JSON editor on accounting module
+  - [x] 4.6.5 Lock cfdi emisor fields edition and fix pending debt issue

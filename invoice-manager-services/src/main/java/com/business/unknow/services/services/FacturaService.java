@@ -630,16 +630,23 @@ public class FacturaService {
       montoPagado = montoPagado.add(pago.get());
     }
     BigDecimal saldo = total.subtract(montoPagado);
-    log.info("Factura con folio {} actualiza saldo a {}",facturaCustom.getFolio(),saldo);
+    log.info(
+        "Factura con folio {} total: {}, montoPagado : {} , saldo : {}",
+        facturaCustom.getFolio(),
+        total,
+        montoPagado,
+        saldo);
     InvoiceValidator.checkNotNegative(saldo, "Saldo pendiente");
     facturaCustom.setTotal(total);
     facturaCustom.setSaldoPendiente(saldo);
-    return updateFacturaCustom(facturaCustom.getFolio(), facturaCustom);
+    filesService.sendFacturaCustomToS3(folioCfdi, facturaCustom);
+    updateFacturaBase(facturaCustom.getId(), facturaCustom);
+    return facturaCustom;
   }
 
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
-  public void deleteFactura(String folio) throws InvoiceManagerException, NtlinkUtilException {
+  public void deleteFactura(String folio) {
     Optional<Factura40> inv40 = repository.findByFolio(folio);
     if (inv40.isPresent()) {
       repository.delete(inv40.get());
