@@ -86,7 +86,7 @@ public class InvoiceBuilderService {
         facturaCustom.toBuilder()
             .cfdi(cfdi)
             .version(Constants.CFDI_40_VERSION)
-            .total(facturaCustom.getCfdi().getTotal())
+            .total(cfdi.getTotal())
             .saldoPendiente(
                 Objects.nonNull(facturaCustom.getSaldoPendiente())
                     ? facturaCustom.getSaldoPendiente()
@@ -401,7 +401,7 @@ public class InvoiceBuilderService {
       if (clientCompany.isPresent()) {
         String address =
             String.format(
-                    "%s %s, %s, %s, %s CP : %s",
+                    "%s %s, %s, %s, %s CP. %s",
                     clientCompany.get().getCalle(),
                     clientCompany.get().getNoExterior(),
                     clientCompany.get().getColonia(),
