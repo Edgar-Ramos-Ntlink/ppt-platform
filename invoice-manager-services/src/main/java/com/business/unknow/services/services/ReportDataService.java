@@ -3,6 +3,7 @@ package com.business.unknow.services.services;
 import com.business.unknow.services.entities.Reporte;
 import com.business.unknow.services.repositories.ReporteRepository;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
+import com.mx.ntlink.cfdi.modelos.Impuesto;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,9 +19,15 @@ public class ReportDataService {
     reporteRepository.deleteByFolio(cfdi.getFolio());
 
     BigDecimal impTrasladados =
-        cfdi.getImpuestos().stream().findFirst().get().getTotalImpuestosTrasladados();
+        cfdi.getImpuestos().stream()
+            .findFirst()
+            .orElse(Impuesto.builder().totalImpuestosTrasladados(BigDecimal.ZERO).build())
+            .getTotalImpuestosTrasladados();
     BigDecimal impRetenidos =
-        cfdi.getImpuestos().stream().findFirst().get().getTotalImpuestosRetenidos();
+        cfdi.getImpuestos().stream()
+            .findFirst()
+            .orElse(Impuesto.builder().totalImpuestosRetenidos(BigDecimal.ZERO).build())
+            .getTotalImpuestosRetenidos();
 
     List<Reporte> reports =
         cfdi.getConceptos().stream()
