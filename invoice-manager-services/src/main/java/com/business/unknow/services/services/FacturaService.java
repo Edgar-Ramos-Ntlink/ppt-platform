@@ -37,6 +37,7 @@ import com.business.unknow.services.services.evaluations.FacturaEvaluatorService
 import com.business.unknow.services.services.evaluations.TimbradoEvaluatorService;
 import com.business.unknow.services.util.FacturaUtils;
 import com.business.unknow.services.util.validators.InvoiceValidator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -475,15 +476,9 @@ public class FacturaService {
     facturaCustom.setFechaActualizacion(save.getFechaActualizacion());
     filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
-    byte[] pdf =
-        getPdfFromFactura(
-            facturaCustom,
-            FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
-                    || NOTA_CREDITO.getDescripcion().equals(facturaCustom.getTipoDocumento())
-                ? PDF_FACTURA_SIN_TIMBRAR
-                : PDF_COMPLEMENTO_TIMBRAR);
-    filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
+    buildPdf(facturaCustom,(COMPLEMENTO.getDescripcion().equals(facturaCustom.getTipoDocumento()))? PDF_COMPLEMENTO_SIN_TIMBRAR:PDF_FACTURA_SIN_TIMBRAR);
     reportDataService.upsertReportData(facturaCustom.getCfdi());
+    log.info("New invoice has been created with folio: {}", facturaCustom.getFolio());
     return facturaCustom;
   }
 
@@ -511,9 +506,7 @@ public class FacturaService {
         case FACTURA:
           facturaCustom.setCfdi(cfdiService.updateCfdi(facturaCustom.getCfdi()));
           reportDataService.upsertReportData(facturaCustom.getCfdi());
-          byte[] pdf = getPdfFromFactura(facturaCustom, PDF_FACTURA_SIN_TIMBRAR);
-          filesService.sendFileToS3(
-              facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
+          buildPdf(facturaCustom,PDF_FACTURA_SIN_TIMBRAR);
           filesService.sendXmlToS3(
               facturaCustom.getFolio(), cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi()));
           break;
@@ -584,9 +577,7 @@ public class FacturaService {
                     });
 
             facturaCustom.getCfdi().setComplemento(ImmutableList.of(pagos));
-            byte[] complementPDF = getPdfFromFactura(facturaCustom, PDF_COMPLEMENTO_SIN_TIMBRAR);
-            filesService.sendFileToS3(
-                facturaCustom.getFolio(), complementPDF, PDF.getFormat(), S3Buckets.CFDIS);
+            buildPdf(facturaCustom,PDF_COMPLEMENTO_SIN_TIMBRAR);
             Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
             comprobante.setMetodoPago(null);
             comprobante.setFormaPago(null);
@@ -675,16 +666,7 @@ public class FacturaService {
         facturaCustom.getXml().getBytes(),
         XML.getFormat(),
         S3Buckets.CFDIS);
-    filesService.sendFileToS3(
-        facturaCustom.getFolio(),
-        getPdfFromFactura(
-            facturaCustom,
-            FACTURA.getDescripcion().equals(facturaCustom.getTipoDocumento())
-                    || NOTA_CREDITO.getDescripcion().equals(facturaCustom.getTipoDocumento())
-                ? PDF_FACTURA_TIMBRAR
-                : PDF_COMPLEMENTO_TIMBRAR),
-        PDF.getFormat(),
-        S3Buckets.CFDIS);
+
     Factura40 entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
     entityFromDto.setId(factura.getId());
     entityFromDto.setFechaTimbrado(new Date());
@@ -836,8 +818,7 @@ public class FacturaService {
     filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
     facturaCustom = invoiceBuilderService.assignDescData(facturaCustom);
-    byte[] pdf = getPdfFromFactura(facturaCustom, PDF_COMPLEMENTO_SIN_TIMBRAR);
-    filesService.sendFileToS3(facturaCustom.getFolio(), pdf, PDF.getFormat(), S3Buckets.CFDIS);
+    buildPdf(facturaCustom,PDF_COMPLEMENTO_SIN_TIMBRAR);
     return facturaCustom;
   }
 
@@ -888,17 +869,50 @@ public class FacturaService {
     }
   }
 
-  private byte[] getPdfFromFactura(FacturaCustom facturaCustom, String template)
-      throws InvoiceManagerException, NtlinkUtilException {
-    Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
-    FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
-    facturaPdf.setCfdi(comprobante);
-    facturaPdf.setLogotipo(
-        filesService
-            .getResourceFileByResourceReferenceAndType(
-                S3Buckets.EMPRESAS, facturaCustom.getRfcEmisor(), "LOGO")
-            // TODO REFACTOR CODE TO STOP USING  DEPRECATED METHOD
-            .getData());
-    return FacturaUtils.generateFacturaPdf(facturaPdf, template);
+  public void rebuildPDF(String folio) throws InvoiceManagerException {
+      FacturaCustom factCustom = getFacturaByFolio(folio);
+      if(FacturaStatus.TIMBRADA.getValor().equals(factCustom.getStatusFactura())){
+          if(COMPLEMENTO.getDescripcion().equals(factCustom.getTipoDocumento())){
+              factCustom.setMetodoPago(MetodosPago.PPD.name());
+                  ObjectMapper objMapper = new ObjectMapper();
+              Pagos pagos = factCustom.getCfdi().getComplemento().stream().map(c -> {
+                  try {
+                      return objMapper.writeValueAsString(c);
+                  } catch (IOException e) {
+                      return "";
+                  }
+              }).filter(s -> s.contains("pagos")).map(p -> {
+                  try {
+                      return objMapper.readValue(p, Pagos.class);
+                  } catch (IOException e) {
+                      return Pagos.builder().build();
+                  }
+              }).findFirst().get();
+              factCustom.getCfdi().setComplemento(ImmutableList.of(pagos));
+              buildPdf(factCustom,PDF_COMPLEMENTO_TIMBRAR);
+          } else {
+              buildPdf(factCustom,PDF_FACTURA_TIMBRAR);
+          }
+          buildPdf(factCustom, COMPLEMENTO.getDescripcion().equals(factCustom.getTipoDocumento())?PDF_COMPLEMENTO_TIMBRAR:PDF_FACTURA_TIMBRAR);
+      } else {
+          throw new InvoiceManagerException("Solo las facturas timbradas regeneran PDF", HttpStatus.BAD_REQUEST.value());
+      }
   }
+
+    private void buildPdf(FacturaCustom facturaCustom, String template) throws InvoiceManagerException{
+
+            Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
+            FacturaPdf facturaPdf = mapper.getFacturaPdfFromFacturaCustom(facturaCustom);
+            facturaPdf.setCfdi(comprobante);
+            facturaPdf.setLogotipo(
+                    filesService
+                            .getResourceFileByResourceReferenceAndType(
+                                    S3Buckets.EMPRESAS, facturaCustom.getRfcEmisor(), "LOGO")
+                            // TODO REFACTOR CODE TO STOP USING  DEPRECATED METHOD
+                            .getData());
+            byte[] pdfBytes = FacturaUtils.generateFacturaPdf(facturaPdf, template);
+
+            filesService.sendFileToS3(facturaCustom.getFolio(), pdfBytes,
+                    PDF.getFormat(), S3Buckets.CFDIS);
+    }
 }

@@ -343,12 +343,15 @@
         </div>
         </nb-card-body>
         <nb-card-footer>
-            <button class="btn btn-warning" (click)="ref.close(undefined)">
+            <button class="btn btn-warning ml-2 mr-2" (click)="ref.close(undefined)">
                 Salir
             </button>
-            &nbsp;&nbsp;
-            <button class="btn btn-success" (click)="ref.close(true)">
+            <button class="btn btn-success ml-2 mr-2" (click)="ref.close(true)">
                 JSON Update
+            </button>
+
+            <button class="btn btn-primary ml-2 mr-2" (click)="rebuildPdf()">
+                reconstruccion PDF
             </button>
         </nb-card-footer>
     </nb-card>

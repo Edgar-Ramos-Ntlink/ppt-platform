@@ -135,4 +135,8 @@ export class InvoicesService {
     public reSendEmail(folio: string): Observable<any> {
         return this.httpClient.post(`../api/facturas/${folio}/correos`, folio);
     }
+
+    public rebuildPdf(folio:string): Observable<any> {
+        return this.httpClient.post(`../api/facturas/${folio}/reconstruccion-pdf`, folio);
+    }
 }
