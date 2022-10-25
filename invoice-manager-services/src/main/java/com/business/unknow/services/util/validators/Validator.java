@@ -13,7 +13,7 @@ public class Validator {
   protected static final String ATRIBUTE_NEGATIVE = "Error, el campo [%s] no puede ser negativo.";
   private static final String EMAIL_REGEX =
       "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-  private static final String CHAR_REGEX = "^[A-Za-z0-9ÁÉÍÓÚÑáéíóúñ.,'&\\-\\s]+";
+  private static final String CHAR_REGEX = "^[A-Za-z0-9ÁÉÍÓÚÑáéíóúñ.,:;!$%@#£€*?&-_\"\\-\\s]+";
 
   public static void checkNotNull(Object var, String attribute) throws InvoiceManagerException {
     if (var == null) {

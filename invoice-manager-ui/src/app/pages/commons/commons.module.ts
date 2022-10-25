@@ -48,7 +48,7 @@ import { UserComponent } from './user/user.component';
         MulticomplementosComponent,
         CuentasBancariasComponent,
         CuentasBancariasComponent,
-        CuentaBancariaComponent,
+        CuentaBancariaComponent
     ],
     imports: [
         CommonModule,

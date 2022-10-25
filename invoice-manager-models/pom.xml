@@ -17,7 +17,7 @@
         <lombok.version>1.18.20</lombok.version>
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-        <ntlink-utils-version>2.3.4</ntlink-utils-version>
+        <ntlink-utils-version>2.3.5</ntlink-utils-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>

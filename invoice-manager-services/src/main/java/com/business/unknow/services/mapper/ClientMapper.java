@@ -18,7 +18,9 @@ public interface ClientMapper {
   @Mappings({
     @Mapping(expression = "java(dto.getRfc().toUpperCase())", target = "rfc"),
     @Mapping(source = "localidad", target = "colonia"),
-    @Mapping(expression = "java(dto.getRazonSocial().toUpperCase())", target = "razonSocial"),
+    @Mapping(
+        expression = "java(dto.getRazonSocial().trim().toUpperCase())",
+        target = "razonSocial"),
   })
   Client getEntityFromClientDto(ClientDto dto);
 }
