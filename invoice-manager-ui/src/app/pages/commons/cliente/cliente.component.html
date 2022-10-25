@@ -4,7 +4,7 @@
       <nb-card-header class="puff_center">
         <div class="clearfix">
           <strong>Datos cliente</strong>
-          
+
           <button type="button" class="btn btn-outline-success float-right" *ngIf="!clientInfo.activo &&  module != 'promotor'" (click)="toggleOn()">Activar</button>
           <button type="button" class="btn btn-outline-danger float-right" *ngIf="clientInfo.activo &&  module != 'promotor'" (click)="toggleOff()">Desactivar</button>
           <div class="alert alert-warning float-right" *ngIf="dataFile === undefined" role="alert">
@@ -13,14 +13,14 @@
         </div>
 
       </nb-card-header>
-      <nb-card-body>          
+      <nb-card-body>
           <form [formGroup]="clienteForm">
               <div class="row">
                   <div class="col-sm-12 col-md-12">
                       <strong>Datos generales del cliente</strong>
                       <br>
                       <div class="row">
-                          <div class="col-sm-4">      
+                          <div class="col-sm-4">
                               <label for="inputRFC" class="label col-form-label">RFC</label>
                               <input class="form-control text-uppercase" type="text" id="inputRFC" name="rfc"
                                   formControlName="rfc" [attr.disabled]="clientInfo.id"
@@ -46,7 +46,7 @@
                                       El RFC ya esta asociado a otro registro de este promotor
                                   </small>
                               </ng-container>
-                          </div> 
+                          </div>
                           <div class="col-sm-6">
                               <label for="inputSocialReason" class="label col-form-label">Razón Social</label>
                               <input type="text" [ngClass]="{
@@ -69,7 +69,7 @@
                                   </small>
                               </ng-container>
                           </div>
-                          <div class="col-sm-2">      
+                          <div class="col-sm-2">
                               <label for="inputPais" class="label">País</label>
                               <select id="inputPais" class="form-control" [attr.disabled]="clientInfo.activo ? true : null"
                                   selected="0" fullWidth
@@ -85,7 +85,7 @@
                                       Es necesario seleccionar un país
                                   </small>
                               </ng-container>
-                          </div> 
+                          </div>
                       </div>
                       <div class="row">
                           <div class="col-sm-2">
@@ -104,7 +104,7 @@
                                   </small>
                               </ng-container>
                           </div>
-                          <div [ngClass]="{'col-sm-4': formInfo.coloniaId !=='other', 'col-sm-2': formInfo.coloniaId ==='other'}">      
+                          <div [ngClass]="{'col-sm-4': formInfo.coloniaId !=='other', 'col-sm-2': formInfo.coloniaId ==='other'}">
                               <label for="inputColonia" class="label">Seleccionar colonia</label>
                               <select id="inputColonia" class="text-uppercase form-control" fullWidth
                                   [(ngModel)]="formInfo.coloniaId" [ngModelOptions]="{standalone: true}"
@@ -115,7 +115,7 @@
                                   </option>
                                   <option value="other">Otra</option>
                               </select>
-                          </div> 
+                          </div>
                           <div [ngClass]="{'col-sm-4': formInfo.coloniaId !=='other', 'col-sm-3': formInfo.coloniaId ==='other'}"  *ngIf="formInfo.coloniaId==='other'">
                               <label for="inputLocalidad" class="label">Colonia</label>
                               <input type="text" class="form-control text-uppercase" fullWidth
@@ -232,7 +232,7 @@
                               <label for="inputRegimen" class="label">Regimen Fiscal</label>
                               <select id="inputRegimen" class="text-uppercase form-control" fullWidth [ngClass]="{
                               'border border-danger': regimenFiscal.invalid && (regimenFiscal.dirty || regimenFiscal.touched),
-                              'border border-success': regimenFiscal.valid && (regimenFiscal.dirty || regimenFiscal.touched)}" 
+                              'border border-success': regimenFiscal.valid && (regimenFiscal.dirty || regimenFiscal.touched)}"
                               [formControl]="regimenFiscal">
                                   <option value="*" class="text-uppercase">Seleccionar</option>
                                   <option *ngFor="let regimen of regimenes" class="text-uppercase"
@@ -274,10 +274,10 @@
                       <strong>Comisiones del cliente</strong>
                       <br>
                       <div class="row">
-                          <div class="col-sm-3">      
+                          <div class="col-sm-3">
                               <label for="inputPromotor" class="label col-form-label">Promotor</label>
                               <input class="form-control text-uppercase" type="number" id="inputPromotor" name="porcentajePromotor"
-                                  min="0" max="8" [attr.disabled]="(clientInfo.activo || module === 'operaciones')?true:null" 
+                                  min="0" max="8" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id ?true:null"
                                   placeholder="4" fullWidth [ngClass]="{
                                           'border border-danger': porcentajePromotor.invalid && (porcentajePromotor.dirty || porcentajePromotor.touched),
                                           'border border-success': porcentajePromotor.valid && (porcentajePromotor.dirty || porcentajePromotor.touched)
@@ -293,11 +293,11 @@
                                       Porcentaje promotor Invalido
                                   </small>
                               </ng-container>
-                          </div> 
-                          <div class="col-sm-3">      
+                          </div>
+                          <div class="col-sm-3">
                               <label for="inputCliente" class="label col-form-label">Cliente</label>
                               <input class="form-control text-uppercase" type="number" id="inputCliente" name="porcentajeCliente"
-                                  min="0" max="8" [attr.disabled]="(clientInfo.activo || module === 'operaciones')?true:null" 
+                                  min="0" max="8" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id?true:null"
                                   placeholder="4" fullWidth [ngClass]="{
                                           'border border-danger': porcentajeCliente.invalid && (porcentajeCliente.dirty || porcentajeCliente.touched),
                                           'border border-success': porcentajeCliente.valid && (porcentajeCliente.dirty || porcentajeCliente.touched)
@@ -313,11 +313,11 @@
                                       Porcentaje cliente Invalido
                                   </small>
                               </ng-container>
-                          </div> 
-                          <div class="col-sm-3">      
+                          </div>
+                          <div class="col-sm-3">
                               <label for="inputDespacho" class="label col-form-label">Despacho</label>
                               <input class="form-control text-uppercase" type="number" id="inputDespacho" name="porcentajeDespacho"
-                                  min="0" max="16" [attr.disabled]="(clientInfo.activo || module === 'operaciones')?true:null" 
+                                  min="0" max="16" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id?true:null"
                                   placeholder="4" fullWidth [ngClass]="{
                                           'border border-danger': porcentajeDespacho.invalid && (porcentajeDespacho.dirty || porcentajeDespacho.touched),
                                           'border border-success': porcentajeDespacho.valid && (porcentajeDespacho.dirty || porcentajeDespacho.touched)
@@ -333,11 +333,11 @@
                                       Porcentaje despacho Invalido
                                   </small>
                               </ng-container>
-                          </div> 
-                          <div class="col-sm-3">      
+                          </div>
+                          <div class="col-sm-3">
                               <label for="inputContacto" class="label col-form-label">Contacto</label>
                               <input class="form-control text-uppercase" type="number" id="inputContacto" name="porcentajeContacto"
-                                  min="0" max="8" [attr.disabled]="(clientInfo.activo || module === 'operaciones')?true:null" 
+                                  min="0" max="8" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id?true:null"
                                   placeholder="4" fullWidth [ngClass]="{
                                           'border border-danger': porcentajeContacto.invalid && (porcentajeContacto.dirty || porcentajeContacto.touched),
                                           'border border-success': porcentajeContacto.valid && (porcentajeContacto.dirty || porcentajeContacto.touched)
@@ -353,7 +353,7 @@
                                       Control Invalido
                                   </small>
                               </ng-container>
-                          </div> 
+                          </div>
                       </div>
                   </div>
                   <div class="col-sm-12 col-md-12">
@@ -361,30 +361,30 @@
                       <strong>Notas adicionales</strong>
                       <br>
                       <div class="row">
-                          <div class="col-sm-6">  
-                              <label for="inputNotes" class="label">Notas cliente</label>    
+                          <div class="col-sm-6">
+                              <label for="inputNotes" class="label">Notas cliente</label>
                               <textarea type="text" class="form-control" fullWidth id="inputNotes"  maxlength="280" cols="3"
                                   placeholder="Notas adicionales cliente" formControlName="notas" name="notas"></textarea>
-                          </div> 
-                          <div class="col-sm-6" *ngIf="clientInfo.id">      
-                              <label for="certFile" class="label">Comprobante cedula fiscal</label>
+                          </div>
+                          <div class="col-sm-6" *ngIf="clientInfo.id">
+                              <label for="documentFile" class="label">Comprobante cedula fiscal</label>
                               <div class="input-group">
-                                  <div class="custom-file" id="documentFile">
-                                      <input type="file" class="custom-file-input" id="documentFile" [disabled]="!clientInfo.id" 
+                                  <div class="custom-file" >
+                                      <input type="file" class="custom-file-input" id="documentFile" [disabled]="!clientInfo.id"
                                       accept=".pdf,.xls,.xlsx,.doc, .docx,image/*" (change)="fileDataUploadListener($event)"
                                       style="display:block;" aria-describedby="inputDocFile">
-                                      <label class="custom-file-label" style="background-color: #f7f9fc;" for="inputDocFile">{{formInfo.fileDataName}}</label>
+                                      <label class="custom-file-label" style="background-color: #f7f9fc;" for="documentFile">{{formInfo.fileDataName}}</label>
                                   </div>
                               </div>
-                              <small id="clientFileHelp" *ngIf="dataFile != undefined" class="form-text text-primary">El cliente ya cuenta con constancia de situacion fiscal</small>
-                              <small id="clientFileHelp" *ngIf="dataFile == undefined" class="form-text text-danger">La constancia de situacion fiscal es un documento requerido</small>
-                              <button class="btn d-inline mt-2 ml-2 mr-2" [ngClass]="{'btn-outline-success': formInfo.fileDataName.length > 0 , 'btn-outline-secondary': formInfo.fileDataName.length == 0 }" 
+                              <small id="clientFileHelp1" *ngIf="dataFile != undefined" class="form-text text-primary">El cliente ya cuenta con constancia de situacion fiscal</small>
+                              <small id="clientFileHelp2" *ngIf="dataFile == undefined" class="form-text text-danger">La constancia de situacion fiscal es un documento requerido</small>
+                              <button class="btn d-inline mt-2 ml-2 mr-2" [ngClass]="{'btn-outline-success': formInfo.fileDataName.length > 0 , 'btn-outline-secondary': formInfo.fileDataName.length == 0 }"
                               (click)="uploadFile()" *ngIf="clientInfo.id !== undefined" [disabled]="formInfo.fileDataName.length == 0">
                               <i class="fa fa-upload"></i></button>
-                              <button class="btn d-inline mt-2 ml-2 mr-2" [ngClass]="{'btn-outline-primary': dataFile!= undefined && dataFile.id != undefined, 'btn-outline-secondary': !dataFile || dataFile.id ==undefined}" 
+                              <button class="btn d-inline mt-2 ml-2 mr-2" [ngClass]="{'btn-outline-primary': dataFile!= undefined && dataFile.id != undefined, 'btn-outline-secondary': !dataFile || dataFile.id ==undefined}"
                               (click)="downloadFile()" *ngIf="clientInfo.id !== undefined" [disabled]="!dataFile || dataFile.id ==undefined">
                                   <i class="fa fa-download"></i></button>
-                          </div> 
+                          </div>
                       </div>
                   </div>
               </div>
@@ -394,12 +394,12 @@
                   <br/>
                   <button type="button" *ngIf="clientInfo.id === undefined && module === 'promotor'"
                       [disabled]="loading  || clienteForm.invalid"
-                      (click)="insertClient()" nbButton 
+                      (click)="insertClient()" nbButton
                       status="primary">
                       GUARDAR
                   </button>
-                  <button type="button"  *ngIf="clientInfo.id !== undefined" 
-                      [disabled]="loading  || clienteForm.invalid" 
+                  <button type="button"  *ngIf="clientInfo.id !== undefined"
+                      [disabled]="loading  || clienteForm.invalid"
                       (click)="updateClient()" nbButton
                       status="primary">
                       ACTUALIZAR

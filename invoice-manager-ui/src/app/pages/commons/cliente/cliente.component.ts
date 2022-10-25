@@ -144,7 +144,7 @@ export class ClienteComponent implements OnInit {
       this.formInfo.id = this.clientInfo.id;
       this.formInfo.rfc = this.clientInfo.rfc;
       this.formInfo.coloniaId = "other";
-      Object.keys(this.clienteForm.controls).forEach(key => this.clienteForm.controls[key].setValue(this.clientInfo[key] ? this.clientInfo[key] : ''));      
+      Object.keys(this.clienteForm.controls).forEach(key => this.clienteForm.controls[key].setValue((this.clientInfo[key]!= undefined && this.clientInfo[key]!= null ) ? this.clientInfo[key] : '')); 
       this.colonias = (await this.catalogsService.getZipCodeInfo(this.clientInfo.cp)).colonias;
       this.colonias.filter(colonia => colonia===this.clientInfo.localidad).forEach(colonia => (this.formInfo.coloniaId = colonia));
     } catch (error) {
@@ -207,6 +207,11 @@ export class ClienteComponent implements OnInit {
       }
       this.notificationService.sendNotification('info','Cliente creado correctamente');
       this.loading = false;
+
+      const url = this.router.url;
+      const redirectUrl = `.${url.substring(0,url.lastIndexOf('/'))}/${this.clientInfo.id}`
+      this.router.navigate([redirectUrl])
+
     } catch (error) {
       this.notificationService.sendNotification('danger',error?.message, 'Error');
       this.loading = false;
