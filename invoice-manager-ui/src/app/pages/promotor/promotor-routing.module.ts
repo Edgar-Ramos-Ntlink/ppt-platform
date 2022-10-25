@@ -7,6 +7,7 @@ import { ClienteComponent } from '../commons/cliente/cliente.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
 import { MulticomplementosComponent } from '../commons/multicomplementos/multicomplementos.component';
 
+
 const routes: Routes = [{
   path: '',
   component: PromotorComponent,
@@ -26,7 +27,7 @@ const routes: Routes = [{
     }, {
       path: 'pago-facturas',
       component: MulticomplementosComponent,
-    },
+    }
   ]}];
 
 @NgModule({
