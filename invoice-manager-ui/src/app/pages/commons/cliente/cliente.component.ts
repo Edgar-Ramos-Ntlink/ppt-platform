@@ -11,6 +11,11 @@ import { DonwloadFileService } from '../../../@core/util-services/download-file-
 import { NtError } from '../../../@core/models/nt-error';
 import { NotificationsService } from '../../../@core/util-services/notifications.service';
 
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AppConstants } from '../../../models/app-constants';
+import { AsyncValidatorFn, AsyncValidator, NG_ASYNC_VALIDATORS, AbstractControl, ValidationErrors } from '@angular/forms';
+
+
 @Component({
   selector: 'ngx-cliente',
   templateUrl: './cliente.component.html',
@@ -20,14 +25,89 @@ export class ClienteComponent implements OnInit {
 
   public module: string = 'promotor';
   public clientInfo: Client;
-  public formInfo: any = { rfc: '', coloniaId: '*', fileDataName: '' };
+  public formInfo: any = { id: '',rfc: '', coloniaId: '*', fileDataName: '' };
   public coloniaId: number = 0;
   public colonias = [];
   public regimenes = [];
   public loading: boolean = false;
 
   private dataFile: ResourceFile;
-
+  public clienteForm = new FormGroup({
+    rfc: new FormControl('', {
+      "validators":[
+          Validators.required,
+          Validators.minLength(AppConstants.RFC_MIN_LENGTH),
+          Validators.maxLength(AppConstants.RFC_MAX_LENGTH),
+          Validators.pattern(AppConstants.RFC_PATTERN)
+      ],
+      "asyncValidators":[this.doesUserHasThisRFCAssociatedValidator(this.clientService)],
+      "updateOn": "blur"
+    }),
+    razonSocial: new FormControl('', [
+      Validators.required,
+      Validators.minLength(5),
+      Validators.maxLength(250),
+      Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
+    ]),
+    pais: new FormControl('MEX', [
+      Validators.pattern(AppConstants.COUNTRY_CODE_PATTERN),
+    ]),
+    cp: new FormControl('', [
+      Validators.required,
+      Validators.pattern(AppConstants.ZIP_CODE_PATTERN),
+    ]),
+    localidad: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(250),
+      Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
+    ]),
+    municipio: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(200),
+      Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
+    ]),
+    estado: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(100),
+      Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
+    ]),
+    calle: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(250),
+      Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
+    ]),
+    noExterior: new FormControl('', [
+      Validators.maxLength(10),
+    ]),
+    noInterior: new FormControl('', [
+      Validators.maxLength(10),
+    ]),
+    regimenFiscal: new FormControl('*', [
+      Validators.required,
+    ]),
+    correoContacto: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(100),
+      Validators.email,
+    ]),
+    porcentajeCliente: new FormControl('', [
+      Validators.required,
+      Validators.minLength(1),
+    ]),
+    porcentajeContacto: new FormControl('', [
+      Validators.required,
+      Validators.minLength(1),
+    ]),
+    porcentajeDespacho: new FormControl('', [
+      Validators.required,
+      Validators.minLength(1),
+    ]),
+    porcentajePromotor: new FormControl('', [
+      Validators.required,
+      Validators.minLength(1),
+    ]),   
+    notas: new FormControl('', [])
+  }); 
 
   constructor(
     private resourcesService: FilesData,
@@ -37,13 +117,17 @@ export class ClienteComponent implements OnInit {
     private notificationService: NotificationsService,
     private catalogsService: CatalogsData,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router
+  ) { 
+      this.catalogsService
+      .getAllRegimenFiscal()
+      .then(reg => this.regimenes = reg);
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.module = this.router.url.split('/')[2];
     this.clientInfo = new Client();
     this.clientInfo.pais = 'MEX';
-    this.catalogsService.getAllRegimenFiscal().then(reg => this.regimenes = reg);
     /** recovering folio info**/
     this.route.paramMap.subscribe(route => {
       const id = route.get('id');
@@ -57,18 +141,12 @@ export class ClienteComponent implements OnInit {
     this.loading = true;
     try {
       this.clientInfo = await this.clientService.getClientById(id).toPromise();
+      this.formInfo.id = this.clientInfo.id;
       this.formInfo.rfc = this.clientInfo.rfc;
-      const data: ZipCodeInfo = await this.catalogsService.getZipCodeInfo(this.clientInfo.cp);
-      this.colonias = data.colonias;
-      let index = 0;
-      this.formInfo.coloniaId = 'other';
-      data.colonias.forEach(element => {
-        if (data.colonias[index] === this.clientInfo.localidad) {
-          this.formInfo.coloniaId = index;
-          return;
-        }
-        index++;
-      });
+      this.formInfo.coloniaId = "other";
+      Object.keys(this.clienteForm.controls).forEach(key => this.clienteForm.controls[key].setValue(this.clientInfo[key] ? this.clientInfo[key] : ''));      
+      this.colonias = (await this.catalogsService.getZipCodeInfo(this.clientInfo.cp)).colonias;
+      this.colonias.filter(colonia => colonia===this.clientInfo.localidad).forEach(colonia => (this.formInfo.coloniaId = colonia));
     } catch (error) {
       this.notificationService.sendNotification('danger',error?.message, 'Error');
     }
@@ -76,7 +154,18 @@ export class ClienteComponent implements OnInit {
     this.dataFile = await this.resourcesService.getResourceFile(this.clientInfo.id.toString(),'CLIENTES','DOCUMENTO').toPromise();
   }
 
+  public doesUserHasThisRFCAssociatedValidator(service: ClientsData):AsyncValidatorFn  {
+    return (control: AbstractControl) : Promise<ValidationErrors>  => {
+      let promotor = sessionStorage.getItem('email');
+      let rfc = control.value;
+      return  service.getClientsByPromotorAndRfc(promotor, rfc).toPromise().then(record => {
+        return (record && !this.clientInfo.id) ? {"rfcExist":true} : null;
+      });
+    }
+  }
+
   public async updateClient() {
+    Object.assign(this.clientInfo,this.clienteForm.value);
     this.loading = true;
     try {
       const errors: string[] = this.clientValidatorService.validarCliente(this.clientInfo);
@@ -96,6 +185,7 @@ export class ClienteComponent implements OnInit {
   }
 
   public async insertClient() {
+    this.clientInfo = { ...this.clienteForm.value };
     const client: Client = { ...this.clientInfo };
     this.loading = true;
     try {
@@ -124,27 +214,39 @@ export class ClienteComponent implements OnInit {
 
   }
 
-  public onLocation(index: string) {
-    if (index !== 'other' && index !== '*') {
-      this.clientInfo.localidad = this.colonias[index];
+  public onLocation(colonia: string) {
+    if (colonia !== 'other' && colonia !== '*') {
+      this.clienteForm.controls['localidad'].setValue(colonia);
     }
   }
 
   public zipCodeInfo(zc: string) {
-    if (zc.length > 4 && zc.length < 6) {
+    if (zc.length === 5) {
       this.colonias = [];
       this.catalogsService.getZipCodeInfo(zc).then(
-        (data: ZipCodeInfo) => {
-          this.clientInfo.estado = data.estado;
-          this.clientInfo.municipio = data.municipio;
-          this.colonias = data.colonias;
-          this.clientInfo.localidad = data.colonias[0];
-          if (data.colonias.length < 1) {
-            this.notificationService.sendNotification('warning',`No se ha encontrado información pata el codigo postal ${zc}`);
+          (data: ZipCodeInfo) => {
+              this.colonias = data.colonias;
+              if (this.colonias.length < 1) {
+                  this.formInfo.coloniaId = 'other';
+                  this.clienteForm.controls['estado'].setValue('');
+                  this.clienteForm.controls['municipio'].setValue('');
+                  this.clienteForm.controls['localidad'].setValue('');
+                  this.notificationService.sendNotification('warning',`No se ha encontrado información pata el codigo postal ${zc}`);
+              } else {
+                  this.formInfo.coloniaId = data.colonias[0];
+                  this.clienteForm.controls['estado'].setValue(data.estado);
+                  this.clienteForm.controls['municipio'].setValue(data.municipio);
+                  this.clienteForm.controls['localidad'].setValue(this.formInfo.coloniaId);
+              }
+          },
+          (error: NtError) => {
+              this.formInfo.coloniaId = 'other';
+              this.clienteForm.controls['estado'].setValue('');
+              this.clienteForm.controls['municipio'].setValue('');
+              this.clienteForm.controls['localidad'].setValue('');
+              this.notificationService.sendNotification('warning',error?.message,'Error');
           }
-        }, (error: NtError) => {
-          this.notificationService.sendNotification('warning',error?.message, 'Error');
-        });
+      );
     }
   }
 
@@ -157,7 +259,7 @@ export class ClienteComponent implements OnInit {
   }
 
   public async toggleOn() {
-
+    Object.assign(this.clientInfo,this.clienteForm.value);
     const client: Client = { ... this.clientInfo };
     client.activo = true;
     this.loading = true;
@@ -172,6 +274,7 @@ export class ClienteComponent implements OnInit {
   }
 
   public async toggleOff() {
+    Object.assign(this.clientInfo,this.clienteForm.value);
     const client: Client = { ... this.clientInfo };
     client.activo = false;
     this.loading = true;
@@ -224,4 +327,21 @@ export class ClienteComponent implements OnInit {
     this.downloadService.dowloadResourceFile(path, `DocumentoRelacionado_${this.clientInfo.rfc}`);
   }
 
+  get rfc() {return this.clienteForm.get("rfc")!} 
+  get razonSocial() {return this.clienteForm.get("razonSocial")!} 
+  get pais() {return this.clienteForm.get("pais")!} 
+  get cp() {return this.clienteForm.get("cp")!} 
+  get localidad() {return this.clienteForm.get("localidad")!} 
+  get municipio() {return this.clienteForm.get("municipio")!} 
+  get estado() {return this.clienteForm.get("estado")!} 
+  get calle() {return this.clienteForm.get("calle")!} 
+  get noExterior() {return this.clienteForm.get("noExterior")!} 
+  get noInterior() {return this.clienteForm.get("noInterior")!} 
+  get regimenFiscal() {return this.clienteForm.get("regimenFiscal")!} 
+  get correoContacto() {return this.clienteForm.get("correoContacto")!} 
+  get porcentajeCliente() {return this.clienteForm.get("porcentajeCliente")!} 
+  get porcentajeContacto() {return this.clienteForm.get("porcentajeContacto")!} 
+  get porcentajeDespacho() {return this.clienteForm.get("porcentajeDespacho")!} 
+  get porcentajePromotor() {return this.clienteForm.get("porcentajePromotor")!} 
+  get notas() {return this.clienteForm.get("notas")!}   
 }
