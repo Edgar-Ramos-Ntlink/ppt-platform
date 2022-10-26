@@ -669,7 +669,11 @@ public class FacturaService {
         facturaCustom.getXml().getBytes(),
         XML.getFormat(),
         S3Buckets.CFDIS);
-    buildPdf(facturaCustom, COMPLEMENTO.getDescripcion().equals(facturaCustom.getTipoDocumento())?PDF_COMPLEMENTO_TIMBRAR:PDF_FACTURA_TIMBRAR);
+    buildPdf(
+        facturaCustom,
+        COMPLEMENTO.getDescripcion().equals(facturaCustom.getTipoDocumento())
+            ? PDF_COMPLEMENTO_TIMBRAR
+            : PDF_FACTURA_TIMBRAR);
     Factura40 entityFromDto = mapper.getEntityFromFacturaCustom(facturaCustom);
     entityFromDto.setId(factura.getId());
     entityFromDto.setFechaTimbrado(new Date());
