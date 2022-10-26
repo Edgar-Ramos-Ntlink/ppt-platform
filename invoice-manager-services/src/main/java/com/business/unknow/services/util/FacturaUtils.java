@@ -5,6 +5,7 @@ import static com.business.unknow.Constants.DATE_PRE_FOLIO_GENERIC_FORMAT;
 import com.business.unknow.Constants;
 import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.FacturaPdf;
+import com.business.unknow.model.error.InvoiceManagerException;
 import com.google.common.io.Resources;
 import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.util.CfdiNamespaceMapper;
@@ -18,9 +19,11 @@ import java.util.Base64;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-
+@Slf4j
 public class FacturaUtils {
 
   private static final String EXP = "&amp;";
@@ -55,7 +58,7 @@ public class FacturaUtils {
   }
 
   public static byte[] generateFacturaPdf(FacturaPdf facturaPdf, String type)
-      throws NtlinkUtilException {
+          throws InvoiceManagerException {
     try {
       String template =
           Resources.toString(
@@ -73,11 +76,9 @@ public class FacturaUtils {
           PdfGeneratorUtil.generatePdf(
               Base64.getEncoder().encodeToString(template.getBytes()), "XSD", xmlString);
       return Base64.getDecoder().decode(pdf);
-    } catch (JAXBException | IOException e) {
-      throw new ResponseStatusException(
-          HttpStatus.CONFLICT,
-          String.format(
-              "Error generating pdf file  with folio %s", facturaPdf.getCfdi().getFolio()));
+    } catch (JAXBException | NtlinkUtilException | IOException e) {
+      log.error("Error en la generacion del PDF", e);
+      throw new InvoiceManagerException("Error en la generación del documento PDF",HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
   }
 }

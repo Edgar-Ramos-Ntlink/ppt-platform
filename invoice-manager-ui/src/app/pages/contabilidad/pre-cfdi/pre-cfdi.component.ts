@@ -614,6 +614,12 @@ export class PreCfdiComponent implements OnInit {
         );
     }
 
+    public rebuildPdf(){
+        this.invoiceService.rebuildPdf(this.factura.folio)
+        .subscribe(()=> this.notificationService.sendNotification('success','PDF reconstuido'),
+        (error:NtError)=>this.notificationService.sendNotification('danger',error.message,'Error en la recostruccion del PDF'));
+    }
+
     public async jsonUpdate( dialog: TemplateRef<any>) {
         try {
             

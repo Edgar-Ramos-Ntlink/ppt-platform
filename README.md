@@ -148,3 +148,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.6.4 Addinng JSON editor on accounting module
   - [x] 4.6.5 Lock cfdi emisor fields edition and fix pending debt issue
   - [x] 4.6.6 Fix Invoices without taxes 
+  - [x] 4.6.7 Improvements on client creation validation, pdf regeneration and invoice amount reduction improvements 
