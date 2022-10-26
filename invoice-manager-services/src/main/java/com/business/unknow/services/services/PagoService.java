@@ -228,7 +228,7 @@ public class PagoService {
   public PagoDto insertNewPayment(PagoDto pagoDto)
       throws InvoiceManagerException, NtlinkUtilException {
     PagoValidator.validate(pagoDto);
-    log.info("Creating a new payment [{}]",pagoDto);
+    log.info("Creating a new payment [{}]", pagoDto);
     List<FacturaCustom> facturas = new ArrayList<>();
     for (PagoFacturaDto pagoFact : pagoDto.getFacturas()) {
       FacturaCustom factura = facturaService.getFacturaByFolio(pagoFact.getFolio());
@@ -280,8 +280,13 @@ public class PagoService {
           facturaService.updateTotalAndSaldoFactura(
               dto.getFolio(), Optional.empty(), Optional.of(pagoFact.get().getMonto()));
         } else {
-          log.info("A payment for {} is trying to be created before invoice is ready", dto.getFolio());
-          throw new InvoiceManagerException(String.format("La factura con folio {} no existe en el sistema, intente de nuevo mas tarde",dto.getFolio()), HttpStatus.CONTINUE.value());
+          log.info(
+              "A payment for {} is trying to be created before invoice is ready", dto.getFolio());
+          throw new InvoiceManagerException(
+              String.format(
+                  "La factura con folio {} no existe en el sistema, intente de nuevo mas tarde",
+                  dto.getFolio()),
+              HttpStatus.CONTINUE.value());
         }
       }
     }

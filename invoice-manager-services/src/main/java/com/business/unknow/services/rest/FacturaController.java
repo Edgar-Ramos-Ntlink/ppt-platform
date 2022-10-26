@@ -96,7 +96,8 @@ public class FacturaController {
   }
 
   @PostMapping("/{folio}/reconstruccion-pdf")
-  public ResponseEntity<Void> rebuildPDF(@RequestBody @Valid String folio) throws InvoiceManagerException {
+  public ResponseEntity<Void> rebuildPDF(@RequestBody @Valid String folio)
+      throws InvoiceManagerException {
     service.rebuildPDF(folio);
     return new ResponseEntity<>(HttpStatus.OK);
   }
