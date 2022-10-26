@@ -19,10 +19,9 @@ import java.util.Base64;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+
 @Slf4j
 public class FacturaUtils {
 
@@ -58,7 +57,7 @@ public class FacturaUtils {
   }
 
   public static byte[] generateFacturaPdf(FacturaPdf facturaPdf, String type)
-          throws InvoiceManagerException {
+      throws InvoiceManagerException {
     try {
       String template =
           Resources.toString(
@@ -78,7 +77,8 @@ public class FacturaUtils {
       return Base64.getDecoder().decode(pdf);
     } catch (JAXBException | NtlinkUtilException | IOException e) {
       log.error("Error en la generacion del PDF", e);
-      throw new InvoiceManagerException("Error en la generación del documento PDF",HttpStatus.INTERNAL_SERVER_ERROR.value());
+      throw new InvoiceManagerException(
+          "Error en la generación del documento PDF", HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
   }
 }
