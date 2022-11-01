@@ -46,7 +46,7 @@ export class ClienteComponent implements OnInit {
     razonSocial: new FormControl('', [
       Validators.required,
       Validators.minLength(5),
-      Validators.maxLength(250),
+      Validators.maxLength(300),
       Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
     ]),
     pais: new FormControl('MEX', [
@@ -58,29 +58,29 @@ export class ClienteComponent implements OnInit {
     ]),
     localidad: new FormControl('', [
       Validators.required,
-      Validators.maxLength(250),
+      Validators.maxLength(200),
       Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
     ]),
     municipio: new FormControl('', [
       Validators.required,
-      Validators.maxLength(200),
+      Validators.maxLength(150),
       Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
     ]),
     estado: new FormControl('', [
       Validators.required,
-      Validators.maxLength(100),
+      Validators.maxLength(45),
       Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
     ]),
     calle: new FormControl('', [
       Validators.required,
-      Validators.maxLength(250),
+      Validators.maxLength(200),
       Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
     ]),
     noExterior: new FormControl('', [
-      Validators.maxLength(10),
+      Validators.maxLength(45),
     ]),
     noInterior: new FormControl('', [
-      Validators.maxLength(10),
+      Validators.maxLength(45),
     ]),
     regimenFiscal: new FormControl('*', [
       Validators.required,
@@ -148,6 +148,7 @@ export class ClienteComponent implements OnInit {
       this.colonias = (await this.catalogsService.getZipCodeInfo(this.clientInfo.cp)).colonias;
       this.colonias.filter(colonia => colonia===this.clientInfo.localidad).forEach(colonia => (this.formInfo.coloniaId = colonia));
     } catch (error) {
+      this.loading = false;
       this.notificationService.sendNotification('danger',error?.message, 'Error');
     }
     this.loading = false;
