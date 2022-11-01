@@ -137,11 +137,6 @@ export class InvoiceReportsComponent implements OnInit {
                             `./pages/operaciones/cfdi/C/${folio}`,
                         ]);
                         break;
-                    case 'NT':
-                        this.router.navigate([
-                            `./pages/operaciones/cfdi/NT/${folio}`,
-                        ]);
-                        break;
                     default:
                         this.router.navigate([
                             `./pages/promotor/precfdi/${folio}`,

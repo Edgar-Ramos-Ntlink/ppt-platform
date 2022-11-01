@@ -337,6 +337,7 @@ public class PagoService {
       pagoDto.setStatusPago(RevisionPagos.RECHAZADO.name());
       pagoDto.setComentarioPago(pago.getComentarioPago());
       for (FacturaCustom factura : facturas) {
+        log.info("Rejecting payment of invoice: {}", factura.getFolio());
         if (MetodosPago.PUE.getClave().equals(factura.getMetodoPago())) {
           factura.setStatusFactura(FacturaStatus.RECHAZO_TESORERIA.getValor());
           factura.setStatusDetail(pago.getComentarioPago());
@@ -346,6 +347,7 @@ public class PagoService {
     } else if (entity.getRevision1() && pago.getRevision2()) {
       pagoDto.setStatusPago(RevisionPagos.ACEPTADO.name());
       for (FacturaCustom fact : facturas) {
+        log.info("Payment approved for invoice: {}", fact.getFolio());
         fact.setValidacionTeso(true);
         facturaService.updateFacturaCustom(fact.getFolio(), fact);
       }
@@ -364,6 +366,7 @@ public class PagoService {
             .distinct()
             .collect(Collectors.toList());
     for (String folio : mainFactFolios) {
+      log.warn("Deleting payment of {} from invoice {}", entity.getMonto(), folio);
       if (Objects.nonNull(folio)) {
         FacturaCustom f = facturaService.getFacturaBaseByFolio(folio);
         facturas.add(f);

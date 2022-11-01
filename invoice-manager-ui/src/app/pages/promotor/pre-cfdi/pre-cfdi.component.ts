@@ -205,6 +205,7 @@ export class PreCfdiComponent implements OnInit, OnDestroy {
                     'Solicitud de factura enviada correctamente'
                 );
                 this.store.dispatch(updateInvoice({ invoice }));
+                this.router.navigate([`./pages/promotor/precfdi/${invoice.folio}`]);
             } else {
                 errors.forEach((e) =>
                     this.notificationService.sendNotification(

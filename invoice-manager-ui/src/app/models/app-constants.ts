@@ -18,5 +18,10 @@ export class AppConstants {
     static readonly TAX_REGIMEN_PATTERN = '^[0-9]{3}$';
     static readonly ZIP_CODE_PATTERN ='^[0-9]{5}$';
     static readonly COUNTRY_CODE_PATTERN = '^[A-Z]{3}$';
+    static readonly UNIT_CATALOG_PATTERN = '^[0-9A-Z]{2,3}$';
+    static readonly SIX_DECIMAL_DIGITS_AMOUNT_PATTERN = '^[0-9]{1,18}(.[0-9]{1,6})?$';
+    static readonly CLAVE_PROD_SERV_PATTERN = '^[0-9]{8}$'
+    static readonly OBJ_IMP_PATTERN = '^[0-4]{2}$'
+    static readonly IMPUESTO_PATTERN = '^[A-Z]{3}?_0.[0-9]{1,2}?$'
     static readonly UUID_PATTERN = '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$';
 }

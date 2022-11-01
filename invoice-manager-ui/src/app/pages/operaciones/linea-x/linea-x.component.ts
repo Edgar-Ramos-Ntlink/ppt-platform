@@ -5,7 +5,7 @@ import { CatalogsData } from '../../../@core/data/catalogs-data';
 import { CompaniesData } from '../../../@core/data/companies-data';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Client } from '../../../models/client';
 import { NbDialogService } from '@nebular/theme';
 import { Pago } from '../../../@core/models/cfdi/pago';
@@ -52,6 +52,7 @@ export class LineaXComponent implements OnInit {
         private notificationService: NotificationsService,
         private dialogService: NbDialogService,
         private route: ActivatedRoute,
+        private router: Router,
         private store: Store<AppState>
     ) {}
 
@@ -212,6 +213,9 @@ export class LineaXComponent implements OnInit {
                     'Solicitud de factura enviada correctamente'
                 );
                 this.store.dispatch(updateInvoice({ invoice }));
+                this.router.navigate([
+                    `./pages/operaciones/cfdi/${this.LINEAEMISOR}/${invoice.folio}`,
+                ]);
             } else {
                 errors.forEach((e) =>
                     this.notificationService.sendNotification(

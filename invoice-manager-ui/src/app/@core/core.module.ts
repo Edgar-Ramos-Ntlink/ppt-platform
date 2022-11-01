@@ -1,6 +1,6 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutService } from './utils';
 import {
     NbActionsModule,
@@ -86,6 +86,7 @@ const UTIL_SERVICES = [
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         NbActionsModule,
         NbButtonModule,
         NbCardModule,

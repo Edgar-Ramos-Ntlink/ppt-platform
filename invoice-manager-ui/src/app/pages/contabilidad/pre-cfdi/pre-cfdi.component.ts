@@ -5,7 +5,7 @@ import { CompaniesData } from '../../../@core/data/companies-data';
 import { Empresa } from '../../../models/empresa';
 import { InvoicesData } from '../../../@core/data/invoices-data';
 import { PagoBase } from '../../../models/pago-base';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Catalogo } from '../../../models/catalogos/catalogo';
 import { CfdiValidatorService } from '../../../@core/util-services/cfdi-validator.service';
 import { PaymentsData } from '../../../@core/data/payments-data';
@@ -100,6 +100,7 @@ export class PreCfdiComponent implements OnInit {
         private cfdiValidator: CfdiValidatorService,
         private notificationService: NotificationsService,
         private route: ActivatedRoute,
+        private router: Router,
         private dialogService: NbDialogService,
         private store: Store<AppState>
     ) {}
@@ -373,7 +374,6 @@ export class PreCfdiComponent implements OnInit {
 
             let errors: string[] = this.cfdiValidator.validarCfdi(invoice.cfdi);
             if (errors.length === 0) {
-                console.log('Sending invoice', invoice);
                 invoice = await this.invoiceService
                     .insertNewInvoice(invoice)
                     .toPromise();
@@ -383,6 +383,7 @@ export class PreCfdiComponent implements OnInit {
                     'Solicitud de factura enviada correctamente'
                 );
                 this.store.dispatch(updateInvoice({ invoice }));
+                this.router.navigate([`./pages/contabilidad/cfdi/${invoice.folio}`]);
             } else {
                 errors.forEach((e) =>
                     this.notificationService.sendNotification(
