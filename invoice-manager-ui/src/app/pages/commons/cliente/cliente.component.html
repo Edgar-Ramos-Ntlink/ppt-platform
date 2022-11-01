@@ -26,10 +26,10 @@
                                   formControlName="rfc" [attr.disabled]="clientInfo.id"
                                   onKeyUp="this.value=this.value.toUpperCase();"
                                   placeholder="RFC" fullWidth [ngClass]="{
-                                          'border border-danger': rfc.invalid && (rfc.dirty || rfc.touched),
-                                          'border border-success': rfc.valid && (rfc.dirty || rfc.touched)
+                                          'border border-danger': rfc.invalid,
+                                          'border border-success': rfc.valid
                                       }" />
-                              <ng-container *ngIf="rfc.invalid && (rfc.dirty || rfc.touched)">
+                              <ng-container *ngIf="rfc.invalid">
                                   <small class="form-text text-danger" *ngIf="rfc.errors?.required">
                                       ¡Campo Requerido!
                                   </small>
