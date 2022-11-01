@@ -119,7 +119,7 @@ export class ConceptosComponent implements OnInit {
   }
 
   public calcularImpuestosTrasladados(impuestos: Impuesto[]): number {
-    if (impuestos.length > 0) {
+    if (impuestos && impuestos.length > 0) {
       const traslados: Traslado[] = [];
 
       impuestos.forEach((i) => traslados.push(...i.traslados));

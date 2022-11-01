@@ -57,22 +57,18 @@ export class ClienteComponent implements OnInit {
       Validators.pattern(AppConstants.ZIP_CODE_PATTERN),
     ]),
     localidad: new FormControl('', [
-      Validators.required,
       Validators.maxLength(200),
       Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
     ]),
     municipio: new FormControl('', [
-      Validators.required,
       Validators.maxLength(150),
       Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
     ]),
     estado: new FormControl('', [
-      Validators.required,
       Validators.maxLength(45),
       Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
     ]),
     calle: new FormControl('', [
-      Validators.required,
       Validators.maxLength(200),
       Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
     ]),
@@ -84,6 +80,7 @@ export class ClienteComponent implements OnInit {
     ]),
     regimenFiscal: new FormControl('*', [
       Validators.required,
+      Validators.pattern(AppConstants.FISCAL_REGIMEN_PATTERN)
     ]),
     correoContacto: new FormControl('', [
       Validators.required,
@@ -159,9 +156,13 @@ export class ClienteComponent implements OnInit {
     return (control: AbstractControl) : Promise<ValidationErrors>  => {
       let promotor = sessionStorage.getItem('email');
       let rfc = control.value;
+      if(!this.clientInfo.id){
       return  service.getClientsByPromotorAndRfc(promotor, rfc).toPromise().then(record => {
         return (record && !this.clientInfo.id) ? {"rfcExist":true} : null;
       });
+      } else {
+        return new Promise((resolve)=>null);
+      }
     }
   }
 
@@ -318,10 +319,8 @@ export class ClienteComponent implements OnInit {
       this.dataFile.tipoArchivo = 'DOCUMENTO';
       await this.resourcesService.insertResourceFile(this.dataFile).toPromise();
       this.notificationService.sendNotification('info','El archivo se cargo correctamente');
-      //this.loadCompanyInfo(this.companyInfo.rfc);
       this.formInfo.fileDataName = '';
       this.formInfo.doctType = '*';
-      this.loadClientInfo(this.clientInfo.id)
     } catch (error) {
       this.notificationService.sendNotification('danger',error?.message, 'Error cargando archivo');
     }

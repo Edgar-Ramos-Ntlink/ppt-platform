@@ -43,7 +43,7 @@
                                       El RFC no cumple con el patron establecido por el SAT
                                   </small>
                                   <small class="form-text text-danger" *ngIf="rfc.errors?.rfcExist">
-                                      El RFC ya esta asociado a otro registro de este promotor
+                                      El RFC ya esta asociado a otro cliente de este promotor
                                   </small>
                               </ng-container>
                           </div>
@@ -277,7 +277,7 @@
                           <div class="col-sm-3">
                               <label for="inputPromotor" class="label col-form-label">Promotor</label>
                               <input class="form-control text-uppercase" type="number" id="inputPromotor" name="porcentajePromotor"
-                                  min="0" max="8" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id ?true:null"
+                                  min="0" max="14" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id ?true:null"
                                   placeholder="4" fullWidth [ngClass]="{
                                           'border border-danger': porcentajePromotor.invalid,
                                           'border border-success': porcentajePromotor.valid
@@ -289,19 +289,23 @@
                                   <small class="form-text text-danger" *ngIf="porcentajePromotor.errors?.minlength">
                                       El porcentaje promotor debe ser de al menos un digito
                                   </small>
-                                  <small class="form-text text-danger" *ngIf="porcentajePromotor.errors?.pattern">
-                                      Porcentaje promotor Invalido
-                                  </small>
+                                  <small class="form-text text-danger" *ngIf="porcentajePromotor.errors?.min">
+                                    El porcentaje no debe ser menor a 0%
+                                </small>
+                                <small class="form-text text-danger" *ngIf="porcentajePromotor.errors?.max">
+                                  El porcentaje no puede ser mayor a 14%
+                              </small>
                               </ng-container>
                           </div>
                           <div class="col-sm-3">
                               <label for="inputCliente" class="label col-form-label">Cliente</label>
                               <input class="form-control text-uppercase" type="number" id="inputCliente" name="porcentajeCliente"
-                                  min="0" max="8" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id?true:null"
+                                  min="0" max="14" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id?true:null"
                                   placeholder="4" fullWidth [ngClass]="{
                                           'border border-danger': porcentajeCliente.invalid,
                                           'border border-success': porcentajeCliente.valid
                                       }" formControlName="porcentajeCliente"  />
+                            
                               <ng-container *ngIf="porcentajeCliente.invalid">
                                   <small class="form-text text-danger" *ngIf="porcentajeCliente.errors?.required">
                                       ¡Campo Requerido!
@@ -309,19 +313,23 @@
                                   <small class="form-text text-danger" *ngIf="porcentajeCliente.errors?.minlength">
                                       El porcentaje cliente debe ser de al menos un digito
                                   </small>
-                                  <small class="form-text text-danger" *ngIf="porcentajeCliente.errors?.pattern">
-                                      Porcentaje cliente Invalido
-                                  </small>
+                                  <small class="form-text text-danger" *ngIf="porcentajeCliente.errors?.min">
+                                    El porcentaje no debe ser menor a 0%
+                                </small>
+                                <small class="form-text text-danger" *ngIf="porcentajeCliente.errors?.max">
+                                  El porcentaje no puede ser mayor a 14%
+                              </small>
                               </ng-container>
                           </div>
                           <div class="col-sm-3">
                               <label for="inputDespacho" class="label col-form-label">Despacho</label>
                               <input class="form-control text-uppercase" type="number" id="inputDespacho" name="porcentajeDespacho"
-                                  min="0" max="16" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id?true:null"
+                                  min="2" max="16" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id?true:null"
                                   placeholder="4" fullWidth [ngClass]="{
                                           'border border-danger': porcentajeDespacho.invalid,
                                           'border border-success': porcentajeDespacho.valid
                                       }" formControlName="porcentajeDespacho" />
+                                      
                               <ng-container *ngIf="porcentajeDespacho.invalid">
                                   <small class="form-text text-danger" *ngIf="porcentajeDespacho.errors?.required">
                                       ¡Campo Requerido!
@@ -329,9 +337,12 @@
                                   <small class="form-text text-danger" *ngIf="porcentajeDespacho.errors?.minlength">
                                       El porcentaje despacho debe ser de al menos un digito
                                   </small>
-                                  <small class="form-text text-danger" *ngIf="porcentajeDespacho.errors?.pattern">
-                                      Porcentaje despacho Invalido
+                                  <small class="form-text text-danger" *ngIf="porcentajeDespacho.errors?.min">
+                                      El depacho no debe de tener menos de un 2%
                                   </small>
+                                  <small class="form-text text-danger" *ngIf="porcentajeDespacho.errors?.max">
+                                    El porcentaje no puede ser mas de un 16%
+                                </small>
                               </ng-container>
                           </div>
                           <div class="col-sm-3">
@@ -349,9 +360,12 @@
                                   <small class="form-text text-danger" *ngIf="porcentajeContacto.errors?.minlength">
                                       El control debe ser de al menos un digito
                                   </small>
-                                  <small class="form-text text-danger" *ngIf="porcentajeContacto.errors?.pattern">
-                                      Control Invalido
-                                  </small>
+                                  <small class="form-text text-danger" *ngIf="porcentajeContacto.errors?.min">
+                                    El porcentaje no debe ser menor a 0%
+                                </small>
+                                <small class="form-text text-danger" *ngIf="porcentajeContacto.errors?.max">
+                                  El porcentaje no puede ser mayor a 8%
+                              </small>
                               </ng-container>
                           </div>
                       </div>
@@ -366,17 +380,17 @@
                               <textarea type="text" class="form-control" fullWidth id="inputNotes"  maxlength="280" cols="3"
                                   placeholder="Notas adicionales cliente" formControlName="notas" name="notas"></textarea>
                           </div>
-                          <div class="col-sm-6" *ngIf="clientInfo.id">
+                          <div class="col-sm-6">
                               <label for="documentFile" class="label">Comprobante cedula fiscal</label>
                               <div class="input-group">
                                   <div class="custom-file" >
-                                      <input type="file" class="custom-file-input" id="documentFile" [disabled]="!clientInfo.id"
+                                      <input type="file" class="custom-file-input" id="documentFile" [disabled]="clienteForm.valid"
                                       accept=".pdf,.xls,.xlsx,.doc, .docx,image/*" (change)="fileDataUploadListener($event)"
                                       style="display:block;" aria-describedby="inputDocFile">
                                       <label class="custom-file-label" style="background-color: #f7f9fc;" for="documentFile">{{formInfo.fileDataName}}</label>
                                   </div>
                               </div>
-                              <small id="clientFileHelp1" *ngIf="dataFile != undefined" class="form-text text-primary">El cliente ya cuenta con constancia de situacion fiscal</small>
+                              <small id="clientFileHelp1" *ngIf="dataFile != undefined && clientInfo.id" class="form-text text-primary">El cliente ya cuenta con constancia de situacion fiscal</small>
                               <small id="clientFileHelp2" *ngIf="dataFile == undefined" class="form-text text-danger">La constancia de situacion fiscal es un documento requerido</small>
                               <button class="btn d-inline mt-2 ml-2 mr-2" [ngClass]="{'btn-outline-success': formInfo.fileDataName.length > 0 , 'btn-outline-secondary': formInfo.fileDataName.length == 0 }"
                               (click)="uploadFile()" *ngIf="clientInfo.id !== undefined" [disabled]="formInfo.fileDataName.length == 0">

@@ -68,24 +68,25 @@ export class CfdiValidatorService {
         );
         concepto.impuestos = [];
         const impuesto = new Impuesto();
-        if (concepto.objetoImp != '01' && tipoImpuesto === 'IVA') {
-            const tasaImp = +concepto.impuesto.split('_')[1];
+        if (concepto.objetoImp != '01') {
+            if(tipoImpuesto === 'IVA'){
+                const tasaImp = +concepto.impuesto.split('_')[1];
             const imp = +format(multiply(base, bignumber(tasaImp)));
             impuesto.traslados = [
                 new Traslado('002', 'Tasa', tasaImp.toString(), base, imp),
             ];
+            }
+            if (tipoImpuesto === 'RET') {
+                const tasaRet = +concepto.impuesto.split('_')[1];
+                const retencion = +format(multiply(base, bignumber(tasaRet))); // TODO calcular retencion dinamicamente
+                impuesto.retenciones = [
+                    new Retencion('002', 'Tasa', tasaRet.toString(), base, retencion),
+                ];
+            }
+            concepto.impuestos.push(impuesto);
         } else {
-            impuesto.traslados = [new Traslado('000', 'Tasa', '0.00', 0, 0)];
+           concepto.impuestos = null;
         }
-        if (tipoImpuesto === 'RET') {
-            const tasaRet = +concepto.impuesto.split('_')[1];
-            const retencion = +format(multiply(base, bignumber(tasaRet))); // TODO calcular retencion dinamicamente
-            impuesto.retenciones = [
-                new Retencion('002', 'Tasa', tasaRet.toString(), base, retencion),
-            ];
-        }
-        concepto.impuestos.push(impuesto);
-
         return concepto;
     }
 
