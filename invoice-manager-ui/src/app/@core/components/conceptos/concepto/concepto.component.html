@@ -99,7 +99,7 @@
         >
           <option value="*">Seleccionar</option>
           <option *ngFor="let clave of claveUnidadCat" [(value)]="clave.clave">
-            {{ clave.nombre }}
+           {{clave.clave}} - {{ clave.nombre }}
           </option>
         </select>
         <ng-container *ngIf="claveUnidad.invalid">
@@ -175,7 +175,7 @@
           </small>
       </ng-container>
       </div>
-      <div class="col-sm-2">
+      <div class="col-sm-2" *ngIf="objetoImp.value != '01'">
         <label for="inputIVA" class="label">Impuestos</label>
         <select
           id="inputIVA"
