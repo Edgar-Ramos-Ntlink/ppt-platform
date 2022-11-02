@@ -141,7 +141,9 @@ export class ClienteComponent implements OnInit {
       this.formInfo.id = this.clientInfo.id;
       this.formInfo.rfc = this.clientInfo.rfc;
       this.formInfo.coloniaId = "other";
-      Object.keys(this.clienteForm.controls).forEach(key => this.clienteForm.controls[key].setValue((this.clientInfo[key]!= undefined && this.clientInfo[key]!= null ) ? this.clientInfo[key] : '')); 
+      Object.keys(this.clienteForm.controls)
+      .forEach(key => this.clienteForm.controls[key].setValue((this.clientInfo[key]!= undefined && this.clientInfo[key]!= null ) ? this.clientInfo[key] : '')); 
+
       this.colonias = (await this.catalogsService.getZipCodeInfo(this.clientInfo.cp)).colonias;
       this.colonias.filter(colonia => colonia===this.clientInfo.localidad).forEach(colonia => (this.formInfo.coloniaId = colonia));
     } catch (error) {
@@ -248,9 +250,9 @@ export class ClienteComponent implements OnInit {
           },
           (error: NtError) => {
               this.formInfo.coloniaId = 'other';
-              this.clienteForm.controls['estado'].setValue('');
-              this.clienteForm.controls['municipio'].setValue('');
-              this.clienteForm.controls['localidad'].setValue('');
+              this.clienteForm.controls['estado'].setValue((this.clientInfo['estado']!= undefined && this.clientInfo['estado']!= null ) ? this.clientInfo['estado'] : '');
+              this.clienteForm.controls['municipio'].setValue((this.clientInfo['municipio']!= undefined && this.clientInfo['municipio']!= null ) ? this.clientInfo['municipio'] : '');
+              this.clienteForm.controls['localidad'].setValue((this.clientInfo['localidad']!= undefined && this.clientInfo['localidad']!= null ) ? this.clientInfo['localidad'] : '');
               this.notificationService.sendNotification('warning',error?.message,'Error');
           }
       );

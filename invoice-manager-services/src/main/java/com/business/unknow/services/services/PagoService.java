@@ -1,6 +1,5 @@
 package com.business.unknow.services.services;
 
-import com.business.unknow.Constants;
 import com.business.unknow.enums.FacturaStatus;
 import com.business.unknow.enums.FormaPago;
 import com.business.unknow.enums.MetodosPago;
@@ -22,6 +21,7 @@ import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
 import com.business.unknow.services.util.validators.PagoValidator;
 import com.mx.ntlink.NtlinkUtilException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -271,23 +271,30 @@ public class PagoService {
           && dto.getTipoDocumento().equals(TipoDocumento.FACTURA.getDescripcion())
           && dto.getMetodoPago().equals(MetodosPago.PUE.name())) {
 
-        Optional<PagoFacturaDto> pagoFact =
+        PagoFacturaDto pagoFact =
             pagoDto.getFacturas().stream()
                 .filter(p -> p.getFolio().equals(dto.getFolio()))
-                .findAny();
-        if (pagoFact.isPresent()) {
-          log.info("Updating saldo pendiente factura {}", dto.getFolio());
-          facturaService.updateTotalAndSaldoFactura(
-              dto.getFolio(), Optional.empty(), Optional.of(pagoFact.get().getMonto()));
-        } else {
-          log.info(
-              "A payment for {} is trying to be created before invoice is ready", dto.getFolio());
-          throw new InvoiceManagerException(
-              String.format(
-                  "La factura con folio {} no existe en el sistema, intente de nuevo mas tarde",
-                  dto.getFolio()),
-              HttpStatus.CONTINUE.value());
-        }
+                .findAny()
+                .orElseThrow(
+                    () ->
+                        new InvoiceManagerException(
+                            String.format(
+                                "La factura con folio {} no existe en el sistema, intente de nuevo mas tarde",
+                                dto.getFolio()),
+                            HttpStatus.CONTINUE.value()));
+        BigDecimal paidAmount =
+            findPagosByFolio(dto.getFolio()).stream()
+                .filter(
+                    p -> !"CREDITO".equals(p.getFormaPago())) // removes credito despacho payments
+                .map(
+                    p ->
+                        dto.getCfdi().getMoneda().equals(p.getMoneda())
+                            ? p.getMonto()
+                            : p.getMonto().divide(p.getTipoDeCambio(), 2, RoundingMode.HALF_UP))
+                .reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2))
+                .add(pagoFact.getMonto());
+        log.info("Updating saldo pendiente factura {}", dto.getFolio());
+        facturaService.updateSaldoFactura(dto, paidAmount);
       }
     }
     if (FormaPago.CREDITO.getPagoValue().equals(pagoDto.getFormaPago()) && facturas.size() == 1) {
@@ -418,17 +425,28 @@ public class PagoService {
                 .findAny();
         if (pagoFactOpt.isPresent()
             && pagoFactOpt.get().getFolioReferencia().equals(mainFact.getFolio())) {
-          facturaService.updateTotalAndSaldoFactura(
-              mainFact.getFolio(),
-              Optional.empty(),
-              Optional.of(
-                  Constants.MXN.equals(entity.getMoneda())
-                      ? pagoFactOpt.get().getMonto().negate()
-                      : pagoFactOpt
-                          .get()
-                          .getMonto()
-                          .divide(entity.getTipoDeCambio(), 2, RoundingMode.HALF_UP)
-                          .negate()));
+
+          List<PagoDto> pagosFact =
+              findPagosByFolio(mainFact.getFolio()).stream()
+                  .filter(p -> !p.getId().equals(idPago)) // removes pago to be deleted
+                  .filter(
+                      p -> !"CREDITO".equals(p.getFormaPago())) // removes credito despacho payments
+                  .collect(Collectors.toList());
+          FacturaCustom pueFact = facturaService.getFacturaByFolio(mainFact.getFolio());
+          BigDecimal paidAmount = BigDecimal.ZERO;
+          if (!pagosFact.isEmpty()) { // if pagosFact is empty means nothing was paid
+            paidAmount =
+                pagosFact.stream()
+                    .map(
+                        p ->
+                            pueFact.getCfdi().getMoneda().equals(p.getMoneda())
+                                ? p.getMonto()
+                                : p.getMonto().divide(p.getTipoDeCambio(), 2, RoundingMode.HALF_UP))
+                    .reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2));
+
+            pueFact.setSaldoPendiente(pueFact.getCfdi().getTotal().subtract(paidAmount));
+          }
+          facturaService.updateSaldoFactura(pueFact, paidAmount);
         } else {
           throw new ResponseStatusException(
               HttpStatus.CONFLICT, "Existe alguna inconsistencia en las referencias de los pagos");
