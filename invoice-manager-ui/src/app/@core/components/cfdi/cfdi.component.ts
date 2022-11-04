@@ -24,7 +24,7 @@ export class CfdiComponent implements OnInit {
 
     public factura: Factura;
     public cfdi: Cfdi;
-    public isAdministrator : boolean = false;
+    public isAdministrator: boolean = false;
     public loading: boolean = false;
 
     public payTypeCat: Catalogo[] = [];
@@ -42,11 +42,9 @@ export class CfdiComponent implements OnInit {
     ngOnInit() {
         // catalogs info
         this.initVariables();
-        this.store
-            .pipe(select(invoice))
-            .subscribe((fact) => {
-                this.factura = fact;
-            });
+        this.store.pipe(select(invoice)).subscribe((fact) => {
+            this.factura = fact;
+        });
         this.store.pipe(select(cfdi)).subscribe((cfdi) => {
             this.cfdi = cfdi;
         });
@@ -54,16 +52,15 @@ export class CfdiComponent implements OnInit {
 
     initVariables() {
         const user = JSON.parse(sessionStorage.getItem('user'));
-        this.isAdministrator = user.roles.find((u) => u.role == 'ADMINISTRADOR') != undefined;
-        this.catalogsService
-            .getFormasPago()
-            .then((cat) => {this.payTypeCat = cat;
-                if(this.cfdi?.metodoPago){
-                    this.onPayMethodChange(this.cfdi.metodoPago);
-                }
-                this.loading = false;
-            });
-        
+        this.isAdministrator =
+            user.roles.find((u) => u.role == 'ADMINISTRADOR') != undefined;
+        this.catalogsService.getFormasPago().then((cat) => {
+            this.payTypeCat = cat;
+            if (this.cfdi?.metodoPago && !this.cfdi.folio) {
+                this.onPayMethodChange(this.cfdi.metodoPago);
+            }
+            this.loading = false;
+        });
     }
 
     onPayMethodChange(clave: string) {
@@ -71,12 +68,16 @@ export class CfdiComponent implements OnInit {
         if (clave === 'PPD') {
             invoice.cfdi.formaPago = '99';
             this.catalogsService
-            .getFormasPago()
-            .then((cat) => (this.payTypeCat = cat.filter(c=>c.id == '99')));
+                .getFormasPago()
+                .then(
+                    (cat) => (this.payTypeCat = cat.filter((c) => c.id == '99'))
+                );
         } else {
             this.catalogsService
-            .getFormasPago()
-            .then((cat) => (this.payTypeCat = cat.filter(c=>c.id != '99')));
+                .getFormasPago()
+                .then(
+                    (cat) => (this.payTypeCat = cat.filter((c) => c.id != '99'))
+                );
             invoice.cfdi.formaPago = '01';
         }
         invoice.cfdi.metodoPago = clave;
@@ -99,7 +100,7 @@ export class CfdiComponent implements OnInit {
         this.store.dispatch(updateCfdi({ cfdi }));
     }
 
-    updateLugarExpedicion(lugarExpedicion : string){
+    updateLugarExpedicion(lugarExpedicion: string) {
         const cfdi = { ...this.cfdi };
         cfdi.lugarExpedicion = lugarExpedicion;
         this.store.dispatch(updateCfdi({ cfdi }));
@@ -158,16 +159,22 @@ export class CfdiComponent implements OnInit {
         this.invoiceService
             .getInvoiceByFolio(folio)
             .toPromise()
-            .then((fact) =>{
-            const url = this.router.url;
-            const redirectUrl = `.${url.substring(0,url.lastIndexOf('/'))}/${fact.folio}`
-            this.router.navigate([redirectUrl])
-    });
+            .then((fact) => {
+                const url = this.router.url;
+                const redirectUrl = `.${url.substring(
+                    0,
+                    url.lastIndexOf('/')
+                )}/${fact.folio}`;
+                this.router.navigate([redirectUrl]);
+            });
     }
 
     public goToRelacionado(folio: String) {
         const url = this.router.url;
-        const redirectUrl = `.${url.substring(0,url.lastIndexOf('/'))}/${folio}`
+        const redirectUrl = `.${url.substring(
+            0,
+            url.lastIndexOf('/')
+        )}/${folio}`;
         this.router.navigate([redirectUrl]);
     }
 }
