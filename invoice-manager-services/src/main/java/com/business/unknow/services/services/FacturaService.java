@@ -404,7 +404,7 @@ public class FacturaService {
                                 Objects.nonNull(complement.getFechaCancelacion())
                                     ? sdf.format(complement.getFechaCancelacion())
                                     : "");
-                            row.put("FOLIO FISCAL PAGO", complement.getUuid());
+                            row.put("FOLIO FISCAL PAGO", p.getIdDocumento());
                             row.put("IMPORTE", p.getImportePagado());
                             row.put("SALDO ANTERIOR", p.getImporteSaldoAnterior());
                             row.put("SALDO INSOLUTO", p.getImporteSaldoInsoluto());
