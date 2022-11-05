@@ -11,11 +11,21 @@
         <label class="label"
           >1.- Seleccione la clave producto servicio</label
         >
-        <small id="serachHelp" *ngIf="formInfo.claveProdServFlag" class="form-text text-danger">Es necesario completar los 8 digitos de la clave</small>
+        <ng-container *ngIf="claveProdServ.invalid">
+          <small class="form-text text-danger" *ngIf="claveProdServ.errors?.required">
+              ¡Campo Requerido!
+          </small>
+          <small class="form-text text-danger" *ngIf="claveProdServ.errors?.pattern">
+               Se requiren 8 dígitos numéricos
+          </small>
+          <small class="form-text text-danger" *ngIf="claveProdServDesc.errors?.minlength">
+            Se requiren al menos 5 caracteres para la busqueda
+          </small>
+      </ng-container>
         <ng-autocomplete
           id="inputProdServ"
           [data]="prodServCat"
-          [initialValue] ="formInfo.claveProdServ"
+          [initialValue] ="initClaveProdServ"
           [searchKeyword]="'descripcion'"
           placeholder="Escribe la clave o una descripcion corta"
           (inputChanged)="buscarClaveProductoServicio($event)"
@@ -35,20 +45,7 @@
         <ng-template #NFTemplate let-notFound>
           <span>No hay coincidencias</span>
         </ng-template>
-        <ng-container *ngIf="claveProdServ.invalid">
-          <small class="form-text text-danger" *ngIf="claveProdServ.errors?.required">
-              ¡Campo Requerido!
-          </small>
-          <small class="form-text text-danger" *ngIf="claveProdServ.errors?.minlength">
-              Se requiren al menos 5 dígitos
-          </small>
-          <small class="form-text text-danger" *ngIf="claveProdServ.errors?.maxlength">
-              La clave producto servicio no debe ser superior a 8 dígitos
-          </small>
-          <small class="form-text text-danger" *ngIf="claveProdServ.errors?.pattern">
-              La clave producto servicio no cumple con la estructura esperada de 8 dígitos numericos
-          </small>
-      </ng-container>
+        
       </div>
       <div class="col-sm-3">
         <button

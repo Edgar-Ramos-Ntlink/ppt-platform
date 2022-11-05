@@ -250,9 +250,9 @@ export class ClienteComponent implements OnInit {
           },
           (error: NtError) => {
               this.formInfo.coloniaId = 'other';
-              this.clienteForm.controls['estado'].setValue((this.clientInfo['estado']!= undefined && this.clientInfo['estado']!= null ) ? this.clientInfo['estado'] : '');
-              this.clienteForm.controls['municipio'].setValue((this.clientInfo['municipio']!= undefined && this.clientInfo['municipio']!= null ) ? this.clientInfo['municipio'] : '');
-              this.clienteForm.controls['localidad'].setValue((this.clientInfo['localidad']!= undefined && this.clientInfo['localidad']!= null ) ? this.clientInfo['localidad'] : '');
+              this.clienteForm.controls['estado'].setValue(this.clientInfo['estado'] || '');
+              this.clienteForm.controls['municipio'].setValue(this.clientInfo['municipio'] || '');
+              this.clienteForm.controls['localidad'].setValue(this.clientInfo['localidad'] || '');
               this.notificationService.sendNotification('warning',error?.message,'Error');
           }
       );

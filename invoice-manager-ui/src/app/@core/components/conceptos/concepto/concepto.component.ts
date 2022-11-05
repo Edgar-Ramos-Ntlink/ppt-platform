@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NbDialogRef, NbToastrService } from '@nebular/theme';
 import { AppConstants } from '../../../../models/app-constants';
 import { ClaveUnidad } from '../../../../models/catalogos/clave-unidad';
@@ -15,62 +15,61 @@ import { CfdiValidatorService } from '../../../util-services/cfdi-validator.serv
 })
 export class ConceptoComponent implements OnInit {
     @Input() public concepto: Concepto;
-
-    public conceptForm = new FormGroup({
-        descripcion: new FormControl('', [
-            Validators.required,
-            Validators.minLength(5),
-            Validators.maxLength(1000),
-            Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
-        ]),
-        unidad: new FormControl('', [
-            Validators.required,
-            Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
-        ]),
-        claveUnidad: new FormControl('E48', [
-            Validators.required,
-            Validators.pattern(AppConstants.UNIT_CATALOG_PATTERN),
-        ]),
-        cantidad: new FormControl('', [
-            Validators.required,
-            Validators.pattern(AppConstants.SIX_DECIMAL_DIGITS_AMOUNT_PATTERN),
-        ]),
-        valorUnitario: new FormControl('', [
-            Validators.required,
-            Validators.pattern(AppConstants.SIX_DECIMAL_DIGITS_AMOUNT_PATTERN),
-        ]),
-        claveProdServ: new FormControl('', [
-            Validators.required,
-            Validators.minLength(5),
-            Validators.maxLength(8),
-            Validators.pattern(AppConstants.CLAVE_PROD_SERV_PATTERN),
-        ]),
-        claveProdServDesc: new FormControl('', [
-            Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
-        ]),
-        objetoImp: new FormControl('', [
-            Validators.maxLength(2),
-            Validators.pattern(AppConstants.OBJ_IMP_PATTERN),
-        ]),
-        impuesto: new FormControl('IVA0.16', [
-            Validators.pattern(AppConstants.IMPUESTO_PATTERN),
-        ]),
-    });
-
-    public formInfo = {
-        claveProdServ: undefined,
-        claveProdServFlag: false,
-    };
-
+    public initClaveProdServ: ClaveProductoServicio;
     public prodServCat: ClaveProductoServicio[] = [];
     public claveUnidadCat: ClaveUnidad[] = [];
+
+    public conceptForm: FormGroup;
 
     constructor(
         protected ref: NbDialogRef<ConceptoComponent>,
         private catalogsService: CatalogsData,
         private cfdiValidator: CfdiValidatorService,
-        private toastrService: NbToastrService
-    ) {}
+        private toastrService: NbToastrService,
+        private formBuilder: FormBuilder
+    ) {
+        this.conceptForm = this.formBuilder.group({
+            descripcion:['',[
+                Validators.required,
+                Validators.minLength(5),
+                Validators.maxLength(1000),
+                Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
+            ]],
+            unidad: ['', [
+                Validators.required,
+                Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
+            ]],
+            claveUnidad: ['E48', [
+                Validators.required,
+                Validators.pattern(AppConstants.UNIT_CATALOG_PATTERN),
+            ]],
+            cantidad: ['', [
+                Validators.required,
+                Validators.pattern(AppConstants.SIX_DECIMAL_DIGITS_AMOUNT_PATTERN),
+            ]],
+            valorUnitario: ['', [
+                Validators.required,
+                Validators.pattern(AppConstants.SIX_DECIMAL_DIGITS_AMOUNT_PATTERN),
+            ]],
+            claveProdServ: ['', [
+                Validators.required,
+                Validators.minLength(8),
+                Validators.maxLength(9),
+                Validators.pattern(AppConstants.CLAVE_PROD_SERV_PATTERN),
+            ]],
+            claveProdServDesc: ['', [
+                Validators.minLength(5),
+                Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
+            ]],
+            objetoImp: ['', [
+                Validators.maxLength(2),
+                Validators.pattern(AppConstants.OBJ_IMP_PATTERN),
+            ]],
+            impuesto: ['IVA_0.16', [
+                Validators.pattern(AppConstants.IMPUESTO_PATTERN),
+            ]]
+        });
+    }
 
     ngOnInit(): void {
         this.catalogsService
@@ -90,10 +89,7 @@ export class ConceptoComponent implements OnInit {
             )
         );
         if (this.concepto?.claveProdServ) {
-            this.formInfo.claveProdServ = {
-                clave: this.concepto.claveProdServ,
-                descripcion: `${this.concepto.claveProdServ} - ${this.concepto.claveProdServDesc}`,
-            };
+            this.initClaveProdServ = new ClaveProductoServicio(this.concepto.claveProdServ,`${this.concepto.claveProdServ} - ${this.concepto.claveProdServDesc}`);
         }
     }
 
@@ -110,7 +106,7 @@ export class ConceptoComponent implements OnInit {
         if (clave?.clave) {
             this.conceptForm.controls['claveProdServ'].setValue(clave.clave);
             if (clave.descripcion) {
-                var splitted = clave.descripcion.split('-', 2);
+                const splitted = clave.descripcion.split('-', 2);
                 if (splitted.length > 1) {
                     this.conceptForm.controls['claveProdServDesc'].setValue(
                         splitted[1].trim()
@@ -121,18 +117,17 @@ export class ConceptoComponent implements OnInit {
     }
 
     public onCleanSearch() {
-        this.formInfo.claveProdServ = undefined;
+        this.initClaveProdServ = undefined;
         this.conceptForm.controls['claveProdServ'].setValue(undefined);
         this.conceptForm.controls['claveProdServDesc'].setValue('');
     }
 
     public async buscarClaveProductoServicio(claveProdServ: string) {
-        console.log('buscarClaveProductoServicio',claveProdServ)
         const value = +claveProdServ;
         try {
-            this.formInfo.claveProdServFlag = false;
             if (isNaN(value)) {
-                if (claveProdServ.length > 5) {
+                this.conceptForm.controls['claveProdServDesc'].setValue(claveProdServ);
+                if (claveProdServ.length >= 5) {
                     this.prodServCat =
                         await this.catalogsService.getProductoServiciosByDescription(
                             claveProdServ
@@ -141,15 +136,13 @@ export class ConceptoComponent implements OnInit {
                     this.prodServCat = [];
                 }
             } else {
+                this.conceptForm.controls['claveProdServ'].setValue(claveProdServ);
                 if (claveProdServ.length === 8) {
                     this.prodServCat =
                         await this.catalogsService.getProductoServiciosByClave(
                             claveProdServ
                         );
                 } else {
-                    if (claveProdServ.length < 8 && claveProdServ.length > 3) {
-                        this.formInfo.claveProdServFlag = true;
-                    }
                     this.prodServCat = [];
                 }
             }
@@ -158,15 +151,15 @@ export class ConceptoComponent implements OnInit {
         }
     }
 
-    openSatCatalog() {
+    public openSatCatalog() {
         window.open('http://pys.sat.gob.mx/PyS/catPyS.aspx', '_blank');
     }
 
-    exit() {
+    public exit() {
         this.ref.close();
     }
 
-    submit() {
+    public submit() {
         const concepto = this.cfdiValidator.buildConcepto({
             ...this.conceptForm.value,
         });
@@ -191,6 +184,9 @@ export class ConceptoComponent implements OnInit {
     }
     get claveProdServ() {
         return this.conceptForm.get('claveProdServ')!;
+    }
+    get claveProdServDesc(){
+        return this.conceptForm.get('claveProdServDesc')!;
     }
     get objetoImp() {
         return this.conceptForm.get('objetoImp')!;
