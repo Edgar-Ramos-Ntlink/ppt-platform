@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { NbDialogRef, NbToastrService } from '@nebular/theme';
 import { AppConstants } from '../../../../models/app-constants';
 import { ClaveUnidad } from '../../../../models/catalogos/clave-unidad';
@@ -159,11 +159,10 @@ export class ConceptoComponent implements OnInit {
         this.ref.close();
     }
 
-    public submit() {
+    public submit(concept : FormGroupDirective) {
         const concepto = this.cfdiValidator.buildConcepto({
-            ...this.conceptForm.value,
+            ...concept.form.value,
         });
-
         this.ref.close(concepto);
     }
 

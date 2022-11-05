@@ -5,7 +5,7 @@
     </div>
   </nb-card-header>
   <nb-card-body>
-    <form [formGroup]="conceptForm" style="width: 80vw">
+    <form #c="ngForm" [formGroup]="conceptForm" style="width: 80vw">
     <div class="row">
       <div class="col-sm-9">
         <label class="label"
@@ -203,7 +203,7 @@
       <button
         class="float-right btn ml-2 mr-2" [disabled]="conceptForm.invalid"
         [ngClass]="{'btn-success': !conceptForm.invalid , 'btn-secondary': conceptForm.invalid }"
-        (click)="submit(concepto)"
+        (click)="submit(c)"
       >
         Enviar
       </button>
