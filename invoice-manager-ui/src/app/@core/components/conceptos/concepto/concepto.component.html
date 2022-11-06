@@ -5,24 +5,37 @@
     </div>
   </nb-card-header>
   <nb-card-body>
+    <form #c="ngForm" [formGroup]="conceptForm" style="width: 80vw">
     <div class="row">
       <div class="col-sm-9">
-        <label for="inputProdServ" class="label"
+        <label class="label"
           >1.- Seleccione la clave producto servicio</label
         >
-        <small id="serachHelp" *ngIf="formInfo.claveProdServFlag" class="form-text text-danger">Es necesario completar los 8 digitos de la clave</small>
+        <ng-container *ngIf="claveProdServ.invalid">
+          <small class="form-text text-danger" *ngIf="claveProdServ.errors?.required">
+              ¡Campo Requerido!
+          </small>
+          <small class="form-text text-danger" *ngIf="claveProdServ.errors?.pattern">
+               Se requiren 8 dígitos numéricos
+          </small>
+          <small class="form-text text-danger" *ngIf="claveProdServDesc.errors?.minlength">
+            Se requiren al menos 5 caracteres para la busqueda
+          </small>
+      </ng-container>
         <ng-autocomplete
           id="inputProdServ"
           [data]="prodServCat"
+          [initialValue] ="initClaveProdServ"
           [searchKeyword]="'descripcion'"
           placeholder="Escribe la clave o una descripcion corta"
           (inputChanged)="buscarClaveProductoServicio($event)"
+          (inputCleared)="onCleanSearch()"
           (selected)="onClaveSelected($event)"
           [itemTemplate]="cTemplate"
           [notFoundTemplate]="NFTemplate"
         >
         </ng-autocomplete>
-        
+
         <ng-template #cTemplate let-item>
           <div class="item">
             <span [innerHTML]="item.descripcion"></span>
@@ -32,6 +45,7 @@
         <ng-template #NFTemplate let-notFound>
           <span>No hay coincidencias</span>
         </ng-template>
+        
       </div>
       <div class="col-sm-3">
         <button
@@ -46,15 +60,27 @@
     <div class="row">
       <div class="col-sm-12">
         <label for="inputdesc" class="label">2.- Indique la descripción</label>
-        <input
+        <textarea
           id="inputdesc"
           class="form-control"
           fullWidth
           type="text"
-          [(ngModel)]="concepto.descripcion"
+          [formControl]="descripcion"
           placeholder="Descripción del producto"
-          [disabled]="!concepto?.claveProdServ"
-        />
+          rows="2"
+          [attr.disabled]="!!claveProdServ.errors?.required ? true: null"
+        ></textarea>
+        <ng-container *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)">
+          <small class="form-text text-danger" *ngIf="descripcion.errors?.required">
+              ¡Campo Requerido!
+          </small>
+          <small class="form-text text-danger" *ngIf="descripcion.errors?.minlength">
+              El control debe ser de al menos 5 caracteres
+          </small>
+          <small class="form-text text-danger" *ngIf="descripcion.errors?.pattern">
+              La descripción tiene un caracter inválido
+          </small>
+      </ng-container>
       </div>
     </div>
     <div class="row">
@@ -65,14 +91,19 @@
           style="display: block"
           class="form-control"
           (change)="onSelectUnidad($event.target.value)"
-          [(ngModel)]="concepto.claveUnidad"
-          [disabled]="!concepto?.descripcion"
+          [formControl]="claveUnidad"
+          [attr.disabled]="!!descripcion.errors?.required ? true: null"
         >
           <option value="*">Seleccionar</option>
           <option *ngFor="let clave of claveUnidadCat" [(value)]="clave.clave">
-            {{ clave.nombre }}
+           {{clave.clave}} - {{ clave.nombre }}
           </option>
         </select>
+        <ng-container *ngIf="claveUnidad.invalid">
+          <small class="form-text text-danger" *ngIf="claveUnidad.errors?.pattern">
+            ¡Campo Requerido!
+          </small>
+      </ng-container>
       </div>
       <div class="col-sm-2">
         <label for="inputCantidad" class="label">Cantidad</label>
@@ -83,9 +114,17 @@
           type="number"
           min="0"
           placeholder="Cantidad"
-          [(ngModel)]="concepto.cantidad"
-          [disabled]="!concepto?.descripcion"
+          [formControl]="cantidad"
+          [attr.disabled]="!!descripcion.errors?.required ? true: null"
         />
+        <ng-container *ngIf="cantidad.invalid && (cantidad.dirty || cantidad.touched)">
+          <small class="form-text text-danger" *ngIf="cantidad.errors?.required">
+              ¡Campo Requerido!
+          </small>
+          <small class="form-text text-danger" *ngIf="cantidad.errors?.pattern">
+            Valor inválido (más de 6 decimales o negativo)
+          </small>
+      </ng-container>
       </div>
       <div class="col-sm-2">
         <label for="inputPrecio" class="label">Precio Unitario</label>
@@ -96,9 +135,17 @@
           type="number"
           min="0"
           placeholder="Precio Unitario"
-          [(ngModel)]="concepto.valorUnitario"
-          [disabled]="!concepto?.descripcion"
+          [formControl]="valorUnitario"
+          [attr.disabled]="!!descripcion.errors?.required ? true: null"
         />
+        <ng-container *ngIf="valorUnitario.invalid && (valorUnitario.dirty || valorUnitario.touched)">
+          <small class="form-text text-danger" *ngIf="valorUnitario.errors?.required">
+              ¡Campo Requerido!
+          </small>
+          <small class="form-text text-danger" *ngIf="valorUnitario.errors?.pattern">
+              Valor inválido (más de 6 decimales o negativo)
+          </small>
+      </ng-container>
       </div>
       <div class="col-sm-2">
         <label for="inputObjImp" class="label">Objeto Impuesto</label>
@@ -106,32 +153,47 @@
           id="inputObjImp"
           style="display: block"
           class="form-control"
-          [(ngModel)]="concepto.objetoImp"
-          [disabled]="!concepto?.descripcion"
+          [formControl]="objetoImp"
+          [attr.disabled]="!!descripcion.errors?.required ? true: null"
         >
           <option value="*">Seleccionar</option>
-          <option value="01">No objeto de impuesto.</option>
-          <option value="02">Sí objeto de impuesto.</option>
+          <option value="01">No objeto de impuesto</option>
+          <option value="02">Sí objeto de impuesto</option>
           <option value="03">
-            Sí objeto del impuesto y no obligado al desglose.
+            Sí objeto del impuesto y no obligado al desglose
+          </option>
+          <option value="04">
+            Sí objeto del impuesto y no causa impuesto.
           </option>
         </select>
+        <ng-container *ngIf="objetoImp.invalid">
+          <small class="form-text text-danger" *ngIf="objetoImp.errors?.pattern">
+            ¡Campo Requerido!
+          </small>
+      </ng-container>
       </div>
-      <div class="col-sm-2 align-self-end">
-        <input
-          type="checkbox"
-          [(ngModel)]="formInfo.iva"
-          class="form-check-input"
-          id="iva"
-          (change)="ivaCheckboxChange()"
-          [disabled]="!concepto?.descripcion"
-        />
-        <label class="form-check-label" for="iva">IVA 16%</label>
-        <!--br>
-            <input type="checkbox" [(ngModel)]="formInfo.retencion" class="form-check-input" id="retencion" [disabled]="!concepto.iva">
-            <label class="form-check-label "  for="retencion">RETENCIÓN</label-->
+      <div class="col-sm-2" *ngIf="objetoImp.value != '01'">
+        <label for="inputIVA" class="label">Impuestos</label>
+        <select
+          id="inputIVA"
+          style="display: block"
+          class="form-control"
+          [formControl]="impuesto"
+          [attr.disabled]="!!valorUnitario.invalid || !!cantidad.invalid  ? true: null"
+        >
+          <option value="*">Seleccionar</option>
+          <option value="IVA_0.00">IVA 0%</option>
+          <option value="IVA_0.08">IVA 8%</option>
+          <option value="IVA_0.16">IVA 16%</option>
+        </select>
+        <ng-container *ngIf="impuesto.invalid">
+          <small class="form-text text-danger" *ngIf="impuesto.errors?.pattern">
+            ¡Campo Requerido!
+          </small>
+      </ng-container>
       </div>
     </div>
+  </form>
   </nb-card-body>
   <nb-card-footer>
     <div class="clearfix">
@@ -139,8 +201,9 @@
         Salir
       </button>
       <button
-        class="float-right btn btn-success ml-2 mr-2"
-        (click)="submit(concepto)"
+        class="float-right btn ml-2 mr-2" [disabled]="conceptForm.invalid"
+        [ngClass]="{'btn-success': !conceptForm.invalid , 'btn-secondary': conceptForm.invalid }"
+        (click)="submit(c)"
       >
         Enviar
       </button>

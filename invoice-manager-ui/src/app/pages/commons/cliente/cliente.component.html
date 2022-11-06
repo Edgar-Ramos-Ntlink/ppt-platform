@@ -26,10 +26,10 @@
                                   formControlName="rfc" [attr.disabled]="clientInfo.id"
                                   onKeyUp="this.value=this.value.toUpperCase();"
                                   placeholder="RFC" fullWidth [ngClass]="{
-                                          'border border-danger': rfc.invalid && (rfc.dirty || rfc.touched),
-                                          'border border-success': rfc.valid && (rfc.dirty || rfc.touched)
+                                          'border border-danger': rfc.invalid,
+                                          'border border-success': rfc.valid
                                       }" />
-                              <ng-container *ngIf="rfc.invalid && (rfc.dirty || rfc.touched)">
+                              <ng-container *ngIf="rfc.invalid">
                                   <small class="form-text text-danger" *ngIf="rfc.errors?.required">
                                       ¡Campo Requerido!
                                   </small>
@@ -43,18 +43,18 @@
                                       El RFC no cumple con el patron establecido por el SAT
                                   </small>
                                   <small class="form-text text-danger" *ngIf="rfc.errors?.rfcExist">
-                                      El RFC ya esta asociado a otro registro de este promotor
+                                      El RFC ya esta asociado a otro cliente de este promotor
                                   </small>
                               </ng-container>
                           </div>
                           <div class="col-sm-6">
                               <label for="inputSocialReason" class="label col-form-label">Razón Social</label>
                               <input type="text" [ngClass]="{
-                                  'border border-danger': razonSocial.invalid && (razonSocial.dirty || razonSocial.touched),
-                                  'border border-success': razonSocial.valid && (razonSocial.dirty || razonSocial.touched)
+                                  'border border-danger': razonSocial.invalid,
+                                  'border border-success': razonSocial.valid
                               }" class="form-control text-uppercase" fullWidth formControlName="razonSocial"
                                   id="inputSocialReason" placeholder="Razón Social" />
-                              <ng-container *ngIf="razonSocial.invalid && (razonSocial.dirty || razonSocial.touched)">
+                              <ng-container *ngIf="razonSocial.invalid">
                                   <small class="form-text text-danger" *ngIf="razonSocial.errors?.required">
                                       ¡Campo Requerido!
                                   </small>
@@ -74,14 +74,14 @@
                               <select id="inputPais" class="form-control" [attr.disabled]="clientInfo.activo ? true : null"
                                   selected="0" fullWidth
                                   [ngClass]="{
-                                  'border border-danger': pais.invalid && (pais.dirty || pais.touched),
-                                  'border border-success': pais.valid && (pais.dirty || pais.touched)
+                                  'border border-danger': pais.invalid,
+                                  'border border-success': pais.valid
                                   }" [formControl]="pais" >
                                   <option value="MEX">MÉXICO</option>
                               </select>
                               <ng-container *ngIf="pais.invalid">
                                   <small class="form-text text-danger"
-                                      *ngIf="pais.errors?.pattern && (pais.dirty || pais.touched)">
+                                      *ngIf="pais.errors?.pattern">
                                       Es necesario seleccionar un país
                                   </small>
                               </ng-container>
@@ -92,10 +92,10 @@
                               <label for="inputZipCode" class="label">Código Postal</label>
                               <input type="text" (ngModelChange)="zipCodeInfo($event)" formControlName="cp"
                                   class="form-control text-uppercase" fullWidth id="inputZipCode" [ngClass]="{
-                                      'border border-danger': cp.invalid && (cp.dirty || cp.touched),
-                                      'border border-success': cp.valid && (cp.dirty || cp.touched)
+                                      'border border-danger': cp.invalid,
+                                      'border border-success': cp.valid
                                       }" placeholder="00300" />
-                              <ng-container *ngIf="cp.invalid && (cp.dirty || cp.touched)">
+                              <ng-container *ngIf="cp.invalid">
                                   <small class="form-text text-danger" *ngIf="cp.errors?.required">
                                       ¡Campo Requerido!
                                   </small>
@@ -120,10 +120,10 @@
                               <label for="inputLocalidad" class="label">Colonia</label>
                               <input type="text" class="form-control text-uppercase" fullWidth
                                   formControlName="localidad" id="inputLocalidad" [ngClass]="{
-                                      'border border-danger': localidad.invalid && (localidad.dirty || localidad.touched),
-                                      'border border-success': localidad.valid && (localidad.dirty || localidad.touched)
+                                      'border border-danger': localidad.invalid,
+                                      'border border-success': localidad.valid
                                       }" placeholder="Escriba la colonia" />
-                              <ng-container *ngIf="localidad.invalid && (localidad.dirty || localidad.touched)">
+                              <ng-container *ngIf="localidad.invalid">
                                   <small class="form-text text-danger" *ngIf="localidad.errors?.required">
                                       ¡Campo Requerido!
                                   </small>
@@ -138,10 +138,10 @@
                           <div class="col-sm-2">
                               <label for="inputState" class="label">Estado</label>
                               <input type="text" class="form-control text-uppercase" fullWidth [ngClass]="{
-                                  'border border-danger': estado.invalid && (estado.dirty || estado.touched),
-                                  'border border-success': estado.valid && (estado.dirty || estado.touched)
+                                  'border border-danger': estado.invalid,
+                                  'border border-success': estado.valid
                                   }" formControlName="estado" id="inputState" placeholder="Estado" />
-                              <ng-container *ngIf="estado.invalid && (estado.dirty || estado.touched)">
+                              <ng-container *ngIf="estado.invalid">
                                   <small class="form-text text-danger" *ngIf="estado.errors?.required">
                                       ¡Campo Requerido!
                                   </small>
@@ -157,11 +157,11 @@
                               <label for="inputCity" class="label">Municipio/Delegación</label>
                               <input type="text" class="form-control text-uppercase" fullWidth
                                   formControlName="municipio" id="inputCity" [ngClass]="{
-                                      'border border-danger': municipio.invalid && (municipio.dirty || municipio.touched),
-                                      'border border-success': municipio.valid && (municipio.dirty || municipio.touched)
+                                      'border border-danger': municipio.invalid,
+                                      'border border-success': municipio.valid
                                       }" placeholder="Municipio/Delegación" />
                               <ng-container
-                                  *ngIf="municipio.invalid && (municipio.dirty || municipio.touched)">
+                                  *ngIf="municipio.invalid">
                                   <small class="form-text text-danger" *ngIf="municipio.errors?.required">
                                       ¡Campo Requerido!
                                   </small>
@@ -178,10 +178,10 @@
                           <div class="col-md-6">
                               <label for="inputCalle" class="label">Calle</label>
                               <input type="text" class="form-control text-uppercase" fullWidth [ngClass]="{
-                                  'border border-danger': calle.invalid && (calle.dirty || calle.touched),
-                                  'border border-success': calle.valid && (calle.dirty || calle.touched)
+                                  'border border-danger': calle.invalid,
+                                  'border border-success': calle.valid
                                   }" formControlName="calle" id="inputCalle" placeholder="Calle" />
-                              <ng-container *ngIf="calle.invalid && (calle.dirty || calle.touched)">
+                              <ng-container *ngIf="calle.invalid">
                                   <small class="form-text text-danger" *ngIf="calle.errors?.required">
                                       ¡Campo Requerido!
                                   </small>
@@ -196,12 +196,12 @@
                           <div class="col-md-3">
                               <label for="inputExterior" class="label">No. exterior</label>
                               <input type="text" class="form-control text-uppercase" fullWidth [ngClass]="{
-                                  'border border-danger': noExterior.invalid && (noExterior.dirty || noExterior.touched),
-                                  'border border-success': noExterior.valid && (noExterior.dirty || noExterior.touched)
+                                  'border border-danger': noExterior.invalid,
+                                  'border border-success': noExterior.valid
                                   }" formControlName="noExterior" id="inputExterior"
                                   placeholder="No. exterior" />
                               <ng-container
-                                  *ngIf="noExterior.invalid && (noExterior.dirty || noExterior.touched)">
+                                  *ngIf="noExterior.invalid">
                                   <small class="form-text text-danger" *ngIf="noExterior.errors?.maxlength">
                                       El campo excede el numero máximo de caracteres permitidos
                                   </small>
@@ -213,11 +213,11 @@
                           <div class="col-md-3">
                               <label for="inputInterior" class="label">NO INTERIOR</label>
                               <input type="text" class="form-control text-uppercase" fullWidth [ngClass]="{
-                                  'border border-danger': noInterior.invalid && (noInterior.dirty || noInterior.touched),
-                                  'border border-success': noInterior.valid && (noInterior.dirty || noInterior.touched)
+                                  'border border-danger': noInterior.invalid,
+                                  'border border-success': noInterior.valid
                                   }" formControlName="noInterior" id="inputInterior"
                                   placeholder="No. interior" />
-                              <ng-container *ngIf="noInterior.invalid && (noInterior.dirty || noInterior.touched)">
+                              <ng-container *ngIf="noInterior.invalid">
                                   <small class="form-text text-danger" *ngIf="noInterior.errors?.maxlength">
                                       El campo excede el numero máximo de caracteres permitidos
                                   </small>
@@ -231,8 +231,8 @@
                           <div class="col-sm-6">
                               <label for="inputRegimen" class="label">Regimen Fiscal</label>
                               <select id="inputRegimen" class="text-uppercase form-control" fullWidth [ngClass]="{
-                              'border border-danger': regimenFiscal.invalid && (regimenFiscal.dirty || regimenFiscal.touched),
-                              'border border-success': regimenFiscal.valid && (regimenFiscal.dirty || regimenFiscal.touched)}"
+                              'border border-danger': regimenFiscal.invalid,
+                              'border border-success': regimenFiscal.valid}"
                               [formControl]="regimenFiscal">
                                   <option value="*" class="text-uppercase">Seleccionar</option>
                                   <option *ngFor="let regimen of regimenes" class="text-uppercase"
@@ -242,7 +242,7 @@
                               </select>
                               <ng-container *ngIf="regimenFiscal.invalid">
                                   <small class="form-text text-danger"
-                                      *ngIf="regimenFiscal.errors?.pattern && (regimenFiscal.dirty || regimenFiscal.touched)">
+                                      *ngIf="regimenFiscal.errors?.pattern">
                                       Es necesario seleccionar el regimen fiscal
                                   </small>
                               </ng-container>
@@ -251,11 +251,11 @@
                               <label for="inputEmail" class="label">Correo Cliente</label>
                               <input type="email" class="form-control" fullWidth
                                   formControlName="correoContacto" id="inputEmail" [ngClass]="{
-                                      'border border-danger': correoContacto.invalid && (correoContacto.dirty || correoContacto.touched),
-                                      'border border-success': correoContacto.valid && (correoContacto.dirty || correoContacto.touched)
+                                      'border border-danger': correoContacto.invalid,
+                                      'border border-success': correoContacto.valid
                                       }" placeholder="Email" />
                               <ng-container
-                                  *ngIf="correoContacto.invalid && (correoContacto.dirty || correoContacto.touched)">
+                                  *ngIf="correoContacto.invalid">
                                   <small class="form-text text-danger" *ngIf="correoContacto.errors?.required">
                                       ¡Campo Requerido!
                                   </small>
@@ -277,61 +277,72 @@
                           <div class="col-sm-3">
                               <label for="inputPromotor" class="label col-form-label">Promotor</label>
                               <input class="form-control text-uppercase" type="number" id="inputPromotor" name="porcentajePromotor"
-                                  min="0" max="8" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id ?true:null"
+                                  min="0" max="14" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id ?true:null"
                                   placeholder="4" fullWidth [ngClass]="{
-                                          'border border-danger': porcentajePromotor.invalid && (porcentajePromotor.dirty || porcentajePromotor.touched),
-                                          'border border-success': porcentajePromotor.valid && (porcentajePromotor.dirty || porcentajePromotor.touched)
+                                          'border border-danger': porcentajePromotor.invalid,
+                                          'border border-success': porcentajePromotor.valid
                                       }" formControlName="porcentajePromotor" />
-                              <ng-container *ngIf="porcentajePromotor.invalid && (porcentajePromotor.dirty || porcentajePromotor.touched)">
+                              <ng-container *ngIf="porcentajePromotor.invalid">
                                   <small class="form-text text-danger" *ngIf="porcentajePromotor.errors?.required">
                                       ¡Campo Requerido!
                                   </small>
                                   <small class="form-text text-danger" *ngIf="porcentajePromotor.errors?.minlength">
                                       El porcentaje promotor debe ser de al menos un digito
                                   </small>
-                                  <small class="form-text text-danger" *ngIf="porcentajePromotor.errors?.pattern">
-                                      Porcentaje promotor Invalido
-                                  </small>
+                                  <small class="form-text text-danger" *ngIf="porcentajePromotor.errors?.min">
+                                    El porcentaje no debe ser menor a 0%
+                                </small>
+                                <small class="form-text text-danger" *ngIf="porcentajePromotor.errors?.max">
+                                  El porcentaje no puede ser mayor a 14%
+                              </small>
                               </ng-container>
                           </div>
                           <div class="col-sm-3">
                               <label for="inputCliente" class="label col-form-label">Cliente</label>
                               <input class="form-control text-uppercase" type="number" id="inputCliente" name="porcentajeCliente"
-                                  min="0" max="8" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id?true:null"
+                                  min="0" max="14" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id?true:null"
                                   placeholder="4" fullWidth [ngClass]="{
-                                          'border border-danger': porcentajeCliente.invalid && (porcentajeCliente.dirty || porcentajeCliente.touched),
-                                          'border border-success': porcentajeCliente.valid && (porcentajeCliente.dirty || porcentajeCliente.touched)
+                                          'border border-danger': porcentajeCliente.invalid,
+                                          'border border-success': porcentajeCliente.valid
                                       }" formControlName="porcentajeCliente"  />
-                              <ng-container *ngIf="porcentajeCliente.invalid && (porcentajeCliente.dirty || porcentajeCliente.touched)">
+                            
+                              <ng-container *ngIf="porcentajeCliente.invalid">
                                   <small class="form-text text-danger" *ngIf="porcentajeCliente.errors?.required">
                                       ¡Campo Requerido!
                                   </small>
                                   <small class="form-text text-danger" *ngIf="porcentajeCliente.errors?.minlength">
                                       El porcentaje cliente debe ser de al menos un digito
                                   </small>
-                                  <small class="form-text text-danger" *ngIf="porcentajeCliente.errors?.pattern">
-                                      Porcentaje cliente Invalido
-                                  </small>
+                                  <small class="form-text text-danger" *ngIf="porcentajeCliente.errors?.min">
+                                    El porcentaje no debe ser menor a 0%
+                                </small>
+                                <small class="form-text text-danger" *ngIf="porcentajeCliente.errors?.max">
+                                  El porcentaje no puede ser mayor a 14%
+                              </small>
                               </ng-container>
                           </div>
                           <div class="col-sm-3">
                               <label for="inputDespacho" class="label col-form-label">Despacho</label>
                               <input class="form-control text-uppercase" type="number" id="inputDespacho" name="porcentajeDespacho"
-                                  min="0" max="16" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id?true:null"
+                                  min="2" max="16" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id?true:null"
                                   placeholder="4" fullWidth [ngClass]="{
-                                          'border border-danger': porcentajeDespacho.invalid && (porcentajeDespacho.dirty || porcentajeDespacho.touched),
-                                          'border border-success': porcentajeDespacho.valid && (porcentajeDespacho.dirty || porcentajeDespacho.touched)
+                                          'border border-danger': porcentajeDespacho.invalid,
+                                          'border border-success': porcentajeDespacho.valid
                                       }" formControlName="porcentajeDespacho" />
-                              <ng-container *ngIf="porcentajeDespacho.invalid && (porcentajeDespacho.dirty || porcentajeDespacho.touched)">
+                                      
+                              <ng-container *ngIf="porcentajeDespacho.invalid">
                                   <small class="form-text text-danger" *ngIf="porcentajeDespacho.errors?.required">
                                       ¡Campo Requerido!
                                   </small>
                                   <small class="form-text text-danger" *ngIf="porcentajeDespacho.errors?.minlength">
                                       El porcentaje despacho debe ser de al menos un digito
                                   </small>
-                                  <small class="form-text text-danger" *ngIf="porcentajeDespacho.errors?.pattern">
-                                      Porcentaje despacho Invalido
+                                  <small class="form-text text-danger" *ngIf="porcentajeDespacho.errors?.min">
+                                      El depacho no debe de tener menos de un 2%
                                   </small>
+                                  <small class="form-text text-danger" *ngIf="porcentajeDespacho.errors?.max">
+                                    El porcentaje no puede ser mas de un 16%
+                                </small>
                               </ng-container>
                           </div>
                           <div class="col-sm-3">
@@ -339,19 +350,22 @@
                               <input class="form-control text-uppercase" type="number" id="inputContacto" name="porcentajeContacto"
                                   min="0" max="8" [attr.disabled]="(clientInfo.activo || module === 'promotor')&&clientInfo.id?true:null"
                                   placeholder="4" fullWidth [ngClass]="{
-                                          'border border-danger': porcentajeContacto.invalid && (porcentajeContacto.dirty || porcentajeContacto.touched),
-                                          'border border-success': porcentajeContacto.valid && (porcentajeContacto.dirty || porcentajeContacto.touched)
+                                          'border border-danger': porcentajeContacto.invalid,
+                                          'border border-success': porcentajeContacto.valid
                                       }" formControlName="porcentajeContacto" />
-                              <ng-container *ngIf="porcentajeContacto.invalid && (porcentajeContacto.dirty || porcentajeContacto.touched)">
+                              <ng-container *ngIf="porcentajeContacto.invalid">
                                   <small class="form-text text-danger" *ngIf="porcentajeContacto.errors?.required">
                                       ¡Campo Requerido!
                                   </small>
                                   <small class="form-text text-danger" *ngIf="porcentajeContacto.errors?.minlength">
                                       El control debe ser de al menos un digito
                                   </small>
-                                  <small class="form-text text-danger" *ngIf="porcentajeContacto.errors?.pattern">
-                                      Control Invalido
-                                  </small>
+                                  <small class="form-text text-danger" *ngIf="porcentajeContacto.errors?.min">
+                                    El porcentaje no debe ser menor a 0%
+                                </small>
+                                <small class="form-text text-danger" *ngIf="porcentajeContacto.errors?.max">
+                                  El porcentaje no puede ser mayor a 8%
+                              </small>
                               </ng-container>
                           </div>
                       </div>
@@ -366,17 +380,17 @@
                               <textarea type="text" class="form-control" fullWidth id="inputNotes"  maxlength="280" cols="3"
                                   placeholder="Notas adicionales cliente" formControlName="notas" name="notas"></textarea>
                           </div>
-                          <div class="col-sm-6" *ngIf="clientInfo.id">
+                          <div class="col-sm-6">
                               <label for="documentFile" class="label">Comprobante cedula fiscal</label>
                               <div class="input-group">
                                   <div class="custom-file" >
-                                      <input type="file" class="custom-file-input" id="documentFile" [disabled]="!clientInfo.id"
+                                      <input type="file" class="custom-file-input" id="documentFile" [disabled]="clienteForm.valid"
                                       accept=".pdf,.xls,.xlsx,.doc, .docx,image/*" (change)="fileDataUploadListener($event)"
                                       style="display:block;" aria-describedby="inputDocFile">
                                       <label class="custom-file-label" style="background-color: #f7f9fc;" for="documentFile">{{formInfo.fileDataName}}</label>
                                   </div>
                               </div>
-                              <small id="clientFileHelp1" *ngIf="dataFile != undefined" class="form-text text-primary">El cliente ya cuenta con constancia de situacion fiscal</small>
+                              <small id="clientFileHelp1" *ngIf="dataFile != undefined && clientInfo.id" class="form-text text-primary">El cliente ya cuenta con constancia de situacion fiscal</small>
                               <small id="clientFileHelp2" *ngIf="dataFile == undefined" class="form-text text-danger">La constancia de situacion fiscal es un documento requerido</small>
                               <button class="btn d-inline mt-2 ml-2 mr-2" [ngClass]="{'btn-outline-success': formInfo.fileDataName.length > 0 , 'btn-outline-secondary': formInfo.fileDataName.length == 0 }"
                               (click)="uploadFile()" *ngIf="clientInfo.id !== undefined" [disabled]="formInfo.fileDataName.length == 0">

@@ -46,7 +46,7 @@ export class ClienteComponent implements OnInit {
     razonSocial: new FormControl('', [
       Validators.required,
       Validators.minLength(5),
-      Validators.maxLength(250),
+      Validators.maxLength(300),
       Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
     ]),
     pais: new FormControl('MEX', [
@@ -57,33 +57,30 @@ export class ClienteComponent implements OnInit {
       Validators.pattern(AppConstants.ZIP_CODE_PATTERN),
     ]),
     localidad: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(250),
-      Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
-    ]),
-    municipio: new FormControl('', [
-      Validators.required,
       Validators.maxLength(200),
       Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
     ]),
+    municipio: new FormControl('', [
+      Validators.maxLength(150),
+      Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
+    ]),
     estado: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(100),
+      Validators.maxLength(45),
       Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
     ]),
     calle: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(250),
+      Validators.maxLength(200),
       Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
     ]),
     noExterior: new FormControl('', [
-      Validators.maxLength(10),
+      Validators.maxLength(45),
     ]),
     noInterior: new FormControl('', [
-      Validators.maxLength(10),
+      Validators.maxLength(45),
     ]),
     regimenFiscal: new FormControl('*', [
       Validators.required,
+      Validators.pattern(AppConstants.FISCAL_REGIMEN_PATTERN)
     ]),
     correoContacto: new FormControl('', [
       Validators.required,
@@ -144,10 +141,13 @@ export class ClienteComponent implements OnInit {
       this.formInfo.id = this.clientInfo.id;
       this.formInfo.rfc = this.clientInfo.rfc;
       this.formInfo.coloniaId = "other";
-      Object.keys(this.clienteForm.controls).forEach(key => this.clienteForm.controls[key].setValue((this.clientInfo[key]!= undefined && this.clientInfo[key]!= null ) ? this.clientInfo[key] : '')); 
+      Object.keys(this.clienteForm.controls)
+      .forEach(key => this.clienteForm.controls[key].setValue((this.clientInfo[key]!= undefined && this.clientInfo[key]!= null ) ? this.clientInfo[key] : '')); 
+
       this.colonias = (await this.catalogsService.getZipCodeInfo(this.clientInfo.cp)).colonias;
       this.colonias.filter(colonia => colonia===this.clientInfo.localidad).forEach(colonia => (this.formInfo.coloniaId = colonia));
     } catch (error) {
+      this.loading = false;
       this.notificationService.sendNotification('danger',error?.message, 'Error');
     }
     this.loading = false;
@@ -158,9 +158,13 @@ export class ClienteComponent implements OnInit {
     return (control: AbstractControl) : Promise<ValidationErrors>  => {
       let promotor = sessionStorage.getItem('email');
       let rfc = control.value;
+      if(!this.clientInfo.id){
       return  service.getClientsByPromotorAndRfc(promotor, rfc).toPromise().then(record => {
         return (record && !this.clientInfo.id) ? {"rfcExist":true} : null;
       });
+      } else {
+        return new Promise((resolve)=>null);
+      }
     }
   }
 
@@ -246,9 +250,9 @@ export class ClienteComponent implements OnInit {
           },
           (error: NtError) => {
               this.formInfo.coloniaId = 'other';
-              this.clienteForm.controls['estado'].setValue('');
-              this.clienteForm.controls['municipio'].setValue('');
-              this.clienteForm.controls['localidad'].setValue('');
+              this.clienteForm.controls['estado'].setValue(this.clientInfo['estado'] || '');
+              this.clienteForm.controls['municipio'].setValue(this.clientInfo['municipio'] || '');
+              this.clienteForm.controls['localidad'].setValue(this.clientInfo['localidad'] || '');
               this.notificationService.sendNotification('warning',error?.message,'Error');
           }
       );
@@ -317,10 +321,8 @@ export class ClienteComponent implements OnInit {
       this.dataFile.tipoArchivo = 'DOCUMENTO';
       await this.resourcesService.insertResourceFile(this.dataFile).toPromise();
       this.notificationService.sendNotification('info','El archivo se cargo correctamente');
-      //this.loadCompanyInfo(this.companyInfo.rfc);
       this.formInfo.fileDataName = '';
       this.formInfo.doctType = '*';
-      this.loadClientInfo(this.clientInfo.id)
     } catch (error) {
       this.notificationService.sendNotification('danger',error?.message, 'Error cargando archivo');
     }

@@ -43,7 +43,6 @@ import com.google.common.collect.ImmutableMap;
 import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.cfdi.mappers.CfdiMapper;
 import com.mx.ntlink.cfdi.mappers.pagos.PagosMapper;
-import com.mx.ntlink.cfdi.modelos.Cfdi;
 import com.mx.ntlink.cfdi.modelos.complementos.pagos.Pagos;
 import com.mx.ntlink.models.generated.Comprobante;
 import java.io.IOException;
@@ -348,7 +347,7 @@ public class FacturaService {
             "MONEDA",
             "ESTATUS",
             "CANCELACION",
-            "FOLIO FISCAL PAGO",
+            "FOLIO FISCAL PPD",
             "IMPORTE",
             "SALDO ANTERIOR",
             "SALDO INSOLUTO",
@@ -405,7 +404,7 @@ public class FacturaService {
                                 Objects.nonNull(complement.getFechaCancelacion())
                                     ? sdf.format(complement.getFechaCancelacion())
                                     : "");
-                            row.put("FOLIO FISCAL PAGO", complement.getUuid());
+                            row.put("FOLIO FISCAL PPD", p.getIdDocumento());
                             row.put("IMPORTE", p.getImportePagado());
                             row.put("SALDO ANTERIOR", p.getImporteSaldoAnterior());
                             row.put("SALDO INSOLUTO", p.getImporteSaldoInsoluto());
@@ -604,36 +603,18 @@ public class FacturaService {
     return facturaCustom;
   }
 
-  public FacturaCustom updateTotalAndSaldoFactura(
-      String folioCfdi, Optional<BigDecimal> newTotal, Optional<BigDecimal> pago)
-      throws InvoiceManagerException, NtlinkUtilException {
-    FacturaCustom facturaCustom = getFacturaByFolio(folioCfdi);
-    Cfdi cfdi = cfdiService.getCfdiByFolio(folioCfdi);
-    BigDecimal total = newTotal.isPresent() ? newTotal.get() : facturaCustom.getTotal();
-    BigDecimal montoPagado =
-        pagoService.findPagosByFolio(facturaCustom.getFolio()).stream()
-            .filter(p -> !"CREDITO".equals(p.getFormaPago()))
-            .map(
-                p ->
-                    cfdi.getMoneda().equals(p.getMoneda())
-                        ? p.getMonto()
-                        : p.getMonto().divide(p.getTipoDeCambio(), 2, RoundingMode.HALF_UP))
-            .reduce(BigDecimal.ZERO, (p1, p2) -> p1.add(p2));
-
-    if (pago.isPresent()) {
-      montoPagado = montoPagado.add(pago.get());
-    }
-    BigDecimal saldo = total.subtract(montoPagado);
+  public FacturaCustom updateSaldoFactura(FacturaCustom facturaCustom, BigDecimal montoPagado)
+      throws InvoiceManagerException {
+    BigDecimal saldo = facturaCustom.getCfdi().getTotal().subtract(montoPagado);
     log.info(
         "Factura con folio {} total: {}, montoPagado : {} , saldo : {}",
         facturaCustom.getFolio(),
-        total,
+        facturaCustom.getCfdi().getTotal(),
         montoPagado,
         saldo);
     InvoiceValidator.checkNotNegative(saldo, "Saldo pendiente");
-    facturaCustom.setTotal(total);
     facturaCustom.setSaldoPendiente(saldo);
-    filesService.sendFacturaCustomToS3(folioCfdi, facturaCustom);
+    filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
     updateFacturaBase(facturaCustom.getId(), facturaCustom);
     return facturaCustom;
   }

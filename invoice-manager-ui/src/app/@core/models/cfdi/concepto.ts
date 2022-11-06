@@ -23,6 +23,8 @@ export class Concepto {
     public cuentaPredial: CuentaPredial;
     public parte: Parte;
 
+    public impuesto: string; // only used on UI
+
     constructor() {
         this.impuestos = [];
         this.descuento = 0;
@@ -35,5 +37,6 @@ export class Concepto {
         this.unidad = 'Unidad de Servicio';
         this.descripcion = '';
         this.objetoImp = '02';
+        this.impuesto = 'IVA_0.16';
     }
 }

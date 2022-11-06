@@ -284,7 +284,7 @@ export class CargaMasivaComponent implements OnInit {
         concepto.importe = transfer.IMPORTE;
         this.cfdiValidator.validarConcepto(concepto);
         cfdi.conceptos.push(
-            this.cfdiValidator.buildConcepto(concepto, true, false)
+            this.cfdiValidator.buildConcepto(concepto)
         );
         factura.cfdi = await this.cfdiValidator.calcularImportes(cfdi);
         return factura;

@@ -53,11 +53,10 @@ export class CfdiValidatorService {
             );
     }
 
-    public buildConcepto(
-        concepto: Concepto,
-        iva: boolean,
-        retencion: boolean
-    ): Concepto {
+    public buildConcepto(concepto: Concepto): Concepto {
+        concepto.descuento = concepto.descuento || 0;
+        const tipoImpuesto = concepto.impuesto.split('_')[0];
+
         concepto.importe = +format(
             multiply(
                 bignumber(concepto.cantidad),
@@ -70,21 +69,24 @@ export class CfdiValidatorService {
         concepto.impuestos = [];
         const impuesto = new Impuesto();
         if (concepto.objetoImp != '01') {
-            const imp = +format(multiply(base, bignumber(0.16))); // TODO calcular impuestos dinamicamente no solo IVA
+            if(tipoImpuesto === 'IVA'){
+                const tasaImp = +concepto.impuesto.split('_')[1];
+            const imp = +format(multiply(base, bignumber(tasaImp)));
             impuesto.traslados = [
-                new Traslado('002', 'Tasa', '0.160000', base, imp),
+                new Traslado('002', 'Tasa', tasaImp.toString(), base, imp),
             ];
+            }
+            if (tipoImpuesto === 'RET') {
+                const tasaRet = +concepto.impuesto.split('_')[1];
+                const retencion = +format(multiply(base, bignumber(tasaRet))); // TODO calcular retencion dinamicamente
+                impuesto.retenciones = [
+                    new Retencion('002', 'Tasa', tasaRet.toString(), base, retencion),
+                ];
+            }
+            concepto.impuestos.push(impuesto);
         } else {
-            impuesto.traslados = [new Traslado('000', 'Tasa', '0', 0, 0)];
+           concepto.impuestos = null;
         }
-        if (retencion) {
-            const retencion = +format(multiply(base, bignumber(0.06))); // TODO calcular retencion dinamicamente
-            impuesto.retenciones = [
-                new Retencion('002', 'Tasa', '0.060000', base, retencion),
-            ];
-        }
-        concepto.impuestos.push(impuesto);
-
         return concepto;
     }
 

@@ -100,7 +100,7 @@ export class ConceptosComponent implements OnInit {
             const result = await this.cfdiService
             .recalculateCfdi(cfdi)
             .toPromise();
-          const fact = {...this.factura,cfdi:result,total:result.total, saldoPendiente:result.total}
+          const fact = {...this.factura,cfdi:result,total:result.total}
           const invoice = await this.invoiceService.updateInvoice(fact).toPromise();
           this.store.dispatch(updateInvoice({ invoice }));
           } else {
@@ -119,7 +119,7 @@ export class ConceptosComponent implements OnInit {
   }
 
   public calcularImpuestosTrasladados(impuestos: Impuesto[]): number {
-    if (impuestos.length > 0) {
+    if (impuestos && impuestos.length > 0) {
       const traslados: Traslado[] = [];
 
       impuestos.forEach((i) => traslados.push(...i.traslados));
