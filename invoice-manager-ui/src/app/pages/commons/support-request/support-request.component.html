@@ -1,0 +1,122 @@
+<div class="row">
+    <div class="col-md-12">
+        <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" nbSpinnerSize="giant">
+            <nb-card-header>
+                <div class="clearfix">
+                    <strong>
+                        <h5>Solicitud de soporte</h5>
+                    </strong>
+                </div>
+
+            </nb-card-header>
+            <nb-card-body>
+                <div class="row">
+
+                    <div class="col-sm-6 col-md-8 mb-3">
+                        <form [formGroup]="supportForm" class="needs-validation" novalidate="" (ngSubmit)="onSubmit()">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="contactname" class="label col-form-label">Nombre de contacto</label>
+                                    <input type="text" class="form-control text-uppercase" id="contactname"
+                                        placeholder="Su nombre" formControlName="contactName" name="contactname">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="clientEmail" class="label col-form-label">Email contacto</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">@</span>
+                                        </div>
+                                        <input type="text" class="form-control" id="clientEmail" [attr.disabled]="true"
+                                            placeholder="Email del cliente" formControlName="contactEmail"
+                                            name="contactemail" name="clientEmail">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="contactPhone" class="label col-form-label">Tel&eacute;fono de
+                                        contacto</label>
+                                    <input type="text" class="form-control" id="contactPhone"
+                                        placeholder="Tel&eacute;fono de contacto" formControlName="contactPhone"
+                                        name="contactPhone">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="product" class="label col-form-label">Problema a reportar</label>
+                                    <select class="custom-select d-block w-100" id="product" name="product"
+                                        formControlName="notes">
+                                        <option value="*">SELECCIONAR</option>
+                                        <option value="NO PERMITE TIMBRAR">NO PERMITE TIMBRAR</option>
+                                        <option value="CARGA DE SELLOS">CARGA DE SELLOS</option>
+                                        <option value="ESTATUS FACTURA INVALIDO">ESTATUS FACTURA INVALIDO</option>
+                                        <option value="INCOSISTENCIAS EN EL CFDI">INCOSISTENCIAS EN EL CFDI</option>
+                                        <option value="EL PDF TIENE INCOSISTENCIAS">EL PDF TIENE INCOSISTENCIAS</option>
+                                        <option value="NO ME PERMITE CANCELAR">NO ME PERMITE CANCELAR</option>
+                                        <option value="FACTURA/COMPLEMENTO DOLARES">FACTURA/COMPLEMENTO DOLARES</option>
+                                        <option value="NO ENVIA CORREO">NO ENVIA CORREO</option>
+                                        <option value="OTRO">OTRO</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="problem" class="label col-form-label">Describe el problema</label>
+                                    <textarea type="text" class="form-control" id="problem"
+                                        placeholder="Descripción detallada del problema, colocar datos de referencia RFC, folio, etc"
+                                        rows="5" formControlName="problem" name="problem"></textarea>
+
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="folio !='*'">
+                                <div class="col-md-12 mb-3">
+                                    <label for="solution" class="label col-form-label">solucion del problema</label>
+                                    <textarea type="text" class="form-control" id="solution" [attr.disabled]="true"
+                                        rows="5" formControlName="solution" name="solution"></textarea>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="folio !='*'">
+                                <div class="col-md-6 mb-3">
+                                    <label for="agent" class="label col-form-label">Agente soporte</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="agent" [attr.disabled]="true"
+                                            formControlName="agent" name="agent" name="agent">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="dueDate" class="label col-form-label">Fecha limite</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="dueDate" [attr.disabled]="true"
+                                            formControlName="dueDate" name="dueDate" name="dueDate">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label for="documentFile" class="label">Captura pantalla o evidencia del
+                                        problema</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="documentFile"
+                                                [attr.disabled]="supportForm.invalid" accept=".pdf,.doc, .docx,image/*"
+                                                (change)="fileDataUploadListener($event)" style="display:block;"
+                                                aria-describedby="inputDocFile">
+                                            <label class="custom-file-label" style="background-color: #f7f9fc;"
+                                                for="documentFile">{{dataFile?.fileName}}</label>
+                                        </div>
+                                    </div>
+                                    <button class="btn d-inline mt-2 ml-2 mr-2" *ngIf="dataFile && folio!='*'"
+                                        [ngClass]="{'btn-outline-primary': dataFile!= undefined && dataFile.id != undefined, 'btn-outline-secondary': !dataFile || dataFile.id ==undefined}"
+                                        (click)="downloadFile()" [disabled]="!dataFile || dataFile.id ==undefined">
+                                        <i class="fa fa-download"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>
