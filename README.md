@@ -151,3 +151,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.6.7 Improvements on client creation validation, pdf regeneration and invoice amount reduction improvements 
   - [x] 4.6.8 Reactive concept validation(6 decimal validation) and fix update missing invoice amount on concepts update. adding extra logs
   - [x] 4.6.9 Adding complement parent UUID in report
+  - [x] 4.6.10 Support module for errors
