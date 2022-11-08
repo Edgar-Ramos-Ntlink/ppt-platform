@@ -31,6 +31,12 @@
                             </h6>
 
                         </div>
+                        <div *ngIf="folio === '*'">
+                            <p>Cuentas con algun problema en la plataforma, puedes notificarnos por este medio, solo
+                                ingresa los datos solicitados, para atender su solicitud, no olvides colocar cualquier
+                                referencia relevante al problema, como es folio, prefolio, RFC y modulo donde se origino
+                                el problema</p>
+                        </div>
                         <form [formGroup]="supportForm" class="needs-validation" novalidate="" (ngSubmit)="onSubmit()">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
