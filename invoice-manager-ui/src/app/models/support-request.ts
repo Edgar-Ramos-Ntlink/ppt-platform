@@ -20,11 +20,11 @@ export class SupportRequest {
     public creation: Date;
     public update: Date;
 
-    constructor(contactEmail?: string) {
+    constructor(clientEmail?: string) {
         this.status = 'PENDIENTE';
         this.supportType = '*';
         this.agent = 'soporte@ntlink.com.mx';
-        this.contactEmail = contactEmail;
+        this.clientEmail = clientEmail;
         this.supportLevel = 'primer nivel';
         this.requestType = '*';
         this.problem = '';

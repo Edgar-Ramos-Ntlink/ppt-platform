@@ -61,7 +61,9 @@ public class SupportController {
   public ResponseEntity<Void> upsertAttachedDocument(
       @PathVariable String folio, @RequestBody @Valid ResourceFileDto resourceFile) {
     template.postForObject(
-        String.format("%s/api/support/%s/file", ntlinkHost, folio), resourceFile, ResourceFileDto.class);
+        String.format("%s/api/support/%s/file", ntlinkHost, folio),
+        resourceFile,
+        ResourceFileDto.class);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 }

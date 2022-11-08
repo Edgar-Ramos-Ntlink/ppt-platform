@@ -61,7 +61,7 @@ export class SupportRequestComponent implements OnInit {
                 'SJ INVOICE MANAGER',
                 [Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN)],
             ],
-            contactEmail: [
+            clientEmail: [
                 sessionStorage.getItem('email'),
                 [Validators.required, Validators.email],
             ],
@@ -74,6 +74,7 @@ export class SupportRequestComponent implements OnInit {
             this.dataFile = undefined;
             this.folio = route.get('folio');
             if (this.folio !== '*') {
+                this.loading = true;
                 this.supportService.buscarSoporte(+this.folio).subscribe(
                     (support) => {
                         this.supportForm.patchValue(support);
@@ -82,8 +83,10 @@ export class SupportRequestComponent implements OnInit {
                             .subscribe(
                                 (dataFile) => (this.dataFile = dataFile)
                             );
+                        this.loading = false;
                     },
                     (error: NtError) => {
+                        this.loading = false;
                         this.notificationService.sendNotification(
                             'danger',
                             error.message,
@@ -109,6 +112,7 @@ export class SupportRequestComponent implements OnInit {
         try {
             this.loading = true;
             const support: SupportRequest = { ...this.supportForm.value };
+            support.product = 'SJ INVOICE MANAGER';
             support.companyName = 'SEMEEL JAK, S.A. DE C.V.';
             support.companyRfc = 'SJA121128SG5';
             support.clientEmail = sessionStorage.getItem('email');
@@ -219,8 +223,8 @@ export class SupportRequestComponent implements OnInit {
     get product() {
         return this.supportForm.get('product')!;
     }
-    get contactEmail() {
-        return this.supportForm.get('product')!;
+    get clientEmail() {
+        return this.supportForm.get('clientEmail')!;
     }
     get agent() {
         return this.supportForm.get('agent')!;
