@@ -1,5 +1,6 @@
 package com.business.unknow.services.config;
 
+import com.business.unknow.services.util.RestTemplateResponseErrorHandler;
 import com.mx.ntlink.aws.S3Utils;
 import com.mx.ntlink.cfdi.mappers.CfdiMapper;
 import com.mx.ntlink.cfdi.mappers.pagos.PagosMapper;
@@ -22,7 +23,9 @@ public class MainConfig {
 
   @Bean
   public RestTemplate template() {
-    return new RestTemplate();
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.setErrorHandler(new RestTemplateResponseErrorHandler());
+    return restTemplate;
   }
 
   @Bean

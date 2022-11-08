@@ -19,6 +19,7 @@ export class SupportRequestComponent implements OnInit {
     public dataFile: ResourceFile;
     public loading: boolean = false;
     public folio: string = '*';
+    public folioBusqueda: string = '';
 
     constructor(
         private supportService: SupportData,
@@ -36,56 +37,109 @@ export class SupportRequestComponent implements OnInit {
                     Validators.pattern('^((\\+..-?)|0)?[0-9]{10}$'),
                 ],
             ],
-            contactName: ['', [Validators.required, Validators.maxLength(100)]],
-            problem: ['', [Validators.required, Validators.maxLength(300)]],
+            contactName: [
+                '',
+                [
+                    Validators.required,
+                    Validators.maxLength(100),
+                    Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
+                ],
+            ],
+            problem: [
+                '',
+                [
+                    Validators.required,
+                    Validators.minLength(20),
+                    Validators.maxLength(300),
+                ],
+            ],
             notes: ['*', [Validators.minLength(2), Validators.maxLength(300)]],
             solution: ['', [Validators.maxLength(300)]],
             agent: [''],
             dueDate: [''],
             product: [
                 'SJ INVOICE MANAGER',
-                [
-                    Validators.required,
-                    Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN),
-                ],
+                [Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN)],
             ],
             contactEmail: [
                 sessionStorage.getItem('email'),
-                [Validators.required],
+                [Validators.required, Validators.email],
             ],
+            status: [''],
         });
     }
 
     ngOnInit(): void {
         this.route.paramMap.subscribe((route) => {
+            this.dataFile = undefined;
             this.folio = route.get('folio');
             if (this.folio !== '*') {
                 this.supportService.buscarSoporte(+this.folio).subscribe(
-                    (support) => this.loadFormInfo(support),
-                    (error: NtError) =>
+                    (support) => {
+                        this.supportForm.patchValue(support);
+                        this.supportService
+                            .getAttachedDocument(support.folio)
+                            .subscribe(
+                                (dataFile) => (this.dataFile = dataFile)
+                            );
+                    },
+                    (error: NtError) => {
                         this.notificationService.sendNotification(
                             'danger',
-                            error.error,
+                            error.message,
                             'No se encontro informacion'
-                        )
+                        );
+                        this.supportForm.reset();
+                        this.supportForm.patchValue(
+                            new SupportRequest(sessionStorage.getItem('email'))
+                        );
+                    }
+                );
+            } else {
+                this.dataFile = undefined;
+                this.supportForm.reset();
+                this.supportForm.patchValue(
+                    new SupportRequest(sessionStorage.getItem('email'))
                 );
             }
         });
     }
 
-    public loadFormInfo(support: SupportRequest) {
-        console.log('Support:', support);
-        Object.keys(this.supportForm.controls).forEach((key) =>
-            this.supportForm.controls[key].setValue(
-                this.supportForm[key] != undefined && support[key] != null
-                    ? support[key]
-                    : ''
-            )
-        );
-        console.log('data', this.supportForm.value);
+    public async onSubmit() {
+        try {
+            this.loading = true;
+            const support: SupportRequest = { ...this.supportForm.value };
+            support.companyName = 'SEMEEL JAK, S.A. DE C.V.';
+            support.companyRfc = 'SJA121128SG5';
+            support.clientEmail = sessionStorage.getItem('email');
+            support.contactEmail = sessionStorage.getItem('email');
+            support.agent = 'soporte.invoice@ntlink.com.mx';
+            support.supportLevel = 'primer nivel';
+            support.requestType = 'soporte';
+            support.status = 'PENDIENTE';
+            const result: SupportRequest = await this.supportService
+                .insertSoporte(support)
+                .toPromise();
+            if (this.dataFile) {
+                await this.supportService
+                    .insertAttachedFile(result.folio, this.dataFile)
+                    .toPromise();
+            }
+            this.notificationService.sendNotification(
+                'success',
+                `Solicitud creada con folio ${result.folio}`,
+                'Solicitud creada'
+            );
+            this.router.navigate([`/pages/support/${result.folio}`]);
+        } catch (error) {
+            this.notificationService.sendNotification(
+                'danger',
+                error.message,
+                'Error en la solicitud'
+            );
+        }
+        this.loading = false;
     }
-
-    public onSubmit() {}
 
     public fileDataUploadListener(event: any): void {
         let reader = new FileReader();
@@ -136,7 +190,15 @@ export class SupportRequestComponent implements OnInit {
     }
 
     public downloadFile() {
-        console.log('downlaod file');
+        this.downloadService.downloadFile(
+            this.dataFile.data,
+            `archivoAdjunto${this.dataFile.extension}`,
+            this.dataFile.formato
+        );
+    }
+
+    public findTicket() {
+        this.router.navigate([`/pages/support/${this.folioBusqueda}`]);
     }
 
     get contactPhone() {
@@ -164,6 +226,9 @@ export class SupportRequestComponent implements OnInit {
         return this.supportForm.get('agent')!;
     }
     get dueDate() {
-        return this.supportForm.get('agent')!;
+        return this.supportForm.get('dueDate')!;
+    }
+    get status() {
+        return this.supportForm.get('status')!;
     }
 }

@@ -20,16 +20,17 @@ export class SupportRequest {
     public creation: Date;
     public update: Date;
 
-    constructor() {
+    constructor(contactEmail?: string) {
         this.status = 'PENDIENTE';
         this.supportType = '*';
         this.agent = 'soporte@ntlink.com.mx';
+        this.contactEmail = contactEmail;
         this.supportLevel = 'primer nivel';
         this.requestType = '*';
         this.problem = '';
-        this.notes = '';
+        this.notes = '*';
         this.solution = '';
-        this.product = '*';
+        this.product = 'SJ INVOICE MANAGER';
         const duedate = new Date();
         duedate.setDate(duedate.getDate() + 1);
         this.dueDate = duedate;
