@@ -1,5 +1,6 @@
 package com.business.unknow.services.config;
 
+import com.business.unknow.services.util.RestTemplateResponseErrorHandler;
 import com.mx.ntlink.aws.S3Utils;
 import com.mx.ntlink.cfdi.mappers.CfdiMapper;
 import com.mx.ntlink.cfdi.mappers.pagos.PagosMapper;
@@ -9,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class MainConfig {
@@ -18,6 +20,13 @@ public class MainConfig {
 
   @Value("${ntlink.host}")
   private String ntlinkWsUrl;
+
+  @Bean
+  public RestTemplate template() {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.setErrorHandler(new RestTemplateResponseErrorHandler());
+    return restTemplate;
+  }
 
   @Bean
   public S3Utils getS3Utils() {

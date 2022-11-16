@@ -59,6 +59,8 @@ import { PagosValidatorService } from './util-services/pagos-validator.service';
 import { ComplementosPagoComponent } from './components/complementos-pago/complementos-pago.component';
 import { InvoiceStatusComponent } from './components/invoice-status/invoice-status.component';
 import { GenerarComplementoComponent } from '../pages/commons/generar-complemento/generar-complemento.component';
+import { SupportData } from './data/support-data';
+import { SupportService } from './back-services/support.service';
 
 const DATA_SERVICES = [
     { provide: CatalogsData, useClass: CatalogsService },
@@ -71,6 +73,7 @@ const DATA_SERVICES = [
     { provide: TransferData, useClass: TransferService },
     { provide: UsersData, useClass: UsersService },
     { provide: FilesData, useClass: FilesService },
+    { provide: SupportData, useClass: SupportService },
 ];
 
 const UTIL_SERVICES = [
