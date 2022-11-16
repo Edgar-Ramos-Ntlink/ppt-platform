@@ -8,6 +8,7 @@ import { ResourceFile } from '../../../models/resource-file';
 import { SupportData } from '../../../@core/data/support-data';
 import { SupportRequest } from '../../../models/support-request';
 import { NtError } from '../../../@core/models/nt-error';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'nt-support-request',
@@ -75,29 +76,38 @@ export class SupportRequestComponent implements OnInit {
             this.folio = route.get('folio');
             if (this.folio !== '*') {
                 this.loading = true;
-                this.supportService.buscarSoporte(+this.folio).subscribe(
-                    (support) => {
-                        this.supportForm.patchValue(support);
-                        this.supportService
-                            .getAttachedDocument(support.folio)
-                            .subscribe(
-                                (dataFile) => (this.dataFile = dataFile)
+                this.supportService
+                    .buscarSoporte(+this.folio)
+                    .pipe(
+                        switchMap((support) => {
+                            return this.supportService
+                                .getAttachedDocument(support.folio)
+                                .pipe(
+                                    map((dataFile) => ({ support, dataFile }))
+                                );
+                        })
+                    )
+                    .subscribe(
+                        ({ support, dataFile }) => {
+                            this.supportForm.patchValue(support);
+                            this.dataFile = dataFile;
+                            this.loading = false;
+                        },
+                        (error: NtError) => {
+                            this.loading = false;
+                            this.notificationService.sendNotification(
+                                'danger',
+                                error.message,
+                                'No se encontro informacion'
                             );
-                        this.loading = false;
-                    },
-                    (error: NtError) => {
-                        this.loading = false;
-                        this.notificationService.sendNotification(
-                            'danger',
-                            error.message,
-                            'No se encontro informacion'
-                        );
-                        this.supportForm.reset();
-                        this.supportForm.patchValue(
-                            new SupportRequest(sessionStorage.getItem('email'))
-                        );
-                    }
-                );
+                            this.supportForm.reset();
+                            this.supportForm.patchValue(
+                                new SupportRequest(
+                                    sessionStorage.getItem('email')
+                                )
+                            );
+                        }
+                    );
             } else {
                 this.dataFile = undefined;
                 this.supportForm.reset();

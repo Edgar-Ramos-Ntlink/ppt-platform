@@ -135,6 +135,8 @@ export class ClienteComponent implements OnInit {
             const id = route.get('id');
             if (id !== '*') {
                 this.loadClientInfo(+id);
+            } else {
+                this.clienteForm.patchValue(new Client());
             }
         });
     }
@@ -148,15 +150,7 @@ export class ClienteComponent implements OnInit {
             this.formInfo.id = this.clientInfo.id;
             this.formInfo.rfc = this.clientInfo.rfc;
             this.formInfo.coloniaId = 'other';
-            Object.keys(this.clienteForm.controls).forEach((key) =>
-                this.clienteForm.controls[key].setValue(
-                    this.clientInfo[key] != undefined &&
-                        this.clientInfo[key] != null
-                        ? this.clientInfo[key]
-                        : ''
-                )
-            );
-
+            this.clienteForm.patchValue(this.clientInfo);
             this.colonias = (
                 await this.catalogsService.getZipCodeInfo(this.clientInfo.cp)
             ).colonias;
@@ -187,28 +181,23 @@ export class ClienteComponent implements OnInit {
         return (control: AbstractControl): Promise<ValidationErrors> => {
             let promotor = sessionStorage.getItem('email');
             let rfc = control.value;
-            if (!this.clientInfo.id) {
-                return service
-                    .getClientsByPromotorAndRfc(promotor, rfc)
-                    .toPromise()
-                    .then((record) => {
-                        return record && !this.clientInfo.id
-                            ? { rfcExist: true }
-                            : null;
-                    });
-            } else {
-                return new Promise((resolve) => null);
-            }
+            return service
+                .getClientsByPromotorAndRfc(promotor, rfc)
+                .toPromise()
+                .then((record) => {
+                    return record && !this.clientInfo.id
+                        ? { rfcExist: true }
+                        : null;
+                });
         };
     }
 
     public async updateClient() {
-        Object.assign(this.clientInfo, this.clienteForm.value);
+        const client = { ...this.clienteForm.value };
         this.loading = true;
         try {
-            const errors: string[] = this.clientValidatorService.validarCliente(
-                this.clientInfo
-            );
+            const errors: string[] =
+                this.clientValidatorService.validarCliente(client);
             if (errors.length > 0) {
                 for (const err of errors) {
                     this.notificationService.sendNotification(
@@ -221,7 +210,7 @@ export class ClienteComponent implements OnInit {
                 return;
             }
             this.clientInfo = await this.clientService
-                .updateClient(this.clientInfo)
+                .updateClient(client)
                 .toPromise();
             this.notificationService.sendNotification(
                 'info',
@@ -238,8 +227,7 @@ export class ClienteComponent implements OnInit {
     }
 
     public async insertClient() {
-        this.clientInfo = { ...this.clienteForm.value };
-        const client: Client = { ...this.clientInfo };
+        const client: Client = { ...this.clienteForm.value };
         this.loading = true;
         try {
             const errors: string[] =
@@ -291,6 +279,7 @@ export class ClienteComponent implements OnInit {
     }
 
     public onLocation(colonia: string) {
+        console.log('Form', this.clienteForm);
         if (colonia !== 'other' && colonia !== '*') {
             this.clienteForm.controls['localidad'].setValue(colonia);
         }
@@ -345,23 +334,8 @@ export class ClienteComponent implements OnInit {
         }
     }
 
-    public validatePercentages() {
-        if (
-            this.clientInfo.correoContacto === undefined ||
-            this.clientInfo.correoContacto.length < 1
-        ) {
-            this.clientInfo.correoContacto = 'Sin asignar';
-            this.clientInfo.porcentajeContacto = 0;
-            this.clientInfo.porcentajeDespacho =
-                16 -
-                this.clientInfo.porcentajeCliente -
-                this.clientInfo.porcentajePromotor;
-        }
-    }
-
     public async toggleOn() {
-        Object.assign(this.clientInfo, this.clienteForm.value);
-        const client: Client = { ...this.clientInfo };
+        const client: Client = { ...this.clienteForm.value };
         client.activo = true;
         this.loading = true;
         try {
@@ -383,8 +357,7 @@ export class ClienteComponent implements OnInit {
     }
 
     public async toggleOff() {
-        Object.assign(this.clientInfo, this.clienteForm.value);
-        const client: Client = { ...this.clientInfo };
+        const client: Client = { ...this.clienteForm.value };
         client.activo = false;
         this.loading = true;
         try {
