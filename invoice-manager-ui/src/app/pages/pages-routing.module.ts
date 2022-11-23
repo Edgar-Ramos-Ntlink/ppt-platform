@@ -20,7 +20,7 @@ const routes: Routes = [
                 pathMatch: 'full',
             },
             {
-                path: 'support/:folio',
+                path: 'soporte/:folio',
                 pathMatch: 'full',
                 component: SupportRequestComponent,
             },

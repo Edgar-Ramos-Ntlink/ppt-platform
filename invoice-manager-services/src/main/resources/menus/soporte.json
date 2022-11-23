@@ -1,0 +1,14 @@
+{
+	"title": "Soporte",
+	"icon": "people-outline",
+	"children": [
+		{
+			"title": "Nuevo Soporte",
+			"link": "/pages/soporte/*"
+		},
+		{
+			"title": "Reportes de Soporte",
+			"link": "/pages/reporte-soporte"
+		}
+	]
+}

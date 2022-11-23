@@ -74,7 +74,7 @@ export class SupportRequestComponent implements OnInit {
         this.route.paramMap.subscribe((route) => {
             this.dataFile = undefined;
             this.folio = route.get('folio');
-            if (this.folio !== '*') {
+            if (this.folio !== '*' && this.folio != null) {
                 this.loading = true;
                 this.supportService
                     .buscarSoporte(+this.folio)
