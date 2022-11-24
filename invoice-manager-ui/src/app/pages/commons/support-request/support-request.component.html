@@ -96,9 +96,9 @@
                                     </ng-container>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="product" class="label col-form-label">Problema a reportar</label>
-                                    <select class="custom-select d-block w-100" id="product" name="product"
-                                        [attr.disabled]="(folio !== '*')?true:null" formControlName="notes">
+                                    <label for="supportType" class="label col-form-label">Tipo de Soporte</label>
+                                    <select class="custom-select d-block w-100" id="supportType" name="supportType"
+                                        [attr.disabled]="(folio !== '*') ? true : null" formControlName="supportType">
                                         <option value="*">SELECCIONAR</option>
                                         <option value="NO PERMITE TIMBRAR">NO PERMITE TIMBRAR</option>
                                         <option value="CARGA DE SELLOS">CARGA DE SELLOS</option>
@@ -110,8 +110,27 @@
                                         <option value="NO ENVIA CORREO">NO ENVIA CORREO</option>
                                         <option value="OTRO">OTRO</option>
                                     </select>
-                                    <ng-container *ngIf="notes.invalid">
-                                        <small class="form-text text-danger" *ngIf="notes.errors?.minlength">
+                                    <ng-container *ngIf="supportType.invalid">
+                                        <small class="form-text text-danger" *ngIf="supportType.errors?.minlength">
+                                            ¡Campo Requerido!
+                                        </small>
+                                    </ng-container>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                
+                                <div class="col-md-12 mb-3">
+                                    <label for="module" class="label col-form-label">Módulo</label>
+                                    <select class="custom-select d-block w-100" id="module" name="module"
+                                        [attr.disabled]="(folio !== '*') ? true : null" formControlName="module">
+                                        <option value="*">SELECCIONAR</option>
+                                        <option *ngFor="let module of modules" [value]="module.role">
+                                            {{ module.role   }}
+                                        </option>
+                                    </select>
+                                    <ng-container *ngIf="module.invalid">
+                                        <small class="form-text text-danger" *ngIf="module.errors?.minlength">
                                             ¡Campo Requerido!
                                         </small>
                                     </ng-container>
@@ -137,9 +156,28 @@
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="notes" class="label col-form-label">Notas</label>
+                                    <textarea type="text" class="form-control" id="notes"
+                                        [attr.disabled]="(folio !== '*') ? true : null"
+                                        placeholder="Agrega cualquier nota necesaria que pueda ayudar al soporte del problema."
+                                        rows="5" formControlName="notes" name="notes"></textarea>
+                                    <ng-container *ngIf="notes.invalid">
+                                        <small class="form-text text-danger" *ngIf="notes.errors?.required">
+                                            ¡Campo Requerido!
+                                        </small>
+                                        <small class="form-text text-danger" *ngIf="notes.errors?.minlength">
+                                            Se require de una descripcion mas detallada
+                                        </small>
+                                    </ng-container>
+
+                                </div>
+                            </div>
+
                             <div class="row" *ngIf="folio !='*'">
                                 <div class="col-md-12 mb-3">
-                                    <label for="solution" class="label col-form-label">solucion del problema</label>
+                                    <label for="solution" class="label col-form-label">Solucion del problema</label>
                                     <textarea type="text" class="form-control" id="solution" [attr.disabled]="true"
                                         rows="5" formControlName="solution" name="solution"></textarea>
                                 </div>

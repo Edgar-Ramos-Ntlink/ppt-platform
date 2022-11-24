@@ -1,0 +1,83 @@
+import { Component, OnInit } from '@angular/core';
+import { GenericPage } from '../../../models/generic-page';
+import { Router } from '@angular/router';
+import { UtilsService } from '../../../@core/util-services/utils.service';
+import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
+import { SupportData } from '../../../@core/data/support-data';
+import { ClientSupport } from '../../../models/client-support';
+
+@Component({
+    selector: 'nt-reporte-soporte',
+    templateUrl: './reporte-soporte.component.html',
+    styleUrls: ['./reporte-soporte.component.scss'],
+})
+export class ReporteSoporteComponent implements OnInit {
+    public filterParams: any = {
+        companyRfc: '',
+        folio: '',
+        since: undefined,
+        to: undefined,
+        status: '*',
+        supportType: '*',
+        supportLevel: '*',
+        requestType: '*',
+        agent: '',
+        page: '0',
+        size: '10',
+    };
+    public page: GenericPage<ClientSupport> = new GenericPage();
+    public loading = false;
+
+    constructor(
+        private router: Router,
+        private utilsService: UtilsService,
+        private downloadService: DonwloadFileService,
+        private supportService: SupportData,
+    ) {}
+
+    ngOnInit() {
+        this.page.empty = false;
+        this.page.totalElements = 500;
+        this.updateDataTable();
+    }
+
+    updateDataTable(currentPage?: number, pageSize?: number) {
+        const params: any = this.utilsService.parseFilterParms(
+            this.filterParams,
+        );
+        params.page =
+            currentPage !== undefined ? currentPage : this.filterParams.page;
+        params.size =
+            pageSize !== undefined ? pageSize : this.filterParams.size;
+        this.supportService
+            .getSoportes(params)
+            .subscribe((result: GenericPage<any>) => {
+                // tslint:disable-next-line:no-console
+                console.log('res', result);
+                return (this.page = result);
+            });
+    }
+
+    redirectToSoporte(id: number) {
+        this.router.navigate([`./pages/soporte/${id}`]);
+    }
+
+    onChangePageSize(pageSize: number) {
+        this.updateDataTable(this.page.number, pageSize);
+    }
+
+    downloadReports() {
+        const params: any = this.utilsService.parseFilterParms(
+            this.filterParams,
+        );
+        params.page = 0;
+        params.size = 10000;
+        this.supportService.getSoporteReport(params).subscribe((file) => {
+            this.downloadService.downloadFile(
+                file.data,
+                'SoporteReport.xlsx',
+                'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,',
+            );
+        });
+    }
+}

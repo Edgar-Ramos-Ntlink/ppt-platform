@@ -19,6 +19,7 @@ export class SupportRequest {
     public dueDate: Date;
     public creation: Date;
     public update: Date;
+    public module: string;
 
     constructor(clientEmail?: string) {
         this.status = 'PENDIENTE';

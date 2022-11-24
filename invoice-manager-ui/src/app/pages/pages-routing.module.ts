@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SupportRequestComponent } from './commons/support-request/support-request.component';
+import { ReporteSoporteComponent } from './commons/reporte-soporte/reporte-soporte.component';
 
 const routes: Routes = [
     {
@@ -24,6 +25,11 @@ const routes: Routes = [
                 pathMatch: 'full',
                 component: SupportRequestComponent,
             },
+            {
+                path: 'reporte-soporte',
+                pathMatch: 'full',
+                component: ReporteSoporteComponent,
+              },
             {
                 path: 'promotor',
                 loadChildren: () =>
