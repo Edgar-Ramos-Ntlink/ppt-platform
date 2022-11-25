@@ -139,6 +139,25 @@
 
                             <div class="row">
                                 <div class="col-md-12 mb-3">
+                                    <label for="errorMessage" class="label col-form-label">Mensaje de error</label>
+                                    <textarea type="text" class="form-control" id="errorMessage"
+                                        [attr.disabled]="(folio !== '*')?true:null"
+                                        placeholder="Pegue aquí el error del sistema."
+                                        rows="5" formControlName="errorMessage" name="errorMessage"></textarea>
+                                    <ng-container *ngIf="errorMessage.invalid">
+                                        <small class="form-text text-danger" *ngIf="errorMessage.errors?.required">
+                                            ¡Campo Requerido!
+                                        </small>
+                                        <small class="form-text text-danger" *ngIf="errorMessage.errors?.minlength">
+                                            Se require de una descripcion mas detallada
+                                        </small>
+                                    </ng-container>
+
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
                                     <label for="problem" class="label col-form-label">Describe el problema</label>
                                     <textarea type="text" class="form-control" id="problem"
                                         [attr.disabled]="(folio !== '*')?true:null"

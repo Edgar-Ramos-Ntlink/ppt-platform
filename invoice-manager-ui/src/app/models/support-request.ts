@@ -10,6 +10,7 @@ export class SupportRequest {
     public supportLevel: string;
     public requestType: string;
     public problem: string;
+    public errorMessage: string;
     public solution: string;
     public notes: string;
     public dueDate: Date;
@@ -24,6 +25,7 @@ export class SupportRequest {
         this.supportLevel = 'primer nivel';
         this.requestType = '*';
         this.problem = '';
+        this.errorMessage = '';
         this.notes = '';
         this.module = '*';
         this.solution = '';

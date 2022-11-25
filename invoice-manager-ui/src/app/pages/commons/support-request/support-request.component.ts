@@ -56,6 +56,13 @@ export class SupportRequestComponent implements OnInit {
                     Validators.maxLength(300),
                 ],
             ],
+            errorMessage: [
+                '',
+                [
+                    Validators.minLength(2),
+                    Validators.maxLength(300),
+                ],
+            ],
             module: ['*', [Validators.minLength(2), Validators.maxLength(300)]],
             notes: ['', [Validators.minLength(2), Validators.maxLength(300)]],
             solution: ['', [Validators.maxLength(300)]],
@@ -219,6 +226,10 @@ export class SupportRequestComponent implements OnInit {
     get problem() {
         // tslint:disable-next-line:no-non-null-assertion
         return this.supportForm.get('problem')!;
+    }
+    get errorMessage() {
+        // tslint:disable-next-line:no-non-null-assertion
+        return this.supportForm.get('errorMessage')!;
     }
     get supportType() {
         // tslint:disable-next-line:no-non-null-assertion

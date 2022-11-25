@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { UtilsService } from '../../../@core/util-services/utils.service';
 import { DonwloadFileService } from '../../../@core/util-services/download-file-service';
 import { SupportData } from '../../../@core/data/support-data';
-import { ClientSupport } from '../../../models/client-support';
+import { SupportRequest } from '../../../models/support-request';
 
 @Component({
     selector: 'nt-reporte-soporte',
@@ -25,7 +25,7 @@ export class ReporteSoporteComponent implements OnInit {
         page: '0',
         size: '10',
     };
-    public page: GenericPage<ClientSupport> = new GenericPage();
+    public page: GenericPage<SupportRequest> = new GenericPage();
     public loading = false;
 
     constructor(
