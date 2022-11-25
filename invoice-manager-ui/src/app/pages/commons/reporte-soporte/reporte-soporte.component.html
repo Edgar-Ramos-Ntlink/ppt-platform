@@ -4,20 +4,7 @@
             <nb-card-header class="puff_center">Reporte Soporte</nb-card-header>
             <nb-card-body>
                 <div class="row slide_1">
-                    <div class="col-md-2">
-                        <label for="inputNumeroCliente" class="label"
-                            >Número de cliente</label
-                        >
-                        <div class="">
-                            <input
-                              id="inputNumeroCliente"
-                                type="text"
-                                [(ngModel)]="filterParams.clientId"
-                                class="form-control"
-                                placeholder="Todos"
-                            />
-                        </div>
-                    </div>
+                    
                     <div class="col-md-7">
                         <label for="inputRazonSocial" class="label"
                             >Nombre o Razón social</label
@@ -32,20 +19,6 @@
                             />
                         </div>
                     </div>
-                    <div class="col-sm-3">
-                        <label for="inputRfcCliente" class="label">RFC</label>
-                        <div class="">
-                            <input
-                                type="text"
-                                id="inputRfcCliente"
-                                [(ngModel)]="filterParams.companyRfc"
-                                class="form-control"
-                                placeholder="Todos"
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div class="row slide_2">
                     <div class="col-md-2">
                         <label for="inputFolio" class="label">Folio</label>
                         <div class="">
@@ -58,7 +31,10 @@
                             />
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                </div>
+                <div class="row slide_2">
+                    
+                    <div class="col-sm-3">
                         <label for="statusCliente" class="label">Estatus</label>
                         <select id="statusCliente"
                             id="EstatusSoporte"
@@ -73,7 +49,7 @@
                             <option value="TERMINADO">Terminado</option>
                         </select>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <label for="tipoSoporte" class="label"
                             >Tipo Soporte</label
                         >
@@ -83,12 +59,16 @@
                             [(ngModel)]="filterParams.supportType"
                             style="display: block"
                         >
-                            <option value="*">Todos</option>
-                            <option value="telefono">Telefono</option>
-                            <option value="email">E-mail</option>
-                            <option value="whatssap">Whatssap</option>
-                            <option value="skype">Skype</option>
-                            <option value="nt-invoice">Skype</option>
+                        <option value="*">TODOS</option>
+                        <option value="NO PERMITE TIMBRAR">NO PERMITE TIMBRAR</option>
+                        <option value="CARGA DE SELLOS">CARGA DE SELLOS</option>
+                        <option value="ESTATUS FACTURA INVALIDO">ESTATUS FACTURA INVALIDO</option>
+                        <option value="INCOSISTENCIAS EN EL CFDI">INCOSISTENCIAS EN EL CFDI</option>
+                        <option value="EL PDF TIENE INCOSISTENCIAS">EL PDF TIENE INCOSISTENCIAS</option>
+                        <option value="NO ME PERMITE CANCELAR">NO ME PERMITE CANCELAR</option>
+                        <option value="FACTURA/COMPLEMENTO DOLARES">FACTURA/COMPLEMENTO DOLARES</option>
+                        <option value="NO ENVIA CORREO">NO ENVIA CORREO</option>
+                        <option value="OTRO">OTRO</option>
                         </select>
                     </div>
                     <div class="col-sm-3">
@@ -101,7 +81,7 @@
                             [(ngModel)]="filterParams.supportLevel"
                             style="display: block"
                         >
-                            <option value="">Todos</option>
+                            <option value="*">Todos</option>
                             <option value="primer nivel">Primer nivel</option>
                             <option value="segundo nivel">Segundo nivel</option>
                             <option value="Interno">Interno</option>
