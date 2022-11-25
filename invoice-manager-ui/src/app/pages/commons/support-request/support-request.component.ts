@@ -8,7 +8,7 @@ import { ResourceFile } from '../../../models/resource-file';
 import { SupportData } from '../../../@core/data/support-data';
 import { SupportRequest } from '../../../models/support-request';
 import { NtError } from '../../../@core/models/nt-error';
-import { map, switchMap, catchError, finalize } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 
 @Component({
@@ -56,17 +56,17 @@ export class SupportRequestComponent implements OnInit {
                     Validators.maxLength(300),
                 ],
             ],
-            supportType: ['*', [Validators.minLength(2), Validators.maxLength(300)]],
             module: ['*', [Validators.minLength(2), Validators.maxLength(300)]],
             notes: ['', [Validators.minLength(2), Validators.maxLength(300)]],
             solution: ['', [Validators.maxLength(300)]],
+            supportType: ['*', [Validators.minLength(2), Validators.maxLength(300)]],
             agent: [''],
             dueDate: [''],
             product: [
                 'SJ INVOICE MANAGER',
                 [Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN)],
             ],
-            clientEmail: [
+            contactEmail: [
                 sessionStorage.getItem('email'),
                 [Validators.required, Validators.email],
             ],
@@ -75,11 +75,9 @@ export class SupportRequestComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log('onInitSoporte');
         this.route.paramMap.subscribe((route) => {
             this.dataFile = undefined;
             this.folio = route.get('folio');
-            console.log('folio', this.folio);
             this.modules = JSON.parse(sessionStorage.getItem('user'))?.roles;
             if (this.folio !== '*' && this.folio != null) {
                 this.loading = true;
@@ -104,7 +102,6 @@ export class SupportRequestComponent implements OnInit {
                     )
                     .subscribe(
                         (support) => {
-                            console.log(support);
                             this.supportForm.patchValue(support);
                         },
                     );
@@ -122,10 +119,6 @@ export class SupportRequestComponent implements OnInit {
         try {
             this.loading = true;
             const support: SupportRequest = { ...this.supportForm.value };
-            support.product = 'SJ INVOICE MANAGER';
-            support.companyName = 'SEMEEL JAK, S.A. DE C.V.';
-            support.companyRfc = 'SJA121128SG5';
-            support.clientEmail = sessionStorage.getItem('email');
             support.contactEmail = sessionStorage.getItem('email');
             support.agent = 'soporte.invoice@ntlink.com.mx';
             support.supportLevel = 'primer nivel';
@@ -247,9 +240,9 @@ export class SupportRequestComponent implements OnInit {
         // tslint:disable-next-line:no-non-null-assertion
         return this.supportForm.get('product')!;
     }
-    get clientEmail() {
+    get contactEmail() {
         // tslint:disable-next-line:no-non-null-assertion
-        return this.supportForm.get('clientEmail')!;
+        return this.supportForm.get('contactEmail')!;
     }
     get agent() {
         // tslint:disable-next-line:no-non-null-assertion

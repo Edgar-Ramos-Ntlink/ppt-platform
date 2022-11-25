@@ -34,7 +34,7 @@
                         <div *ngIf="folio === '*'">
                             <p>Cuentas con algun problema en la plataforma, puedes notificarnos por este medio, solo
                                 ingresa los datos solicitados, para atender su solicitud, no olvides colocar cualquier
-                                referencia relevante al problema, como es folio, prefolio, RFC y modulo donde se origino
+                                referencia relevante al problema, como es folio, prefolio y modulo donde se origino
                                 el problema</p>
                         </div>
                         <form [formGroup]="supportForm" class="needs-validation" novalidate="" (ngSubmit)="onSubmit()">
@@ -57,19 +57,19 @@
                                     </ng-container>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="clientEmail" class="label col-form-label">Email contacto</label>
+                                    <label for="contactEmail" class="label col-form-label">Email contacto</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">@</span>
                                         </div>
-                                        <input type="text" class="form-control" id="clientEmail" [attr.disabled]="true"
-                                            placeholder="Email del cliente" formControlName="clientEmail"
-                                            name="clientEmail" name="clientEmail">
-                                        <ng-container *ngIf="clientEmail.invalid">
-                                            <small class="form-text text-danger" *ngIf="clientEmail.errors?.required">
+                                        <input type="text" class="form-control" id="contactEmail" [attr.disabled]="true"
+                                            placeholder="Email del cliente" formControlName="contactEmail"
+                                            name="contactEmail" name="contactEmail">
+                                        <ng-container *ngIf="contactEmail.invalid">
+                                            <small class="form-text text-danger" *ngIf="contactEmail.errors?.required">
                                                 ¡Campo Requerido!
                                             </small>
-                                            <small class="form-text text-danger" *ngIf="clientEmail.errors?.email">
+                                            <small class="form-text text-danger" *ngIf="contactEmail.errors?.email">
                                                 Se require de un correo valido
                                             </small>
                                         </ng-container>
@@ -142,7 +142,7 @@
                                     <label for="problem" class="label col-form-label">Describe el problema</label>
                                     <textarea type="text" class="form-control" id="problem"
                                         [attr.disabled]="(folio !== '*')?true:null"
-                                        placeholder="Descripción detallada del problema, colocar datos de referencia RFC, folio, etc"
+                                        placeholder="Descripción detallada del problema, colocar datos de folio, etc"
                                         rows="5" formControlName="problem" name="problem"></textarea>
                                     <ng-container *ngIf="problem.invalid">
                                         <small class="form-text text-danger" *ngIf="problem.errors?.required">
