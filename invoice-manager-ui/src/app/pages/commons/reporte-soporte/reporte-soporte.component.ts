@@ -12,12 +12,14 @@ import { SupportRequest } from '../../../models/support-request';
     styleUrls: ['./reporte-soporte.component.scss'],
 })
 export class ReporteSoporteComponent implements OnInit {
+    public modules: [];
     public filterParams: any = {
-        companyRfc: '',
+        contactName: '',
         folio: '',
         since: undefined,
         to: undefined,
         status: '*',
+        module: '*',
         supportType: '*',
         supportLevel: '*',
         requestType: '*',
@@ -38,6 +40,7 @@ export class ReporteSoporteComponent implements OnInit {
     ngOnInit() {
         this.page.empty = false;
         this.page.totalElements = 500;
+        this.modules = JSON.parse(sessionStorage.getItem('user'))?.roles;
         this.updateDataTable();
     }
 
@@ -52,8 +55,6 @@ export class ReporteSoporteComponent implements OnInit {
         this.supportService
             .getSoportes(params)
             .subscribe((result: GenericPage<any>) => {
-                // tslint:disable-next-line:no-console
-                console.log('res', result);
                 return (this.page = result);
             });
     }

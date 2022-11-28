@@ -6,14 +6,14 @@
                 <div class="row slide_1">
                     
                     <div class="col-md-7">
-                        <label for="inputRazonSocial" class="label"
-                            >Nombre o Razón social</label
+                        <label for="inputContactName" class="label"
+                            >Nombre</label
                         >
                         <div class="">
                             <input
-                              id="inputRazonSocial"
+                              id="inputContactName"
                                 type="text"
-                                [(ngModel)]="filterParams.companyName"
+                                [(ngModel)]="filterParams.contactName"
                                 class="form-control"
                                 placeholder="Todos"
                             />
@@ -51,7 +51,7 @@
                     </div>
                     <div class="col-sm-3">
                         <label for="tipoSoporte" class="label"
-                            >Tipo Soporte</label
+                            >Tipo de Soporte</label
                         >
                         <select
                             id="tipoSoporte"
@@ -89,30 +89,18 @@
                         </select>
                     </div>
                     <div class="col-sm-3">
-                        <label for="tipoSolicitud" class="label"
+                        <label for="module" class="label"
                             >Módulo</label
                         >
                         <select
-                            id="tipoSolicitud"
+                            id="module"
                             class="form-control"
-                            [(ngModel)]="filterParams.requestType"
+                            [(ngModel)]="filterParams.module"
                             style="display: block"
                         >
                             <option value="*">Todos</option>
-                            <option value="soporte">Soporte</option>
-                            <option value="ventas">Ventas</option>
-                            <option value="atencion a clientes">
-                                Atención a Clientes
-                            </option>
-                            <option value="llamada de salida">
-                                Llamada de salida
-                            </option>
-                            <option value="Soporte Interno">
-                                Soporte Interno
-                            </option>
-                            <option value="Incidente">Incidente</option>
-                            <option value="Acceso a bitacoras">
-                                Acceso a bitacoras
+                            <option *ngFor="let module of modules" [value]="module.role">
+                                {{ module.role   }}
                             </option>
                         </select>
                     </div>
@@ -237,9 +225,8 @@
                             <tr>
                                 <th class="text-center">Acciones</th>
                                 <th>Folio</th>
-                                <!-- <th>Id Cliente</th> -->
                                 <th>Estatus</th>
-                                <!-- <th>RFC</th> -->
+                                <th>Modulo</th>
                                 <th>Nombre</th>
                                 <th>Tipo Soporte</th>
                                 <th>Nivel Soporte</th>
@@ -265,11 +252,12 @@
                                     </button>
                                 </td>
                                 <td scope="row">{{ fila.folio }}</td>
-                                <!-- <td scope="row">{{ fila.clientId }}</td> -->
                                 <td scope="row">
                                     {{ fila.status | uppercase }}
                                 </td>
-                                <!-- <td scope="row">{{ fila.companyRfc | uppercase }}</td> -->
+                                <td scope="row">
+                                    {{ fila.module | uppercase }}
+                                </td>
                                 <td scope="row">
                                     {{ fila.contactName | uppercase }}
                                 </td>

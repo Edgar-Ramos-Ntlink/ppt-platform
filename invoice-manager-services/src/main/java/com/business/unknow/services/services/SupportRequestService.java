@@ -203,7 +203,6 @@ public class SupportRequestService {
         SupportRequestValidator.validateSupportRequest(dto);
         SupportRequestValidator.assignDefaults(dto);
         SupportRequest clientSoporte = repository.save(mapper.getEntityFromDto(dto));
-        //mailNotification(dto, clientSoporte.getFolio());
         return mapper.getDtoFromEntity(clientSoporte);
     }
 
@@ -219,7 +218,6 @@ public class SupportRequestService {
 
         SupportRequest request = mapper.getEntityFromDto(requestDto);
         request.setFolio(folio);
-        //mailNotification(requestDto, folio);
         return mapper.getDtoFromEntity(repository.save(request));
     }
 
