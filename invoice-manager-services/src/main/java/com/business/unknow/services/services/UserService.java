@@ -131,13 +131,8 @@ public class UserService {
     List<MenuItem> menu = new ArrayList<>();
     menu.add(getMenuFromResource("dashboard"));
     menu.add(getMenuFromResource("division"));
-    List<String> userRoles = user.getRoles().stream().map(r -> r.getRole()).collect(Collectors.toList());
-    if (userRoles.contains("CONTABILIDAD") ||
-            userRoles.contains("TESORERIA") ||
-            userRoles.contains("OPERADOR") ||
-            userRoles.contains("ADMINISTRADOR")) {
-      menu.add(getMenuFromResource("soporte"));
-    }
+    List<String> userRoles =
+        user.getRoles().stream().map(r -> r.getRole()).collect(Collectors.toList());
     for (String role : userRoles) {
       menu.add(getMenuFromResource(role.toLowerCase()));
     }

@@ -10,42 +10,59 @@ import { EmpresaComponent } from '../commons/empresa/empresa.component';
 import { CuentaBancariaComponent } from '../commons/cuenta-bancaria/cuenta-bancaria.component';
 import { CuentasBancariasComponent } from '../commons/cuentas-bancarias/cuentas-bancarias.component';
 import { UsersComponent } from '../commons/users/users.component';
+import { ReporteSoporteComponent } from '../commons/reporte-soporte/reporte-soporte.component';
 
-const routes: Routes = [{
-  path: '',
-  component: AdministracionComponent,
-  children: [
+const routes: Routes = [
     {
-      path: 'usuarios',
-      component: UsersComponent,
-    }, {
-      path: 'usuarios/:id',
-      component: UserComponent,
-    }, {
-      path: 'clientes',
-      component: ClientesComponent,
-    }, {
-      path: 'cliente/:id',
-      component: ClienteComponent,
-    }, {
-      path: 'empresas',
-      component: EmpresasComponent,
-    }, {
-      path: 'empresa/:rfc',
-      component: EmpresaComponent,
-    },{
-      path: 'cuentas-bancarias',
-      component: CuentasBancariasComponent,
-    },{
-      path: 'cuenta-bancaria/:empresa/:cuenta',
-      component: CuentaBancariaComponent,
-    },{
-      path: 'reportes',
-      component: InvoiceReportsComponent,
-    }]}];
+        path: '',
+        component: AdministracionComponent,
+        children: [
+            {
+                path: 'usuarios',
+                component: UsersComponent,
+            },
+            {
+                path: 'usuarios/:id',
+                component: UserComponent,
+            },
+            {
+                path: 'clientes',
+                component: ClientesComponent,
+            },
+            {
+                path: 'cliente/:id',
+                component: ClienteComponent,
+            },
+            {
+                path: 'empresas',
+                component: EmpresasComponent,
+            },
+            {
+                path: 'empresa/:rfc',
+                component: EmpresaComponent,
+            },
+            {
+                path: 'cuentas-bancarias',
+                component: CuentasBancariasComponent,
+            },
+            {
+                path: 'cuenta-bancaria/:empresa/:cuenta',
+                component: CuentaBancariaComponent,
+            },
+            {
+                path: 'reportes',
+                component: InvoiceReportsComponent,
+            },
+            {
+                path: 'reporte-soporte',
+                component: ReporteSoporteComponent,
+            },
+        ],
+    },
+];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class AdministracionRoutingModule { }
+export class AdministracionRoutingModule {}
