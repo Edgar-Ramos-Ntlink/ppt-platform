@@ -41,13 +41,18 @@ public class UserService {
   private final ObjectMapper objMapper = new ObjectMapper();
 
   public Page<UserDto> getAllUsersByParams(
-      String status, String email, String alias, int page, int size) {
-    Page<User> result =
-        repository.findAllByParams(
-            String.format("%%%s%%", status),
-            String.format("%%%s%%", email),
-            String.format("%%%s%%", alias),
-            PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+      String status, String email, String alias,Optional<String> role, int page, int size) {
+    Page<User> result =  null;
+    if(role.isPresent()){
+      result = repository.findAllByRoles_Role(role.get(),PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+    } else {
+      result =
+              repository.findAllByParams(
+                      String.format("%%%s%%", status),
+                      String.format("%%%s%%", email),
+                      String.format("%%%s%%", alias),
+                      PageRequest.of(page, size, Sort.by("fechaActualizacion").descending()));
+    }
     return new PageImpl<>(
         mapper.getUsersDtoFromEntities(result.getContent()),
         result.getPageable(),

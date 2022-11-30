@@ -13,7 +13,7 @@
 		{
 			"title": "Reportes",
 			"link": "/pages/contabilidad/reportes",
-			"queryParams":{"lineaEmisor":"B","status":"8"}
+			"queryParams":{"lineaEmisor":"B","status":"*"}
 		},
 		{
 			"title": "CFDI",

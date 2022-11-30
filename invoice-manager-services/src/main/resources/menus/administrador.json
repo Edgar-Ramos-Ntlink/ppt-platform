@@ -21,7 +21,7 @@
 		{
 			"title": "Reportes Facturas",
 			"link": "/pages/administracion/reportes",
-			"queryParams":{"lineaEmisor":"A","status":"3"}
+			"queryParams":{"lineaEmisor":"A","status":"*"}
 		},
 		{
 			"title": "Reportes Soporte",

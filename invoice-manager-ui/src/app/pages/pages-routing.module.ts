@@ -21,7 +21,7 @@ const routes: Routes = [
                 pathMatch: 'full',
             },
             {
-                path: 'soporte/:folio',
+                path: 'solicitud/:folio',
                 pathMatch: 'full',
                 component: SupportRequestComponent,
             },
@@ -29,7 +29,7 @@ const routes: Routes = [
                 path: 'reporte-soporte',
                 pathMatch: 'full',
                 component: ReporteSoporteComponent,
-              },
+            },
             {
                 path: 'promotor',
                 loadChildren: () =>
@@ -75,6 +75,13 @@ const routes: Routes = [
                 loadChildren: () =>
                     import('./administracion/administracion.module').then(
                         (m) => m.AdministracionModule
+                    ),
+            },
+            {
+                path: 'soporte',
+                loadChildren: () =>
+                    import('./soporte/soporte.module').then(
+                        (m) => m.SoporteModule
                     ),
             },
             {

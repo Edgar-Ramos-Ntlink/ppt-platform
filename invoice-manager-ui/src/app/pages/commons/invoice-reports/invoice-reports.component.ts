@@ -79,15 +79,10 @@ export class InvoiceReportsComponent implements OnInit {
                         this.updateDataTable();
                         break;
                     case 'operaciones':
-                        this.updateDataTable();
-                        break;
                     case 'contabilidad':
-                        this.updateDataTable();
-                        break;
                     case 'administracion':
-                        this.updateDataTable();
-                        break;
                     case 'tesoreria':
+                    case 'soporte':
                         this.updateDataTable();
                         break;
                     default:
@@ -147,6 +142,9 @@ export class InvoiceReportsComponent implements OnInit {
             case 'contabilidad':
                 this.router.navigate([`./pages/contabilidad/cfdi/${folio}`]);
                 break;
+            case 'soporte':
+                this.router.navigate([`./pages/contabilidad/cfdi/${folio}`]);
+                break;
             case 'administracion':
                 this.router.navigate([`./pages/promotor/precfdi/${folio}`]);
                 break;
@@ -192,38 +190,20 @@ export class InvoiceReportsComponent implements OnInit {
         params.size =
             pageSize !== undefined ? pageSize : this.filterParams.size;
 
-        switch (this.module) {
-            case 'promotor':
-                this.router.navigate([`./pages/promotor/reportes`], {
-                    queryParams: params,
-                });
-                break;
-            case 'tesoreria':
-                this.router.navigate([`./pages/promotor/reportes`], {
-                    queryParams: params,
-                });
-                break;
-            case 'operaciones':
-                this.router.navigate([`./pages/operaciones/reportes`], {
-                    queryParams: params,
-                });
-                break;
-            case 'contabilidad':
-                this.router.navigate([`./pages/contabilidad/reportes`], {
-                    queryParams: params,
-                });
-                break;
-            case 'administracion':
-                this.router.navigate([`./pages/administracion/reportes`], {
-                    queryParams: params,
-                });
-                break;
-            default:
-                this.router.navigate([`./pages/promotor/reportes`], {
-                    queryParams: params,
-                });
+        if (
+            this.module == 'operaciones' ||
+            this.module == 'contabilidad' ||
+            this.module == 'administracion' ||
+            this.module == 'soporte'
+        ) {
+            this.router.navigate([`./pages/${this.module}/reportes`], {
+                queryParams: params,
+            });
+        } else {
+            this.router.navigate([`./pages/promotor/reportes`], {
+                queryParams: params,
+            });
         }
-
         this.invoiceService
             .getInvoices(params)
             .subscribe((result: GenericPage<any>) => (this.page = result));
@@ -350,7 +330,11 @@ export class InvoiceReportsComponent implements OnInit {
         this.loading = true;
         this.invoiceService.reSendEmail(folio).subscribe(
             () => {
-                this.notificationService.sendNotification('success', `Se ha enviado correctamente el correo de la factura con folio ${folio}`,'Envio de correo exitoso')
+                this.notificationService.sendNotification(
+                    'success',
+                    `Se ha enviado correctamente el correo de la factura con folio ${folio}`,
+                    'Envio de correo exitoso'
+                );
                 this.loading = false;
             },
             (error) => {
