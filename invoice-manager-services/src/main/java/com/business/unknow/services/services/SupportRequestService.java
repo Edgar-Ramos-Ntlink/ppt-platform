@@ -1,5 +1,7 @@
 package com.business.unknow.services.services;
 
+import com.business.unknow.MailConstants;
+import com.business.unknow.model.config.MailContent;
 import com.business.unknow.model.dto.SupportRequestDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.error.InvoiceManagerException;
@@ -194,7 +196,9 @@ public class SupportRequestService {
     SupportRequestValidator.validateSupportRequest(dto);
     SupportRequestValidator.assignDefaults(dto);
     SupportRequest clientSoporte = repository.save(mapper.getEntityFromDto(dto));
-    return mapper.getDtoFromEntity(clientSoporte);
+    SupportRequestDto result = mapper.getDtoFromEntity(clientSoporte);
+    sendMailNotification(result);
+    return result;
   }
 
   public SupportRequestDto updateSuppoprtRequest(SupportRequestDto requestDto, Integer folio) {
@@ -209,6 +213,7 @@ public class SupportRequestService {
 
     SupportRequest request = mapper.getEntityFromDto(requestDto);
     request.setFolio(folio);
+    sendMailNotification(requestDto);
     return mapper.getDtoFromEntity(repository.save(request));
   }
 
@@ -234,5 +239,24 @@ public class SupportRequestService {
                         HttpStatus.NOT_FOUND,
                         String.format("No existe el folio de soporte : %d", folio)));
     repository.delete(request);
+  }
+
+  private void sendMailNotification(SupportRequestDto request) {
+    List<String> recipients = Arrays.asList(request.getContactEmail(), request.getAgent());
+    MailContent content =
+        MailContent.builder()
+            .subject(String.format(MailConstants.SUPPORT_REQUEST_SUBJECT, request.getFolio()))
+            .bodyText(
+                String.format(
+                    MailConstants.SUPPORT_REQUEST_BODY_MESSAGE,
+                    request.getFolio(),
+                    request.getContactName(),
+                    request.getContactEmail(),
+                    request.getStatus(),
+                    request.getSupportType(),
+                    request.getProblem(),
+                    request.getSolution()))
+            .build();
+    mailService.sendEmail(recipients, content);
   }
 }

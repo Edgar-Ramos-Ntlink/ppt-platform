@@ -10,6 +10,7 @@ import { SupportRequest } from '../../../models/support-request';
 import { NtError } from '../../../@core/models/nt-error';
 import { catchError, finalize } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
+import { FilesData } from '../../../@core/data/files-data';
 
 @Component({
     selector: 'nt-support-request',
@@ -26,19 +27,17 @@ export class SupportRequestComponent implements OnInit {
 
     constructor(
         private supportService: SupportData,
+        private filesService: FilesData,
         private notificationService: NotificationsService,
         private downloadService: DonwloadFileService,
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
-        private router: Router,
+        private router: Router
     ) {
         this.supportForm = this.formBuilder.group({
             contactPhone: [
                 '',
-                [
-                    Validators.required,
-                    Validators.pattern('^((\\+..-?)|0)?[0-9]{10}$'),
-                ],
+                [Validators.pattern('^((\\+..-?)|0)?[0-9]{10}$')],
             ],
             contactName: [
                 '',
@@ -58,15 +57,15 @@ export class SupportRequestComponent implements OnInit {
             ],
             errorMessage: [
                 '',
-                [
-                    Validators.minLength(2),
-                    Validators.maxLength(300),
-                ],
+                [Validators.minLength(2), Validators.maxLength(300)],
             ],
             module: ['*', [Validators.minLength(2), Validators.maxLength(300)]],
             notes: ['', [Validators.minLength(2), Validators.maxLength(300)]],
             solution: ['', [Validators.maxLength(300)]],
-            supportType: ['*', [Validators.minLength(2), Validators.maxLength(300)]],
+            supportType: [
+                '*',
+                [Validators.minLength(2), Validators.maxLength(300)],
+            ],
             agent: [''],
             dueDate: [''],
             product: [
@@ -95,28 +94,26 @@ export class SupportRequestComponent implements OnInit {
                             this.notificationService.sendNotification(
                                 'danger',
                                 error.message,
-                                'No se encontro informacion',
+                                'No se encontro informacion'
                             );
                             this.supportForm.reset();
                             this.supportForm.patchValue(
                                 new SupportRequest(
-                                    sessionStorage.getItem('email'),
-                                ),
+                                    sessionStorage.getItem('email')
+                                )
                             );
                             return EMPTY;
                         }),
-                        finalize(() => this.loading = false),
+                        finalize(() => (this.loading = false))
                     )
-                    .subscribe(
-                        (support) => {
-                            this.supportForm.patchValue(support);
-                        },
-                    );
+                    .subscribe((support) => {
+                        this.supportForm.patchValue(support);
+                    });
             } else {
                 this.dataFile = undefined;
                 this.supportForm.reset();
                 this.supportForm.patchValue(
-                    new SupportRequest(sessionStorage.getItem('email')),
+                    new SupportRequest(sessionStorage.getItem('email'))
                 );
             }
         });
@@ -134,22 +131,25 @@ export class SupportRequestComponent implements OnInit {
             const result: SupportRequest = await this.supportService
                 .insertSoporte(support)
                 .toPromise();
+            this.dataFile.referencia = result.folio.toString();
+            this.dataFile.tipoRecurso = 'SOPORTE';
+            this.dataFile.tipoArchivo = 'DOCUMENT';
             if (this.dataFile) {
-                await this.supportService
-                    .insertAttachedFile(result.folio, this.dataFile)
+                await this.filesService
+                    .insertResourceFile(this.dataFile)
                     .toPromise();
             }
             this.notificationService.sendNotification(
                 'success',
                 `Solicitud creada con folio ${result.folio}`,
-                'Solicitud creada',
+                'Solicitud creada'
             );
             this.router.navigate([`/pages/soporte/${result.folio}`]);
         } catch (error) {
             this.notificationService.sendNotification(
                 'danger',
                 error.message,
-                'Error en la solicitud',
+                'Error en la solicitud'
             );
         }
         this.loading = false;
@@ -165,7 +165,7 @@ export class SupportRequestComponent implements OnInit {
                 this.dataFile.fileName = file.name;
                 this.dataFile.extension = file.name.substring(
                     file.name.lastIndexOf('.'),
-                    file.name.length,
+                    file.name.length
                 );
                 this.dataFile.data = reader.result.toString();
             };
@@ -173,41 +173,17 @@ export class SupportRequestComponent implements OnInit {
                 this.notificationService.sendNotification(
                     'danger',
                     'Error',
-                    'Error cargando el archivo',
+                    'Error cargando el archivo'
                 );
             };
         }
     }
 
-    public async uploadFile(folio: number): Promise<void> {
-        try {
-            this.loading = true;
-            this.dataFile.tipoRecurso = 'SOPORTE';
-            this.dataFile.referencia = folio.toString();
-            this.dataFile.tipoArchivo = 'DOCUMENT';
-
-            await this.supportService
-                .insertAttachedFile(folio, this.dataFile)
-                .toPromise();
-            this.notificationService.sendNotification(
-                'info',
-                'El archivo se cargo correctamente',
-            );
-        } catch (error) {
-            this.notificationService.sendNotification(
-                'danger',
-                error?.message,
-                'Error cargando archivo',
-            );
-        }
-        this.loading = false;
-    }
-
     public downloadFile() {
         this.downloadService.downloadFile(
             this.dataFile.data,
-            `archivoAdjunto${this.dataFile.extension}`,
-            this.dataFile.formato,
+            `${this.dataFile.tipoRecurso}_${this.dataFile.referencia}${this.dataFile.extension}`,
+            this.dataFile.formato
         );
     }
 

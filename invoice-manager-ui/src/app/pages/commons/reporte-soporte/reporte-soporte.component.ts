@@ -14,7 +14,7 @@ import { SupportRequest } from '../../../models/support-request';
 export class ReporteSoporteComponent implements OnInit {
     public modules: [];
     public filterParams: any = {
-        contactName: '',
+        contactEmail: '',
         folio: '',
         since: undefined,
         to: undefined,
@@ -29,24 +29,31 @@ export class ReporteSoporteComponent implements OnInit {
     };
     public page: GenericPage<SupportRequest> = new GenericPage();
     public loading = false;
+    public adminView = false;
 
     constructor(
         private router: Router,
         private utilsService: UtilsService,
         private downloadService: DonwloadFileService,
-        private supportService: SupportData,
+        private supportService: SupportData
     ) {}
 
     ngOnInit() {
         this.page.empty = false;
         this.page.totalElements = 500;
         this.modules = JSON.parse(sessionStorage.getItem('user'))?.roles;
+        if (!this.router.url.includes('administracion')) {
+            this.filterParams.contactEmail = sessionStorage.getItem('email');
+            this.adminView = false;
+        } else {
+            this.adminView = true;
+        }
         this.updateDataTable();
     }
 
     updateDataTable(currentPage?: number, pageSize?: number) {
         const params: any = this.utilsService.parseFilterParms(
-            this.filterParams,
+            this.filterParams
         );
         params.page =
             currentPage !== undefined ? currentPage : this.filterParams.page;
@@ -69,7 +76,7 @@ export class ReporteSoporteComponent implements OnInit {
 
     downloadReports() {
         const params: any = this.utilsService.parseFilterParms(
-            this.filterParams,
+            this.filterParams
         );
         params.page = 0;
         params.size = 10000;
@@ -77,7 +84,7 @@ export class ReporteSoporteComponent implements OnInit {
             this.downloadService.downloadFile(
                 file.data,
                 'SoporteReport.xlsx',
-                'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,',
+                'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'
             );
         });
     }
