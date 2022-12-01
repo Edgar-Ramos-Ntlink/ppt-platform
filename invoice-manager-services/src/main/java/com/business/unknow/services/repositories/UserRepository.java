@@ -27,6 +27,5 @@ public interface UserRepository extends CrudRepository<User, Integer> {
       @Param("alias") String alias,
       Pageable pageable);
 
-
-  Page<User> findAllByRoles_Role(String role,Pageable pageable);
+  Page<User> findAllByRoles_Role(String role, Pageable pageable);
 }

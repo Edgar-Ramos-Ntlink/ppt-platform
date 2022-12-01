@@ -40,7 +40,7 @@ public class UserController {
       @RequestParam(name = "page", defaultValue = "0") int page,
       @RequestParam(name = "size", defaultValue = "10") int size) {
     return new ResponseEntity<>(
-        service.getAllUsersByParams(status, email, alias,role, page, size), HttpStatus.OK);
+        service.getAllUsersByParams(status, email, alias, role, page, size), HttpStatus.OK);
   }
 
   @GetMapping("/{id}")

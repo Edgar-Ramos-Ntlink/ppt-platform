@@ -193,7 +193,10 @@ export class ClienteComponent implements OnInit {
     }
 
     public async updateClient() {
-        const client = { ...this.clienteForm.value };
+        const client: Client = { ...this.clienteForm.value };
+        client.id = this.clientInfo.id;
+        client.correoPromotor = this.clientInfo.correoPromotor;
+        client.fechaCreacion = this.clientInfo.fechaCreacion;
         this.loading = true;
         try {
             const errors: string[] =
