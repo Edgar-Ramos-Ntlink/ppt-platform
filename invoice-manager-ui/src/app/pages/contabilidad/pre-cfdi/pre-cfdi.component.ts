@@ -52,9 +52,9 @@ export class PreCfdiComponent implements OnInit {
     public payment: Pago;
     public factura: Factura;
     public folioParam: string;
-    public isAdministrator: boolean = false;
+    public isSupport: boolean = false;
     public folio: string;
-    public json : string;
+    public json: string;
     public formInfo = {
         emisorRfc: '*',
         receptorRfc: '*',
@@ -136,15 +136,14 @@ export class PreCfdiComponent implements OnInit {
                     this.folio = folio;
                 });
             });
-            const user = JSON.parse(sessionStorage.getItem('user'));
-            this.isAdministrator = user.roles.find((u) => u.role == 'ADMINISTRADOR') != undefined;
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        this.isSupport =
+            user.roles.find((u) => u.role == 'ADMINISTRADOR') != undefined;
 
-        this.store
-            .pipe(select(invoice))
-            .subscribe((fact) => {
-                this.factura = fact;
-                this.json = JSON.stringify(this.factura,null,'\t');
-            });
+        this.store.pipe(select(invoice)).subscribe((fact) => {
+            this.factura = fact;
+            this.json = JSON.stringify(this.factura, null, '\t');
+        });
     }
 
     public getInvoiceByFolio(folio: string) {
@@ -383,7 +382,9 @@ export class PreCfdiComponent implements OnInit {
                     'Solicitud de factura enviada correctamente'
                 );
                 this.store.dispatch(updateInvoice({ invoice }));
-                this.router.navigate([`./pages/contabilidad/cfdi/${invoice.folio}`]);
+                this.router.navigate([
+                    `./pages/contabilidad/cfdi/${invoice.folio}`,
+                ]);
             } else {
                 errors.forEach((e) =>
                     this.notificationService.sendNotification(
@@ -615,48 +616,51 @@ export class PreCfdiComponent implements OnInit {
         );
     }
 
-    public rebuildPdf(){
-        this.invoiceService.rebuildPdf(this.factura.folio)
-        .subscribe(()=> this.notificationService.sendNotification('success','PDF reconstuido'),
-        (error:NtError)=>this.notificationService.sendNotification('danger',error.message,'Error en la recostruccion del PDF'));
+    public rebuildPdf() {
+        this.invoiceService.rebuildPdf(this.factura.folio).subscribe(
+            () =>
+                this.notificationService.sendNotification(
+                    'success',
+                    'PDF reconstuido'
+                ),
+            (error: NtError) =>
+                this.notificationService.sendNotification(
+                    'danger',
+                    error.message,
+                    'Error en la recostruccion del PDF'
+                )
+        );
     }
 
-    public async jsonUpdate( dialog: TemplateRef<any>) {
+    public async jsonUpdate(dialog: TemplateRef<any>) {
         try {
-            
-            this.dialogService
-                .open(dialog)
-                .onClose.subscribe((result) => {
-                    this.loading = true;
-                    if (result !== undefined) {
-                        const fact = JSON.parse(this.json);
-                        console.log('Updating with JSON:', fact)
-                        this.invoiceService
-                            .updateInvoice(fact)
-                            .subscribe(
-                                (invoice) => {
-                                    this.notificationService.sendNotification(
-                                        'success',
-                                        'factura Actualizada'
-                                    );
-                                    this.store.dispatch(
-                                        updateInvoice({ invoice })
-                                    );
-                                    this.loading = false;
-                                },
-                                (error: NtError) => {
-                                    this.notificationService.sendNotification(
-                                        'danger',
-                                        error?.message,
-                                        'Error'
-                                    );
-                                    this.loading = false;
-                                }
+            this.dialogService.open(dialog).onClose.subscribe((result) => {
+                this.loading = true;
+                if (result !== undefined) {
+                    const fact = JSON.parse(this.json);
+                    console.log('Updating with JSON:', fact);
+                    this.invoiceService.updateInvoice(fact).subscribe(
+                        (invoice) => {
+                            this.notificationService.sendNotification(
+                                'success',
+                                'factura Actualizada'
                             );
-                    } else {
-                        this.loading = false;
-                    }
-                });
+                            this.store.dispatch(updateInvoice({ invoice }));
+                            this.loading = false;
+                        },
+                        (error: NtError) => {
+                            this.notificationService.sendNotification(
+                                'danger',
+                                error?.message,
+                                'Error'
+                            );
+                            this.loading = false;
+                        }
+                    );
+                } else {
+                    this.loading = false;
+                }
+            });
         } catch (error) {
             this.notificationService.sendNotification(
                 'danger',

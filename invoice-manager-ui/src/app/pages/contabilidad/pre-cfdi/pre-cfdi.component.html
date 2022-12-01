@@ -124,7 +124,7 @@
                                 factura?.statusFactura == 1 ||
                                 factura?.statusFactura == 2 ||
                                 factura?.statusFactura == 4 ||
-                                factura?.statusFactura == 8 || isAdministrator">
+                                factura?.statusFactura == 8 || isSupport">
                     </nt-cfdi>
                 </div>
 
@@ -149,10 +149,10 @@
 
                 <div class="clearfix" class="buttons-row" *ngIf="factura?.folio !== undefined">
                     <button class="mr" nbButton status="warning" size="medium" (click)="jsonUpdate(jsonDialog)"
-                    class="mr-2 ml-2 float-right" [nbSpinner]="loading" [disabled]="loading"
-                    *ngIf="isAdministrator && factura?.folio" nbSpinnerStatus="success" nbSpinnerSize="small"
-                    nbSpinnerMessage="">
-                    JSON Update
+                        class="mr-2 ml-2 float-right" [nbSpinner]="loading" [disabled]="loading"
+                        *ngIf="isSupport && factura?.folio" nbSpinnerStatus="success" nbSpinnerSize="small"
+                        nbSpinnerMessage="">
+                        JSON Update
                     </button>
 
                     <button nbButton status="success" size="medium" (click)="timbrarFactura(factura, dialog)"
@@ -333,14 +333,14 @@
         <nb-card-header>Editor JSON</nb-card-header>
         <nb-card-body>
             <div style="width: 90vw; height: 60vh">
-            <div class="row">
-                <div class="col-sm-12">
-                    <label for="jsonValue" class="label text-danger">Editor JSON usar con extrema precaucion</label>
-                    <textarea id="jsonValue" type="text" class="form-control bg-warning text-dark" [(ngModel)]="json" rows="20" 
-                        placeholder="JSON value"></textarea>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="jsonValue" class="label text-danger">Editor JSON usar con extrema precaucion</label>
+                        <textarea id="jsonValue" type="text" class="form-control bg-warning text-dark"
+                            [(ngModel)]="json" rows="20" placeholder="JSON value"></textarea>
+                    </div>
                 </div>
             </div>
-        </div>
         </nb-card-body>
         <nb-card-footer>
             <button class="btn btn-warning ml-2 mr-2" (click)="ref.close(undefined)">

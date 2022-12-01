@@ -42,7 +42,10 @@ export class ReporteSoporteComponent implements OnInit {
         this.page.empty = false;
         this.page.totalElements = 500;
         this.modules = JSON.parse(sessionStorage.getItem('user'))?.roles;
-        if (!this.router.url.includes('administracion')) {
+        if (
+            !this.router.url.includes('/pages/administracion') &&
+            !this.router.url.includes('/pages/soporte')
+        ) {
             this.filterParams.contactEmail = sessionStorage.getItem('email');
             this.adminView = false;
         } else {
@@ -67,7 +70,16 @@ export class ReporteSoporteComponent implements OnInit {
     }
 
     redirectToSoporte(id: number) {
-        this.router.navigate([`./pages/soporte/${id}`]);
+        if (
+            !this.router.url.includes('pages/administracion') &&
+            !this.router.url.includes('pages/soporte')
+        ) {
+            this.router.navigate([`./pages/solicitud/${id}`]);
+        } else {
+            this.router.navigate([
+                `./pages/${this.router.url.split('/')[2]}/soporte/${id}`,
+            ]);
+        }
     }
 
     onChangePageSize(pageSize: number) {

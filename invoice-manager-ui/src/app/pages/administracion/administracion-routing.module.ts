@@ -11,6 +11,7 @@ import { CuentaBancariaComponent } from '../commons/cuenta-bancaria/cuenta-banca
 import { CuentasBancariasComponent } from '../commons/cuentas-bancarias/cuentas-bancarias.component';
 import { UsersComponent } from '../commons/users/users.component';
 import { ReporteSoporteComponent } from '../commons/reporte-soporte/reporte-soporte.component';
+import { SupportRequestComponent } from '../commons/support-request/support-request.component';
 
 const routes: Routes = [
     {
@@ -56,6 +57,10 @@ const routes: Routes = [
             {
                 path: 'reporte-soporte',
                 component: ReporteSoporteComponent,
+            },
+            {
+                path: 'soporte/:folio',
+                component: SupportRequestComponent,
             },
         ],
     },

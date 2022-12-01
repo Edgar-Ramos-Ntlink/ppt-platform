@@ -7,7 +7,7 @@ import {
 } from '@nebular/theme';
 
 import { LayoutService } from '../../../@core/utils';
-import { filter, map, takeUntil, tap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { User } from '../../../@core/models/user';
 import { AuthService } from '../../../auth/auth.service';
@@ -51,7 +51,7 @@ export class OneColumnLayoutComponent implements OnInit, OnDestroy {
     currentTheme = 'default';
 
     supportItems = [
-        { title: 'Solicitar ayuda', pathMatch: './pages/soporte/*' },
+        { title: 'Solicitar ayuda', pathMatch: './pages/solicitud/*' },
         { title: 'Mis soportes', pathMatch: './pages/reporte-soporte' },
     ];
 

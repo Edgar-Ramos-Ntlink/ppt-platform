@@ -8,6 +8,7 @@ import { EmpresaComponent } from '../commons/empresa/empresa.component';
 import { EmpresasComponent } from '../commons/empresas/empresas.component';
 import { InvoiceReportsComponent } from '../commons/invoice-reports/invoice-reports.component';
 import { ReporteSoporteComponent } from '../commons/reporte-soporte/reporte-soporte.component';
+import { SupportRequestComponent } from '../commons/support-request/support-request.component';
 import { UserComponent } from '../commons/user/user.component';
 import { UsersComponent } from '../commons/users/users.component';
 import { SoporteComponent } from './soporte.component';
@@ -56,6 +57,10 @@ const routes: Routes = [
             {
                 path: 'reporte-soporte',
                 component: ReporteSoporteComponent,
+            },
+            {
+                path: 'soporte/:folio',
+                component: SupportRequestComponent,
             },
         ],
     },

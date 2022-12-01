@@ -6,10 +6,19 @@
                     <strong class="float-left">
                         <h6>Solicitud de soporte</h6>
                     </strong>
-                    <div class="ml-2 mr-2 float-right" *ngIf="folio!=='*'">
-                        <h6 class="d-inline p-2">
-                            Folio : {{folio}}
+
+                    <div class="float-right" *ngIf="folio !== '*'">
+                        <h6>
+                            <span class="badge badge-warning float-right"
+                                *ngIf="status.value === 'PENDIENTE'">{{status.value}}</span>
+                            <span class="badge badge-primary float-right"
+                                *ngIf="status.value === 'VALIDACION'">{{status.value}}</span>
+                            <span class="badge badge-primary float-right"
+                                *ngIf="status.value === 'EN PROGRESO'">{{status.value}}</span>
+                            <span class="badge badge-success float-right"
+                                *ngIf="status.value === 'FINALIZADO'">{{status.value}}</span>
                         </h6>
+
                     </div>
                 </div>
 
@@ -18,19 +27,7 @@
 
                 <div class="row">
                     <div class="col-sm-6 col-md-9 mb-3">
-                        <div class="clearfix" *ngIf="folio !== '*'">
-                            <h6>
-                                <span class="badge badge-warning float-right"
-                                    *ngIf="status.value === 'PENDIENTE'">{{status.value}}</span>
-                                <span class="badge badge-primary float-right"
-                                    *ngIf="status.value === 'VALIDACION'">{{status.value}}</span>
-                                <span class="badge badge-primary float-right"
-                                    *ngIf="status.value === 'EN PROGRESO'">{{status.value}}</span>
-                                <span class="badge badge-success float-right"
-                                    *ngIf="status.value === 'FINALIZADO'">{{status.value}}</span>
-                            </h6>
 
-                        </div>
                         <div *ngIf="folio === '*'">
                             <p>Cuentas con algun problema en la plataforma, puedes notificarnos por este medio, solo
                                 ingresa los datos solicitados, para atender su solicitud, no olvides colocar cualquier
@@ -121,13 +118,27 @@
                             <div class="row">
 
                                 <div class="col-md-12 mb-3">
-                                    <label for="module" class="label col-form-label">Módulo</label>
-                                    <select class="custom-select d-block w-100" id="module" name="module"
-                                        [attr.disabled]="(folio !== '*') ? true : null" formControlName="module">
+                                    <label for="module1" class="label col-form-label">Módulo</label>
+                                    <select class="custom-select d-block w-100" id="module1" name="module"
+                                        *ngIf="folio === '*'" formControlName="module">
                                         <option value="*">SELECCIONAR</option>
-                                        <option *ngFor="let module of modules" [value]="module.role">
-                                            {{ module.role }}
+                                        <option *ngFor="let module of modules" [value]="module">
+                                            {{ module }}
                                         </option>
+                                    </select>
+                                    <select class="custom-select d-block w-100" name="module"
+                                        *ngIf="folio !== '*'" [attr.disabled]="true" formControlName="module">
+                                        <option value="OPERADOR">OPERADOR</option>
+                                        <option value="PROMOTOR">PROMOTOR</option>
+                                        <option value="TESORERIA">TESORERIA</option>
+                                        <option value="CONTABILIDAD">CONTABILIDAD</option>
+                                        <option value="CONSULTAS">CONSULTAS</option>
+                                        <option value="LEGAL">LEGAL</option>
+                                        <option value="BANCOS">BANCOS</option>
+                                        <option value="ADMINISTRACION">ADMINISTRACION</option>
+                                        <option value="OPERADOR-B">OPERADOR-B</option>
+                                        <option value="OPERADOR-C">OPERADOR-c</option>
+                                        <option value="SOPORTE">TESORERIA</option>
                                     </select>
                                     <ng-container *ngIf="module.invalid">
                                         <small class="form-text text-danger" *ngIf="module.errors?.minlength">
@@ -150,6 +161,9 @@
                                         </small>
                                         <small class="form-text text-danger" *ngIf="problem.errors?.minlength">
                                             Se require de una descripcion mas detallada
+                                        </small>
+                                        <small class="form-text text-danger" *ngIf="problem.errors?.maxlength">
+                                            La descripcion no debe superar 300 caracteres
                                         </small>
                                     </ng-container>
 
@@ -179,7 +193,7 @@
                                 <div class="col-md-12 mb-3">
                                     <label for="notes" class="label col-form-label">Notas</label>
                                     <textarea type="text" class="form-control" id="notes"
-                                        [attr.disabled]="(folio !== '*') ? true : null"
+                                        [attr.disabled]="(status.value === 'FINALIZADO')?true:null"
                                         placeholder="Agrega cualquier nota necesaria que pueda ayudar al soporte del problema."
                                         rows="5" formControlName="notes" name="notes"></textarea>
                                     <ng-container *ngIf="notes.invalid">
@@ -189,6 +203,9 @@
                                         <small class="form-text text-danger" *ngIf="notes.errors?.minlength">
                                             Se require de una descripcion mas detallada
                                         </small>
+                                        <small class="form-text text-danger" *ngIf="notes.errors?.maxlength">
+                                            La descripcion no debe superar 300 caracteres
+                                        </small>
                                     </ng-container>
 
                                 </div>
@@ -197,8 +214,17 @@
                             <div class="row" *ngIf="folio !='*'">
                                 <div class="col-md-12 mb-3">
                                     <label for="solution" class="label col-form-label">Solucion del problema</label>
-                                    <textarea type="text" class="form-control" id="solution" [attr.disabled]="true"
-                                        rows="5" formControlName="solution" name="solution"></textarea>
+                                    <textarea type="text" class="form-control" id="solution"
+                                        [attr.disabled]="supportView?null:false" rows="5" formControlName="solution"
+                                        name="solution"></textarea>
+                                    <ng-container *ngIf="solution.invalid">
+                                        <small class="form-text text-danger" *ngIf="solution.errors?.minlength">
+                                            Se require de una descripcion mas detallada
+                                        </small>
+                                        <small class="form-text text-danger" *ngIf="solution.errors?.maxlength">
+                                            La descripcion no debe superar 300 caracteres
+                                        </small>
+                                    </ng-container>
                                 </div>
                             </div>
                             <div class="row" *ngIf="folio !='*'">
@@ -210,9 +236,9 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="dueDate" class="label col-form-label">Fecha limite</label>
+                                    <label for="dueDate1" class="label col-form-label">Fecha limite</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="dueDate" [attr.disabled]="true"
+                                        <input type="text" class="form-control" id="dueDate1" [attr.disabled]="true"
                                             formControlName="dueDate" name="dueDate" name="dueDate">
                                     </div>
                                 </div>
@@ -232,12 +258,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-12" *ngIf="dataFile && folio!='*'">
-                                    <button class="btn d-inline mt-2 ml-2 mr-2" type="button"
-                                        [ngClass]="{'btn-outline-primary': dataFile!= undefined && dataFile.id != undefined, 'btn-outline-secondary': !dataFile || dataFile.id ==undefined}"
-                                        (click)="downloadFile()" [disabled]="!dataFile || dataFile.id ==undefined">
-                                        <i class="fa fa-download"></i></button>
-                                </div>
                             </div>
                             <br>
                             <div class="clearfix">
@@ -248,7 +268,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-sm-6 col-md-3 mb-3">
+                    <div class="col-sm-6 col-md-3 mb-3" *ngIf="folio === '*'">
                         <strong class="d-flex justify-content-between align-items-center mb-3">
                             <span class="text-muted">¿Ya cuentas con un ticket?</span>
                         </strong>
@@ -264,8 +284,123 @@
 
                         </div>
                     </div>
+
+                    <div class="col-sm-6 col-md-3 mb-3 text-right" *ngIf="folio !== '*'">
+
+                        <h6 class="d-inline p-2">
+                            Folio : {{folio}}
+                        </h6>
+                        <strong class="d-flex justify-content-between align-items-center mb-3" *ngIf="!dataFile">
+                            <span class="text-muted">No hay documentos adjuntos</span>
+                        </strong>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button class="btn btn-info mt-2 ml-2 mr-2" type="button" *ngIf="dataFile"
+                                    (click)="downloadFile()"> Archivo adjunto &nbsp;&nbsp;
+                                    <i class="fa fa-download"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button class="btn d-inline mt-2 ml-2 mr-2 btn-primary" type="button"
+                                    *ngIf="status.value === 'PENDIENTE'  && supportView" (click)="takeSupport()"> Tomar
+                                    Soporte
+                                    &nbsp;&nbsp;
+                                    <i class="fa fa-cogs"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button class="btn d-inline mt-2 ml-2 mr-2 btn-warning" type="button"
+                                    *ngIf="status.value === 'EN PROGRESO'" (click)="scaleSupport(dialog)"> Escalar
+                                    soporte
+                                    &nbsp;&nbsp;
+                                    <i class="fa fa-bolt"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button class="btn d-inline mt-2 ml-2 mr-2 btn-success" type="button"
+                                    *ngIf="status.value === 'EN PROGRESO'" (click)="validateSupport()"> Validar
+                                    solucion
+                                    &nbsp;&nbsp;
+                                    <i class="fa fa-user"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button class="btn d-inline mt-2 ml-2 mr-2 btn-danger" type="button"
+                                    *ngIf="status.value === 'VALIDACION' && !adminView && !supportView"
+                                    (click)="rejectSupport()">
+                                    Rechazar solucion &nbsp;&nbsp;
+                                    <i class="fa fa-times-circle"></i></button>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button class="btn d-inline mt-2 ml-2 mr-2 btn-success" type="button"
+                                    *ngIf="status.value === 'VALIDACION' && !supportView" (click)="finalizeSupport()">
+                                    Finalizar soporte
+                                    &nbsp;&nbsp;
+                                    <i class="fa fa-check"></i></button>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                    </div>
                 </div>
             </nb-card-body>
         </nb-card>
     </div>
 </div>
+
+<ng-template #dialog let-data let-ref="dialogRef">
+    <nb-card>
+        <nb-card-header>Seleccione Pack Facturacion</nb-card-header>
+        <nb-card-body>
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="agents" class="label">Agente a escalar</label>
+                    <select id="agents" id="agents" class="form-control" [(ngModel)]="data.agent">
+                        <option *ngFor="let user of supportUsers" [value]="user.email">
+                            {{ user.alias }} - {{ user.email }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-5">
+                    <label for="duedate" class="label">Nueva Fecha Limite</label>
+                    <input nbInput id="duedate" placeholder="duedate" [nbDatepicker]="dueDate" fullWidth
+                        style="display: block" [(ngModel)]="data.dueDate" />
+                    <nb-datepicker #dueDate></nb-datepicker>
+                </div>
+            </div>
+            <div class="row">
+                <label for="scalereason" class="label col-form-label">Notas</label>
+                <textarea type="text" class="form-control" id="scalereason" [(ngModel)]="data.notes"
+                    placeholder="Describe la razon del escalamiento" rows="2" name="notes"></textarea>
+                <small class="form-text text-danger" *ngIf="data.notes.length < 10">
+                    Se require de una descripcion mas detallada
+                </small>
+            </div>
+        </nb-card-body>
+        <nb-card-footer>
+            <button class="btn btn-warning" (click)="ref.close(undefined)">
+                Salir
+            </button>
+            &nbsp;&nbsp;
+            <button class="btn btn-success" (click)="ref.close(data)" [disabled]="data.notes.length < 10">
+                Escalar
+            </button>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>
