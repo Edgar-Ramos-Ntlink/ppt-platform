@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { GenericPage } from '../../models/generic-page';
 import { ResourceFile } from '../../models/resource-file';
 import { SupportRequest } from '../../models/support-request';
 
@@ -10,12 +11,11 @@ export abstract class SupportData {
         soporte: SupportRequest
     ): Observable<SupportRequest>;
 
-    abstract buscarSoporte(folio: number): Observable<SupportRequest>;
+    abstract buscarSoporte(idSoporte: number): Observable<SupportRequest>;
 
-    abstract insertAttachedFile(
-        folio: number,
-        file: ResourceFile
-    ): Observable<any>;
+    abstract getSoportes(
+        filterParams: any
+    ): Observable<GenericPage<SupportRequest>>;
 
-    abstract getAttachedDocument(folio: number): Observable<ResourceFile>;
+    abstract getSoporteReport(filterParams: any): Observable<ResourceFile>;
 }

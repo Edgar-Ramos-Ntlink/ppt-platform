@@ -6,6 +6,7 @@ import com.business.unknow.services.services.RoleService;
 import com.business.unknow.services.services.UserService;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,10 +36,11 @@ public class UserController {
       @RequestParam(name = "status", defaultValue = "") String status,
       @RequestParam(name = "email", defaultValue = "") String email,
       @RequestParam(name = "alias", defaultValue = "") String alias,
+      @RequestParam(name = "role") Optional<String> role,
       @RequestParam(name = "page", defaultValue = "0") int page,
       @RequestParam(name = "size", defaultValue = "10") int size) {
     return new ResponseEntity<>(
-        service.getAllUsersByParams(status, email, alias, page, size), HttpStatus.OK);
+        service.getAllUsersByParams(status, email, alias, role, page, size), HttpStatus.OK);
   }
 
   @GetMapping("/{id}")

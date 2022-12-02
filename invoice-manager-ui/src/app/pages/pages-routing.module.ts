@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SupportRequestComponent } from './commons/support-request/support-request.component';
+import { ReporteSoporteComponent } from './commons/reporte-soporte/reporte-soporte.component';
 
 const routes: Routes = [
     {
@@ -20,9 +21,14 @@ const routes: Routes = [
                 pathMatch: 'full',
             },
             {
-                path: 'support/:folio',
+                path: 'solicitud/:folio',
                 pathMatch: 'full',
                 component: SupportRequestComponent,
+            },
+            {
+                path: 'reporte-soporte',
+                pathMatch: 'full',
+                component: ReporteSoporteComponent,
             },
             {
                 path: 'promotor',
@@ -69,6 +75,13 @@ const routes: Routes = [
                 loadChildren: () =>
                     import('./administracion/administracion.module').then(
                         (m) => m.AdministracionModule
+                    ),
+            },
+            {
+                path: 'soporte',
+                loadChildren: () =>
+                    import('./soporte/soporte.module').then(
+                        (m) => m.SoporteModule
                     ),
             },
             {

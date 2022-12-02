@@ -19,8 +19,12 @@
 			"link": "/pages/administracion/cuentas-bancarias"
 		},
 		{
-			"title": "Reportes",
+			"title": "Reportes Facturas",
 			"link": "/pages/administracion/reportes",
-			"queryParams":{"lineaEmisor":"A","status":"3"}
+			"queryParams":{"lineaEmisor":"A","status":"*"}
+		},
+		{
+			"title": "Reportes Soporte",
+			"link": "/pages/administracion/reporte-soporte"
 		}]
   }

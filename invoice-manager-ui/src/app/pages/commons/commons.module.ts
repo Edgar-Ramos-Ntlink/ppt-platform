@@ -5,6 +5,7 @@ import {
     NbActionsModule,
     NbButtonModule,
     NbCardModule,
+    NbListModule,
     NbTabsetModule,
     NbCheckboxModule,
     NbDatepickerModule,
@@ -34,6 +35,7 @@ import { CoreModule } from '../../@core/core.module';
 import { UsersComponent } from './users/users.component';
 import { UserComponent } from './user/user.component';
 import { SupportRequestComponent } from './support-request/support-request.component';
+import { ReporteSoporteComponent } from './reporte-soporte/reporte-soporte.component';
 
 @NgModule({
     declarations: [
@@ -50,7 +52,8 @@ import { SupportRequestComponent } from './support-request/support-request.compo
         CuentasBancariasComponent,
         CuentasBancariasComponent,
         CuentaBancariaComponent,
-        SupportRequestComponent
+        SupportRequestComponent,
+        ReporteSoporteComponent,
     ],
     imports: [
         CommonModule,
@@ -62,6 +65,7 @@ import { SupportRequestComponent } from './support-request/support-request.compo
         NbActionsModule,
         NbButtonModule,
         NbCardModule,
+        NbListModule,
         NbCheckboxModule,
         NbDatepickerModule,
         NbInputModule,

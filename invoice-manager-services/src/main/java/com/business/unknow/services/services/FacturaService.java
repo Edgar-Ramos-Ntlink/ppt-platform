@@ -12,7 +12,6 @@ import static com.business.unknow.enums.TipoArchivo.TXT;
 import static com.business.unknow.enums.TipoArchivo.XML;
 import static com.business.unknow.enums.TipoDocumento.COMPLEMENTO;
 import static com.business.unknow.enums.TipoDocumento.FACTURA;
-import static com.business.unknow.enums.TipoDocumento.NOTA_CREDITO;
 
 import com.business.unknow.MailConstants;
 import com.business.unknow.enums.FacturaStatus;

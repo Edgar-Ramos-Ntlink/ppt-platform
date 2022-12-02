@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.business.unknow</groupId>
         <artifactId>invoice-manager-platform</artifactId>
-        <version>4.6.10</version>
+        <version>4.6.11</version>
     </parent>
     <artifactId>invoice-manager-models</artifactId>
     <name>invoice-manager-models</name>
@@ -17,7 +17,7 @@
         <lombok.version>1.18.20</lombok.version>
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-        <ntlink-utils-version>2.3.5</ntlink-utils-version>
+        <ntlink-utils-version>2.4.0</ntlink-utils-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>

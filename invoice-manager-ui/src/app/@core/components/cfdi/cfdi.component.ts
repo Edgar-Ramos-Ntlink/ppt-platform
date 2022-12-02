@@ -24,7 +24,7 @@ export class CfdiComponent implements OnInit {
 
     public factura: Factura;
     public cfdi: Cfdi;
-    public isAdministrator: boolean = false;
+    public isSupport: boolean = false;
     public loading: boolean = false;
 
     public payTypeCat: Catalogo[] = [];
@@ -52,8 +52,8 @@ export class CfdiComponent implements OnInit {
 
     initVariables() {
         const user = JSON.parse(sessionStorage.getItem('user'));
-        this.isAdministrator =
-            user.roles.find((u) => u.role == 'ADMINISTRADOR') != undefined;
+        this.isSupport =
+            user.roles.find((u) => u.role == 'SOPORTE') != undefined;
         this.catalogsService.getFormasPago().then((cat) => {
             this.payTypeCat = cat;
             if (this.cfdi?.metodoPago && !this.cfdi.folio) {

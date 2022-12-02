@@ -1,0 +1,26 @@
+ {
+    "title": "Soporte",
+    "icon": "question-mark-circle-outline",
+    "children": [
+    	{
+			"title": "Usuarios",
+			"link": "/pages/soporte/usuarios"
+		},
+		{
+			"title": "Empresas",
+			"link": "/pages/soporte/empresas"
+		},
+		{
+			"title": "Clientes",
+			"link": "/pages/soporte/clientes"
+		},
+		{
+			"title": "Reportes Facturas",
+			"link": "/pages/soporte/reportes",
+			"queryParams":{"lineaEmisor":"A","status":"*"}
+		},
+		{
+			"title": "Reportes Soporte",
+			"link": "/pages/soporte/reporte-soporte"
+		}]
+  }

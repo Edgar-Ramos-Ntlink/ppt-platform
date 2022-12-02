@@ -1,5 +1,8 @@
-package com.business.unknow.model.dto;
+package com.business.unknow.model.dto.services;
 
+import static com.business.unknow.Constants.JSON_DATE_FORMAT;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
@@ -20,23 +23,25 @@ import lombok.extern.jackson.Jacksonized;
 public class SupportRequestDto implements Serializable {
 
   private Integer folio;
-  private Integer clientId;
-  private String clientEmail;
-  private String companyRfc;
-  private String companyName;
-  private String contactPhone;
   private String contactEmail;
   private String contactName;
-  private String product;
+  private String contactPhone;
+  private String module;
   private String status;
-  private String supportType;
   private String agent;
+  private String supportType;
   private String supportLevel;
-  private String requestType;
   private String problem;
+  private String errorMessage;
   private String solution;
   private String notes;
+
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATE_FORMAT)
   private Date dueDate;
+
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATE_FORMAT)
   private Date creation;
+
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATE_FORMAT)
   private Date update;
 }

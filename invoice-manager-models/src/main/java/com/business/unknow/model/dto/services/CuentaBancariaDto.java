@@ -1,6 +1,6 @@
 package com.business.unknow.model.dto.services;
 
-import static com.business.unknow.Constants.JSON_DAY_FORMAT;
+import static com.business.unknow.Constants.JSON_DATE_FORMAT;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -35,9 +35,9 @@ public class CuentaBancariaDto implements Serializable {
   private String linea;
   private String razonSocial;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATE_FORMAT)
   private Date fechaCreacion;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DATE_FORMAT)
   private Date fechaActualizacion;
 }

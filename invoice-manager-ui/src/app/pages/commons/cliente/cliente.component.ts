@@ -193,7 +193,7 @@ export class ClienteComponent implements OnInit {
     }
 
     public async updateClient() {
-        const client = { ...this.clienteForm.value };
+        const client: Client = { ...this.clienteForm.value };
         this.loading = true;
         try {
             const errors: string[] =
@@ -209,6 +209,9 @@ export class ClienteComponent implements OnInit {
                 this.loading = false;
                 return;
             }
+            client.id = this.clientInfo.id;
+            client.correoPromotor = this.clientInfo.correoPromotor;
+            client.fechaCreacion = this.clientInfo.fechaCreacion;
             this.clientInfo = await this.clientService
                 .updateClient(client)
                 .toPromise();
@@ -339,6 +342,9 @@ export class ClienteComponent implements OnInit {
         client.activo = true;
         this.loading = true;
         try {
+            client.id = this.clientInfo.id;
+            client.correoPromotor = this.clientInfo.correoPromotor;
+            client.fechaCreacion = this.clientInfo.fechaCreacion;
             this.clientInfo = await this.clientService
                 .updateClient(client)
                 .toPromise();
@@ -361,6 +367,9 @@ export class ClienteComponent implements OnInit {
         client.activo = false;
         this.loading = true;
         try {
+            client.id = this.clientInfo.id;
+            client.correoPromotor = this.clientInfo.correoPromotor;
+            client.fechaCreacion = this.clientInfo.fechaCreacion;
             this.clientInfo = await this.clientService
                 .updateClient(client)
                 .toPromise();

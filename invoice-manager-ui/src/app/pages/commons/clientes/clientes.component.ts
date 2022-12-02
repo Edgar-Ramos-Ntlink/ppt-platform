@@ -11,7 +11,7 @@ import { DonwloadFileService } from '../../../@core/util-services/download-file-
     styleUrls: ['./clientes.component.scss'],
 })
 export class ClientesComponent implements OnInit {
-    public loading: boolean= false;
+    public loading: boolean = false;
     public page: GenericPage<any> = new GenericPage();
 
     public module: string = 'promotor';
@@ -34,7 +34,7 @@ export class ClientesComponent implements OnInit {
 
     ngOnInit() {
         this.module = this.router.url.split('/')[2];
-        
+
         this.route.queryParams.subscribe((params) => {
             if (!this.utilsService.compareParams(params, this.filterParams)) {
                 this.filterParams = { ...this.filterParams, ...params };
@@ -81,59 +81,53 @@ export class ClientesComponent implements OnInit {
         params.size =
             pageSize !== undefined ? pageSize : this.filterParams.size;
 
-        switch (this.module) {
-            case 'promotor':
-                this.router.navigate([`./pages/promotor/clientes`], {
-                    queryParams: params,
-                });
-                break;
-            case 'operaciones':
-                this.router.navigate([`./pages/operaciones/clientes`], {
-                    queryParams: params,
-                });
-                break;
-            case 'administracion':
-                this.router.navigate([`./pages/administracion/clientes`], {
-                    queryParams: params,
-                });
-                break;
-            default:
-                this.router.navigate([`./pages/promotor/clientes`], {
-                    queryParams: params,
-                });
+        if (this.module) {
+            this.router.navigate([`./pages/${this.module}/clientes`], {
+                queryParams: params,
+            });
+        } else {
+            this.router.navigate([`./pages/promotor/clientes`], {
+                queryParams: params,
+            });
         }
 
-        this.clientService
-            .getClients(params)
-            .subscribe((result: GenericPage<any>) => {this.page = result; this.loading = false;},
-            error=>{ console.log(error); this.loading = false;});
+        this.clientService.getClients(params).subscribe(
+            (result: GenericPage<any>) => {
+                this.page = result;
+                this.loading = false;
+            },
+            (error) => {
+                console.log(error);
+                this.loading = false;
+            }
+        );
     }
 
     public onChangePageSize(pageSize: number) {
         this.updateDataTable(this.page.number, pageSize);
     }
 
-    
-
     public async downloadHandler() {
-        const params: any = { ... this.filterParams };
+        const params: any = { ...this.filterParams };
         params.page = 0;
         params.size = 2000;
         this.loading = true;
         try {
-          const result = await this.clientService.getClientsReport(params).toPromise();
-          this.downloadService.downloadFile(result.data, 'ReporteClientes.xlsx', 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,');
+            const result = await this.clientService
+                .getClientsReport(params)
+                .toPromise();
+            this.downloadService.downloadFile(
+                result.data,
+                'ReporteClientes.xlsx',
+                'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,'
+            );
         } catch (error) {
-          console.error(error);
-        } 
+            console.error(error);
+        }
         this.loading = false;
-    
-      }
-    
+    }
 
     public redirectToCliente(id: number) {
-        this.router.navigate([
-            `./pages/${this.module}/cliente/${id}`,
-        ]);
+        this.router.navigate([`./pages/${this.module}/cliente/${id}`]);
     }
 }
