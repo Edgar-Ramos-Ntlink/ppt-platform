@@ -2,10 +2,14 @@ package com.business.unknow.model.dto;
 
 import static com.business.unknow.Constants.JSON_DAY_FORMAT;
 
+import com.business.unknow.serializers.CustomDateTimeDeserializer;
+import com.business.unknow.serializers.CustomDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -53,10 +57,12 @@ public class FacturaCustom implements Serializable {
   private BigDecimal impuestosRetenidos;
   private BigDecimal impuestosTrasladados;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
+  @JsonSerialize(using = CustomDateTimeSerializer.class)
+  @JsonDeserialize(using = CustomDateTimeDeserializer.class)
   private Date fechaCreacion;
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = JSON_DAY_FORMAT)
+  @JsonSerialize(using = CustomDateTimeSerializer.class)
+  @JsonDeserialize(using = CustomDateTimeDeserializer.class)
   private Date fechaActualizacion;
 
   private String statusCancelacion;

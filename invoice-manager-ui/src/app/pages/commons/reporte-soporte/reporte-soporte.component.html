@@ -184,16 +184,13 @@
                                     {{ fila.agent }}
                                 </td>
                                 <td scope="row">
-                                    {{ fila.dueDate | date: 'd/MM/yy' }}
+                                    {{ fila.dueDate }}
                                 </td>
                                 <td scope="row">
-                                    {{ fila.creation | date: 'd/MM/yy' }}
+                                    {{ fila.creation }}
                                 </td>
                                 <td scope="row">
-                                    {{
-                                    fila.update
-                                    | date: 'd/MM/yy'
-                                    }}
+                                    {{ fila.update }}
                                 </td>
                             </tr>
                         </tbody>

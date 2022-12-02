@@ -22,5 +22,8 @@ public class MailConstants {
           + "<br> <strong> Descripción problema</strong><br>"
           + "<p style=\"font-family: arial, sans-serif;\">%s</p>"
           + "<br> <strong>Solución</strong><br>"
-          + "<p style=\"font-family: arial, sans-serif;\">%s</p>";
+          + "<p style=\"font-family: arial, sans-serif;\">%s</p>"
+          + "<br> <strong>Notas</strong><br>"
+          + "<p style=\"font-family: arial, sans-serif;\">%s</p>"
+          + "<br> <strong> Agente :  %s</strong> <br>";
 }

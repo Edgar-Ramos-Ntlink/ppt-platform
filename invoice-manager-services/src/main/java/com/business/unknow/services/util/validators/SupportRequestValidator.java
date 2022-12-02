@@ -1,6 +1,6 @@
 package com.business.unknow.services.util.validators;
 
-import com.business.unknow.model.dto.SupportRequestDto;
+import com.business.unknow.model.dto.services.SupportRequestDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import java.sql.Date;
 import java.time.LocalDate;

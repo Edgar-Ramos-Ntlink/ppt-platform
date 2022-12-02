@@ -35,7 +35,7 @@
 <div class="row" *ngIf="cfdi">
     <div class="col-md-12">
         <nt-emisor *ngIf="cfdi.emisor && cfdi.emisor.rfc !== undefined" [emisor]="cfdi.emisor"
-            [allowEdit]="isSupport || (factura.statusFactura != 3 && factura.statusFactura != 7)"
+            [allowEdit]="isSupport || (allowEdit && factura.statusFactura != 3 && factura.statusFactura != 7)"
             [direccion]="factura.direccionEmisor"></nt-emisor>
 
         <br />

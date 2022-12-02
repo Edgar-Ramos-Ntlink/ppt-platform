@@ -2,7 +2,7 @@ package com.business.unknow.services.services;
 
 import com.business.unknow.MailConstants;
 import com.business.unknow.model.config.MailContent;
-import com.business.unknow.model.dto.SupportRequestDto;
+import com.business.unknow.model.dto.services.SupportRequestDto;
 import com.business.unknow.model.dto.files.ResourceFileDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.entities.SupportRequest;
@@ -255,7 +255,9 @@ public class SupportRequestService {
                     request.getStatus(),
                     request.getSupportType(),
                     request.getProblem(),
-                    request.getSolution()))
+                    request.getSolution(),
+                    request.getNotes(),
+                    request.getAgent()))
             .build();
     mailService.sendEmail(recipients, content);
   }

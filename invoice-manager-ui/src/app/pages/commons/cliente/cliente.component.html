@@ -394,7 +394,7 @@
                                     <div class="input-group">
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" id="documentFile"
-                                                [disabled]="clienteForm.valid"
+                                                [disabled]="clienteForm.invalid"
                                                 accept=".pdf,.xls,.xlsx,.doc, .docx,image/*"
                                                 (change)="fileDataUploadListener($event)" style="display:block;"
                                                 aria-describedby="inputDocFile">
@@ -414,7 +414,7 @@
                                         [disabled]="formInfo.fileDataName.length == 0">
                                         <i class="fa fa-upload"></i></button>
                                     <button class="btn d-inline mt-2 ml-2 mr-2"
-                                        [ngClass]="{'btn-outline-primary': dataFile!= undefined && dataFile.id != undefined, 'btn-outline-secondary': !dataFile || dataFile.id ==undefined}"
+                                        [ngClass]="{'btn-outline-primary': dataFile!= undefined && clientInfo.id, 'btn-outline-secondary': !dataFile || dataFile.id ==undefined}"
                                         (click)="downloadFile()" *ngIf="clientInfo.id !== undefined"
                                         [disabled]="!dataFile || dataFile.id ==undefined">
                                         <i class="fa fa-download"></i></button>

@@ -39,8 +39,8 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="contactname" class="label col-form-label">Nombre de contacto</label>
                                     <input type="text" class="form-control text-uppercase" id="contactname"
-                                        [attr.disabled]="(folio !== '*')?true:null" placeholder="Su nombre"
-                                        formControlName="contactName" name="contactname">
+                                        [attr.disabled]="true" placeholder="Su nombre" formControlName="contactName"
+                                        name="contactname">
                                     <ng-container *ngIf="contactName.invalid">
                                         <small class="form-text text-danger" *ngIf="contactName.errors?.required">
                                             ¡Campo Requerido!
@@ -126,8 +126,8 @@
                                             {{ module }}
                                         </option>
                                     </select>
-                                    <select class="custom-select d-block w-100" name="module"
-                                        *ngIf="folio !== '*'" [attr.disabled]="true" formControlName="module">
+                                    <select class="custom-select d-block w-100" name="module" *ngIf="folio !== '*'"
+                                        [attr.disabled]="true" formControlName="module">
                                         <option value="OPERADOR">OPERADOR</option>
                                         <option value="PROMOTOR">PROMOTOR</option>
                                         <option value="TESORERIA">TESORERIA</option>
@@ -175,8 +175,8 @@
                                     <label for="errorMessage" class="label col-form-label">Mensaje de error</label>
                                     <textarea type="text" class="form-control" id="errorMessage"
                                         [attr.disabled]="(folio !== '*')?true:null"
-                                        placeholder="Pegue aquí el error del sistema." rows="5"
-                                        formControlName="errorMessage" name="errorMessage"></textarea>
+                                        placeholder="Copié y pegué mensaje de error de la notificacion que aparece en la seccion superior derecha"
+                                        rows="5" formControlName="errorMessage" name="errorMessage"></textarea>
                                     <ng-container *ngIf="errorMessage.invalid">
                                         <small class="form-text text-danger" *ngIf="errorMessage.errors?.required">
                                             ¡Campo Requerido!
@@ -215,8 +215,8 @@
                                 <div class="col-md-12 mb-3">
                                     <label for="solution" class="label col-form-label">Solucion del problema</label>
                                     <textarea type="text" class="form-control" id="solution"
-                                        [attr.disabled]="supportView?null:false" rows="5" formControlName="solution"
-                                        name="solution"></textarea>
+                                        [attr.disabled]="(supportView && 'FINALIZADO'!==status?.value)?null:false"
+                                        rows="5" formControlName="solution" name="solution"></textarea>
                                     <ng-container *ngIf="solution.invalid">
                                         <small class="form-text text-danger" *ngIf="solution.errors?.minlength">
                                             Se require de una descripcion mas detallada
@@ -266,6 +266,20 @@
                                     ENVIAR
                                 </button>
                             </div>
+                            <div class="row" *ngIf="folio !=='*'">
+                                <div class="col-md-6 mb-3">
+                                    <label for="agent" class="label col-form-label">Fecha Creacion</label>
+                                    <div class="input-group">
+                                        <strong>{{creation.value}}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="dueDate1" class="label col-form-label">Fecha actualizacion</label>
+                                    <div class="input-group">
+                                        <strong>{{update.value}}</strong>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                     <div class="col-sm-6 col-md-3 mb-3" *ngIf="folio === '*'">
@@ -314,7 +328,8 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <button class="btn d-inline mt-2 ml-2 mr-2 btn-warning" type="button"
-                                    *ngIf="status.value === 'EN PROGRESO'" (click)="scaleSupport(dialog)"> Escalar
+                                    *ngIf="status.value === 'EN PROGRESO' && supportView"
+                                    (click)="scaleSupport(dialog)"> Escalar
                                     soporte
                                     &nbsp;&nbsp;
                                     <i class="fa fa-bolt"></i></button>
@@ -324,7 +339,8 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <button class="btn d-inline mt-2 ml-2 mr-2 btn-success" type="button"
-                                    *ngIf="status.value === 'EN PROGRESO'" (click)="validateSupport()"> Validar
+                                    *ngIf="status.value === 'EN PROGRESO' && supportView" (click)="validateSupport()">
+                                    Validar
                                     solucion
                                     &nbsp;&nbsp;
                                     <i class="fa fa-user"></i></button>

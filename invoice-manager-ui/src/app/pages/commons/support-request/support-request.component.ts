@@ -26,7 +26,7 @@ export class SupportRequestComponent implements OnInit {
     public loading: boolean = false;
     public folio: string = '*';
     public folioBusqueda: string = '';
-    public modules: [string];
+    public modules: string[];
     public supportView = false;
     public adminView = false;
     public supportUsers: User[] = [];
@@ -79,6 +79,8 @@ export class SupportRequestComponent implements OnInit {
             ],
             agent: [''],
             dueDate: [''],
+            creation: [''],
+            update: [''],
             product: [
                 'SJ INVOICE MANAGER',
                 [Validators.pattern(AppConstants.GENERIC_TEXT_PATTERN)],
@@ -95,9 +97,9 @@ export class SupportRequestComponent implements OnInit {
         this.route.paramMap.subscribe((route) => {
             this.dataFile = undefined;
             this.folio = route.get('folio');
-            this.modules = JSON.parse(
-                sessionStorage.getItem('user')
-            )?.roles.map((r) => r.role);
+            const user: User = JSON.parse(sessionStorage.getItem('user'));
+
+            this.modules = user?.roles.map((r) => r.role);
 
             this.adminView = this.router.url.includes('pages/administracion');
             this.supportView = this.router.url.includes('pages/soporte');
@@ -113,12 +115,11 @@ export class SupportRequestComponent implements OnInit {
                                 error.message,
                                 'No se encontro informacion'
                             );
+                            this.dataFile = undefined;
+                            const support = new SupportRequest(user.email);
+                            support.contactName = user.name;
                             this.supportForm.reset();
-                            this.supportForm.patchValue(
-                                new SupportRequest(
-                                    sessionStorage.getItem('email')
-                                )
-                            );
+                            this.supportForm.patchValue(support);
                             return EMPTY;
                         }),
                         finalize(() => (this.loading = false))
@@ -131,10 +132,10 @@ export class SupportRequestComponent implements OnInit {
                     });
             } else {
                 this.dataFile = undefined;
+                const support = new SupportRequest(user.email);
+                support.contactName = user.name;
                 this.supportForm.reset();
-                this.supportForm.patchValue(
-                    new SupportRequest(sessionStorage.getItem('email'))
-                );
+                this.supportForm.patchValue(support);
             }
         });
         this.userService
@@ -221,6 +222,11 @@ export class SupportRequestComponent implements OnInit {
         this.supportService.updateSoporte(+this.folio, support).subscribe(
             (result) => {
                 this.supportForm.patchValue(result);
+                this.notificationService.sendNotification(
+                    'success',
+                    'El soporte se te ha asignado',
+                    'Soporte asignado'
+                );
                 this.loading = false;
             },
             (error: NtError) => {
@@ -242,6 +248,11 @@ export class SupportRequestComponent implements OnInit {
         this.supportService.updateSoporte(+this.folio, support).subscribe(
             (result) => {
                 this.supportForm.patchValue(result);
+                this.notificationService.sendNotification(
+                    'success',
+                    'El soporte se ha cerrado',
+                    'Soporte Finalizado'
+                );
                 this.loading = false;
             },
             (error: NtError) => {
@@ -272,6 +283,11 @@ export class SupportRequestComponent implements OnInit {
             (result) => {
                 this.supportForm.patchValue(result);
                 this.loading = false;
+                this.notificationService.sendNotification(
+                    'success',
+                    'El soporte se ha modificado al estatus de validacion',
+                    'Soporte en validacion'
+                );
             },
             (error: NtError) => {
                 this.notificationService.sendNotification(
@@ -301,6 +317,11 @@ export class SupportRequestComponent implements OnInit {
             (result) => {
                 this.supportForm.patchValue(result);
                 this.loading = false;
+                this.notificationService.sendNotification(
+                    'success',
+                    'El soporte se ha rechazado',
+                    'Soporte rechazado'
+                );
             },
             (error: NtError) => {
                 this.notificationService.sendNotification(
@@ -329,6 +350,11 @@ export class SupportRequestComponent implements OnInit {
                             (result) => {
                                 this.supportForm.patchValue(result);
                                 this.loading = false;
+                                this.notificationService.sendNotification(
+                                    'success',
+                                    'El soporte ha escalado',
+                                    'Soporte escalado'
+                                );
                             },
                             (error: NtError) => {
                                 this.notificationService.sendNotification(
@@ -398,5 +424,13 @@ export class SupportRequestComponent implements OnInit {
     get status() {
         // tslint:disable-next-line:no-non-null-assertion
         return this.supportForm.get('status')!;
+    }
+    get creation() {
+        // tslint:disable-next-line:no-non-null-assertion
+        return this.supportForm.get('creation')!;
+    }
+    get update() {
+        // tslint:disable-next-line:no-non-null-assertion
+        return this.supportForm.get('update')!;
     }
 }
