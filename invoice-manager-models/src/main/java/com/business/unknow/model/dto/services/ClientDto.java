@@ -1,7 +1,6 @@
 package com.business.unknow.model.dto.services;
 
 import static com.business.unknow.Constants.JSON_DATETIME_FORMAT;
-import static com.business.unknow.Constants.JSON_DAY_FORMAT;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

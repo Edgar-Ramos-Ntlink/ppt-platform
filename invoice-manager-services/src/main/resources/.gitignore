@@ -1,2 +1,3 @@
 static
 application-prod.properties
+application-qa.properties

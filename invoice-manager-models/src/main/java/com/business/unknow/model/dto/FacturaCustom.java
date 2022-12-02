@@ -1,10 +1,7 @@
 package com.business.unknow.model.dto;
 
-import static com.business.unknow.Constants.JSON_DAY_FORMAT;
-
 import com.business.unknow.serializers.CustomDateTimeDeserializer;
 import com.business.unknow.serializers.CustomDateTimeSerializer;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -66,9 +63,15 @@ public class FacturaCustom implements Serializable {
   private Date fechaActualizacion;
 
   private String statusCancelacion;
+
+  @JsonSerialize(using = CustomDateTimeSerializer.class)
+  @JsonDeserialize(using = CustomDateTimeDeserializer.class)
   private Date fechaCancelacion;
 
+  @JsonSerialize(using = CustomDateTimeSerializer.class)
+  @JsonDeserialize(using = CustomDateTimeDeserializer.class)
   private Date fechaTimbrado;
+
   private Integer statusCancelado;
   private String cadenaOriginalTimbrado;
   private String selloCfd;
