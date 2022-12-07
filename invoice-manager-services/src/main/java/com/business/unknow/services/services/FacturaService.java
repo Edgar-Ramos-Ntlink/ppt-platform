@@ -802,9 +802,9 @@ public class FacturaService {
     Comprobante comprobante = cfdiMapper.cfdiToComprobante(facturaCustom.getCfdi());
     comprobante.setMetodoPago(null);
     comprobante.setFormaPago(null);
+    facturaCustom = invoiceBuilderService.assignDescData(facturaCustom);
     filesService.sendXmlToS3(facturaCustom.getFolio(), comprobante);
     filesService.sendFacturaCustomToS3(facturaCustom.getFolio(), facturaCustom);
-    facturaCustom = invoiceBuilderService.assignDescData(facturaCustom);
     buildPdf(facturaCustom, PDF_COMPLEMENTO_SIN_TIMBRAR);
     return facturaCustom;
   }
