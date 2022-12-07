@@ -16,6 +16,7 @@ import com.mx.ntlink.NtlinkUtilException;
 import com.mx.ntlink.aws.S3Utils;
 import com.mx.ntlink.cfdi.mappers.CfdiMapper;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
+import com.mx.ntlink.error.XMLParserException;
 import com.mx.ntlink.helper.CfdiTransformer;
 import com.mx.ntlink.models.generated.Comprobante;
 import java.io.ByteArrayOutputStream;
@@ -69,7 +70,7 @@ public class FilesService {
     try {
       String xml = CfdiTransformer.cfdiMoldelToString(comprobante);
       s3Utils.upsertFile(s3Bucket, S3Buckets.CFDIS.name(), name.concat(".xml"), xml.getBytes());
-    } catch (JAXBException | NtlinkUtilException e) {
+    } catch (XMLParserException | NtlinkUtilException e) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
           String.format("Error saving Xml file in S3 with folio %s", comprobante.getFolio()));
