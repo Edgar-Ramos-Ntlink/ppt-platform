@@ -149,9 +149,7 @@ public class InvoiceBuilderService {
         .formaPagoDesc(
             Objects.isNull(facturaCustom.getCfdi().getFormaPago())
                 ? null
-                : catalogService
-                    .getPaymentFormByKey(formaDePago)
-                    .getDescripcion())
+                : catalogService.getPaymentFormByKey(formaDePago).getDescripcion())
         .metodoPagoDesc(
             MetodosPago.findByValor(facturaCustom.getCfdi().getMetodoPago()).getDescripcion())
         .tipoDeComprobanteDesc(

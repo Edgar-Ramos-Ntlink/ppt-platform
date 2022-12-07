@@ -152,4 +152,5 @@ Para desarrollar este proyecto es necesario
   - [x] 4.6.8 Reactive concept validation(6 decimal validation) and fix update missing invoice amount on concepts update. adding extra logs
   - [x] 4.6.9 Adding complement parent UUID in report
   - [x] 4.6.10 Support module for  users support request
-  - [x] 4.6.11 Custom date serialization on invoice reports and allow manage spring active profile externally
+  - [x] 4.6.11 Custom date serialization on invoice reports and allow manage spring active profile externally}
+  - [x] 4.6.12 Fixing Comeplementos payment form and  massive charge in contabilidad
