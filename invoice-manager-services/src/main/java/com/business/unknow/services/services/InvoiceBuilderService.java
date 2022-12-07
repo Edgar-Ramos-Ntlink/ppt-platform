@@ -14,6 +14,7 @@ import static com.business.unknow.Constants.DATE_TIME_FORMAT;
 import static com.business.unknow.Constants.IVA_BASE_16;
 import static com.business.unknow.Constants.IVA_IMPUESTO_16;
 import static com.business.unknow.enums.FacturaStatus.VALIDACION_TESORERIA;
+import static com.business.unknow.enums.FormaPago.TRANSFERENCIA_ELECTRONICA;
 import static com.mx.ntlink.models.generated.CTipoFactor.TASA;
 
 import com.business.unknow.Constants;
@@ -119,6 +120,13 @@ public class InvoiceBuilderService {
   }
 
   public FacturaCustom assignDescData(FacturaCustom facturaCustom) throws NtlinkUtilException {
+    String formaDePago =
+        TipoDocumento.COMPLEMENTO.getDescripcion().equals(facturaCustom.getTipoDocumento())
+            ? facturaCustom.getPagos().stream()
+                .map(PagoComplemento::getFormaDePagoP)
+                .findFirst()
+                .orElse(TRANSFERENCIA_ELECTRONICA.getClave())
+            : facturaCustom.getCfdi().getFormaPago();
     return facturaCustom.toBuilder()
         .totalDesc(
             NumberTranslatorUtil.getStringNumber(
@@ -142,7 +150,7 @@ public class InvoiceBuilderService {
             Objects.isNull(facturaCustom.getCfdi().getFormaPago())
                 ? null
                 : catalogService
-                    .getPaymentFormByKey(facturaCustom.getCfdi().getFormaPago())
+                    .getPaymentFormByKey(formaDePago)
                     .getDescripcion())
         .metodoPagoDesc(
             MetodosPago.findByValor(facturaCustom.getCfdi().getMetodoPago()).getDescripcion())

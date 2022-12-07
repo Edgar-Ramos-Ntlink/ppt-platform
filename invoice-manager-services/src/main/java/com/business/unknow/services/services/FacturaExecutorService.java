@@ -12,6 +12,7 @@ import com.mx.ntlink.cfdi.mappers.CfdiMapper;
 import com.mx.ntlink.cfdi.modelos.Cfdi;
 import com.mx.ntlink.client.NtLinkClient;
 import com.mx.ntlink.error.SoapClientException;
+import com.mx.ntlink.error.XMLParserException;
 import com.mx.ntlink.helper.CfdiTransformer;
 import com.mx.ntlink.models.generated.CancelaCfdi;
 import com.mx.ntlink.models.generated.Comprobante;
@@ -19,7 +20,6 @@ import com.mx.ntlink.models.generated.TimbraCfdiQrSinSello;
 import com.mx.ntlink.models.generated.TimbraCfdiQrSinSelloResult;
 import com.mx.ntlink.models.generated.TimbreFiscalDigital;
 import java.time.LocalDateTime;
-import javax.xml.bind.JAXBException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -90,7 +90,7 @@ public class FacturaExecutorService {
                 facturaCustom.getFolio(), response.getDescripcionError()));
       }
       return facturaCustom;
-    } catch (SoapClientException | JAXBException e) {
+    } catch (SoapClientException | XMLParserException e) {
       log.error(
           String.format(
               "La factura con el folio %s tiene problemas a timbrar, razon:%s",
