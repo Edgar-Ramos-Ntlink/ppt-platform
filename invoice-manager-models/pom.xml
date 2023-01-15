@@ -17,7 +17,7 @@
         <lombok.version>1.18.20</lombok.version>
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-        <ntlink-utils-version>2.4.1</ntlink-utils-version>
+        <ppt-utils-version>1.0.0</ppt-utils-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
@@ -32,9 +32,9 @@
             <version>${jackson-databind.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.mx.ntlink</groupId>
-            <artifactId>ntlink-utils</artifactId>
-            <version>${ntlink-utils-version}</version>
+            <groupId>com.unknown</groupId>
+            <artifactId>ppt-utils</artifactId>
+            <version>${ppt-utils-version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>

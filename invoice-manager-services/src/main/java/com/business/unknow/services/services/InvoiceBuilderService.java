@@ -15,7 +15,7 @@ import static com.business.unknow.Constants.IVA_BASE_16;
 import static com.business.unknow.Constants.IVA_IMPUESTO_16;
 import static com.business.unknow.enums.FacturaStatus.VALIDACION_TESORERIA;
 import static com.business.unknow.enums.FormaPago.TRANSFERENCIA_ELECTRONICA;
-import static com.mx.ntlink.models.generated.CTipoFactor.TASA;
+import static com.unknown.models.generated.CTipoFactor.TASA;
 
 import com.business.unknow.Constants;
 import com.business.unknow.enums.FacturaStatus;
@@ -34,23 +34,23 @@ import com.business.unknow.services.repositories.ClientRepository;
 import com.business.unknow.services.repositories.EmpresaRepository;
 import com.business.unknow.services.util.FacturaUtils;
 import com.google.common.collect.ImmutableList;
-import com.mx.ntlink.NtlinkUtilException;
-import com.mx.ntlink.cfdi.modelos.Cfdi;
-import com.mx.ntlink.cfdi.modelos.Concepto;
-import com.mx.ntlink.cfdi.modelos.Emisor;
-import com.mx.ntlink.cfdi.modelos.Impuesto;
-import com.mx.ntlink.cfdi.modelos.Receptor;
-import com.mx.ntlink.cfdi.modelos.complementos.pagos.DocumentoRelacionado;
-import com.mx.ntlink.cfdi.modelos.complementos.pagos.ImpuestosDR;
-import com.mx.ntlink.cfdi.modelos.complementos.pagos.ImpuestosP;
-import com.mx.ntlink.cfdi.modelos.complementos.pagos.Pago;
-import com.mx.ntlink.cfdi.modelos.complementos.pagos.Pagos;
-import com.mx.ntlink.cfdi.modelos.complementos.pagos.Totales;
-import com.mx.ntlink.cfdi.modelos.complementos.pagos.TrasladoDR;
-import com.mx.ntlink.cfdi.modelos.complementos.pagos.TrasladoP;
-import com.mx.ntlink.cfdi.modelos.complementos.pagos.TrasladosDR;
-import com.mx.ntlink.cfdi.modelos.complementos.pagos.TrasladosP;
-import com.mx.ntlink.util.NumberTranslatorUtil;
+import com.unknown.cfdi.modelos.Cfdi;
+import com.unknown.cfdi.modelos.Concepto;
+import com.unknown.cfdi.modelos.Emisor;
+import com.unknown.cfdi.modelos.Impuesto;
+import com.unknown.cfdi.modelos.Receptor;
+import com.unknown.cfdi.modelos.complementos.pagos.DocumentoRelacionado;
+import com.unknown.cfdi.modelos.complementos.pagos.ImpuestosDR;
+import com.unknown.cfdi.modelos.complementos.pagos.ImpuestosP;
+import com.unknown.cfdi.modelos.complementos.pagos.Pago;
+import com.unknown.cfdi.modelos.complementos.pagos.Pagos;
+import com.unknown.cfdi.modelos.complementos.pagos.Totales;
+import com.unknown.cfdi.modelos.complementos.pagos.TrasladoDR;
+import com.unknown.cfdi.modelos.complementos.pagos.TrasladoP;
+import com.unknown.cfdi.modelos.complementos.pagos.TrasladosDR;
+import com.unknown.cfdi.modelos.complementos.pagos.TrasladosP;
+import com.unknown.error.PptUtilException;
+import com.unknown.util.NumberTranslatorUtil;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class InvoiceBuilderService {
   @Autowired private EmpresaRepository companyRepo;
 
   public FacturaCustom assignFacturaData(FacturaCustom facturaCustom, int amount)
-      throws NtlinkUtilException {
+      throws PptUtilException {
     String folio =
         facturaCustom.getFolio() == null ? FacturaUtils.generateFolio() : facturaCustom.getFolio();
     Cfdi cfdi = cfdiService.recalculateCfdiAmmounts(facturaCustom.getCfdi());
@@ -119,7 +119,7 @@ public class InvoiceBuilderService {
     return assignDescData(facturaCustom);
   }
 
-  public FacturaCustom assignDescData(FacturaCustom facturaCustom) throws NtlinkUtilException {
+  public FacturaCustom assignDescData(FacturaCustom facturaCustom) throws PptUtilException {
     String formaDePago =
         TipoDocumento.COMPLEMENTO.getDescripcion().equals(facturaCustom.getTipoDocumento())
             ? facturaCustom.getPagos().stream()

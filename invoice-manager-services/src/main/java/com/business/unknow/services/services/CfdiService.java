@@ -2,10 +2,10 @@ package com.business.unknow.services.services;
 
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.util.validators.CfdiValidator;
-import com.mx.ntlink.NtlinkUtilException;
-import com.mx.ntlink.cfdi.mappers.CfdiMapper;
-import com.mx.ntlink.cfdi.modelos.Cfdi;
-import com.mx.ntlink.models.generated.Comprobante;
+import com.unknown.cfdi.mappers.CfdiMapper;
+import com.unknown.cfdi.modelos.Cfdi;
+import com.unknown.error.PptUtilException;
+import com.unknown.models.generated.Comprobante;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class CfdiService {
 
   @Autowired private CfdiAdapter cfdiAdapter;
 
-  public Cfdi getCfdiByFolio(String folio) throws NtlinkUtilException {
+  public Cfdi getCfdiByFolio(String folio) throws PptUtilException {
     return filesService.getCfdiFromS3(folio);
   }
 

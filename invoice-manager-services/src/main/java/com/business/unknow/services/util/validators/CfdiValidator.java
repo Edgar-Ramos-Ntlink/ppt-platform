@@ -3,8 +3,8 @@ package com.business.unknow.services.util.validators;
 import com.business.unknow.enums.MetodosPago;
 import com.business.unknow.enums.TipoComprobante;
 import com.business.unknow.model.error.InvoiceManagerException;
-import com.mx.ntlink.cfdi.modelos.Cfdi;
-import com.mx.ntlink.cfdi.modelos.Concepto;
+import com.unknown.cfdi.modelos.Cfdi;
+import com.unknown.cfdi.modelos.Concepto;
 import org.springframework.http.HttpStatus;
 
 public class CfdiValidator extends Validator {

@@ -101,9 +101,9 @@
             <version>1.3.2</version>
         </dependency>
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-dynamodb</artifactId>
-            <version>${aws.java.version}</version>
+            <groupId>com.mx.ntlink</groupId>
+            <artifactId>ntlink-ws-sdk</artifactId>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>

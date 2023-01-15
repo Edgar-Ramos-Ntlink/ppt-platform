@@ -6,7 +6,7 @@ import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.FilesService;
 import com.business.unknow.services.services.PagoService;
-import com.mx.ntlink.NtlinkUtilException;
+import com.unknown.error.PptUtilException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
@@ -89,20 +89,20 @@ public class PagosController {
 
   @PostMapping
   public ResponseEntity<PagoDto> insertPago(@RequestBody @Valid PagoDto pago)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     return new ResponseEntity<>(pagoService.insertNewPayment(pago), HttpStatus.CREATED);
   }
 
   @PutMapping("/{idPago}")
   public ResponseEntity<PagoDto> updatePago(
       @PathVariable(name = "idPago") Integer idPago, @RequestBody @Valid PagoDto pagoDto)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     return new ResponseEntity<>(pagoService.updatePago(idPago, pagoDto), HttpStatus.OK);
   }
 
   @DeleteMapping("/{idPago}")
   public ResponseEntity<Void> deletePago(@PathVariable(name = "idPago") Integer idPago)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     pagoService.deletePago(idPago);
     pagoService.delePagoFacturas(idPago);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);

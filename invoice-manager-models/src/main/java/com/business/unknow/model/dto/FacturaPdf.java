@@ -1,6 +1,6 @@
 package com.business.unknow.model.dto;
 
-import com.mx.ntlink.models.generated.Comprobante;
+import com.unknown.models.generated.Comprobante;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;

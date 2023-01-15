@@ -2,8 +2,8 @@ package com.business.unknow.services.services;
 
 import com.business.unknow.services.entities.Reporte;
 import com.business.unknow.services.repositories.ReporteRepository;
-import com.mx.ntlink.cfdi.modelos.Cfdi;
-import com.mx.ntlink.cfdi.modelos.Impuesto;
+import com.unknown.cfdi.modelos.Cfdi;
+import com.unknown.cfdi.modelos.Impuesto;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;

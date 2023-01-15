@@ -7,9 +7,9 @@ import com.business.unknow.model.dto.FacturaCustom;
 import com.business.unknow.model.dto.FacturaPdf;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.google.common.io.Resources;
-import com.mx.ntlink.NtlinkUtilException;
-import com.mx.ntlink.util.CfdiNamespaceMapper;
-import com.mx.ntlink.util.PdfGeneratorUtil;
+import com.unknown.error.PptUtilException;
+import com.unknown.util.CfdiNamespaceMapper;
+import com.unknown.util.PdfGeneratorUtil;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
@@ -75,7 +75,7 @@ public class FacturaUtils {
           PdfGeneratorUtil.generatePdf(
               Base64.getEncoder().encodeToString(template.getBytes()), "XSD", xmlString);
       return Base64.getDecoder().decode(pdf);
-    } catch (JAXBException | NtlinkUtilException | IOException e) {
+    } catch (JAXBException | PptUtilException | IOException e) {
       log.error("Error en la generacion del PDF", e);
       throw new InvoiceManagerException(
           "Error en la generación del documento PDF", HttpStatus.INTERNAL_SERVER_ERROR.value());

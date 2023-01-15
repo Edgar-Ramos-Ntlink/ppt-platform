@@ -19,7 +19,7 @@ import com.business.unknow.services.repositories.PagoFacturaRepository;
 import com.business.unknow.services.repositories.PagoRepository;
 import com.business.unknow.services.services.evaluations.PagoEvaluatorService;
 import com.business.unknow.services.util.validators.PagoValidator;
-import com.mx.ntlink.NtlinkUtilException;
+import com.unknown.error.PptUtilException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -226,7 +226,7 @@ public class PagoService {
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public PagoDto insertNewPayment(PagoDto pagoDto)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     PagoValidator.validate(pagoDto);
     log.info("Creating a new payment [{}]", pagoDto);
     List<FacturaCustom> facturas = new ArrayList<>();
@@ -321,7 +321,7 @@ public class PagoService {
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public PagoDto updatePago(Integer idPago, PagoDto pago)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     PagoDto entity = getPaymentById(idPago);
     PagoDto pagoDto =
         entity.toBuilder()
@@ -364,7 +364,7 @@ public class PagoService {
 
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
-  public void deletePago(Integer idPago) throws InvoiceManagerException, NtlinkUtilException {
+  public void deletePago(Integer idPago) throws InvoiceManagerException, PptUtilException {
     PagoDto entity = getPaymentById(idPago);
     List<FacturaCustom> facturas = new ArrayList<>();
     List<String> mainFactFolios =
