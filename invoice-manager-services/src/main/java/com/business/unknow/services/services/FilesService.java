@@ -12,13 +12,13 @@ import com.business.unknow.services.mapper.ResourceFileMapper;
 import com.business.unknow.services.repositories.ResourceFileRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mx.ntlink.NtlinkUtilException;
-import com.mx.ntlink.aws.S3Utils;
-import com.mx.ntlink.cfdi.mappers.CfdiMapper;
-import com.mx.ntlink.cfdi.modelos.Cfdi;
-import com.mx.ntlink.error.XMLParserException;
-import com.mx.ntlink.helper.CfdiTransformer;
-import com.mx.ntlink.models.generated.Comprobante;
+import com.unknown.aws.S3Utils;
+import com.unknown.cfdi.mappers.CfdiMapper;
+import com.unknown.cfdi.modelos.Cfdi;
+import com.unknown.error.PptUtilException;
+import com.unknown.error.XMLParserException;
+import com.unknown.helper.CfdiTransformer;
+import com.unknown.models.generated.Comprobante;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,7 +70,7 @@ public class FilesService {
     try {
       String xml = CfdiTransformer.cfdiMoldelToString(comprobante);
       s3Utils.upsertFile(s3Bucket, S3Buckets.CFDIS.name(), name.concat(".xml"), xml.getBytes());
-    } catch (XMLParserException | NtlinkUtilException e) {
+    } catch (XMLParserException | PptUtilException e) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
           String.format("Error saving Xml file in S3 with folio %s", comprobante.getFolio()));
@@ -88,7 +88,7 @@ public class FilesService {
       ObjectMapper objectMapper = new ObjectMapper();
       byte[] json = objectMapper.writeValueAsBytes(facturaCustom);
       s3Utils.upsertFile(s3Bucket, S3Buckets.CFDIS.name(), name.concat(".json"), json);
-    } catch (JsonProcessingException | NtlinkUtilException e) {
+    } catch (JsonProcessingException | PptUtilException e) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
           String.format("Error saving Json file in S3 with folio %s", facturaCustom.getFolio()));
@@ -104,7 +104,7 @@ public class FilesService {
     log.info("Saving {} file {} to S3", name, format);
     try {
       s3Utils.upsertFile(s3Bucket, bucket.name(), name.concat(format), file);
-    } catch (NtlinkUtilException e) {
+    } catch (PptUtilException e) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT, String.format("Error saving pdf file in S3 with folio %s", name));
     }
@@ -121,7 +121,7 @@ public class FilesService {
       throws InvoiceManagerException {
     try {
       s3Utils.upsertFile(s3Bucket, bucket.name(), name, file.toByteArray());
-    } catch (NtlinkUtilException e) {
+    } catch (PptUtilException e) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, "Error creating S3 file");
     }
   }
@@ -131,9 +131,9 @@ public class FilesService {
    *
    * @param folio
    * @return @link Cfdi}
-   * @throws @link NtlinkUtilException}
+   * @throws @link PptUtilException}
    */
-  public Cfdi getCfdiFromS3(String folio) throws NtlinkUtilException {
+  public Cfdi getCfdiFromS3(String folio) throws PptUtilException {
     try {
       JAXBContext contextObj = JAXBContext.newInstance(Comprobante.class);
       Unmarshaller unmarshaller = contextObj.createUnmarshaller();
@@ -152,7 +152,7 @@ public class FilesService {
     }
   }
 
-  public void deleteCfdiFromS3(String folio) throws NtlinkUtilException {
+  public void deleteCfdiFromS3(String folio) throws PptUtilException {
     s3Utils.deleteFile(s3Bucket, S3Buckets.CFDIS.name(), folio.concat(".xml"));
   }
 
@@ -160,7 +160,7 @@ public class FilesService {
     try {
       s3Utils.deleteFile(s3Bucket, bucket.name(), name);
 
-    } catch (NtlinkUtilException e) {
+    } catch (PptUtilException e) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
           String.format("Error deleting S3 file %s", name).concat(e.getMessage()));
@@ -170,7 +170,7 @@ public class FilesService {
   public String getS3File(S3Buckets bucket, String name) {
     try {
       return s3Utils.getFile(s3Bucket, bucket.name(), name);
-    } catch (NtlinkUtilException e) {
+    } catch (PptUtilException e) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
           String.format("Error getting S3 file %s", name).concat(e.getMessage()));
@@ -180,7 +180,7 @@ public class FilesService {
   public InputStream getS3InputStream(S3Buckets bucket, String name) {
     try {
       return s3Utils.getFileInputStream(s3Bucket, bucket.name(), name);
-    } catch (NtlinkUtilException e) {
+    } catch (PptUtilException e) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
           String.format("Error getting S3 file %s", name).concat(e.getMessage()));

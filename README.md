@@ -153,4 +153,5 @@ Para desarrollar este proyecto es necesario
   - [x] 4.6.9 Adding complement parent UUID in report
   - [x] 4.6.10 Support module for  users support request
   - [x] 4.6.11 Custom date serialization on invoice reports and allow manage spring active profile externally}
-  - [x] 4.6.12 Fixing Comeplementos payment form and  massive charge in contabilidad
+  - [x] 4.6.12 Fixing Complementos payment form and  massive charge in contabilidad
+  - [x] 4.7.0 Importing ppt-utils and NTlink sdk refactor

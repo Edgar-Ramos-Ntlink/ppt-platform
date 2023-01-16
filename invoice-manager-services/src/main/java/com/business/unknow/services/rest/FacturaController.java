@@ -7,7 +7,7 @@ import com.business.unknow.model.dto.pagos.PagoDto;
 import com.business.unknow.model.error.InvoiceManagerException;
 import com.business.unknow.services.services.FacturaService;
 import com.business.unknow.services.services.PagoService;
-import com.mx.ntlink.NtlinkUtilException;
+import com.unknown.error.PptUtilException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -63,29 +63,28 @@ public class FacturaController {
 
   @PostMapping
   public ResponseEntity<FacturaCustom> createFacturaCustom(
-      @RequestBody @Valid FacturaCustom factura)
-      throws InvoiceManagerException, NtlinkUtilException {
+      @RequestBody @Valid FacturaCustom factura) throws InvoiceManagerException, PptUtilException {
     return new ResponseEntity<>(service.createFacturaCustom(factura), HttpStatus.CREATED);
   }
 
   @PutMapping("/{folio}")
   public ResponseEntity<FacturaCustom> updateFactura(
       @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaCustom)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     return new ResponseEntity<>(service.updateFacturaCustom(folio, facturaCustom), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/timbrar")
   public ResponseEntity<FacturaCustom> timbrarFactura(
       @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaCustom)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     return new ResponseEntity<>(service.stamp(folio), HttpStatus.OK);
   }
 
   @PostMapping("/{folio}/cancelar")
   public ResponseEntity<FacturaCustom> cancelInvoice(
       @PathVariable String folio, @RequestBody @Valid FacturaCustom facturaCustom)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     return new ResponseEntity<>(service.cancelInvoice(folio, facturaCustom), HttpStatus.OK);
   }
 
@@ -105,7 +104,7 @@ public class FacturaController {
   @PostMapping("/{folio}/sustitucion")
   public ResponseEntity<FacturaCustom> postSustitucion(
       @RequestBody @Valid FacturaCustom facturaCustom)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     return new ResponseEntity<>(
         service.postRelacion(facturaCustom, TipoDocumento.FACTURA), HttpStatus.OK);
   }
@@ -113,7 +112,7 @@ public class FacturaController {
   @PostMapping("/{folio}/nota-credito")
   public ResponseEntity<FacturaCustom> postNotaCredito(
       @RequestBody @Valid FacturaCustom facturaCustom)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     return new ResponseEntity<>(
         service.postRelacion(facturaCustom, TipoDocumento.NOTA_CREDITO), HttpStatus.OK);
   }
@@ -121,7 +120,7 @@ public class FacturaController {
   @PostMapping("/{folio}/complementos")
   public ResponseEntity<FacturaCustom> createComeplement(
       @PathVariable String folio, @RequestBody @Valid PagoDto pago)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     FacturaCustom facturaCustom = service.createComplemento(folio, pago);
 
     return new ResponseEntity<>(facturaCustom, HttpStatus.OK);

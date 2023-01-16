@@ -39,11 +39,11 @@ import com.business.unknow.services.util.validators.InvoiceValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.mx.ntlink.NtlinkUtilException;
-import com.mx.ntlink.cfdi.mappers.CfdiMapper;
-import com.mx.ntlink.cfdi.mappers.pagos.PagosMapper;
-import com.mx.ntlink.cfdi.modelos.complementos.pagos.Pagos;
-import com.mx.ntlink.models.generated.Comprobante;
+import com.unknown.cfdi.mappers.CfdiMapper;
+import com.unknown.cfdi.mappers.pagos.PagosMapper;
+import com.unknown.cfdi.modelos.complementos.pagos.Pagos;
+import com.unknown.error.PptUtilException;
+import com.unknown.models.generated.Comprobante;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -462,7 +462,7 @@ public class FacturaService {
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public FacturaCustom createFacturaCustom(FacturaCustom facturaCustom)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     facturaCustom =
         invoiceBuilderService.assignFacturaData(
             facturaCustom, facturaDao.getCantidadFacturasOfTheCurrentMonthByTipoDocumento());
@@ -492,7 +492,7 @@ public class FacturaService {
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public FacturaCustom updateFacturaCustom(String folio, FacturaCustom facturaCustom)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     FacturaCustom entity = getFacturaBaseByFolio(folio);
     facturaServiceEvaluator.facturaStatusValidation(
         facturaCustom); // TODO verify if this method can be moved outside of updateFacturaCustom
@@ -630,7 +630,7 @@ public class FacturaService {
 
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
-  public FacturaCustom stamp(String folio) throws InvoiceManagerException, NtlinkUtilException {
+  public FacturaCustom stamp(String folio) throws InvoiceManagerException, PptUtilException {
     FacturaCustom factura = getFacturaByFolio(folio);
     InvoiceValidator.validate(factura, folio);
     List<PagoDto> pagosFactura = new ArrayList<>();
@@ -719,7 +719,7 @@ public class FacturaService {
   @Transactional(
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public FacturaCustom cancelInvoice(String folio, FacturaCustom facturaCustom)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     FacturaCustom entity = getFacturaBaseByFolio(folio);
     InvoiceValidator.validate(facturaCustom, folio);
     timbradoServiceEvaluator.invoiceCancelValidation(facturaCustom);
@@ -739,7 +739,7 @@ public class FacturaService {
   }
 
   private FacturaCustom cancelInvoiceExecution(FacturaCustom facturaCustom, FacturaCustom entity)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     final String folio = facturaCustom.getFolio();
     facturaCustom = facturaExecutorService.cancelInvoice(facturaCustom);
     if (COMPLEMENTO.getDescripcion().equals(facturaCustom.getTipoDocumento())) {
@@ -770,7 +770,7 @@ public class FacturaService {
       rollbackOn = {InvoiceManagerException.class, DataAccessException.class, SQLException.class})
   public FacturaCustom generateComplemento(
       List<FacturaCustom> parentInvoices, PagoDto pagoDto, FacturaStatus status)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     // TODO :MOVE THIS VALIDATION TO A RULE
     if (parentInvoices.stream()
             .allMatch(a -> !a.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor()))
@@ -810,7 +810,7 @@ public class FacturaService {
   }
 
   public FacturaCustom createComplemento(String folio, PagoDto pagoDto)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     PagoFacturaDto pagoFactura =
         PagoFacturaDto.builder().folio(folio).monto(pagoDto.getMonto()).build();
     pagoDto.setFacturas(ImmutableList.of(pagoFactura));
@@ -819,7 +819,7 @@ public class FacturaService {
   }
 
   public FacturaCustom postRelacion(FacturaCustom dto, TipoDocumento tipoDocumento)
-      throws InvoiceManagerException, NtlinkUtilException {
+      throws InvoiceManagerException, PptUtilException {
     if (!dto.getStatusFactura().equals(FacturaStatus.TIMBRADA.getValor())) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT,
