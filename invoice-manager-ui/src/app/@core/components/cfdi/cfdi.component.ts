@@ -78,7 +78,7 @@ export class CfdiComponent implements OnInit {
                 .then(
                     (cat) => (this.payTypeCat = cat.filter((c) => c.id != '99'))
                 );
-            invoice.cfdi.formaPago = '01';
+            invoice.cfdi.formaPago = '03';
         }
         invoice.cfdi.metodoPago = clave;
         invoice.metodoPago = clave;
