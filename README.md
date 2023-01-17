@@ -155,3 +155,4 @@ Para desarrollar este proyecto es necesario
   - [x] 4.6.11 Custom date serialization on invoice reports and allow manage spring active profile externally}
   - [x] 4.6.12 Fixing Complementos payment form and  massive charge in contabilidad
   - [x] 4.7.0 Importing ppt-utils and NTlink sdk refactor
+  - [x] 4.7.1 Adding Pue Default payment method
