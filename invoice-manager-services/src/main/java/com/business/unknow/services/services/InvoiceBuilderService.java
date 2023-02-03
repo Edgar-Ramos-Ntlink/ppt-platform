@@ -11,6 +11,7 @@ import static com.business.unknow.Constants.ComplementoPpdDefaults.PAGO_UNIDAD;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.TASA_O_CUOTA;
 import static com.business.unknow.Constants.ComplementoPpdDefaults.TIPO_FACTOR;
 import static com.business.unknow.Constants.DATE_TIME_FORMAT;
+import static com.business.unknow.Constants.FacturaComplemento.USO_CFDI;
 import static com.business.unknow.Constants.IVA_BASE_16;
 import static com.business.unknow.Constants.IVA_IMPUESTO_16;
 import static com.business.unknow.enums.FacturaStatus.VALIDACION_TESORERIA;
@@ -377,8 +378,7 @@ public class InvoiceBuilderService {
             .direccion(companyAddress.toUpperCase())
             .build();
 
-    Receptor receptor = fact.getCfdi().getReceptor(); // DEFAULT in case no info found below
-    receptor.setUsoCfdi("G03");
+    Receptor receptor = fact.getCfdi().getReceptor();
     Optional<Client> client =
         clientRepo.findByCorreoPromotorAndClient(fact.getSolicitante(), fact.getRfcRemitente());
     if (client.isPresent()) { // LINE A
@@ -399,7 +399,7 @@ public class InvoiceBuilderService {
               .domicilioFiscalReceptor(client.get().getCp())
               .regimenFiscalReceptor(client.get().getRegimenFiscal())
               .direccion(address)
-              .usoCfdi("G03")
+              .usoCfdi(USO_CFDI)
               .build();
       fact.setDireccionReceptor(address);
     } else { // LINE B,C,D and E
@@ -423,7 +423,7 @@ public class InvoiceBuilderService {
                 .domicilioFiscalReceptor(clientCompany.get().getCp())
                 .regimenFiscalReceptor(clientCompany.get().getRegimenFiscal())
                 .direccion(address)
-                .usoCfdi("G03")
+                .usoCfdi(USO_CFDI)
                 .build();
         fact.setDireccionReceptor(address);
       }

@@ -20,7 +20,6 @@ public class Constants {
 
   public static final String MXN = "MXN";
   public static final String CFDI_40_VERSION = "4.0";
-  public static final String CFDI_33_VERSION = "3.3";
   public static final String CFDI_DATE_PATTERN = "%fecha-timbrado%";
 
   public static final Integer BAD_REQUEST = 400;
@@ -73,6 +72,7 @@ public class Constants {
   public static class FacturaComplemento {
     private FacturaComplemento() {}
 
+    public static final String USO_CFDI = "CP01";
     public static final String FORMA_PAGO = "CREDITO";
     public static final String TOTAL = "Total=\"0.0\"";
   }
