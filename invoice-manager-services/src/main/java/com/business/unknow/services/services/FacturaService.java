@@ -294,7 +294,9 @@ public class FacturaService {
                   row.put("METODO PAGO", inv.getMetodoPago());
                   row.put("FORMA PAGO", inv.getFormaPago());
                   row.put("MONEDA", inv.getMoneda());
-                  row.put("ESTATUS", inv.getStatusFactura());
+                  row.put(
+                      "ESTATUS",
+                      FacturaStatus.getStatusByValue(Integer.valueOf(inv.getStatusFactura())));
                   row.put(
                       "CANCELACION",
                       Objects.nonNull(inv.getFechaCancelacion())
