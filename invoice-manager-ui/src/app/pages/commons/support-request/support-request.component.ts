@@ -60,22 +60,25 @@ export class SupportRequestComponent implements OnInit {
                 [
                     Validators.required,
                     Validators.minLength(20),
-                    Validators.maxLength(300),
+                    Validators.maxLength(2000),
                 ],
             ],
             errorMessage: [
                 '',
-                [Validators.minLength(2), Validators.maxLength(300)],
+                [Validators.minLength(2), Validators.maxLength(2000)],
             ],
-            module: ['*', [Validators.minLength(2), Validators.maxLength(300)]],
-            notes: ['', [Validators.minLength(2), Validators.maxLength(300)]],
+            module: [
+                '*',
+                [Validators.minLength(2), Validators.maxLength(2000)],
+            ],
+            notes: ['', [Validators.minLength(2), Validators.maxLength(2000)]],
             solution: [
                 '',
-                [Validators.minLength(10), Validators.maxLength(300)],
+                [Validators.minLength(10), Validators.maxLength(2000)],
             ],
             supportType: [
                 '*',
-                [Validators.minLength(2), Validators.maxLength(300)],
+                [Validators.minLength(2), Validators.maxLength(2000)],
             ],
             agent: [''],
             dueDate: [''],

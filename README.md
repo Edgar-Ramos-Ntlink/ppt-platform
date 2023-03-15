@@ -158,4 +158,5 @@ Para desarrollar este proyecto es necesario
   - [x] 4.7.1 Adding Pue Default payment method
   - [x] 4.7.2 Adding ppd payment uso cfdi Default
   - [x] 4.7.3 Stamp timeout and report status as a text
+  - [x] 4.7.4 Support module validation
   
