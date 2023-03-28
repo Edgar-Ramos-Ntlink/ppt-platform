@@ -131,7 +131,7 @@ public class InvoiceBuilderService {
     return facturaCustom.toBuilder()
         .totalDesc(
             NumberTranslatorUtil.getStringNumber(
-                facturaCustom.getCfdi().getTotal(), facturaCustom.getCfdi().getMoneda()))
+                facturaCustom.getTotal(), facturaCustom.getCfdi().getMoneda()))
         .subTotalDesc(
             NumberTranslatorUtil.getStringNumber(
                 facturaCustom.getCfdi().getSubtotal(), facturaCustom.getCfdi().getMoneda()))
@@ -180,7 +180,7 @@ public class InvoiceBuilderService {
             .folio(folio)
             .version(Constants.CFDI_40_VERSION)
             .preFolio(prefolio)
-            .total(BigDecimal.ZERO)
+            .total(pagoDto.getMonto())
             .packFacturacion(PackFacturarionEnum.NTLINK.name())
             .saldoPendiente(BigDecimal.ZERO)
             .lineaEmisor(facturaCustom.getLineaEmisor())
