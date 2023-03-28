@@ -34,6 +34,9 @@ public class FacturaPdf {
   @XmlElement(name = "TotalDesc")
   private String totalDesc;
 
+  @XmlElement(name = "Total")
+  private String total;
+
   @XmlElement(name = "SubTotalDesc")
   private String subTotalDesc;
 

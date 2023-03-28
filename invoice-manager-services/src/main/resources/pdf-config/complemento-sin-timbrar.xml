@@ -321,7 +321,7 @@
                                 <block>TOTAL PAGADO:</block>
                             </inline-container>
                             <inline-container width="45mm" margin-right="3mm">
-                                <xsl:variable name="total" select="montoTotal" />
+                                <xsl:variable name="total" select="Total" />
                                 <block>
                                     $
                                     <xsl:value-of select="format-number($total, '###,##0.00')" />

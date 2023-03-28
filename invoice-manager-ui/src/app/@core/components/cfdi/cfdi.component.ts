@@ -109,7 +109,9 @@ export class CfdiComponent implements OnInit {
     updateCfdi() {
         this.loading = true;
         const fact: Factura = JSON.parse(JSON.stringify(this.factura));
-        fact.total = this.cfdi.total;
+        if (fact.tipoDocumento === 'Factura') {
+            fact.total = this.cfdi.total;
+        }
         fact.metodoPago = this.cfdi.metodoPago;
         this.invoiceService.updateInvoice(fact).subscribe(
             (invoice) => {
